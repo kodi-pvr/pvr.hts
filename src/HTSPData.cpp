@@ -109,7 +109,7 @@ void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
   if (!m_session || !m_session->IsConnected())
   {
     htsmsg_destroy(m);
-    result.status = PVR_ERROR_NOT_POSSIBLE;
+    result.status = PVR_ERROR_SERVER_ERROR;
     return;
   }
 
@@ -390,7 +390,7 @@ PVR_ERROR CHTSPData::DeleteRecording(const PVR_RECORDING &recording)
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_NOT_DELETED;
+  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 unsigned int CHTSPData::GetNumTimers()
@@ -519,7 +519,7 @@ PVR_ERROR CHTSPData::DeleteTimer(const PVR_TIMER &timer, bool bForce)
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_NOT_DELETED;
+  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
@@ -578,7 +578,7 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_NOT_DELETED;
+  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 PVR_ERROR CHTSPData::UpdateTimer(const PVR_TIMER &timer)
@@ -607,7 +607,7 @@ PVR_ERROR CHTSPData::UpdateTimer(const PVR_TIMER &timer)
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_NOT_SAVED;
+  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 PVR_ERROR CHTSPData::RenameRecording(const PVR_RECORDING &recording, const char *strNewName)
@@ -637,7 +637,7 @@ PVR_ERROR CHTSPData::RenameRecording(const PVR_RECORDING &recording, const char 
   if (success > 0)
     PVR->TriggerRecordingUpdate();
 
-  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_NOT_SAVED;
+  return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 
