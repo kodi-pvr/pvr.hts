@@ -211,6 +211,7 @@ bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
 
 bool CHTSPDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
 {
+  memset(&qualityinfo, 0, sizeof(qualityinfo));
   if (m_SourceInfo.si_adapter.empty() || m_Quality.fe_status.empty())
     return false;
 
@@ -220,29 +221,13 @@ bool CHTSPDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
   qualityinfo.iSNR          = (uint16_t)m_Quality.fe_snr;
   qualityinfo.iBER          = (uint32_t)m_Quality.fe_ber;
   qualityinfo.iUNC          = (uint32_t)m_Quality.fe_unc;
-  qualityinfo.dVideoBitrate = 0;
-  qualityinfo.dAudioBitrate = 0;
-  qualityinfo.dDolbyBitrate = 0;
 
   return true;
 }
 
 inline void HTSPResetDemuxStreamInfo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream)
 {
-  stream.iFPSScale      = 0;
-  stream.iFPSRate       = 0;
-  stream.iHeight        = 0;
-  stream.iWidth         = 0;
-  stream.fAspect        = 0.0;
-  stream.iChannels      = 0;
-  stream.iSampleRate    = 0;
-  stream.iBlockAlign    = 0;
-  stream.iBitRate       = 0;
-  stream.iBitsPerSample = 0;
-  stream.strLanguage[0] = 0;
-  stream.strLanguage[1] = 0;
-  stream.strLanguage[2] = 0;
-  stream.strLanguage[3] = 0;
+  memset(&stream, 0, sizeof(stream));
   stream.iIdentifier    = -1;
 }
 
