@@ -556,4 +556,5 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
+unsigned int GetChannelSwitchDelay(void) { return 0; }
 }
