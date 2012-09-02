@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}</ProjectGuid>
     <RootNamespace>pvrclient_tvheadend</RootNamespace>
+    <ProjectName>pvr.hts</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
