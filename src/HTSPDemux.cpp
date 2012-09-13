@@ -76,13 +76,21 @@ bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
     props->stream[i].iPhysicalId    = m_Streams.stream[i].iPhysicalId;
     props->stream[i].iCodecType     = m_Streams.stream[i].iCodecType;
     props->stream[i].iCodecId       = m_Streams.stream[i].iCodecId;
-    props->stream[i].iHeight        = m_Streams.stream[i].iHeight;
-    props->stream[i].iWidth         = m_Streams.stream[i].iWidth;
     props->stream[i].strLanguage[0] = m_Streams.stream[i].strLanguage[0];
     props->stream[i].strLanguage[1] = m_Streams.stream[i].strLanguage[1];
     props->stream[i].strLanguage[2] = m_Streams.stream[i].strLanguage[2];
     props->stream[i].strLanguage[3] = m_Streams.stream[i].strLanguage[3];
     props->stream[i].iIdentifier    = m_Streams.stream[i].iIdentifier;
+    props->stream[i].iFPSScale      = m_Streams.stream[i].iFPSScale;
+    props->stream[i].iFPSRate       = m_Streams.stream[i].iFPSRate;
+    props->stream[i].iHeight        = m_Streams.stream[i].iHeight;
+    props->stream[i].iWidth         = m_Streams.stream[i].iWidth;
+    props->stream[i].fAspect        = m_Streams.stream[i].fAspect;
+    props->stream[i].iChannels      = m_Streams.stream[i].iChannels;
+    props->stream[i].iSampleRate    = m_Streams.stream[i].iSampleRate;
+    props->stream[i].iBlockAlign    = m_Streams.stream[i].iBlockAlign;
+    props->stream[i].iBitRate       = m_Streams.stream[i].iBitRate;
+    props->stream[i].iBitsPerSample = m_Streams.stream[i].iBitsPerSample;
   }
   return (props->iStreamCount > 0);
 }
