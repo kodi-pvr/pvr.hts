@@ -281,6 +281,12 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     const char* type;
     htsmsg_t*   sub;
 
+    if (m_Streams.iStreamCount >= PVR_STREAM_MAX_STREAMS)
+    {
+      XBMC->Log(LOG_ERROR, "%s - max amount of streams reached", __FUNCTION__);
+      break;
+    }
+
     if (f->hmf_type != HMF_MAP)
       continue;
 
@@ -366,12 +372,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
       else if (m_Streams.stream[m_Streams.iStreamCount].iCodecType == AVMEDIA_TYPE_VIDEO)
         HTSPSetDemuxStreamInfoVideo(m_Streams.stream[m_Streams.iStreamCount], sub);
       ++m_Streams.iStreamCount;
-    }
-
-    if (m_Streams.iStreamCount >= PVR_STREAM_MAX_STREAMS)
-    {
-      XBMC->Log(LOG_ERROR, "%s - max amount of streams reached", __FUNCTION__);
-      break;
     }
   }
 
