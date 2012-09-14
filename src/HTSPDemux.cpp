@@ -48,9 +48,6 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
   m_channel = channelinfo.iUniqueId;
   m_bIsRadio = channelinfo.bIsRadio;
 
-  if (!m_session)
-    m_session = new CHTSPConnection();
-
   if(!m_session->Connect())
     return false;
 
