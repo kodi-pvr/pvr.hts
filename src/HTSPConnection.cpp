@@ -288,7 +288,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 1);
+  htsmsg_add_u32(m, "htspversion", 6);
 
   /* read welcome */
   if((m = ReadResult(m)) == NULL)
@@ -302,7 +302,8 @@ bool CHTSPConnection::SendGreeting(void)
 
   m_strServerName = server;
   m_strVersion    = version;
-  m_iProtocol     = proto;
+  m_iProtocol     = (6 > proto) ? proto : 6;
+  XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - using protocol v%d", __FUNCTION__, m_iProtocol);
 
   if(chall && chall_len)
   {

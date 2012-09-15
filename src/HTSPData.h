@@ -94,7 +94,8 @@ private:
   SChannels GetChannels(int tag);
   SChannels GetChannels(STag &tag);
   STags GetTags();
-  PVR_ERROR GetEvent(SEvent& event, uint32_t id);
+  PVR_ERROR GetEvent(ADDON_HANDLE handle, uint32_t *id, time_t stop);
+  PVR_ERROR GetEvents(ADDON_HANDLE handle, uint32_t cid, time_t stop);
   bool SendEnableAsync();
   SRecordings GetDVREntries(bool recorded, bool scheduled);
 
@@ -102,7 +103,7 @@ private:
   void ParseChannelUpdate(htsmsg_t* msg);
   void ParseDVREntryDelete(htsmsg_t* msg);
   void ParseDVREntryUpdate(htsmsg_t* msg);
-  static bool ParseEvent(htsmsg_t* msg, uint32_t id, SEvent &event);
+  static bool ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end);
   void ParseTagRemove(htsmsg_t* msg);
   void ParseTagUpdate(htsmsg_t* msg);
 
@@ -112,7 +113,6 @@ private:
   PLATFORM::CMutex           m_mutex;
   SChannels                  m_channels;
   STags                      m_tags;
-  SEvents                    m_events;
   SMessages                  m_queue;
   SRecordings                m_recordings;
   int                        m_iReconnectRetries;

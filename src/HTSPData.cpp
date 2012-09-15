@@ -233,60 +233,26 @@ PVR_ERROR CHTSPData::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &channel, tim
 {
   PVR_ERROR retVal = PVR_ERROR_NO_ERROR;
   SChannels channels = GetChannels();
+  int iProtocol = m_session->GetProtocol();
 
   if (channels.find(channel.iUniqueId) != channels.end())
   {
-    time_t stop;
 
-    SEvent ev;
-    ev.id = channels[channel.iUniqueId].event;
-    if (ev.id == 0)
-      return retVal;
+    /* Full channel update */
+    if (iProtocol >= 6)
+      retVal = GetEvents(handle, channel.iUniqueId, iEnd);
 
-    do
+    /* Event at a time */
+    else
     {
-      PVR_ERROR result = GetEvent(ev, ev.id);
-      if (result == PVR_ERROR_NO_ERROR)
+      uint32_t eventId = channels[channel.iUniqueId].event;
+      if (eventId != 0)
       {
-        EPG_TAG broadcast;
-        memset(&broadcast, 0, sizeof(EPG_TAG));
-
-        broadcast.iUniqueBroadcastId  = ev.id;
-        broadcast.strTitle            = ev.title.c_str();
-        broadcast.iChannelNumber      = ev.chan_id >= 0 ? ev.chan_id : channel.iUniqueId;
-        broadcast.startTime           = ev.start;
-        broadcast.endTime             = ev.stop;
-        broadcast.strPlotOutline      = ""; // unused
-        broadcast.strPlot             = ev.descs.c_str();
-        broadcast.strIconPath         = ""; // unused
-        broadcast.iGenreType          = (ev.content & 0x0F) << 4;
-        broadcast.iGenreSubType       = ev.content & 0xF0;
-        broadcast.strGenreDescription = "";
-        broadcast.firstAired          = 0;  // unused
-        broadcast.iParentalRating     = 0;  // unused
-        broadcast.iStarRating         = 0;  // unused
-        broadcast.bNotify             = false;
-        broadcast.iSeriesNumber       = 0;  // unused
-        broadcast.iEpisodeNumber      = 0;  // unused
-        broadcast.iEpisodePartNumber  = 0;  // unused
-        broadcast.strEpisodeName      = ""; // unused
-
-        PVR->TransferEpgEntry(handle, &broadcast);
-
-        ev.id = ev.next;
-        stop = ev.stop;
+        do {
+          retVal = GetEvent(handle, &eventId, iEnd);
+        } while(eventId && retVal == PVR_ERROR_NO_ERROR);
       }
-      else
-      {
-        retVal = result;
-        break;
-      }
-
-    } while(iEnd > stop && ev.id != 0);
-  }
-  else
-  {
-    retVal = PVR_ERROR_UNKNOWN;
+    }
   }
 
   return retVal;
@@ -547,13 +513,18 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method",      "addDvrEntry");
-  htsmsg_add_u32(msg, "eventId",     -1); // XXX tvheadend doesn't correct epg tags with wrong start and end times, so we'll use xbmc's values
-  htsmsg_add_str(msg, "title",       timer.strTitle);
-  htsmsg_add_u32(msg, "start",       startTime);
-  htsmsg_add_u32(msg, "stop",        timer.endTime);
-  htsmsg_add_u32(msg, "channelId",   timer.iClientChannelUid);
+  if ((m_session->GetProtocol() >= 6) && timer.iEpgUid) {
+    htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
+    htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
+    htsmsg_add_s64(msg, "stopExtra",   timer.iMarginEnd);
+  } else {
+    htsmsg_add_str(msg, "title",       timer.strTitle);
+    htsmsg_add_u32(msg, "start",       startTime);
+    htsmsg_add_u32(msg, "stop",        timer.endTime);
+    htsmsg_add_u32(msg, "channelId",   timer.iClientChannelUid);
+    htsmsg_add_str(msg, "description", timer.strSummary);
+  }
   htsmsg_add_u32(msg, "priority",    prio);
-  htsmsg_add_str(msg, "description", timer.strSummary);
   htsmsg_add_str(msg, "creator",     "XBMC");
 
   CHTSResult result;
@@ -771,24 +742,16 @@ STags CHTSPData::GetTags()
   return m_tags;
 }
 
-PVR_ERROR CHTSPData::GetEvent(SEvent& ev, uint32_t id)
+PVR_ERROR CHTSPData::GetEvent(ADDON_HANDLE handle, uint32_t *id, time_t stop)
 {
-  if(id == 0)
+  if(*id == 0)
   {
-    ev.Clear();
     return PVR_ERROR_UNKNOWN;
-  }
-
-  SEvents::iterator it = m_events.find(id);
-  if(it != m_events.end())
-  {
-    ev = it->second;
-    return PVR_ERROR_NO_ERROR;
   }
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method", "getEvent");
-  htsmsg_add_u32(msg, "eventId", id);
+  htsmsg_add_u32(msg, "eventId", *id);
 
   CHTSResult result;
   ReadResult(msg, result);
@@ -798,13 +761,55 @@ PVR_ERROR CHTSPData::GetEvent(SEvent& ev, uint32_t id)
     return result.status;
   }
 
-  if (ParseEvent(result.message, id, ev))
+  if (ParseEvent(handle, result.message, id, stop))
   {
-    m_events[id] = ev;
     return PVR_ERROR_NO_ERROR;
   }
 
   return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR CHTSPData::GetEvents(ADDON_HANDLE handle, uint32_t cid, time_t stop)
+{
+  PVR_ERROR retVal = PVR_ERROR_NO_ERROR;
+
+  if (cid == 0)
+  {
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "getEvents");
+  htsmsg_add_u32(msg, "channelId", cid);
+  htsmsg_add_s64(msg, "maxTime", stop);
+
+  CHTSResult result;
+  ReadResult(msg, result);
+  if(result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to get events for %d", __FUNCTION__, cid);
+    return result.status;
+  }
+
+  if (!(msg = htsmsg_get_list(result.message, "events"))) {
+    XBMC->Log(LOG_DEBUG, "%s - failed to get events for %d", __FUNCTION__, cid);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  htsmsg_t *e;
+  htsmsg_field_t *f;
+  HTSMSG_FOREACH(f, msg)
+  {
+    if ((e = htsmsg_get_map_by_field(f)))
+    {
+      if (!ParseEvent(handle, e, NULL, stop))
+      {
+        retVal = PVR_ERROR_UNKNOWN;
+      }
+    }
+  }
+
+  return retVal;
 }
 
 bool CHTSPData::SendEnableAsync()
@@ -993,64 +998,83 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
    PVR->TriggerRecordingUpdate();
 }
 
-bool CHTSPData::ParseEvent(htsmsg_t* msg, uint32_t id, SEvent &event)
+bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end)
 {
-  uint32_t start, stop, next, chan_id, content;
-  const char *title, *desc, *ext_desc;
-  if(         htsmsg_get_u32(msg, "start", &start)
-  ||          htsmsg_get_u32(msg, "stop" , &stop)
-  || (title = htsmsg_get_str(msg, "title")) == NULL)
+  uint32_t eventId, channelId, content, nextId, stars, age;
+  int64_t start, stop, aired;
+  const char *title, *subtitle, *desc, *summary, *image;
+
+  /* Required fields */
+  if(         htsmsg_get_u32(msg, "eventId",   &eventId)
+  ||          htsmsg_get_u32(msg, "channelId", &channelId)
+  ||          htsmsg_get_s64(msg, "start",     &start)
+  ||          htsmsg_get_s64(msg, "stop" ,     &stop)
+  || (title = htsmsg_get_str(msg, "title")) == NULL
+  || (id && (*id != eventId)))
   {
     XBMC->Log(LOG_DEBUG, "%s - malformed event", __FUNCTION__);
     htsmsg_print(msg);
     return false;
   }
-  event.Clear();
-  event.id    = id;
-  event.start = start;
-  event.stop  = stop;
-  event.title = title;
 
+  /* Optional fields */
+  summary  = htsmsg_get_str(msg, "summary");
+  subtitle = htsmsg_get_str(msg, "subtitle");
   desc     = htsmsg_get_str(msg, "description");
-  ext_desc = htsmsg_get_str(msg, "ext_text");
-
-  if (desc && ext_desc)
-  {
-    string strBuf = desc;
-    strBuf.append(ext_desc);
-    event.descs = strBuf;
-  }
-  else if (desc)
-    event.descs = desc;
-  else if (ext_desc)
-    event.descs = ext_desc;
-  else
-    event.descs = "";
-
-  if(htsmsg_get_u32(msg, "nextEventId", &next))
-    event.next = 0;
-  else
-    event.next = next;
-  if(htsmsg_get_u32(msg, "channelId", &chan_id))
-    event.chan_id = -1;
-  else
-    event.chan_id = chan_id;
-  if(htsmsg_get_u32(msg, "contentType", &content))
-    event.content = -1;
-  else
-    event.content = content;
+  image    = htsmsg_get_str(msg, "image");
+  content  = htsmsg_get_u32_or_default(msg, "contentType", 0);
+  nextId   = htsmsg_get_u32_or_default(msg, "nextEventId", 0);
+  stars    = htsmsg_get_u32_or_default(msg, "starRating", 0);
+  age      = htsmsg_get_u32_or_default(msg, "ageRating", 0);
+  htsmsg_get_s64(msg, "firstAired", &aired);
 
   XBMC->Log(LOG_DEBUG, "%s - id:%u, chan_id:%u, title:'%s', genre_type:%u, genre_sub_type:%u, desc:'%s', start:%u, stop:%u, next:%u"
                     , __FUNCTION__
-                    , event.id
-                    , event.chan_id
-                    , event.title.c_str()
-                    , event.content & 0x0F
-                    , event.content & 0xF0
-                    , event.descs.c_str()
-                    , event.start
-                    , event.stop
-                    , event.next);
+                    , eventId
+                    , channelId
+                    , title
+                    , content & 0x0F
+                    , content & 0xF0
+                    , desc
+                    , start
+                    , stop
+                    , nextId);
+
+  /* Broadcast */
+  EPG_TAG broadcast;
+  memset(&broadcast, 0, sizeof(EPG_TAG));
+
+  broadcast.iUniqueBroadcastId  = eventId;
+  broadcast.strTitle            = title;
+  broadcast.iChannelNumber      = channelId;
+  broadcast.startTime           = start;
+  broadcast.endTime             = stop;
+  broadcast.strPlotOutline      = summary ?: "";
+  broadcast.strPlot             = desc ?: "";
+  broadcast.strIconPath         = image ?: "";
+  broadcast.iGenreType          = (content & 0x0F) << 4;
+  broadcast.iGenreSubType       = content & 0xF0;
+  broadcast.strGenreDescription = ""; // unused
+  broadcast.firstAired          = aired;
+  broadcast.iParentalRating     = age;
+  broadcast.iStarRating         = stars;
+  broadcast.bNotify             = false;
+  broadcast.iSeriesNumber
+    = htsmsg_get_u32_or_default(msg, "seasonNumber", 0);
+  broadcast.iEpisodeNumber
+    = htsmsg_get_u32_or_default(msg, "episodeNumber", 0);
+  broadcast.iEpisodePartNumber
+    = htsmsg_get_u32_or_default(msg, "partNumber", 0);
+  broadcast.strEpisodeName      = subtitle ?: "";
+
+  /* Post to PVR */
+  PVR->TransferEpgEntry(handle, &broadcast);
+
+  /* Update next */
+  if (id && (stop < end))
+  {
+    *id = nextId;
+  }
 
   return true;
 }
