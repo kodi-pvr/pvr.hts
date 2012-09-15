@@ -246,9 +246,9 @@ inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
 {
   stream.iWidth  = htsmsg_get_u32_or_default(msg, "width" , 0);
   stream.iHeight = htsmsg_get_u32_or_default(msg, "height" , 0);
-  unsigned int den = htsmsg_get_u32_or_default(msg, "aspect_den", 1));
+  unsigned int den = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
   if(den)
-    stream.fAspect = (float) (htsmsg_get_u32_or_default(msg, "aspect_num", 1) / den;
+    stream.fAspect = (float)htsmsg_get_u32_or_default(msg, "aspect_num", 1) / den;
   else
     stream.fAspect = 0.0f;
 }
