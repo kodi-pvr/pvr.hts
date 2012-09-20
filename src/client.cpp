@@ -23,14 +23,17 @@
 #include "xbmc_pvr_dll.h"
 #include "HTSPData.h"
 #include "HTSPDemux.h"
+#include "platform/threads/mutex.h"
+#include "platform/util/atomic.h"
 
 using namespace std;
 using namespace ADDON;
+using namespace PLATFORM;
 
 bool         m_bCreated  = false;
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 int          g_iClientId = -1;
-unsigned int g_iPacketSequence = 0;
+long         g_iPacketSequence = 0;
 
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
@@ -50,6 +53,23 @@ CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHTSPDemux *           HTSPDemuxer    = NULL;
 CHTSPData *            HTSPData       = NULL;
+CMutex g_seqMutex;
+
+uint32_t HTSPNextSequenceNumber(void)
+{
+  long lSequence = atomic_inc(&g_iPacketSequence);
+
+  if ((uint32_t)lSequence != lSequence)
+  {
+    CLockObject lock(g_seqMutex);
+    if ((uint32_t)g_iPacketSequence != g_iPacketSequence)
+      g_iPacketSequence = 0;
+
+    lSequence = atomic_inc(&g_iPacketSequence);
+  }
+
+  return (uint32_t)lSequence;
+}
 
 extern "C" {
 

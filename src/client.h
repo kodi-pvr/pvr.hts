@@ -20,6 +20,7 @@
  *
  */
 
+#include "platform/os.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 
@@ -37,9 +38,10 @@ extern std::string               g_strUsername;
 extern std::string               g_strPassword;
 extern int                       g_iConnectTimeout;
 extern int                       g_iResponseTimeout;
-extern unsigned int              g_iPacketSequence;
 extern bool                      g_bShowTimerNotifications;
 extern std::string               g_szUserPath;
 extern std::string               g_szClientPath;
 extern ADDON::CHelper_libXBMC_addon *   XBMC;
 extern CHelper_libXBMC_pvr *     PVR;
+
+uint32_t HTSPNextSequenceNumber(void);

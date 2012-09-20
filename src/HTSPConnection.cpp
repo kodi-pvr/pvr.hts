@@ -216,7 +216,7 @@ htsmsg_t* CHTSPConnection::ReadResult(htsmsg_t* m, bool sequence)
   uint32_t iSequence = 0;
   if(sequence)
   {
-    iSequence = mvp_atomic_inc(&g_iPacketSequence);
+    iSequence = HTSPNextSequenceNumber();
     htsmsg_add_u32(m, "seq", iSequence);
   }
 

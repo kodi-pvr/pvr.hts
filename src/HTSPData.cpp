@@ -113,7 +113,7 @@ void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
     return;
   }
 
-  uint32_t seq = mvp_atomic_inc(&g_iPacketSequence);
+  uint32_t seq = HTSPNextSequenceNumber();
 
   SMessage &message(m_queue[seq]);
   message.event = new CEvent;
