@@ -233,22 +233,23 @@ PVR_ERROR CHTSPData::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &channel, tim
 {
   PVR_ERROR retVal = PVR_ERROR_NO_ERROR;
   SChannels channels = GetChannels();
-  int iProtocol = m_session->GetProtocol();
 
   if (channels.find(channel.iUniqueId) != channels.end())
   {
 
     /* Full channel update */
-    if (iProtocol >= 6)
+    if (GetProtocol() >= 6)
+    {
       retVal = GetEvents(handle, channel.iUniqueId, iEnd);
-
+    }
     /* Event at a time */
     else
     {
       uint32_t eventId = channels[channel.iUniqueId].event;
       if (eventId != 0)
       {
-        do {
+        do
+        {
           retVal = GetEvent(handle, &eventId, iEnd);
         } while(eventId && retVal == PVR_ERROR_NO_ERROR);
       }
@@ -513,11 +514,14 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method",      "addDvrEntry");
-  if ((m_session->GetProtocol() >= 6) && timer.iEpgUid) {
+  if ((GetProtocol() >= 6) && timer.iEpgUid)
+  {
     htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
     htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
     htsmsg_add_s64(msg, "stopExtra",   timer.iMarginEnd);
-  } else {
+  }
+  else
+  {
     htsmsg_add_str(msg, "title",       timer.strTitle);
     htsmsg_add_u32(msg, "start",       startTime);
     htsmsg_add_u32(msg, "stop",        timer.endTime);
@@ -1059,12 +1063,9 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   broadcast.iParentalRating     = age;
   broadcast.iStarRating         = stars;
   broadcast.bNotify             = false;
-  broadcast.iSeriesNumber
-    = htsmsg_get_u32_or_default(msg, "seasonNumber", 0);
-  broadcast.iEpisodeNumber
-    = htsmsg_get_u32_or_default(msg, "episodeNumber", 0);
-  broadcast.iEpisodePartNumber
-    = htsmsg_get_u32_or_default(msg, "partNumber", 0);
+  broadcast.iSeriesNumber       = htsmsg_get_u32_or_default(msg, "seasonNumber", 0);
+  broadcast.iEpisodeNumber      = htsmsg_get_u32_or_default(msg, "episodeNumber", 0);
+  broadcast.iEpisodePartNumber  = htsmsg_get_u32_or_default(msg, "partNumber", 0);
   broadcast.strEpisodeName      = subtitle ?: "";
 
   /* Post to PVR */
@@ -1072,9 +1073,7 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
 
   /* Update next */
   if (id && (stop < end))
-  {
     *id = nextId;
-  }
 
   return true;
 }
