@@ -1053,26 +1053,26 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   broadcast.iChannelNumber      = channelId;
   broadcast.startTime           = start;
   broadcast.endTime             = stop;
-  broadcast.strPlotOutline      = summary ?: "";
-  broadcast.strPlot             = desc ?: "";
-  broadcast.strIconPath         = image ?: "";
+  broadcast.strPlotOutline      = summary ? summary : "";
+  broadcast.strPlot             = desc ? desc : "";
+  broadcast.strIconPath         = image ? image : "";
   broadcast.iGenreType          = (content & 0x0F) << 4;
   broadcast.iGenreSubType       = content & 0xF0;
   broadcast.strGenreDescription = ""; // unused
-  broadcast.firstAired          = aired;
+  broadcast.firstAired          = (time_t) aired;
   broadcast.iParentalRating     = age;
   broadcast.iStarRating         = stars;
   broadcast.bNotify             = false;
   broadcast.iSeriesNumber       = htsmsg_get_u32_or_default(msg, "seasonNumber", 0);
   broadcast.iEpisodeNumber      = htsmsg_get_u32_or_default(msg, "episodeNumber", 0);
   broadcast.iEpisodePartNumber  = htsmsg_get_u32_or_default(msg, "partNumber", 0);
-  broadcast.strEpisodeName      = subtitle ?: "";
+  broadcast.strEpisodeName      = subtitle ? subtitle : "";
 
   /* Post to PVR */
   PVR->TransferEpgEntry(handle, &broadcast);
 
   /* Update next */
-  if (id && (stop < end))
+  if (id && ((time_t)stop < end))
     *id = nextId;
   else if (id)
     *id = 0;
