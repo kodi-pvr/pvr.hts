@@ -1004,15 +1004,15 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
 
 bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end)
 {
-  uint32_t eventId, channelId, content, nextId, stars, age;
-  int64_t start, stop, aired;
+  uint32_t eventId, channelId, content, nextId, stars, age, start, stop;
+  int64_t aired;
   const char *title, *subtitle, *desc, *summary, *image;
 
   /* Required fields */
   if(         htsmsg_get_u32(msg, "eventId",   &eventId)
   ||          htsmsg_get_u32(msg, "channelId", &channelId)
-  ||          htsmsg_get_s64(msg, "start",     &start)
-  ||          htsmsg_get_s64(msg, "stop" ,     &stop)
+  ||          htsmsg_get_u32(msg, "start",     &start)
+  ||          htsmsg_get_u32(msg, "stop" ,     &stop)
   || (title = htsmsg_get_str(msg, "title")) == NULL
   || (id && (*id != eventId)))
   {
@@ -1074,6 +1074,8 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   /* Update next */
   if (id && (stop < end))
     *id = nextId;
+  else if (id)
+    *id = 0;
 
   return true;
 }
