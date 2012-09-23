@@ -302,7 +302,7 @@ bool CHTSPConnection::SendGreeting(void)
 
   m_strServerName = server;
   m_strVersion    = version;
-  m_iProtocol     = (6 > proto) ? proto : 6;
+  m_iProtocol     = proto;
   XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - using protocol v%d", __FUNCTION__, m_iProtocol);
 
   if(chall && chall_len)
