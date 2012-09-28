@@ -411,8 +411,10 @@ PVR_ERROR CHTSPData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANN
       tag.iChannelUniqueId = channel.id;
       tag.iChannelNumber   = channel.num;
 
+#if HTSP_DEBUGGING
       XBMC->Log(LOG_DEBUG, "%s - add channel %s (%d) to group '%s' channel number %d",
           __FUNCTION__, channel.name.c_str(), tag.iChannelUniqueId, group.strGroupName, channel.num);
+#endif
 
       PVR->TransferChannelGroupMember(handle, &tag);
     }
@@ -915,8 +917,10 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
     }
   }
 
+#if HTSP_DEBUGGING
   XBMC->Log(LOG_DEBUG, "%s - id:%u, name:'%s', icon:'%s', event:%u",
       __FUNCTION__, iChannelId, strName ? strName : "(null)", strIconPath ? strIconPath : "(null)", iEventId);
+#endif
 
   if (bChanged)
     PVR->TriggerChannelUpdate();
@@ -990,9 +994,11 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
     recording.error.clear();
   }
 
+#if HTSP_DEBUGGING
   XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s'"
       , __FUNCTION__, recording.id, state, recording.title.c_str()
       , recording.description.c_str());
+#endif
 
   m_recordings[recording.id] = recording;
 
@@ -1032,6 +1038,7 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   age      = htsmsg_get_u32_or_default(msg, "ageRating", 0);
   htsmsg_get_s64(msg, "firstAired", &aired);
 
+#if HTSP_DEBUGGING
   XBMC->Log(LOG_DEBUG, "%s - id:%u, chan_id:%u, title:'%s', genre_type:%u, genre_sub_type:%u, desc:'%s', start:%u, stop:%u, next:%u"
                     , __FUNCTION__
                     , eventId
@@ -1043,6 +1050,7 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
                     , start
                     , stop
                     , nextId);
+#endif
 
   /* Broadcast */
   EPG_TAG broadcast;
@@ -1130,8 +1138,10 @@ void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
     }
   }
 
+#if HTSP_DEBUGGING
   XBMC->Log(LOG_DEBUG, "%s - id:%u, name:'%s', icon:'%s'"
       , __FUNCTION__, id, name ? name : "(null)", icon ? icon : "(null)");
+#endif
 
   PVR->TriggerChannelGroupsUpdate();
 }

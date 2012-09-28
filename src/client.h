@@ -29,6 +29,7 @@
 #define DEFAULT_HTSP_PORT        9982
 #define DEFAULT_CONNECT_TIMEOUT  6
 #define DEFAULT_RESPONSE_TIMEOUT 4
+#define HTSP_DEBUGGING           0
 
 extern bool                      m_bCreated;
 extern std::string               g_strHostname;
