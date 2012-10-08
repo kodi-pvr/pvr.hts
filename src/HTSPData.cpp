@@ -1038,14 +1038,18 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   age      = htsmsg_get_u32_or_default(msg, "ageRating", 0);
   htsmsg_get_s64(msg, "firstAired", &aired);
 
+  /* Fix old genre spec */
+  if (GetProtocol() < 6)
+    content = content << 4;
+
 #if HTSP_DEBUGGING
   XBMC->Log(LOG_DEBUG, "%s - id:%u, chan_id:%u, title:'%s', genre_type:%u, genre_sub_type:%u, desc:'%s', start:%u, stop:%u, next:%u"
                     , __FUNCTION__
                     , eventId
                     , channelId
                     , title
-                    , content & 0x0F
                     , content & 0xF0
+                    , content & 0x0F
                     , desc
                     , start
                     , stop
@@ -1064,8 +1068,8 @@ bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, tim
   broadcast.strPlotOutline      = summary ? summary : "";
   broadcast.strPlot             = desc ? desc : "";
   broadcast.strIconPath         = image ? image : "";
-  broadcast.iGenreType          = (content & 0x0F) << 4;
-  broadcast.iGenreSubType       = content & 0xF0;
+  broadcast.iGenreType          = content & 0xF0;
+  broadcast.iGenreSubType       = content & 0x0F;
   broadcast.strGenreDescription = ""; // unused
   broadcast.firstAired          = (time_t) aired;
   broadcast.iParentalRating     = age;

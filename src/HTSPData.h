@@ -103,7 +103,7 @@ private:
   void ParseChannelUpdate(htsmsg_t* msg);
   void ParseDVREntryDelete(htsmsg_t* msg);
   void ParseDVREntryUpdate(htsmsg_t* msg);
-  static bool ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end);
+  bool ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end);
   void ParseTagRemove(htsmsg_t* msg);
   void ParseTagUpdate(htsmsg_t* msg);
 
