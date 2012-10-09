@@ -18,4 +18,5 @@ libtvheadend_addon_la_SOURCES = src/client.cpp \
                                 src/HTSPConnection.cpp \
                                 src/HTSPData.cpp \
                                 src/HTSPDemux.cpp
+libtvheadend_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

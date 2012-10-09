@@ -12,7 +12,8 @@
     library_linux="XBMC_Tvheadend.pvr"
     library_osx="XBMC_Tvheadend.pvr"
     library_wingl="XBMC_Tvheadend_win32.pvr"
-    library_windx="XBMC_Tvheadend_win32.pvr"/>
+    library_windx="XBMC_Tvheadend_win32.pvr"
+    library_android="libXBMC_Tvheadend.so"/>
   <extension point="xbmc.addon.metadata">
     <summary>XBMC's frontend for Tvheadend</summary>
     <description>Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
