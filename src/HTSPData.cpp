@@ -529,6 +529,7 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
     htsmsg_add_u32(msg, "stop",        timer.endTime);
     htsmsg_add_u32(msg, "channelId",   timer.iClientChannelUid);
     htsmsg_add_str(msg, "description", timer.strSummary);
+    htsmsg_add_u32(msg, "eventId",     -1);
   }
   htsmsg_add_u32(msg, "priority",    prio);
   htsmsg_add_str(msg, "creator",     "XBMC");
