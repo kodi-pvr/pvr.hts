@@ -52,6 +52,8 @@ public:
   htsmsg_t *  ReadResult (htsmsg_t* m, bool sequence = true);
   bool        ReadSuccess(htsmsg_t* m, bool sequence = true, std::string action = "");
 
+  bool        CanTimeshift(void);
+
 private:
   bool SendGreeting(void);
   bool Auth(void);
@@ -69,6 +71,7 @@ private:
   std::string               m_strVersion;
   std::string               m_strHostname;
   bool                      m_bIsConnected;
+  bool                      m_bTimeshiftSupport;
 
   std::deque<htsmsg_t*>     m_queue;
   const unsigned int        m_iQueueSize;

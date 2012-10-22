@@ -278,7 +278,8 @@ bool CHTSPConnection::ReadSuccess(htsmsg_t* m, bool sequence, std::string action
 
 bool CHTSPConnection::SendGreeting(void)
 {
-  htsmsg_t *m;
+  htsmsg_t *m, *cap;
+  htsmsg_field_t *f;
   const char *method, *server, *version;
   const void * chall = NULL;
   size_t chall_len = 0;
@@ -299,6 +300,18 @@ bool CHTSPConnection::SendGreeting(void)
   server  = htsmsg_get_str(m, "servername");
   version = htsmsg_get_str(m, "serverversion");
             htsmsg_get_bin(m, "challenge", &chall, &chall_len);
+  cap     = htsmsg_get_list(m, "servercapability");
+
+  /* Process capabilities */
+  m_bTimeshiftSupport = false;
+  if (cap) {
+    HTSMSG_FOREACH(f, cap) {
+      if (f->hmf_type == HMF_STR) {
+        if (!strcmp("timeshift", f->hmf_str))
+          m_bTimeshiftSupport = true;
+      }
+    }
+  }
 
   m_strServerName = server;
   m_strVersion    = version;
@@ -354,4 +367,9 @@ bool CHTSPConnection::IsConnected(void)
 {
   CLockObject lock(m_mutex);
   return m_bIsConnected && m_socket && m_socket->IsOpen();
+}
+
+bool CHTSPConnection::CanTimeshift(void)
+{
+  return m_bTimeshiftSupport;
 }

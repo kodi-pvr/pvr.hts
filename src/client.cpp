@@ -582,8 +582,22 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
-bool CanPauseStream(void) { return false; }
-bool CanSeekStream(void) { return false; }
-bool SeekTime(int,bool,double*) { return false; }
-void SetSpeed(int) {};
+bool CanPauseStream(void)
+{
+  if (HTSPData)
+    return HTSPData->CanTimeshift();
+  return false;
+}
+bool CanSeekStream(void)
+{
+  if (HTSPData)
+    return HTSPData->CanTimeshift();
+  return false;
+}
+bool SeekTime(int time,bool backward,double *startpts) { return false; }
+void SetSpeed(int speed)
+{
+  if(HTSPDemuxer)
+    HTSPDemuxer->SetSpeed(speed);
+}
 }

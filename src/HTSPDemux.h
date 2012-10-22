@@ -38,6 +38,8 @@ public:
   bool SwitchChannel(const PVR_CHANNEL &channelinfo);
   int CurrentChannel() { return m_channel; }
   bool GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
+  bool SeekTime(int time, bool backward, double *startpts);
+  void SetSpeed(int speed);
 
 protected:
   void ParseSubscriptionStart (htsmsg_t *m);
@@ -45,6 +47,7 @@ protected:
   void ParseSubscriptionStatus(htsmsg_t *m);
   bool SendSubscribe  (int subscription, int channel);
   bool SendUnsubscribe(int subscription);
+  bool SendSpeed      (int subscription, int speed);
   DemuxPacket *ParseMuxPacket(htsmsg_t *m);
 
 private:

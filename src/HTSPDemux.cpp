@@ -64,6 +64,11 @@ void CHTSPDemux::Close()
   m_session->Close();
 }
 
+void CHTSPDemux::SetSpeed(int speed)
+{
+  SendSpeed(m_subs, speed/10);
+}
+
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
   props->iStreamCount = m_Streams.iStreamCount;
@@ -437,6 +442,15 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
   htsmsg_add_s32(m, "channelId"     , channel);
   htsmsg_add_s32(m, "subscriptionId", subscription);
   return m_session->ReadSuccess(m, true, "subscribe to channel");
+}
+
+bool CHTSPDemux::SendSpeed(int subscription, int speed)
+{
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_str(m, "method"        , "subscriptionSpeed");
+  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_s32(m, "speed"         , speed);
+  return m_session->ReadSuccess(m, true, "pause subscription");
 }
 
 bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)
