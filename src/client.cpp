@@ -584,4 +584,6 @@ unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
 bool CanPauseStream(void) { return false; }
 bool CanSeekStream(void) { return false; }
+bool SeekTime(int,bool,double*) { return false; }
+void SetSpeed(int) {};
 }
