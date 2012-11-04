@@ -69,7 +69,6 @@ bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
   props->iStreamCount = m_Streams.iStreamCount;
   for (unsigned int i = 0; i < m_Streams.iStreamCount; i++)
   {
-    props->stream[i].iStreamIndex   = m_Streams.stream[i].iStreamIndex;
     props->stream[i].iPhysicalId    = m_Streams.stream[i].iPhysicalId;
     props->stream[i].iCodecType     = m_Streams.stream[i].iCodecType;
     props->stream[i].iCodecId       = m_Streams.stream[i].iCodecId;
@@ -363,7 +362,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 
     if (bValidStream)
     {
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId  = index;
       if (m_Streams.stream[m_Streams.iStreamCount].iCodecType == AVMEDIA_TYPE_AUDIO)
       {
