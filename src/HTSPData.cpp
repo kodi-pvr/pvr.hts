@@ -45,6 +45,7 @@ CHTSPData::CHTSPData()
   m_bDisconnectWarningDisplayed = false;
   m_bIsStarted = false;
   m_recordingId = 0;
+  m_recordingBuf.alloc(1000000);
 }
 
 CHTSPData::~CHTSPData()
@@ -292,6 +293,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     SRecording recording = it->second;
     CStdString strStreamURL = "http://";
     CStdString strRecordingId;
+    CStdString strDirectory = "/";
     std::string strChannelName = "";
 
     /* lock */
@@ -325,13 +327,26 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
 
     strRecordingId.Format("%i", recording.id);
 
+    if (recording.path != "")
+    {
+      size_t i, idx = recording.path.rfind("/");
+      if (idx == 0 || idx == std::string::npos) {
+        strDirectory = "/";
+      } else {
+        i = recording.path[0] == '/' ? 1 : 0;
+        strDirectory = recording.path.substr(i, idx - i);
+        strDirectory.Replace("/", " - ");
+        strDirectory = "/" + strDirectory;
+      }
+    }
+
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
 
     strncpy(tag.strRecordingId, strRecordingId.c_str(), sizeof(tag.strRecordingId) - 1);
     strncpy(tag.strTitle, recording.title.c_str(), sizeof(tag.strTitle) - 1);
     strncpy(tag.strStreamURL, strStreamURL.c_str(), sizeof(tag.strStreamURL) - 1);
-    tag.strDirectory[0] = '/';
+    strncpy(tag.strDirectory, strDirectory.c_str(), sizeof(tag.strDirectory) - 1);
     strncpy(tag.strPlot, recording.description.c_str(), sizeof(tag.strPlot) - 1);
     strncpy(tag.strChannelName, strChannelName.c_str(), sizeof(tag.strChannelName) - 1);
     tag.recordingTime  = recording.start;
@@ -987,6 +1002,11 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
   else
     recording.title = str;
 
+  if((str = htsmsg_get_str(msg, "path")) == NULL)
+    recording.path = "";
+  else
+    recording.path = str;
+
   if((str = htsmsg_get_str(msg, "description")) == NULL)
     recording.description = "";
   else
@@ -1184,6 +1204,7 @@ bool CHTSPData::OpenRecordedStream(const PVR_RECORDING &recording)
     return false;
   m_recordingId  = id;
   m_recordingOff = 0;
+  m_recordingBuf.reset();
 
   return true;
 }
@@ -1207,32 +1228,40 @@ void CHTSPData::CloseRecordedStream(void)
 
 int CHTSPData::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
+  ssize_t     ret;
   if (GetProtocol() < 7) return 0;
   if (!m_recordingId) return -1;
-  htsmsg_t *msg = htsmsg_create_map();
-  htsmsg_add_str(msg, "method", "fileRead");
-  htsmsg_add_u32(msg, "id", m_recordingId);
-  htsmsg_add_s64(msg, "size", (int64_t)iBufferSize);
-  CHTSResult result;
-  ReadResult(msg, result);
-  if (result.status != PVR_ERROR_NO_ERROR)
-  {
-    XBMC->Log(LOG_DEBUG, "%s - failed to fileRead", __FUNCTION__);
-    return -1;
+
+  /* Fetch data */
+  if (m_recordingBuf.avail() <= iBufferSize) {
+    const void *buf;
+    size_t      len;
+    htsmsg_t *msg = htsmsg_create_map();
+    htsmsg_add_str(msg, "method", "fileRead");
+    htsmsg_add_u32(msg, "id", m_recordingId);
+    htsmsg_add_s64(msg, "size", m_recordingBuf.free());
+    CHTSResult result;
+    ReadResult(msg, result);
+    if (result.status != PVR_ERROR_NO_ERROR)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - failed to fileRead", __FUNCTION__);
+      return -1;
+    }
+    if (htsmsg_get_bin(result.message, "data", &buf, &len)) {
+      XBMC->Log(LOG_DEBUG, "%s - failed fileRead no buffer", __FUNCTION__);
+      return -1;
+    }
+    ret = m_recordingBuf.write(buf, len);
+    if (ret != len) {
+      XBMC->Log(LOG_ERROR, "%s - CircBuffer::write() partial %ld != %ld", __FUNCTION__, ret, len);
+      return -1;
+    }
   }
-  const void *buf;
-  size_t      len;
-  if (htsmsg_get_bin(result.message, "data", &buf, &len)) {
-    XBMC->Log(LOG_DEBUG, "%s - failed fileRead buffer not found", __FUNCTION__);
-    return -1;
-  }
-  if (len > iBufferSize) {
-    XBMC->Log(LOG_DEBUG, "%s - failed fileRead too much data", __FUNCTION__);
-    return -1;
-  }
-  memcpy(pBuffer, buf, len);
-  m_recordingOff += len;
-  return len;
+
+  /* Read */
+  ret = m_recordingBuf.read(pBuffer, iBufferSize);
+  m_recordingOff += ret;
+  return (int)ret;
 }
 
 long long CHTSPData::SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
@@ -1263,7 +1292,8 @@ long long CHTSPData::SeekRecordedStream(long long iPosition, int iWhence /* = SE
     return -1;
   }
   m_recordingOff = off;
-  return off;
+  m_recordingBuf.reset();
+  return m_recordingOff;
 }
 
 long long CHTSPData::PositionRecordedStream(void)

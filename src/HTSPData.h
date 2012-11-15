@@ -24,6 +24,7 @@
 #include "client.h"
 #include "platform/threads/threads.h"
 #include "HTSPConnection.h"
+#include "CircBuffer.h"
 
 class CHTSResult
 {
@@ -127,5 +128,6 @@ private:
   bool                       m_bDisconnectWarningDisplayed;
   uint32_t                   m_recordingId;
   int64_t                    m_recordingOff;
+  CCircBuffer                m_recordingBuf;
 };
 

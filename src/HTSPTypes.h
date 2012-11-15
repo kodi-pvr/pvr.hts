@@ -174,6 +174,7 @@ struct SRecording
   uint32_t         start;
   uint32_t         stop;
   std::string      title;
+  std::string      path;
   std::string      description;
   ERecordingState  state;
   std::string      error;
