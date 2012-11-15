@@ -79,6 +79,13 @@ public:
   unsigned int GetNumChannelGroups(void);
   PVR_ERROR    GetChannelGroups(ADDON_HANDLE handle);
   PVR_ERROR    GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
+  bool         OpenRecordedStream(const PVR_RECORDING &recording);
+  void         CloseRecordedStream(void);
+  int          ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  long long    SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */);
+  long long    PositionRecordedStream(void);
+  long long    LengthRecordedStream(void);
+
 
 protected:
   virtual void *Process(void);
@@ -118,5 +125,7 @@ private:
   SRecordings                m_recordings;
   int                        m_iReconnectRetries;
   bool                       m_bDisconnectWarningDisplayed;
+  uint32_t                   m_recordingId;
+  int64_t                    m_recordingOff;
 };
 
