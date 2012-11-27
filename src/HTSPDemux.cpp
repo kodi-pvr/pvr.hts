@@ -438,9 +438,10 @@ bool CHTSPDemux::SendUnsubscribe(int subscription)
 bool CHTSPDemux::SendSubscribe(int subscription, int channel)
 {
   htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_str(m, "method"        , "subscribe");
-  htsmsg_add_s32(m, "channelId"     , channel);
-  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_str(m, "method"         , "subscribe");
+  htsmsg_add_s32(m, "channelId"      , channel);
+  htsmsg_add_s32(m, "subscriptionId" , subscription);
+  htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
   return m_session->ReadSuccess(m, true, "subscribe to channel");
 }
 
