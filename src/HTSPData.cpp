@@ -44,6 +44,8 @@ CHTSPData::CHTSPData()
   m_session = new CHTSPConnection();
   m_bDisconnectWarningDisplayed = false;
   m_bIsStarted = false;
+  m_recordingId = 0;
+  m_recordingBuf.alloc(1000000);
 }
 
 CHTSPData::~CHTSPData()
@@ -289,9 +291,9 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
   for(SRecordings::const_iterator it = recordings.begin(); it != recordings.end(); ++it)
   {
     SRecording recording = it->second;
-
     CStdString strStreamURL = "http://";
     CStdString strRecordingId;
+    CStdString strDirectory = "/";
     std::string strChannelName = "";
 
     /* lock */
@@ -301,20 +303,42 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
       if (itr != m_channels.end())
         strChannelName = itr->second.name.c_str();
 
-      if (g_strUsername != "")
-      {
-        strStreamURL += g_strUsername;
-        if (g_strPassword != "")
+      /* HTSPv7+ - use HTSP */
+      if (GetProtocol() >= 7) {
+        strStreamURL = "";
+
+      /* HTSPv6- - use HTTP */
+      } else {
+        strStreamURL = "http://";
+
+        if (g_strUsername != "")
         {
-          strStreamURL += ":";
-          strStreamURL += g_strPassword;
+          strStreamURL += g_strUsername;
+          if (g_strPassword != "")
+          {
+            strStreamURL += ":";
+            strStreamURL += g_strPassword;
+          }
+          strStreamURL += "@";
         }
-        strStreamURL += "@";
+        strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
       }
-      strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
     }
 
     strRecordingId.Format("%i", recording.id);
+
+    if (recording.path != "")
+    {
+      size_t i, idx = recording.path.rfind("/");
+      if (idx == 0 || idx == std::string::npos) {
+        strDirectory = "/";
+      } else {
+        i = recording.path[0] == '/' ? 1 : 0;
+        strDirectory = recording.path.substr(i, idx - i);
+        strDirectory.Replace("/", " - ");
+        strDirectory = "/" + strDirectory;
+      }
+    }
 
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
@@ -322,7 +346,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     strncpy(tag.strRecordingId, strRecordingId.c_str(), sizeof(tag.strRecordingId) - 1);
     strncpy(tag.strTitle, recording.title.c_str(), sizeof(tag.strTitle) - 1);
     strncpy(tag.strStreamURL, strStreamURL.c_str(), sizeof(tag.strStreamURL) - 1);
-    tag.strDirectory[0] = '/';
+    strncpy(tag.strDirectory, strDirectory.c_str(), sizeof(tag.strDirectory) - 1);
     strncpy(tag.strPlot, recording.description.c_str(), sizeof(tag.strPlot) - 1);
     strncpy(tag.strChannelName, strChannelName.c_str(), sizeof(tag.strChannelName) - 1);
     tag.recordingTime  = recording.start;
@@ -978,6 +1002,11 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
   else
     recording.title = str;
 
+  if((str = htsmsg_get_str(msg, "path")) == NULL)
+    recording.path = "";
+  else
+    recording.path = str;
+
   if((str = htsmsg_get_str(msg, "description")) == NULL)
     recording.description = "";
   else
@@ -1149,4 +1178,149 @@ void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
 #endif
 
   PVR->TriggerChannelGroupsUpdate();
+}
+
+bool CHTSPData::OpenRecordedStream(const PVR_RECORDING &recording)
+{
+  if (GetProtocol() < 7) return false;
+
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "fileOpen");
+
+  CStdString strDvrPath;
+  strDvrPath.Format("dvr/%s", recording.strRecordingId);
+  htsmsg_add_str(msg, "file", strDvrPath.c_str());
+
+  CHTSResult result;
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileOpen", __FUNCTION__);
+    return false;
+  }
+
+  uint32_t id;
+  if (htsmsg_get_u32(result.message, "id", &id))
+    return false;
+  m_recordingId  = id;
+  m_recordingOff = 0;
+  m_recordingBuf.reset();
+
+  return true;
+}
+
+void CHTSPData::CloseRecordedStream(void)
+{
+  if (GetProtocol() < 7) return;
+  if (!m_recordingId) return;
+
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "fileClose");
+  htsmsg_add_u32(msg, "id", m_recordingId);
+  CHTSResult result;
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileClose", __FUNCTION__);
+  }
+  m_recordingId = 0;
+}
+
+int CHTSPData::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  ssize_t     ret;
+  if (GetProtocol() < 7) return 0;
+  if (!m_recordingId) return -1;
+
+  /* Fetch data */
+  if (m_recordingBuf.avail() <= iBufferSize) {
+    const void *buf;
+    size_t      len;
+    htsmsg_t *msg = htsmsg_create_map();
+    htsmsg_add_str(msg, "method", "fileRead");
+    htsmsg_add_u32(msg, "id", m_recordingId);
+    htsmsg_add_s64(msg, "size", m_recordingBuf.free());
+    CHTSResult result;
+    ReadResult(msg, result);
+    if (result.status != PVR_ERROR_NO_ERROR)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - failed to fileRead", __FUNCTION__);
+      return -1;
+    }
+    if (htsmsg_get_bin(result.message, "data", &buf, &len)) {
+      XBMC->Log(LOG_DEBUG, "%s - failed fileRead no buffer", __FUNCTION__);
+      return -1;
+    }
+    ret = m_recordingBuf.write(buf, len);
+    if (ret != len) {
+      XBMC->Log(LOG_ERROR, "%s - CircBuffer::write() partial %ld != %ld", __FUNCTION__, ret, len);
+      return -1;
+    }
+  }
+
+  /* Read */
+  ret = m_recordingBuf.read(pBuffer, iBufferSize);
+  m_recordingOff += ret;
+  return (int)ret;
+}
+
+long long CHTSPData::SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+  if (GetProtocol() < 7) return 0;
+  if (!m_recordingId)    return -1;
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "fileSeek");
+  htsmsg_add_u32(msg, "id",     m_recordingId);
+  htsmsg_add_s64(msg, "offset", iPosition);
+  if (iWhence == SEEK_CUR)
+    htsmsg_add_str(msg, "whence", "SEEK_CUR");
+  else if (iWhence == SEEK_END)
+    htsmsg_add_str(msg, "whence", "SEEK_END");
+  //else
+  //  htsmsg_add_str(msg, "whence", SEEK_SET");
+  // Note: last is default so no need to send
+  CHTSResult result;
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileSeek", __FUNCTION__);
+    return -1;
+  }
+  int64_t off;
+  if (htsmsg_get_s64(result.message, "offset", &off)) {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileSeek no offset", __FUNCTION__);
+    return -1;
+  }
+  m_recordingOff = off;
+  m_recordingBuf.reset();
+  return m_recordingOff;
+}
+
+long long CHTSPData::PositionRecordedStream(void)
+{
+  if (GetProtocol() < 7) return 0;
+  return m_recordingOff;
+}
+
+long long CHTSPData::LengthRecordedStream(void)
+{
+  if (GetProtocol() < 7) return 0;
+  if (!m_recordingOff) return -1;
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "fileStat");
+  htsmsg_add_u32(msg, "id",     m_recordingId);
+  CHTSResult result;
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileStat", __FUNCTION__);
+    return -1;
+  }
+  int64_t size;
+  if (htsmsg_get_s64(result.message, "size", &size))
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to fileStat no size", __FUNCTION__);
+    return -1;
+  }
+  return size;
 }

@@ -289,7 +289,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 6);
+  htsmsg_add_u32(m, "htspversion", 7);
 
   /* read welcome */
   if((m = ReadResult(m)) == NULL)
