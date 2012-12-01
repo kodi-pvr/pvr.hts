@@ -21,7 +21,7 @@
  *
  */
 
-#include <sys/types.h>
+#include "platform/os.h"
 
 class CCircBuffer
 {
@@ -37,11 +37,11 @@ public:
   size_t  avail  (void) const;
   size_t  free   (void) const;
 
-  ssize_t write  (const void *data, size_t len);
-  ssize_t read   (void *data, size_t len);
+  ssize_t write  (const unsigned char* data, size_t len);
+  ssize_t read   (unsigned char* data, size_t len);
 
 protected:
-  void*  m_buffer;
+  unsigned char * m_buffer;
   size_t m_alloc;
   size_t m_size;
   size_t m_count;

@@ -38,7 +38,7 @@ void CCircBuffer::alloc(size_t size)
 {
   if (size > m_alloc) {
     m_alloc  = size;
-    m_buffer = realloc(m_buffer, size);
+    m_buffer = (unsigned char*) realloc(m_buffer, size);
   }
   m_size = size;
   reset();
@@ -77,7 +77,7 @@ size_t CCircBuffer::free(void) const
   return m_size - m_count - 1;
 }
 
-ssize_t CCircBuffer::write(const void *data, size_t len)
+ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 {
   size_t pt1, pt2;
   if (m_size < 2)
@@ -102,7 +102,7 @@ ssize_t CCircBuffer::write(const void *data, size_t len)
   return len;
 }
 
-ssize_t CCircBuffer::read(void *data, size_t len)
+ssize_t CCircBuffer::read(unsigned char* data, size_t len)
 {
   size_t pt1, pt2;
   if (m_size < 2)
