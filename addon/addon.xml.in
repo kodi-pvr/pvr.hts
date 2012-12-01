@@ -92,6 +92,6 @@
     <disclaimer lang="sl">To je nestabilna programska oprema! Avtorji niso odgovorni za neuspela snemanja, nepravilne časovnike, zapravljen čas in katerikoli drug neželen učinek...</disclaimer>
     <disclaimer lang="sv">Detta är ostabil programvara! Upphovsmännen är inte ansvariga för felaktiga inspelningar, inkorrekta timers, slösad tid eller andra oönskade effekter..</disclaimer>
     <disclaimer lang="zh">这是不稳定版的软件！作者不对录制失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
-    <platform>all</platform>
+    <platform>@OS@</platform>
   </extension>
 </addon>
