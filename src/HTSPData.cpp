@@ -1251,7 +1251,7 @@ int CHTSPData::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSi
       XBMC->Log(LOG_DEBUG, "%s - failed fileRead no buffer", __FUNCTION__);
       return -1;
     }
-    ret = m_recordingBuf.write(buf, len);
+    ret = m_recordingBuf.write((unsigned char*)buf, len);
     if (ret != len) {
       XBMC->Log(LOG_ERROR, "%s - CircBuffer::write() partial %ld != %ld", __FUNCTION__, ret, len);
       return -1;

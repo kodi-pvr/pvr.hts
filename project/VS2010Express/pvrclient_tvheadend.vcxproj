@@ -38,12 +38,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.pvr</TargetExt>
     <TargetName>XBMC_Tvheadend_win32</TargetName>
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.pvr</TargetExt>
     <TargetName>XBMC_Tvheadend_win32</TargetName>
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
@@ -78,12 +76,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\CircBuffer.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\HTSPConnection.cpp" />
     <ClCompile Include="..\..\src\HTSPData.cpp" />
     <ClCompile Include="..\..\src\HTSPDemux.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\CircBuffer.h" />
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\HTSPConnection.h" />
     <ClInclude Include="..\..\src\HTSPData.h" />
