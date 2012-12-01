@@ -50,6 +50,9 @@ protected:
   bool SendSpeed      (int subscription, int speed);
   DemuxPacket *ParseMuxPacket(htsmsg_t *m);
 
+  bool Connect(void);
+  bool CheckConnection(void);
+
 private:
   bool ParseQueueStatus(htsmsg_t* msg);
   bool ParseSignalStatus(htsmsg_t* msg);
