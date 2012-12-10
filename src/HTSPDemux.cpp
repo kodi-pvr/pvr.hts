@@ -366,6 +366,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_AAC;
     }
+    else if(!strcmp(type, "AACLATM"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType  = AVMEDIA_TYPE_AUDIO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId    = CODEC_ID_AAC_LATM;
+    }
     else if(!strcmp(type, "MPEG2VIDEO"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
