@@ -46,6 +46,7 @@ CHTSPConnection::CHTSPConnection() :
     m_strPassword(g_strPassword),
     m_strHostname(g_strHostname),
     m_bIsConnected(false),
+    m_bTimeshiftSupport(false),
     m_iQueueSize(1000)
 {
 }
@@ -317,7 +318,7 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
-  XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - using protocol v%d", __FUNCTION__, m_iProtocol);
+  XBMC->Log(LOG_NOTICE, "CHTSPConnection - %s - connection opened, protocol v%d%s", __FUNCTION__, m_iProtocol, m_bTimeshiftSupport ? " (timeshift enabled)" : "");
 
   if(chall && chall_len)
   {
