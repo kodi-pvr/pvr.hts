@@ -20,6 +20,7 @@
  */
 
 #include "HTSPData.h"
+#include "platform/util/util.h"
 
 extern "C" {
 #include "platform/util/atomic.h"
@@ -51,7 +52,7 @@ CHTSPData::CHTSPData()
 CHTSPData::~CHTSPData()
 {
   Close();
-  delete m_session;
+  SAFE_DELETE(m_session);
 }
 
 bool CHTSPData::Open()
