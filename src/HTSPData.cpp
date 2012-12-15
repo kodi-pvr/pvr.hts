@@ -52,7 +52,7 @@ CHTSPData::CHTSPData()
 CHTSPData::~CHTSPData()
 {
   Close();
-  SAFE_DELETE(m_session);
+  delete m_session;
 }
 
 bool CHTSPData::Open()
@@ -78,7 +78,11 @@ bool CHTSPData::Open()
 
 void CHTSPData::Close()
 {
-  m_session->Close();
+  {
+    CLockObject lock(m_mutex);
+    if (m_session)
+      m_session->Close();
+  }
   StopThread();
 }
 
