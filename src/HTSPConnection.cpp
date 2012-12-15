@@ -47,6 +47,7 @@ CHTSPConnection::CHTSPConnection() :
     m_strHostname(g_strHostname),
     m_bIsConnected(false),
     m_bTimeshiftSupport(false),
+    m_bTimeshiftSeekSupport(false),
     m_iQueueSize(1000)
 {
 }
@@ -291,7 +292,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 7);
+  htsmsg_add_u32(m, "htspversion", 8);
 
   /* read welcome */
   if((m = ReadResult(m)) == NULL)
@@ -306,11 +307,14 @@ bool CHTSPConnection::SendGreeting(void)
 
   /* Process capabilities */
   m_bTimeshiftSupport = false;
+  m_bTimeshiftSeekSupport = false;
   if (cap) {
     HTSMSG_FOREACH(f, cap) {
       if (f->hmf_type == HMF_STR) {
         if (!strcmp("timeshift", f->hmf_str))
           m_bTimeshiftSupport = true;
+        else if (!strcmp("timeshiftseek", f->hmf_str))
+          m_bTimeshiftSeekSupport = true;
       }
     }
   }
@@ -374,4 +378,9 @@ bool CHTSPConnection::IsConnected(void)
 bool CHTSPConnection::CanTimeshift(void)
 {
   return m_bTimeshiftSupport;
+}
+
+bool CHTSPConnection::CanSeekLiveStream(void)
+{
+  return m_bTimeshiftSeekSupport;
 }

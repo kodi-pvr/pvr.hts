@@ -48,6 +48,7 @@ protected:
   bool SendSubscribe  (int subscription, int channel);
   bool SendUnsubscribe(int subscription);
   bool SendSpeed      (int subscription, int speed);
+  bool SendSeek       (int subscription, int time, bool backward, double *startpts);
   DemuxPacket *ParseMuxPacket(htsmsg_t *m);
 
   bool Connect(void);

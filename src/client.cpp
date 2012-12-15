@@ -573,6 +573,33 @@ long long LengthRecordedStream(void)
   return HTSPData->LengthRecordedStream();
 }
 
+bool CanPauseStream(void)
+{
+  if (HTSPData)
+    return HTSPData->CanTimeshift();
+  return false;
+}
+
+bool CanSeekStream(void)
+{
+  if (HTSPData)
+    return HTSPData->CanSeekLiveStream();
+  return false;
+}
+
+bool SeekTime(int time,bool backward,double *startpts)
+{
+  if (HTSPDemuxer && HTSPData && HTSPData->CanSeekLiveStream())
+    HTSPDemuxer->SeekTime(time, backward, startpts);
+  return false;
+}
+
+void SetSpeed(int speed)
+{
+  if(HTSPDemuxer && HTSPData && HTSPData->CanTimeshift())
+    HTSPDemuxer->SetSpeed(speed);
+}
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -593,22 +620,5 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
-bool CanPauseStream(void)
-{
-  if (HTSPData)
-    return HTSPData->CanTimeshift();
-  return false;
-}
-bool CanSeekStream(void)
-{
-  if (HTSPData)
-    return HTSPData->CanTimeshift();
-  return false;
-}
-bool SeekTime(int time,bool backward,double *startpts) { return false; }
-void SetSpeed(int speed)
-{
-  if(HTSPDemuxer)
-    HTSPDemuxer->SetSpeed(speed);
-}
+
 }
