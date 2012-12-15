@@ -584,10 +584,7 @@ bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *sta
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "time"          , time);
   htsmsg_add_u32(m, "backward"      , backward);
-
-  // only supported by v8+
-  if (m_session->GetProtocol() >= 8)
-    htsmsg_add_float(m, "startpts"      , *startpts);
+  htsmsg_add_float(m, "startpts"      , *startpts);
 
   return m_session->ReadSuccess(m, true, "seek subscription");
 }
