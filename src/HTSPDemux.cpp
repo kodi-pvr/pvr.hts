@@ -82,6 +82,8 @@ bool CHTSPDemux::CheckConnection()
 
 void CHTSPDemux::Close()
 {
+  if (m_session->IsConnected())
+    SendUnsubscribe(m_subs);
   m_session->Close();
 }
 

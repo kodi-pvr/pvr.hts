@@ -400,13 +400,16 @@ PVR_ERROR CHTSPData::GetChannelGroups(ADDON_HANDLE handle)
 {
   for(unsigned int iTagPtr = 0; iTagPtr < m_tags.size(); iTagPtr++)
   {
-    PVR_CHANNEL_GROUP tag;
-    memset(&tag, 0 , sizeof(PVR_CHANNEL_GROUP));
+    if (!m_tags[iTagPtr].name.empty())
+    {
+      PVR_CHANNEL_GROUP tag;
+      memset(&tag, 0 , sizeof(PVR_CHANNEL_GROUP));
 
-    tag.bIsRadio     = false;
-    strncpy(tag.strGroupName, m_tags[iTagPtr].name.c_str(), sizeof(tag.strGroupName) - 1);
+      tag.bIsRadio     = false;
+      strncpy(tag.strGroupName, m_tags[iTagPtr].name.c_str(), sizeof(tag.strGroupName) - 1);
 
-    PVR->TransferChannelGroup(handle, &tag);
+      PVR->TransferChannelGroup(handle, &tag);
+    }
   }
 
   return PVR_ERROR_NO_ERROR;
