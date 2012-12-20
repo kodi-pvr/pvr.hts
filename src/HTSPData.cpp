@@ -67,6 +67,12 @@ bool CHTSPData::Open()
     return false;
   }
 
+  m_transcodingCaps.push_back(CODEC_ID_H264);
+  m_transcodingCaps.push_back(CODEC_ID_MPEG4);
+  m_transcodingCaps.push_back(CODEC_ID_MPEG2VIDEO);
+  m_transcodingCaps.push_back(CODEC_ID_AAC);
+  m_transcodingCaps.push_back(CODEC_ID_MP2);
+
   if(!SendEnableAsync())
   {
     XBMC->Log(LOG_ERROR, "%s - couldn't send EnableAsync().", __FUNCTION__);

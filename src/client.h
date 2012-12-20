@@ -23,6 +23,8 @@
 #include "platform/os.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
+#include "libXBMC_gui.h"
+#include "avcodec.h"
 
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_HTTP_PORT        9981
@@ -42,7 +44,13 @@ extern int                       g_iResponseTimeout;
 extern bool                      g_bShowTimerNotifications;
 extern std::string               g_szUserPath;
 extern std::string               g_szClientPath;
+extern bool                      g_bTranscode;
+extern CodecID                   g_iAudioCodec;
+extern CodecID                   g_iVideoCodec;
+extern int                       g_iResolution;
+
 extern ADDON::CHelper_libXBMC_addon *   XBMC;
 extern CHelper_libXBMC_pvr *     PVR;
+extern CHelper_libXBMC_gui *     GUI;
 
 uint32_t HTSPNextSequenceNumber(void);

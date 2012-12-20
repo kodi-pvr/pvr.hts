@@ -23,6 +23,7 @@
 #include "xbmc_pvr_dll.h"
 #include "HTSPData.h"
 #include "HTSPDemux.h"
+#include "DialogTranscodeSettings.h"
 #include "platform/threads/mutex.h"
 #include "platform/util/atomic.h"
 #include "platform/util/util.h"
@@ -45,6 +46,10 @@ int         g_iPortHTSP               = DEFAULT_HTSP_PORT;
 int         g_iPortHTTP               = DEFAULT_HTTP_PORT;
 int         g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int         g_iResponseTimeout        = DEFAULT_RESPONSE_TIMEOUT;
+bool        g_bTranscode              = false;
+CodecID     g_iAudioCodec             = CODEC_ID_NONE;
+CodecID     g_iVideoCodec             = CODEC_ID_NONE;
+int         g_iResolution             = 384;
 std::string g_strUsername             = "";
 std::string g_strPassword             = "";
 std::string g_strUserPath             = "";
@@ -52,6 +57,8 @@ std::string g_strClientPath           = "";
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
+CHelper_libXBMC_gui   *GUI            = NULL;
+PVR_MENUHOOK          *menuHook       = NULL;
 CHTSPDemux *           HTSPDemuxer    = NULL;
 CHTSPData *            HTSPData       = NULL;
 CMutex g_seqMutex;
@@ -133,10 +140,19 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  GUI = new CHelper_libXBMC_gui;
+  if (!GUI->RegisterMe(hdl))
+  {
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
+    SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
@@ -154,9 +170,18 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   {
     SAFE_DELETE(HTSPData);
     SAFE_DELETE(PVR);
+    SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
+  }
+
+  if(HTSPData->CanTranscode()) {
+    menuHook = new PVR_MENUHOOK();
+    menuHook->category = PVR_MENUHOOK_SETTING;
+    menuHook->iHookId = 1;
+    menuHook->iLocalizedStringId = 30100;
+    PVR->AddMenuHook(menuHook);
   }
 
   m_CurStatus = ADDON_STATUS_OK;
@@ -178,7 +203,9 @@ void ADDON_Destroy()
   m_bCreated = false;
   SAFE_DELETE(HTSPData);
   SAFE_DELETE(PVR);
+  SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
+  SAFE_DELETE(menuHook);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
@@ -531,6 +558,17 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
   return HTSPData->GetChannelGroupMembers(handle, group);
 }
 
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+{
+  DialogTranscodeSettings settings;
+
+  settings.DoModal();
+
+  m_CurStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 bool OpenRecordedStream(const PVR_RECORDING &recording)
 {
   if (!HTSPData || !HTSPData->IsConnected())
@@ -602,7 +640,6 @@ void SetSpeed(int speed)
 
 /** UNUSED API FUNCTIONS */
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }

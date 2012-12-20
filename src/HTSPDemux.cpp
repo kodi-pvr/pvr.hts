@@ -560,11 +560,52 @@ bool CHTSPDemux::SendUnsubscribe(int subscription)
 
 bool CHTSPDemux::SendSubscribe(int subscription, int channel)
 {
+  const char *audioCodec;
+  const char *videoCodec;
+
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"         , "subscribe");
   htsmsg_add_s32(m, "channelId"      , channel);
   htsmsg_add_s32(m, "subscriptionId" , subscription);
   htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
+
+  if(g_bTranscode)
+  {
+    switch(g_iAudioCodec)
+    {
+      case CODEC_ID_MP2:
+        audioCodec = "MPEG2AUDIO";
+        break;
+      case CODEC_ID_AAC:
+        audioCodec = "AAC";
+        break;
+      default:
+        audioCodec = "UNKNOWN";
+        break;
+    }
+
+    switch(g_iVideoCodec)
+    {
+      case CODEC_ID_MPEG2VIDEO:
+        videoCodec = "MPEG2VIDEO";
+        break;
+      case CODEC_ID_H264:
+        videoCodec = "H264";
+        break;
+      case CODEC_ID_MPEG4:
+        videoCodec = "MPEG4VIDEO";
+        break;
+      default:
+        videoCodec = "UNKNOWN";
+        break;
+    }
+
+    htsmsg_add_u32(m, "maxWidth"    , 0xffffffff); // Don't care
+    htsmsg_add_u32(m, "maxHeight"   , g_iResolution);
+    htsmsg_add_str(m, "audioCodec"  , audioCodec);
+    htsmsg_add_str(m, "videoCodec"  , videoCodec);
+  }
+
   return m_session->ReadSuccess(m, true, "subscribe to channel");
 }
 
