@@ -6,6 +6,7 @@
   provider-name="Lars Op den Kamp, Team XBMC">
   <requires>
     <c-pluff version="0.1"/>
+    <xbmc.pvr version="1.6.0"/>
   </requires>
   <extension
     point="xbmc.pvrclient"
