@@ -22,7 +22,7 @@
  */
 
 #include "HTSPTypes.h"
-#include "platform/threads/mutex.h"
+#include "platform/threads/threads.h"
 
 extern "C" {
 #include "libhts/net.h"
@@ -34,10 +34,20 @@ namespace PLATFORM
   class CTcpConnection;
 }
 
-class CHTSPConnection
+class CHTSPConnectionCallback
 {
 public:
-  CHTSPConnection();
+  CHTSPConnectionCallback(void) {}
+  virtual ~CHTSPConnectionCallback(void) {}
+
+  virtual void OnConnectionDropped(void) {}
+  virtual void OnConnectionRestored(void) {}
+};
+
+class CHTSPConnection : private PLATFORM::CThread
+{
+public:
+  CHTSPConnection(CHTSPConnectionCallback* callback);
   ~CHTSPConnection();
 
   bool        Connect(void);
@@ -56,6 +66,7 @@ public:
   bool        CanSeekLiveStream(void);
 
 private:
+  void* Process(void);
   bool SendGreeting(void);
   bool Auth(void);
 
@@ -77,4 +88,5 @@ private:
 
   std::deque<htsmsg_t*>     m_queue;
   const unsigned int        m_iQueueSize;
+  CHTSPConnectionCallback*  m_callback;
 };

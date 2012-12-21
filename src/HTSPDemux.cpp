@@ -27,13 +27,13 @@
 using namespace ADDON;
 
 CHTSPDemux::CHTSPDemux() :
+    m_session(NULL),
     m_bIsRadio(false),
     m_subs(0),
     m_channel(0),
     m_tag(0),
     m_StatusCount(0)
 {
-  m_session = new CHTSPConnection();
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
     m_Streams.stream[i].iCodecType = AVMEDIA_TYPE_UNKNOWN;
   m_Streams.iStreamCount = 0;
@@ -48,6 +48,9 @@ CHTSPDemux::~CHTSPDemux()
 
 bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
+  if (!m_session)
+    m_session = new CHTSPConnection(this);
+
   m_channel = channelinfo.iUniqueId;
   m_bIsRadio = channelinfo.bIsRadio;
   return Connect();
@@ -58,7 +61,8 @@ bool CHTSPDemux::Connect(void)
   if(!m_session->Connect())
     return false;
 
-  if(!SendSubscribe(m_subs, m_channel)) {
+  if(!SendSubscribe(m_subs, m_channel))
+  {
     Close();
     return false;
   }
@@ -66,18 +70,6 @@ bool CHTSPDemux::Connect(void)
   m_Streams.iStreamCount  = 0;
   m_StatusCount = 0;
   return true;
-}
-
-// Note: no attempt to warn user about this (the HTSPData link will do
-//       that most of the time anyway)
-bool CHTSPDemux::CheckConnection()
-{
-  bool bReturn = m_session->IsConnected();
-
-  if (!bReturn)
-    bReturn = Connect();
-
-  return bReturn;
 }
 
 void CHTSPDemux::Close()
@@ -134,8 +126,8 @@ void CHTSPDemux::Abort()
 
 DemuxPacket* CHTSPDemux::Read()
 {
-  if (!CheckConnection())
-    return NULL;
+  if (!m_session->IsConnected())
+    return PVR->AllocateDemuxPacket(0);
 
   htsmsg_t *msg = m_session->ReadMessage(1000, 1000);
   if (!msg)
@@ -672,4 +664,9 @@ bool CHTSPDemux::ParseSourceInfo(htsmsg_t* msg)
     m_SourceInfo.si_service = str;
 
   return true;
+}
+
+void CHTSPDemux::OnConnectionRestored(void)
+{
+  SendSubscribe(m_subs, m_channel);
 }

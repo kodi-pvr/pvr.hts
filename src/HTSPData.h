@@ -42,7 +42,7 @@ public:
   PVR_ERROR status;
 };
 
-class CHTSPData : public PLATFORM::CThread
+class CHTSPData : public PLATFORM::CThread, CHTSPConnectionCallback
 {
 public:
   CHTSPData();
@@ -50,7 +50,6 @@ public:
 
   bool Open();
   void Close();
-  bool CheckConnection(void);
   bool IsConnected(void) const { return m_session->IsConnected(); }
 
   /*!
@@ -88,6 +87,8 @@ public:
   long long    PositionRecordedStream(void);
   long long    LengthRecordedStream(void);
 
+  void         OnConnectionDropped(void);
+  void         OnConnectionRestored(void);
 
 protected:
   virtual void *Process(void);

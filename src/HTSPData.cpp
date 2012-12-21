@@ -42,7 +42,7 @@ using namespace PLATFORM;
 
 CHTSPData::CHTSPData()
 {
-  m_session = new CHTSPConnection();
+  m_session = NULL;
   m_bDisconnectWarningDisplayed = false;
   m_bIsStarted = false;
   m_recordingId = 0;
@@ -57,6 +57,9 @@ CHTSPData::~CHTSPData()
 
 bool CHTSPData::Open()
 {
+  if (!m_session)
+    m_session = new CHTSPConnection(this);
+
   CLockObject lock(m_mutex);
   if(!m_session->Connect())
   {
@@ -84,31 +87,6 @@ void CHTSPData::Close()
       m_session->Close();
   }
   StopThread();
-}
-
-bool CHTSPData::CheckConnection(void)
-{
-  bool bReturn(true);
-
-  if (!m_session->IsConnected() && m_bCreated && !IsStopped())
-  {
-    if (!m_bDisconnectWarningDisplayed)
-    {
-      m_bDisconnectWarningDisplayed = true;
-      CStdString strNotification(XBMC->GetLocalizedString(30500));
-      XBMC->QueueNotification(QUEUE_ERROR, strNotification, m_session->GetServerName());
-    }
-
-    if ((bReturn = m_session->Connect() && SendEnableAsync()))
-    {
-      m_bDisconnectWarningDisplayed = false;
-      /* notify the user that the connection has been restored */
-      CStdString strNotification(XBMC->GetLocalizedString(30501));
-      XBMC->QueueNotification(QUEUE_INFO, strNotification, m_session->GetServerName());
-    }
-  }
-
-  return bReturn;
 }
 
 void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
@@ -662,7 +640,7 @@ void *CHTSPData::Process()
     if (!bInitialised && !m_session->IsConnected())
       break;
 
-    if (!CheckConnection())
+    if (!m_session->IsConnected())
     {
       Sleep(1000);
       continue;
@@ -1331,4 +1309,16 @@ long long CHTSPData::LengthRecordedStream(void)
     return -1;
   }
   return size;
+}
+
+void CHTSPData::OnConnectionDropped(void)
+{
+  CStdString strNotification(XBMC->GetLocalizedString(30500));
+  XBMC->QueueNotification(QUEUE_ERROR, strNotification, GetServerName());
+}
+
+void CHTSPData::OnConnectionRestored(void)
+{
+  CStdString strNotification(XBMC->GetLocalizedString(30501));
+  XBMC->QueueNotification(QUEUE_INFO, strNotification, GetServerName());
 }

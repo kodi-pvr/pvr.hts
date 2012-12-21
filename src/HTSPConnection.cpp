@@ -35,7 +35,7 @@ using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 
-CHTSPConnection::CHTSPConnection() :
+CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_socket(new CTcpConnection(g_strHostname, g_iPortHTSP)),
     m_challenge(NULL),
     m_iChallengeLength(0),
@@ -48,7 +48,8 @@ CHTSPConnection::CHTSPConnection() :
     m_bIsConnected(false),
     m_bTimeshiftSupport(false),
     m_bTimeshiftSeekSupport(false),
-    m_iQueueSize(1000)
+    m_iQueueSize(1000),
+    m_callback(callback)
 {
 }
 
@@ -116,11 +117,13 @@ bool CHTSPConnection::Connect()
     return false;
   }
 
-  return true;
+  return CreateThread(true);
 }
 
 void CHTSPConnection::Close()
 {
+  StopThread();
+
   CLockObject lock(m_mutex);
   m_bIsConnected = false;
 
@@ -383,4 +386,43 @@ bool CHTSPConnection::CanTimeshift(void)
 bool CHTSPConnection::CanSeekLiveStream(void)
 {
   return m_bTimeshiftSeekSupport;
+}
+
+void* CHTSPConnection::Process(void)
+{
+  bool bWarningDisplayed(false);
+  while (!IsStopped())
+  {
+    if (!IsConnected())
+    {
+      if (!bWarningDisplayed)
+      {
+        bWarningDisplayed = true;
+        XBMC->Log(LOG_ERROR, "connection dropped, trying to restore");
+        if (m_callback)
+          m_callback->OnConnectionDropped();
+      }
+
+      if(m_challenge)
+      {
+        free(m_challenge);
+        m_challenge        = NULL;
+        m_iChallengeLength = 0;
+      }
+
+      if (Connect())
+      {
+        bWarningDisplayed = false;
+        XBMC->Log(LOG_DEBUG, "connection restored");
+        if (m_callback)
+          m_callback->OnConnectionRestored();
+      }
+    }
+    else
+    {
+      Sleep(250);
+    }
+  }
+
+  return NULL;
 }
