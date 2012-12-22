@@ -53,6 +53,7 @@ public:
   bool        Connect(void);
   void        Close();
   bool        IsConnected(void);
+  bool        CheckConnection(uint32_t iTimeout);
   int         GetProtocol() const { return m_iProtocol; }
   const char *GetServerName() const { return m_strServerName.c_str(); }
   const char *GetVersion() const { return m_strVersion.c_str(); }
@@ -90,4 +91,5 @@ private:
   std::deque<htsmsg_t*>     m_queue;
   const unsigned int        m_iQueueSize;
   CHTSPConnectionCallback*  m_callback;
+  PLATFORM::CCondition<bool> m_connectEvent;
 };

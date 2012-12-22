@@ -637,14 +637,8 @@ void *CHTSPData::Process()
   htsmsg_t* msg;
   while (!IsStopped())
   {
-    if (!bInitialised && !m_session->IsConnected())
-      break;
-
-    if (!m_session->IsConnected())
-    {
-      Sleep(1000);
+    if (!m_session->CheckConnection(1000))
       continue;
-    }
 
     /* if there's anything in the buffer, read it */
     msg = m_session->ReadMessage(5);

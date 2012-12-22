@@ -124,7 +124,7 @@ void CHTSPDemux::Abort()
 
 DemuxPacket* CHTSPDemux::Read()
 {
-  if (!m_session->IsConnected())
+  if (!m_session->CheckConnection(1000))
     return PVR->AllocateDemuxPacket(0);
 
   htsmsg_t *msg = m_session->ReadMessage(1000, 1000);

@@ -126,6 +126,8 @@ bool CHTSPConnection::Connect(void)
   }
 
   m_bIsConnected = true;
+  m_connectEvent.Broadcast();
+
   return CreateThread(true);
 }
 
@@ -145,6 +147,8 @@ void CHTSPConnection::Close()
     m_challenge        = NULL;
     m_iChallengeLength = 0;
   }
+
+  m_connectEvent.Broadcast();
 }
 
 htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iDatapacketTimeout /* = 10000 */)
@@ -379,6 +383,15 @@ bool CHTSPConnection::Auth(void)
   }
 
   return ReadSuccess(m, false, "get reply from authentication with server");
+}
+
+bool CHTSPConnection::CheckConnection(uint32_t iTimeout)
+{
+  CLockObject lock(m_mutex);
+  if (IsConnected())
+    return true;
+
+  return m_connectEvent.Wait(m_mutex, m_bIsConnected, iTimeout);
 }
 
 bool CHTSPConnection::IsConnected(void)
