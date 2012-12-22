@@ -31,8 +31,7 @@ CHTSPDemux::CHTSPDemux() :
     m_bIsRadio(false),
     m_subs(0),
     m_channel(0),
-    m_tag(0),
-    m_StatusCount(0)
+    m_tag(0)
 {
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
     m_Streams.stream[i].iCodecType = AVMEDIA_TYPE_UNKNOWN;
@@ -68,7 +67,6 @@ bool CHTSPDemux::Connect(void)
   }
 
   m_Streams.iStreamCount  = 0;
-  m_StatusCount = 0;
   return true;
 }
 
@@ -237,7 +235,6 @@ bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
     m_channel           = channelinfo.iChannelNumber;
     m_subs              = m_subs+1;
     m_Streams.iStreamCount = 0;
-    m_StatusCount = 0;
 
     return true;
   }
@@ -535,7 +532,6 @@ void CHTSPDemux::ParseSubscriptionStatus(htsmsg_t *m)
     m_Status = "";
   else
   {
-    m_StatusCount++;
     m_Status = status;
     XBMC->Log(LOG_DEBUG, "%s - %s", __FUNCTION__, status);
     XBMC->QueueNotification(QUEUE_INFO, status);

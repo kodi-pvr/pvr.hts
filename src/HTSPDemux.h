@@ -65,7 +65,6 @@ private:
   unsigned              m_subs;
   int                   m_channel;
   int                   m_tag;
-  int                   m_StatusCount;
   std::string           m_Status;
   PVR_STREAM_PROPERTIES m_Streams;
   SChannels             m_channels;
