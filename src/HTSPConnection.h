@@ -66,6 +66,7 @@ public:
   bool        CanSeekLiveStream(void);
 
 private:
+  bool OpenSocket(void);
   void* Process(void);
   bool SendGreeting(void);
   bool Auth(void);

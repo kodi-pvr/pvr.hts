@@ -63,38 +63,46 @@ CHTSPConnection::~CHTSPConnection()
   m_queue.clear();
 }
 
-bool CHTSPConnection::Connect()
+bool CHTSPConnection::OpenSocket(void)
 {
+  CLockObject lock(m_mutex);
+  if (m_socket && m_socket->IsOpen())
+    return true;
+
+  if (!m_socket)
   {
-    CLockObject lock(m_mutex);
-
-    if (m_bIsConnected)
-      return true;
-
-    if (!m_socket)
-    {
-      XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (couldn't create a socket)", __FUNCTION__);
-      return false;
-    }
-
-    XBMC->Log(LOG_DEBUG, "%s - connecting to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
-
-    CTimeout timeout(m_iConnectTimeout);
-    while (!m_socket->IsOpen() && timeout.TimeLeft() > 0)
-    {
-      if (!m_socket->Open(timeout.TimeLeft()))
-        CEvent::Sleep(100);
-    }
-
-    if (!m_socket->IsOpen())
-    {
-      XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (%s)", __FUNCTION__, m_socket->GetError().c_str());
-      return false;
-    }
-
-    m_bIsConnected = true;
-    XBMC->Log(LOG_DEBUG, "%s - connected to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
+    XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (couldn't create a socket)", __FUNCTION__);
+    return false;
   }
+
+  XBMC->Log(LOG_DEBUG, "%s - connecting to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
+
+  CTimeout timeout(m_iConnectTimeout);
+  while (!m_socket->IsOpen() && timeout.TimeLeft() > 0)
+  {
+    if (!m_socket->Open(timeout.TimeLeft()))
+      CEvent::Sleep(100);
+  }
+
+  if (!m_socket->IsOpen())
+  {
+    XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (%s)", __FUNCTION__, m_socket->GetError().c_str());
+    return false;
+  }
+
+  m_bIsConnected = true;
+  XBMC->Log(LOG_DEBUG, "%s - connected to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
+  return true;
+}
+
+bool CHTSPConnection::Connect(void)
+{
+  CLockObject lock(m_mutex);
+  if (m_bIsConnected)
+    return true;
+
+  if (!OpenSocket())
+    return false;
 
   if (!SendGreeting())
   {
@@ -117,6 +125,7 @@ bool CHTSPConnection::Connect()
     return false;
   }
 
+  m_bIsConnected = true;
   return CreateThread(true);
 }
 
@@ -152,7 +161,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
 
   {
     CLockObject lock(m_mutex);
-    if (!IsConnected())
+    if (!m_socket || !m_socket->IsOpen())
     {
       XBMC->Log(LOG_ERROR, "%s - not connected", __FUNCTION__);
       return NULL;
@@ -191,7 +200,7 @@ bool CHTSPConnection::TransmitMessage(htsmsg_t* m)
   void*  buf;
   size_t len;
 
-  if (!IsConnected())
+  if (!m_socket || !m_socket->IsOpen())
   {
     XBMC->Log(LOG_ERROR, "%s - not connected", __FUNCTION__);
     return NULL;
@@ -393,7 +402,7 @@ void* CHTSPConnection::Process(void)
   bool bWarningDisplayed(false);
   while (!IsStopped())
   {
-    if (!IsConnected())
+    if (!m_socket || !m_socket->IsOpen())
     {
       if (!bWarningDisplayed)
       {
