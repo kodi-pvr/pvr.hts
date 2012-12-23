@@ -624,10 +624,9 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
         break;
     }
 
-    htsmsg_add_u32(m, "maxWidth"    , 0xffffffff); // Don't care
-    htsmsg_add_u32(m, "maxHeight"   , g_iResolution);
-    htsmsg_add_str(m, "audioCodec"  , audioCodec);
-    htsmsg_add_str(m, "videoCodec"  , videoCodec);
+    htsmsg_add_u32(m, "maxResolution" , g_iResolution);
+    htsmsg_add_str(m, "audioCodec"    , audioCodec);
+    htsmsg_add_str(m, "videoCodec"    , videoCodec);
   }
 
   return m_session->ReadSuccess(m, true, "subscribe to channel");
