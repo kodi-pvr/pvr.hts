@@ -124,6 +124,22 @@ void ADDON_ReadSettings(void)
   /* read setting "read_timeout" from settings.xml */
   if (!XBMC->GetSetting("response_timeout", &g_iResponseTimeout))
     g_iResponseTimeout = DEFAULT_RESPONSE_TIMEOUT;
+
+  /* read setting "transcode" from settings.xml */
+  if (!XBMC->GetSetting("transcode", &g_bTranscode))
+    g_bTranscode = false;
+
+  /* read setting "audio_codec" from settings.xml */
+  if (!XBMC->GetSetting("audio_codec", &g_iAudioCodec))
+    g_iAudioCodec = CODEC_ID_NONE;
+
+  /* read setting "video_codec" from settings.xml */
+  if (!XBMC->GetSetting("video_codec", &g_iVideoCodec))
+    g_iVideoCodec = CODEC_ID_NONE;
+
+  /* read setting "resolution" from settings.xml */
+  if (!XBMC->GetSetting("resolution", &g_iResolution))
+    g_iResolution = -1;
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -291,6 +307,43 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_OK;
     }
   }
+  else if (str == "transcode")
+  {
+    int bNewValue = *(bool*) settingValue;
+    XBMC->Log(LOG_INFO, "%s - Changed Setting 'transcode' from %u to %u", __FUNCTION__, g_bTranscode, bNewValue);
+    g_bTranscode = bNewValue;
+  }
+  else if (str == "resolution")
+  {
+    int iNewValue = *(int*) settingValue + 1;
+    if (g_iResolution != iNewValue)
+    {
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'resolution' from %u to %u", __FUNCTION__, g_iResolution, iNewValue);
+      g_iResolution = iNewValue;
+      return ADDON_STATUS_OK;
+    }
+  }
+  else if (str == "video_codec")
+  {
+    int iNewValue = *(int*) settingValue + 1;
+    if (g_iVideoCodec != iNewValue)
+    {
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'video_codec' from %u to %u", __FUNCTION__, g_iVideoCodec, iNewValue);
+      g_iVideoCodec = (CodecID)iNewValue;
+      return ADDON_STATUS_OK;
+    }
+  }
+  else if (str == "audio_codec")
+  {
+    int iNewValue = *(int*) settingValue + 1;
+    if (g_iAudioCodec != iNewValue)
+    {
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'audio_codec' from %u to %u", __FUNCTION__, g_iAudioCodec, iNewValue);
+      g_iAudioCodec = (CodecID)iNewValue;
+      return ADDON_STATUS_OK;
+    }
+  }
+
   return ADDON_STATUS_OK;
 }
 
@@ -565,7 +618,11 @@ PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 
   settings.DoModal();
 
-  m_CurStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
+  /* Settings have changed, we need to store it to disk somehow.
+   *
+   * m_CurStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
+   * m_CurStatus = ADDON_STATUS_NEED_SETTINGS;
+  */
 
   return PVR_ERROR_NO_ERROR;
 }
