@@ -381,6 +381,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
       newStreams.stream[newStreams.iStreamCount].iCodecType  = AVMEDIA_TYPE_AUDIO;
       newStreams.stream[newStreams.iStreamCount].iCodecId    = CODEC_ID_AAC_LATM;
     }
+    else if(!strcmp(type, "VORBIS"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType  = AVMEDIA_TYPE_AUDIO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId    = CODEC_ID_VORBIS;
+    }
     else if(!strcmp(type, "MPEG2VIDEO"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
@@ -390,6 +395,16 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_H264;
+    }
+    else if(!strcmp(type, "VP8"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_VP8;
+    }
+    else if(!strcmp(type, "MPEG4VIDEO"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG4;
     }
     else if(!strcmp(type, "DVBSUB"))
     {
