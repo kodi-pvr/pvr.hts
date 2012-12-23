@@ -848,7 +848,7 @@ void CHTSPData::ParseChannelRemove(htsmsg_t* msg)
 
 void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 {
-  bool bChanged(false);
+  bool bChannelChanged(false), bTagsChanged(false);
   uint32_t iChannelId, iEventId = 0, iChannelNumber = 0, iCaid = 0;
   const char *strName, *strIconPath;
   if(htsmsg_get_u32(msg, "channelId", &iChannelId))
@@ -866,44 +866,63 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 
   if((strName = htsmsg_get_str(msg, "channelName")))
   {
-    bChanged = (channel.name != strName);
-    channel.name = strName;
+    if (channel.name != strName)
+    {
+      bChannelChanged = true;
+      channel.name = strName;
+    }
   }
 
   if((strIconPath = htsmsg_get_str(msg, "channelIcon")))
   {
-    bChanged = (channel.icon != strIconPath);
-    channel.icon = strIconPath;
+    if (channel.icon != strIconPath)
+    {
+      bChannelChanged = true;
+      channel.icon = strIconPath;
+    }
   }
 
   if(htsmsg_get_u32(msg, "channelNumber", &iChannelNumber) == 0)
   {
     int iNewChannelNumber = (iChannelNumber == 0) ? iChannelId + 1000 : iChannelNumber;
-    bChanged = (channel.num != iNewChannelNumber);
-    channel.num = iNewChannelNumber;
+    if (channel.num != iNewChannelNumber)
+    {
+      bChannelChanged = true;
+      channel.num = iNewChannelNumber;
+    }
   }
 
   htsmsg_t *tags;
 
   if((tags = htsmsg_get_list(msg, "tags")))
   {
-    bChanged = true;
-    channel.tags.clear();
-
+    std::vector<int> newTags;
     htsmsg_field_t *f;
     HTSMSG_FOREACH(f, tags)
     {
       if(f->hmf_type != HMF_S64)
         continue;
-      channel.tags.push_back((int)f->hmf_s64);
+      newTags.push_back((int)f->hmf_s64);
     }
+
+    for (std::vector<int>::const_iterator it = newTags.begin(); it != newTags.end(); it++)
+    {
+      if (std::find(channel.tags.begin(), channel.tags.end(), *it) == channel.tags.end())
+        bTagsChanged = true;
+    }
+    for (std::vector<int>::const_iterator it = channel.tags.begin(); it != channel.tags.end(); it++)
+    {
+      if (std::find(newTags.begin(), newTags.end(), *it) == newTags.end())
+        bTagsChanged = true;
+    }
+    if (bTagsChanged)
+      channel.tags = newTags;
   }
 
   htsmsg_t *services;
-
+  bool bIsRadio(false);
   if((services = htsmsg_get_list(msg, "services")))
   {
-    bChanged = true;
     htsmsg_field_t *f;
     HTSMSG_FOREACH(f, services)
     {
@@ -913,13 +932,22 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
       htsmsg_t *service = &f->hmf_msg;
       const char *service_type = htsmsg_get_str(service, "type");
       if(service_type != NULL)
-      {
-        channel.radio = !strcmp(service_type, "Radio");
-      }
+        bIsRadio = !strcmp(service_type, "Radio");
 
       if(!htsmsg_get_u32(service, "caid", &iCaid))
-        channel.caid = (int) iCaid;
+      {
+        if ((channel.caid != (int)iCaid))
+        {
+          bChannelChanged = true;
+          channel.caid = (int) iCaid;
+        }
+      }
     }
+  }
+  if (channel.radio != bIsRadio)
+  {
+    bChannelChanged = true;
+    channel.radio = bIsRadio;
   }
 
 #if HTSP_DEBUGGING
@@ -927,8 +955,10 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
       __FUNCTION__, iChannelId, strName ? strName : "(null)", strIconPath ? strIconPath : "(null)", iEventId);
 #endif
 
-  if (bChanged)
+  if (bChannelChanged)
     PVR->TriggerChannelUpdate();
+  if (bTagsChanged)
+    PVR->TriggerChannelGroupsUpdate();
 }
 
 void CHTSPData::ParseDVREntryDelete(htsmsg_t* msg)
