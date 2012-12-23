@@ -178,7 +178,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   if(HTSPData->CanTranscode()) {
     menuHook = new PVR_MENUHOOK();
-    menuHook->category = PVR_MENUHOOK_SETTING;
+    menuHook->category = PVR_MENUHOOK_ALL;
     menuHook->iHookId = 1;
     menuHook->iLocalizedStringId = 30100;
     PVR->AddMenuHook(menuHook);
