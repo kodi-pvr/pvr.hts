@@ -31,9 +31,9 @@
 #define SPIN_CONTROL_RESOLUTION         13
 
 
-DialogTranscodeSettings::DialogTranscodeSettings()
+DialogTranscodeSettings::DialogTranscodeSettings(const CodecVector &v)
 : m_window(0), m_spinAudioCodec(0), m_spinVideoCodec(0), m_spinResolution(0),
-  m_radioTranscode(0)
+  m_radioTranscode(0), m_codecs(v)
 {
 	m_window = GUI->Window_create("DialogTranscode.xml", "Confluence", false, true);
 	m_window->m_cbhdl = this;
@@ -113,14 +113,48 @@ bool DialogTranscodeSettings::OnInit()
 	m_spinVideoCodec->Clear();
 	m_spinResolution->Clear();
 
-	m_spinAudioCodec->AddLabel("MPEG-2 Audio", CODEC_ID_MP2);
-	m_spinAudioCodec->AddLabel("AAC",          CODEC_ID_AAC);
 	m_spinAudioCodec->AddLabel("Passthrough",  CODEC_ID_NONE);
-
-	m_spinVideoCodec->AddLabel("MPEG-2 Video", CODEC_ID_MPEG2VIDEO);
-	m_spinVideoCodec->AddLabel("H264",         CODEC_ID_H264);
-	m_spinVideoCodec->AddLabel("MPEG-4",       CODEC_ID_MPEG4);
 	m_spinVideoCodec->AddLabel("Passthrough",  CODEC_ID_NONE);
+
+	for (CodecVector::iterator it = m_codecs.begin(); it != m_codecs.end(); ++it)
+	{
+		switch (*it) {
+		case CODEC_ID_MP2:
+			m_spinAudioCodec->AddLabel("MPEG-2 Audio", CODEC_ID_MP2);
+			break;
+
+		case CODEC_ID_AAC:
+			m_spinAudioCodec->AddLabel("AAC", CODEC_ID_AAC);
+			break;
+
+		case CODEC_ID_AC3:
+			m_spinAudioCodec->AddLabel("AC3", CODEC_ID_AC3);
+			break;
+
+		case CODEC_ID_VORBIS:
+			m_spinAudioCodec->AddLabel("Vorbis", CODEC_ID_VORBIS);
+			break;
+
+		case CODEC_ID_MPEG2VIDEO:
+			m_spinVideoCodec->AddLabel("MPEG-2 Video", CODEC_ID_MPEG2VIDEO);
+			break;
+
+		case CODEC_ID_MPEG4:
+			m_spinVideoCodec->AddLabel("MPEG-4", CODEC_ID_MPEG4);
+			break;
+
+		case CODEC_ID_VP8:
+			m_spinVideoCodec->AddLabel("VP8", CODEC_ID_VP8);
+			break;
+
+		case CODEC_ID_H264:
+			m_spinVideoCodec->AddLabel("H264", CODEC_ID_H264);
+			break;
+
+		default:
+			break;
+		}
+	}
 
 	m_spinResolution->AddLabel("192p", 192);
 	m_spinResolution->AddLabel("288p", 288);

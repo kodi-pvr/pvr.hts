@@ -560,7 +560,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
-  DialogTranscodeSettings settings;
+  DialogTranscodeSettings settings(HTSPData->GetTranscodingCodecs());
 
   settings.DoModal();
 

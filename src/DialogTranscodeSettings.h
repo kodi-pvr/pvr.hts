@@ -22,12 +22,13 @@
  */
 
 #include "client.h"
-#include "avcodec.h"
+#include "HTSPTypes.h"
+
 
 class DialogTranscodeSettings {
 
 public:
-	DialogTranscodeSettings();
+	DialogTranscodeSettings(const CodecVector&);
 	virtual ~DialogTranscodeSettings();
 
 	bool Show();
@@ -51,5 +52,7 @@ private:
 	CAddonGUISpinControl *m_spinVideoCodec;
 	CAddonGUISpinControl *m_spinResolution;
 	CAddonGUIRadioButton *m_radioTranscode;
+
+	CodecVector m_codecs;
 };
 

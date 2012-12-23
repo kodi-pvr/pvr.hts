@@ -66,6 +66,9 @@ public:
   bool        CanTimeshift(void);
   bool        CanSeekLiveStream(void);
 
+  bool               CanTranscode(void) const  { return m_transcodingCaps.size() > 0; }
+  const CodecVector& GetTranscodingCodecs(void) const  { return m_transcodingCaps; }
+
 private:
   bool OpenSocket(void);
   void* Process(void);
@@ -87,6 +90,7 @@ private:
   bool                      m_bIsConnected;
   bool                      m_bTimeshiftSupport;
   bool                      m_bTimeshiftSeekSupport;
+  std::vector<CodecID>      m_transcodingCaps;
 
   std::deque<htsmsg_t*>     m_queue;
   const unsigned int        m_iQueueSize;

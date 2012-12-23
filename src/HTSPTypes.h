@@ -26,6 +26,10 @@
 #include <vector>
 #include <map>
 
+#include "avcodec.h"
+
+typedef std::vector<CodecID> CodecVector;
+
 #include "platform/util/StdString.h"
 
 typedef struct htsmsg htsmsg_t;
