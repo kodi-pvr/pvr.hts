@@ -176,7 +176,8 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return m_CurStatus;
   }
 
-  if(HTSPData->CanTranscode()) {
+  if(HTSPData->CanTranscode())
+  {
     menuHook = new PVR_MENUHOOK();
     menuHook->category = PVR_MENUHOOK_ALL;
     menuHook->iHookId = 1;

@@ -24,35 +24,35 @@
 #include "client.h"
 #include "HTSPTypes.h"
 
-
-class DialogTranscodeSettings {
+class DialogTranscodeSettings
+{
 
 public:
-	DialogTranscodeSettings(const CodecVector&);
-	virtual ~DialogTranscodeSettings();
+  DialogTranscodeSettings(const CodecVector&);
+  virtual ~DialogTranscodeSettings();
 
-	bool Show();
-	void Close();
-	void DoModal();
+  bool Show();
+  void Close();
+  void DoModal();
 
-	static bool OnClickCB(GUIHANDLE cbhdl, int controlId);
-	static bool OnFocusCB(GUIHANDLE cbhdl, int controlId);
-	static bool OnInitCB(GUIHANDLE cbhdl);
-	static bool OnActionCB(GUIHANDLE cbhdl, int actionId);
+  static bool OnClickCB(GUIHANDLE cbhdl, int controlId);
+  static bool OnFocusCB(GUIHANDLE cbhdl, int controlId);
+  static bool OnInitCB(GUIHANDLE cbhdl);
+  static bool OnActionCB(GUIHANDLE cbhdl, int actionId);
+
 private:
+  bool OnClick(int controlId);
+  bool OnFocus(int controlId);
+  bool OnInit();
+  bool OnAction(int actionId);
 
-	bool OnClick(int controlId);
-	bool OnFocus(int controlId);
-	bool OnInit();
-	bool OnAction(int actionId);
+  CAddonGUIWindow *m_window;
 
-	CAddonGUIWindow *m_window;
+  CAddonGUISpinControl *m_spinAudioCodec;
+  CAddonGUISpinControl *m_spinVideoCodec;
+  CAddonGUISpinControl *m_spinResolution;
+  CAddonGUIRadioButton *m_radioTranscode;
 
-	CAddonGUISpinControl *m_spinAudioCodec;
-	CAddonGUISpinControl *m_spinVideoCodec;
-	CAddonGUISpinControl *m_spinResolution;
-	CAddonGUIRadioButton *m_radioTranscode;
-
-	CodecVector m_codecs;
+  CodecVector m_codecs;
 };
 

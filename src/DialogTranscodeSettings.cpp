@@ -30,202 +30,191 @@
 #define SPIN_CONTROL_VIDEO_CODEC        12
 #define SPIN_CONTROL_RESOLUTION         13
 
-
-DialogTranscodeSettings::DialogTranscodeSettings(const CodecVector &v)
-: m_window(0), m_spinAudioCodec(0), m_spinVideoCodec(0), m_spinResolution(0),
-  m_radioTranscode(0), m_codecs(v)
+DialogTranscodeSettings::DialogTranscodeSettings(const CodecVector &v) :
+    m_window(0), m_spinAudioCodec(0), m_spinVideoCodec(0), m_spinResolution(0),
+    m_radioTranscode(0), m_codecs(v)
 {
-	m_window = GUI->Window_create("DialogTranscode.xml", "Confluence", false, true);
-	m_window->m_cbhdl = this;
-	m_window->CBOnInit = OnInitCB;
-	m_window->CBOnFocus = OnFocusCB;
-	m_window->CBOnClick = OnClickCB;
-	m_window->CBOnAction = OnActionCB;
+  m_window = GUI->Window_create("DialogTranscode.xml", "Confluence", false, true);
+  m_window->m_cbhdl = this;
+  m_window->CBOnInit = OnInitCB;
+  m_window->CBOnFocus = OnFocusCB;
+  m_window->CBOnClick = OnClickCB;
+  m_window->CBOnAction = OnActionCB;
 }
-
 
 DialogTranscodeSettings::~DialogTranscodeSettings()
 {
-	GUI->Window_destroy(m_window);
+  GUI->Window_destroy(m_window);
 }
-
 
 bool DialogTranscodeSettings::OnInitCB(GUIHANDLE cbhdl)
 {
-	DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
-	return dialog->OnInit();
+  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  return dialog->OnInit();
 }
-
 
 bool DialogTranscodeSettings::OnClickCB(GUIHANDLE cbhdl, int controlId)
 {
-	DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
-	return dialog->OnClick(controlId);
+  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  return dialog->OnClick(controlId);
 }
-
 
 bool DialogTranscodeSettings::OnFocusCB(GUIHANDLE cbhdl, int controlId)
 {
-	DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
-	return dialog->OnFocus(controlId);
+  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  return dialog->OnFocus(controlId);
 }
-
 
 bool DialogTranscodeSettings::OnActionCB(GUIHANDLE cbhdl, int actionId)
 {
-	DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
-	return dialog->OnAction(actionId);
+  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  return dialog->OnAction(actionId);
 }
-
 
 bool DialogTranscodeSettings::Show()
 {
-	if(m_window)
-		return m_window->Show();
+  if (m_window)
+    return m_window->Show();
 
-	return false;
+  return false;
 }
-
 
 void DialogTranscodeSettings::Close()
 {
-	if(m_window)
-		m_window->Close();
+  if (m_window)
+    m_window->Close();
 }
-
 
 void DialogTranscodeSettings::DoModal()
 {
-	if(m_window)
-		m_window->DoModal();
+  if (m_window)
+    m_window->DoModal();
 }
-
 
 bool DialogTranscodeSettings::OnInit()
 {
-	m_spinAudioCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_AUDIO_CODEC);
-	m_spinVideoCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_VIDEO_CODEC);
-	m_spinResolution = GUI->Control_getSpin(m_window, SPIN_CONTROL_RESOLUTION);
+  m_spinAudioCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_AUDIO_CODEC);
+  m_spinVideoCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_VIDEO_CODEC);
+  m_spinResolution = GUI->Control_getSpin(m_window, SPIN_CONTROL_RESOLUTION);
 
-	m_radioTranscode = GUI->Control_getRadioButton(m_window, CONTROL_RADIO_BUTTON_TRANSCODE);
+  m_radioTranscode = GUI->Control_getRadioButton(m_window, CONTROL_RADIO_BUTTON_TRANSCODE);
 
-	m_spinAudioCodec->Clear();
-	m_spinVideoCodec->Clear();
-	m_spinResolution->Clear();
+  m_spinAudioCodec->Clear();
+  m_spinVideoCodec->Clear();
+  m_spinResolution->Clear();
 
-	m_spinAudioCodec->AddLabel("Passthrough",  CODEC_ID_NONE);
-	m_spinVideoCodec->AddLabel("Passthrough",  CODEC_ID_NONE);
+  m_spinAudioCodec->AddLabel("Passthrough", CODEC_ID_NONE);
+  m_spinVideoCodec->AddLabel("Passthrough", CODEC_ID_NONE);
 
-	for (CodecVector::iterator it = m_codecs.begin(); it != m_codecs.end(); ++it)
-	{
-		switch (*it) {
-		case CODEC_ID_MP2:
-			m_spinAudioCodec->AddLabel("MPEG-2 Audio", CODEC_ID_MP2);
-			break;
+  for (CodecVector::iterator it = m_codecs.begin(); it != m_codecs.end(); ++it)
+  {
+    switch (*it)
+    {
+    case CODEC_ID_MP2:
+      m_spinAudioCodec->AddLabel("MPEG-2 Audio", CODEC_ID_MP2);
+      break;
 
-		case CODEC_ID_AAC:
-			m_spinAudioCodec->AddLabel("AAC", CODEC_ID_AAC);
-			break;
+    case CODEC_ID_AAC:
+      m_spinAudioCodec->AddLabel("AAC", CODEC_ID_AAC);
+      break;
 
-		case CODEC_ID_AC3:
-			m_spinAudioCodec->AddLabel("AC3", CODEC_ID_AC3);
-			break;
+    case CODEC_ID_AC3:
+      m_spinAudioCodec->AddLabel("AC3", CODEC_ID_AC3);
+      break;
 
-		case CODEC_ID_VORBIS:
-			m_spinAudioCodec->AddLabel("Vorbis", CODEC_ID_VORBIS);
-			break;
+    case CODEC_ID_VORBIS:
+      m_spinAudioCodec->AddLabel("Vorbis", CODEC_ID_VORBIS);
+      break;
 
-		case CODEC_ID_MPEG2VIDEO:
-			m_spinVideoCodec->AddLabel("MPEG-2 Video", CODEC_ID_MPEG2VIDEO);
-			break;
+    case CODEC_ID_MPEG2VIDEO:
+      m_spinVideoCodec->AddLabel("MPEG-2 Video", CODEC_ID_MPEG2VIDEO);
+      break;
 
-		case CODEC_ID_MPEG4:
-			m_spinVideoCodec->AddLabel("MPEG-4", CODEC_ID_MPEG4);
-			break;
+    case CODEC_ID_MPEG4:
+      m_spinVideoCodec->AddLabel("MPEG-4", CODEC_ID_MPEG4);
+      break;
 
-		case CODEC_ID_VP8:
-			m_spinVideoCodec->AddLabel("VP8", CODEC_ID_VP8);
-			break;
+    case CODEC_ID_VP8:
+      m_spinVideoCodec->AddLabel("VP8", CODEC_ID_VP8);
+      break;
 
-		case CODEC_ID_H264:
-			m_spinVideoCodec->AddLabel("H264", CODEC_ID_H264);
-			break;
+    case CODEC_ID_H264:
+      m_spinVideoCodec->AddLabel("H264", CODEC_ID_H264);
+      break;
 
-		default:
-			break;
-		}
-	}
+    default:
+      break;
+    }
+  }
 
-	m_spinResolution->AddLabel("192p", 192);
-	m_spinResolution->AddLabel("288p", 288);
-	m_spinResolution->AddLabel("384p", 384);
-	m_spinResolution->AddLabel("480p", 480);
-	m_spinResolution->AddLabel("576p", 576);
-	m_spinResolution->AddLabel("720p", 720);
+  m_spinResolution->AddLabel("192p", 192);
+  m_spinResolution->AddLabel("288p", 288);
+  m_spinResolution->AddLabel("384p", 384);
+  m_spinResolution->AddLabel("480p", 480);
+  m_spinResolution->AddLabel("576p", 576);
+  m_spinResolution->AddLabel("720p", 720);
 
-	if(g_iResolution <= 192)
-		m_spinResolution->SetValue(192);
-	else if(g_iResolution <= 288)
-		m_spinResolution->SetValue(288);
-	else if(g_iResolution <= 384)
-		m_spinResolution->SetValue(384);
-	else if(g_iResolution <= 480)
-		m_spinResolution->SetValue(480);
-	else if(g_iResolution <= 576)
-		m_spinResolution->SetValue(576);
-	else
-		m_spinResolution->SetValue(720);
+  if (g_iResolution <= 192)
+    m_spinResolution->SetValue(192);
+  else if (g_iResolution <= 288)
+    m_spinResolution->SetValue(288);
+  else if (g_iResolution <= 384)
+    m_spinResolution->SetValue(384);
+  else if (g_iResolution <= 480)
+    m_spinResolution->SetValue(480);
+  else if (g_iResolution <= 576)
+    m_spinResolution->SetValue(576);
+  else
+    m_spinResolution->SetValue(720);
 
-	m_radioTranscode->SetSelected(g_bTranscode);
-	m_spinAudioCodec->SetValue(g_iAudioCodec);
-	m_spinVideoCodec->SetValue(g_iVideoCodec);
+  m_radioTranscode->SetSelected(g_bTranscode);
+  m_spinAudioCodec->SetValue(g_iAudioCodec);
+  m_spinVideoCodec->SetValue(g_iVideoCodec);
 
-	return true;
+  return true;
 }
-
 
 bool DialogTranscodeSettings::OnClick(int controlId)
 {
-	if(controlId == BUTTON_CANCEL)
-	{
-		m_window->Close();
-	    GUI->Control_releaseSpin(m_spinAudioCodec);
-	    GUI->Control_releaseSpin(m_spinVideoCodec);
-	    GUI->Control_releaseSpin(m_spinResolution);
+  if (controlId == BUTTON_CANCEL)
+  {
+    m_window->Close();
+    GUI->Control_releaseSpin(m_spinAudioCodec);
+    GUI->Control_releaseSpin(m_spinVideoCodec);
+    GUI->Control_releaseSpin(m_spinResolution);
 
-	    GUI->Control_releaseRadioButton(m_radioTranscode);
-	}
-	else if(controlId == BUTTON_OK)
-	{
-		g_bTranscode  = m_radioTranscode->IsSelected();
-		g_iResolution = m_spinResolution->GetValue();
-		g_iAudioCodec = (CodecID) m_spinAudioCodec->GetValue();
-		g_iVideoCodec = (CodecID) m_spinVideoCodec->GetValue();
+    GUI->Control_releaseRadioButton(m_radioTranscode);
+  }
+  else if (controlId == BUTTON_OK)
+  {
+    g_bTranscode = m_radioTranscode->IsSelected();
+    g_iResolution = m_spinResolution->GetValue();
+    g_iAudioCodec = (CodecID) m_spinAudioCodec->GetValue();
+    g_iVideoCodec = (CodecID) m_spinVideoCodec->GetValue();
 
-		m_window->Close();
+    m_window->Close();
 
-	    GUI->Control_releaseSpin(m_spinAudioCodec);
-	    GUI->Control_releaseSpin(m_spinVideoCodec);
-	    GUI->Control_releaseSpin(m_spinResolution);
+    GUI->Control_releaseSpin(m_spinAudioCodec);
+    GUI->Control_releaseSpin(m_spinVideoCodec);
+    GUI->Control_releaseSpin(m_spinResolution);
 
-	    GUI->Control_releaseRadioButton(m_radioTranscode);
-	}
+    GUI->Control_releaseRadioButton(m_radioTranscode);
+  }
 
-	return true;
+  return true;
 }
-
 
 bool DialogTranscodeSettings::OnFocus(int controlId)
 {
-	return true;
+  return true;
 }
-
 
 bool DialogTranscodeSettings::OnAction(int actionId)
 {
-	if (actionId == ADDON_ACTION_CLOSE_DIALOG || actionId == ADDON_ACTION_PREVIOUS_MENU)
-		return OnClick(BUTTON_CANCEL);
-	else
-		return true;
+  if (actionId == ADDON_ACTION_CLOSE_DIALOG
+      || actionId == ADDON_ACTION_PREVIOUS_MENU)
+    return OnClick(BUTTON_CANCEL);
+  else
+    return true;
 }
 
