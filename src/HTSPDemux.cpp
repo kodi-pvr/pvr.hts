@@ -31,7 +31,8 @@ CHTSPDemux::CHTSPDemux() :
     m_bIsRadio(false),
     m_subs(0),
     m_channel(0),
-    m_tag(0)
+    m_tag(0),
+    m_bHasIFrame(false)
 {
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
     m_Streams.stream[i].iCodecType = AVMEDIA_TYPE_UNKNOWN;
@@ -178,7 +179,7 @@ DemuxPacket* CHTSPDemux::Read()
 DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
 {
   DemuxPacket* pkt = NULL;
-  uint32_t    index, duration;
+  uint32_t    index, duration, frametype;
   const void* bin;
   size_t      binlen;
   int64_t     ts;
@@ -189,6 +190,10 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
     XBMC->Log(LOG_ERROR, "%s - malformed message", __FUNCTION__);
     return PVR->AllocateDemuxPacket(0);
   }
+
+  if (!m_bHasIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
+    return PVR->AllocateDemuxPacket(0);
+  m_bHasIFrame = true;
 
   pkt = PVR->AllocateDemuxPacket(binlen);
   memcpy(pkt->pData, bin, binlen);
@@ -491,6 +496,8 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   if (!m_StreamIndex.empty())
     m_Streams.iStreamCount++;
 
+  m_bHasIFrame = false;
+
   if (ParseSourceInfo(m))
   {
     XBMC->Log(LOG_DEBUG, "%s - subscription started on adapter %s, mux %s, network %s, provider %s, service %s"
@@ -522,6 +529,8 @@ void CHTSPDemux::ParseSubscriptionStop  (htsmsg_t *m)
   m_SourceInfo.si_network = "";
   m_SourceInfo.si_provider = "";
   m_SourceInfo.si_service = "";
+
+  m_bHasIFrame = false;
 }
 
 void CHTSPDemux::ParseSubscriptionStatus(htsmsg_t *m)
