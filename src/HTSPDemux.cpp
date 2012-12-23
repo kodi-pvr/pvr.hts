@@ -579,6 +579,12 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
       case CODEC_ID_AAC:
         audioCodec = "AAC";
         break;
+      case CODEC_ID_AC3:
+        audioCodec = "AC3";
+        break;
+      case CODEC_ID_VORBIS:
+        audioCodec = "VORBIS";
+        break;
       default:
         audioCodec = "UNKNOWN";
         break;
@@ -591,6 +597,9 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
         break;
       case CODEC_ID_H264:
         videoCodec = "H264";
+        break;
+      case CODEC_ID_VP8:
+        videoCodec = "VP8";
         break;
       case CODEC_ID_MPEG4:
         videoCodec = "MPEG4VIDEO";
