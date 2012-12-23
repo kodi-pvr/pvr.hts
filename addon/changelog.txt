@@ -1,0 +1,12 @@
+1.6.5
+
+- fixed channel and channel group update triggers
+- ensure that the first demux is an I-frame
+- add CHTSPConnection::CheckConnection() that waits for a connection to be restored when it was dropped
+- cleaner CHTSPConnection::Connect()
+- removed unneeded member in CHTSPDemux
+- better handling of disconnect and reconnects
+
+1.6.4
+
+- initial release
