@@ -46,10 +46,10 @@ int         g_iPortHTSP               = DEFAULT_HTSP_PORT;
 int         g_iPortHTTP               = DEFAULT_HTTP_PORT;
 int         g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int         g_iResponseTimeout        = DEFAULT_RESPONSE_TIMEOUT;
-bool        g_bTranscode              = false;
-CodecID     g_iAudioCodec             = CODEC_ID_NONE;
-CodecID     g_iVideoCodec             = CODEC_ID_NONE;
-int         g_iResolution             = 384;
+bool        g_bTranscode              = DEFAULT_TRANSCODE;
+CodecID     g_iAudioCodec             = DEFAULT_AUDIO_CODEC;
+CodecID     g_iVideoCodec             = DEFAULT_VIDEO_CODEC;
+int         g_iResolution             = DEFAULT_RESOLUTION;
 std::string g_strUsername             = "";
 std::string g_strPassword             = "";
 std::string g_strUserPath             = "";
@@ -127,19 +127,19 @@ void ADDON_ReadSettings(void)
 
   /* read setting "transcode" from settings.xml */
   if (!XBMC->GetSetting("transcode", &g_bTranscode))
-    g_bTranscode = false;
+    g_bTranscode = DEFAULT_TRANSCODE;
 
   /* read setting "audio_codec" from settings.xml */
   if (!XBMC->GetSetting("audio_codec", &g_iAudioCodec))
-    g_iAudioCodec = CODEC_ID_NONE;
+    g_iAudioCodec = DEFAULT_AUDIO_CODEC;
 
   /* read setting "video_codec" from settings.xml */
   if (!XBMC->GetSetting("video_codec", &g_iVideoCodec))
-    g_iVideoCodec = CODEC_ID_NONE;
+    g_iVideoCodec = DEFAULT_VIDEO_CODEC;
 
   /* read setting "resolution" from settings.xml */
   if (!XBMC->GetSetting("resolution", &g_iResolution))
-    g_iResolution = -1;
+    g_iResolution = DEFAULT_RESOLUTION;
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)

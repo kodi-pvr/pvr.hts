@@ -10,6 +10,6 @@
     
     <setting id="transcode"   type="bool"   default="false" visible="false" />
     <setting id="audio_codec" type="number" default="0"     visible="false" />
-    <setting id="video_codec" type="number" default="0"     visible="false" />
-    <setting id="resolution"  type="number" default="384"   visible="false" />
+    <setting id="video_codec" type="number" default="28"    visible="false" />
+    <setting id="resolution"  type="number" default="480"   visible="false" />
 </settings>

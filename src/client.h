@@ -31,6 +31,10 @@
 #define DEFAULT_HTSP_PORT        9982
 #define DEFAULT_CONNECT_TIMEOUT  6
 #define DEFAULT_RESPONSE_TIMEOUT 4
+#define DEFAULT_VIDEO_CODEC      CODEC_ID_H264
+#define DEFAULT_AUDIO_CODEC      CODEC_ID_NONE
+#define DEFAULT_RESOLUTION       480
+#define DEFAULT_TRANSCODE        false
 #define HTSP_DEBUGGING           0
 
 extern bool                      m_bCreated;
