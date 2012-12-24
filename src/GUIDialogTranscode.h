@@ -24,12 +24,12 @@
 #include "client.h"
 #include "HTSPTypes.h"
 
-class DialogTranscodeSettings
+class CGUIDialogTranscode
 {
 
 public:
-  DialogTranscodeSettings(const CodecVector&);
-  virtual ~DialogTranscodeSettings();
+  CGUIDialogTranscode(const CodecVector&);
+  virtual ~CGUIDialogTranscode();
 
   bool Show();
   void Close();

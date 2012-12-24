@@ -19,7 +19,7 @@
  *
  */
 
-#include "DialogTranscodeSettings.h"
+#include "GUIDialogTranscode.h"
 #include "libXBMC_gui.h"
 
 #define BUTTON_OK                       1
@@ -30,7 +30,7 @@
 #define SPIN_CONTROL_VIDEO_CODEC        12
 #define SPIN_CONTROL_RESOLUTION         13
 
-DialogTranscodeSettings::DialogTranscodeSettings(const CodecVector &v) :
+CGUIDialogTranscode::CGUIDialogTranscode(const CodecVector &v) :
     m_window(0), m_spinAudioCodec(0), m_spinVideoCodec(0), m_spinResolution(0),
     m_radioTranscode(0), m_codecs(v)
 {
@@ -42,36 +42,36 @@ DialogTranscodeSettings::DialogTranscodeSettings(const CodecVector &v) :
   m_window->CBOnAction = OnActionCB;
 }
 
-DialogTranscodeSettings::~DialogTranscodeSettings()
+CGUIDialogTranscode::~CGUIDialogTranscode()
 {
   GUI->Window_destroy(m_window);
 }
 
-bool DialogTranscodeSettings::OnInitCB(GUIHANDLE cbhdl)
+bool CGUIDialogTranscode::OnInitCB(GUIHANDLE cbhdl)
 {
-  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  CGUIDialogTranscode* dialog = static_cast<CGUIDialogTranscode*>(cbhdl);
   return dialog->OnInit();
 }
 
-bool DialogTranscodeSettings::OnClickCB(GUIHANDLE cbhdl, int controlId)
+bool CGUIDialogTranscode::OnClickCB(GUIHANDLE cbhdl, int controlId)
 {
-  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  CGUIDialogTranscode* dialog = static_cast<CGUIDialogTranscode*>(cbhdl);
   return dialog->OnClick(controlId);
 }
 
-bool DialogTranscodeSettings::OnFocusCB(GUIHANDLE cbhdl, int controlId)
+bool CGUIDialogTranscode::OnFocusCB(GUIHANDLE cbhdl, int controlId)
 {
-  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  CGUIDialogTranscode* dialog = static_cast<CGUIDialogTranscode*>(cbhdl);
   return dialog->OnFocus(controlId);
 }
 
-bool DialogTranscodeSettings::OnActionCB(GUIHANDLE cbhdl, int actionId)
+bool CGUIDialogTranscode::OnActionCB(GUIHANDLE cbhdl, int actionId)
 {
-  DialogTranscodeSettings* dialog = static_cast<DialogTranscodeSettings*>(cbhdl);
+  CGUIDialogTranscode* dialog = static_cast<CGUIDialogTranscode*>(cbhdl);
   return dialog->OnAction(actionId);
 }
 
-bool DialogTranscodeSettings::Show()
+bool CGUIDialogTranscode::Show()
 {
   if (m_window)
     return m_window->Show();
@@ -79,19 +79,19 @@ bool DialogTranscodeSettings::Show()
   return false;
 }
 
-void DialogTranscodeSettings::Close()
+void CGUIDialogTranscode::Close()
 {
   if (m_window)
     m_window->Close();
 }
 
-void DialogTranscodeSettings::DoModal()
+void CGUIDialogTranscode::DoModal()
 {
   if (m_window)
     m_window->DoModal();
 }
 
-bool DialogTranscodeSettings::OnInit()
+bool CGUIDialogTranscode::OnInit()
 {
   m_spinAudioCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_AUDIO_CODEC);
   m_spinVideoCodec = GUI->Control_getSpin(m_window, SPIN_CONTROL_VIDEO_CODEC);
@@ -174,7 +174,7 @@ bool DialogTranscodeSettings::OnInit()
   return true;
 }
 
-bool DialogTranscodeSettings::OnClick(int controlId)
+bool CGUIDialogTranscode::OnClick(int controlId)
 {
   if (controlId == BUTTON_CANCEL)
   {
@@ -204,12 +204,12 @@ bool DialogTranscodeSettings::OnClick(int controlId)
   return true;
 }
 
-bool DialogTranscodeSettings::OnFocus(int controlId)
+bool CGUIDialogTranscode::OnFocus(int controlId)
 {
   return true;
 }
 
-bool DialogTranscodeSettings::OnAction(int actionId)
+bool CGUIDialogTranscode::OnAction(int actionId)
 {
   if (actionId == ADDON_ACTION_CLOSE_DIALOG
       || actionId == ADDON_ACTION_PREVIOUS_MENU)

@@ -19,6 +19,6 @@ libtvheadend_addon_la_SOURCES = src/client.cpp \
                                 src/HTSPData.cpp \
                                 src/HTSPDemux.cpp \
                                 src/CircBuffer.cpp \
-                                src/DialogTranscodeSettings.cpp
+                                src/GUIDialogTranscode.cpp
 libtvheadend_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

@@ -23,7 +23,7 @@
 #include "xbmc_pvr_dll.h"
 #include "HTSPData.h"
 #include "HTSPDemux.h"
-#include "DialogTranscodeSettings.h"
+#include "GUIDialogTranscode.h"
 #include "platform/threads/mutex.h"
 #include "platform/util/atomic.h"
 #include "platform/util/util.h"
@@ -614,7 +614,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
-  DialogTranscodeSettings settings(HTSPData->GetTranscodingCodecs());
+  CGUIDialogTranscode settings(HTSPData->GetTranscodingCodecs());
 
   settings.DoModal();
 
