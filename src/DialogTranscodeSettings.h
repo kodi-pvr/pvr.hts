@@ -35,16 +35,16 @@ public:
   void Close();
   void DoModal();
 
-  static bool OnClickCB(GUIHANDLE cbhdl, int controlId);
-  static bool OnFocusCB(GUIHANDLE cbhdl, int controlId);
-  static bool OnInitCB(GUIHANDLE cbhdl);
-  static bool OnActionCB(GUIHANDLE cbhdl, int actionId);
-
 private:
   bool OnClick(int controlId);
   bool OnFocus(int controlId);
   bool OnInit();
   bool OnAction(int actionId);
+
+  static bool OnClickCB(GUIHANDLE cbhdl, int controlId);
+  static bool OnFocusCB(GUIHANDLE cbhdl, int controlId);
+  static bool OnInitCB(GUIHANDLE cbhdl);
+  static bool OnActionCB(GUIHANDLE cbhdl, int actionId);
 
   CAddonGUIWindow *m_window;
 
