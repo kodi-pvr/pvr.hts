@@ -191,9 +191,12 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
     return PVR->AllocateDemuxPacket(0);
   }
 
-  if (!m_bHasIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
-    return PVR->AllocateDemuxPacket(0);
-  m_bHasIFrame = true;
+  if (!m_bIsRadio)
+  {
+    if (!m_bHasIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
+      return PVR->AllocateDemuxPacket(0);
+    m_bHasIFrame = true;
+  }
 
   pkt = PVR->AllocateDemuxPacket(binlen);
   memcpy(pkt->pData, bin, binlen);
