@@ -614,15 +614,16 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
-  CGUIDialogTranscode settings(HTSPData->GetTranscodingCodecs());
+  if (!HTSPData || !HTSPData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+  if (!HTSPData->CanTranscode())
+    return PVR_ERROR_REJECTED;
+
+  CodecVector v = HTSPData->GetTranscodingCodecs();
+  CGUIDialogTranscode settings(v);
 
   settings.DoModal();
-
-  /* Settings have changed, we need to store it to disk somehow.
-   *
-   * m_CurStatus = ADDON_STATUS_NEED_SAVEDSETTINGS;
-   * m_CurStatus = ADDON_STATUS_NEED_SETTINGS;
-  */
 
   return PVR_ERROR_NO_ERROR;
 }
