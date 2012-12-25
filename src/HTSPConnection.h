@@ -66,7 +66,7 @@ public:
   bool        CanTimeshift(void);
   bool        CanSeekLiveStream(void);
 
-  bool               CanTranscode(void) const  { return m_bTranscodingSupport; }
+  bool        CanTranscode(void) const  { return m_bTranscodingSupport; }
 
 private:
   bool OpenSocket(void);
