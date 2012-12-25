@@ -186,7 +186,57 @@ bool CHTSPData::GetBackendTime(time_t *utcTime, int *gmtOffset)
 
 CodecVector CHTSPData::GetTranscodingCodecs(void)
 {
+  htsmsg_t *msg;
+  htsmsg_field_t *f;
   CodecVector v;
+  CHTSResult result;
+
+  msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "getCodecs");
+
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to getCodecs", __FUNCTION__);
+    return v;
+  }
+
+  msg = htsmsg_get_list(result.message, "encoders");
+  if(!msg)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - failed to get encoders", __FUNCTION__);
+    return v;
+  }
+
+  HTSMSG_FOREACH(f, msg) {
+    if (f->hmf_type != HMF_STR)
+      continue;
+
+    if (!strcmp("AAC", f->hmf_str))
+      v.push_back(CODEC_ID_AAC);
+
+    else if (!strcmp("MPEG2AUDIO", f->hmf_str))
+      v.push_back(CODEC_ID_MP2);
+
+    else if (!strcmp("AC3", f->hmf_str))
+      v.push_back(CODEC_ID_AC3);
+
+    else if (!strcmp("VORBIS", f->hmf_str))
+      v.push_back(CODEC_ID_VORBIS);
+
+    else if (!strcmp("MPEG2VIDEO", f->hmf_str))
+      v.push_back(CODEC_ID_MPEG2VIDEO);
+
+    else if (!strcmp("H264", f->hmf_str))
+      v.push_back(CODEC_ID_H264);
+
+    else if (!strcmp("VP8", f->hmf_str))
+      v.push_back(CODEC_ID_VP8);
+
+    else if (!strcmp("MPEG4VIDEO", f->hmf_str))
+      v.push_back(CODEC_ID_MPEG4);
+  }
+
   return v;
 }
 
