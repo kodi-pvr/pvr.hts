@@ -26,23 +26,9 @@
 #include "HTSPConnection.h"
 #include "CircBuffer.h"
 
-class CHTSResult
-{
-public:
-  CHTSResult(void) : message(NULL), status(PVR_ERROR_NO_ERROR) {}
-  ~CHTSResult(void)
-  {
-    if (message != NULL)
-      htsmsg_destroy(message);
-  }
+class CHTSPDemux;
 
-  // the actual message
-  htsmsg *message;
-  // the return code
-  PVR_ERROR status;
-};
-
-class CHTSPData : public PLATFORM::CThread, CHTSPConnectionCallback
+class CHTSPData : CHTSPConnectionCallback
 {
 public:
   CHTSPData();
@@ -91,20 +77,22 @@ public:
   long long    PositionRecordedStream(void);
   long long    LengthRecordedStream(void);
 
-  void         OnConnectionDropped(void);
-  void         OnConnectionRestored(void);
+  bool         OnConnectionDropped(void);
+  bool         OnConnectionRestored(void);
+  bool         ProcessMessage(htsmsg* msg);
 
-protected:
-  virtual void *Process(void);
-
+  bool         OpenLiveStream(const PVR_CHANNEL &channel);
+  void         CloseLiveStream(void);
+  int          GetCurrentClientChannel(void);
+  bool         SwitchChannel(const PVR_CHANNEL &channel);
+  PVR_ERROR    GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties);
+  PVR_ERROR    SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
+  void         DemuxAbort(void);
+  void         DemuxFlush(void);
+  DemuxPacket* DemuxRead(void);
+  bool         SeekTime(int time,bool backward,double *startpts);
+  void         SetSpeed(int speed);
 private:
-  struct SMessage
-  {
-    PLATFORM::CEvent* event;
-    htsmsg_t*         msg;
-  };
-  typedef std::map<int, SMessage> SMessages;
-
   SChannels GetChannels();
   SChannels GetChannels(int tag);
   SChannels GetChannels(STag &tag);
@@ -128,12 +116,13 @@ private:
   PLATFORM::CMutex           m_mutex;
   SChannels                  m_channels;
   STags                      m_tags;
-  SMessages                  m_queue;
   SRecordings                m_recordings;
   int                        m_iReconnectRetries;
   bool                       m_bDisconnectWarningDisplayed;
   uint32_t                   m_recordingId;
   int64_t                    m_recordingOff;
   CCircBuffer                m_recordingBuf;
+  CHTSPDemux*                m_demux;
+  PLATFORM::CTimeout         m_connectionWarningTimeout;
 };
 

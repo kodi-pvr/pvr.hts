@@ -23,54 +23,54 @@
 
 #include "client.h"
 #include "HTSPConnection.h"
+#include "platform/util/buffer.h"
 
-class CHTSPDemux : CHTSPConnectionCallback
+class CHTSPDemux : public CHTSPConnectionCallback
 {
 public:
-  CHTSPDemux();
+  CHTSPDemux(CHTSPConnection* connection);
   ~CHTSPDemux();
 
-  bool Open(const PVR_CHANNEL &channelinfo);
-  void Close();
-  bool GetStreamProperties(PVR_STREAM_PROPERTIES* props);
-  void Abort();
+  bool         Open(const PVR_CHANNEL &channelinfo);
+  void         Close();
+  bool         GetStreamProperties(PVR_STREAM_PROPERTIES* props);
+  void         Abort();
   DemuxPacket* Read();
-  bool SwitchChannel(const PVR_CHANNEL &channelinfo);
-  int CurrentChannel() { return m_channel; }
-  bool GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
-  bool SeekTime(int time, bool backward, double *startpts);
-  void SetSpeed(int speed);
-  void OnConnectionRestored(void);
-
-protected:
-  void ParseSubscriptionStart (htsmsg_t *m);
-  void ParseSubscriptionStop  (htsmsg_t *m);
-  void ParseSubscriptionStatus(htsmsg_t *m);
-  bool SendSubscribe  (int subscription, int channel);
-  bool SendUnsubscribe(int subscription);
-  bool SendSpeed      (int subscription, int speed);
-  bool SendSeek       (int subscription, int time, bool backward, double *startpts);
-  DemuxPacket *ParseMuxPacket(htsmsg_t *m);
-
-  bool Connect(void);
+  bool         SwitchChannel(const PVR_CHANNEL &channelinfo);
+  int         CurrentChannel() { return m_channel; }
+  bool         GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
+  bool         SeekTime(int time, bool backward, double *startpts);
+  void         SetSpeed(int speed);
+  bool         OnConnectionRestored(void);
+  bool         ProcessMessage(htsmsg* msg);
+  void         Flush(void);
 
 private:
-  bool ParseQueueStatus(htsmsg_t* msg);
-  bool ParseSignalStatus(htsmsg_t* msg);
-  bool ParseSourceInfo(htsmsg_t* msg);
+  void         ParseSubscriptionStart (htsmsg_t *m);
+  void         ParseSubscriptionStop  (htsmsg_t *m);
+  void         ParseSubscriptionStatus(htsmsg_t *m);
+  bool         SendSubscribe  (int subscription, int channel);
+  bool         SendUnsubscribe(int subscription);
+  bool         SendSpeed      (int subscription, int speed);
+  bool         SendSeek       (int subscription, int time, bool backward, double *startpts);
+  DemuxPacket *ParseMuxPacket(htsmsg_t *m);
+  bool         ParseQueueStatus(htsmsg_t* msg);
+  bool         ParseSignalStatus(htsmsg_t* msg);
+  bool         ParseSourceInfo(htsmsg_t* msg);
 
-  CHTSPConnection      *m_session;
-  bool                  m_bIsRadio;
-  bool                  m_bResetNeeded;
-  unsigned              m_subs;
-  int                   m_channel;
-  int                   m_tag;
-  std::string           m_Status;
-  PVR_STREAM_PROPERTIES m_Streams;
-  SChannels             m_channels;
-  SQueueStatus          m_QueueStatus;
-  SQuality              m_Quality;
-  SSourceInfo           m_SourceInfo;
-  std::map<int, unsigned int> m_StreamIndex;
-  bool                  m_bHasIFrame;
+  CHTSPConnection*                     m_session;
+  bool                                 m_bIsRadio;
+  unsigned                             m_subs;
+  int                                  m_channel;
+  int                                  m_tag;
+  std::string                          m_Status;
+  PVR_STREAM_PROPERTIES                m_Streams;
+  SChannels                            m_channels;
+  SQueueStatus                         m_QueueStatus;
+  SQuality                             m_Quality;
+  SSourceInfo                          m_SourceInfo;
+  std::map<int, unsigned int>          m_StreamIndex;
+  bool                                 m_bWaitForIFrame;
+  PLATFORM::SyncedBuffer<DemuxPacket*> m_demuxPacketBuffer;
+  bool                                 m_bIsOpen;
 };

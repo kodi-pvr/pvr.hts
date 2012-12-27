@@ -20,6 +20,7 @@
  */
 
 #include "HTSPData.h"
+#include "HTSPDemux.h"
 #include "platform/util/util.h"
 
 extern "C" {
@@ -42,10 +43,11 @@ using namespace PLATFORM;
 
 CHTSPData::CHTSPData()
 {
-  m_session = NULL;
+  m_session                     = NULL;
   m_bDisconnectWarningDisplayed = false;
-  m_bIsStarted = false;
-  m_recordingId = 0;
+  m_bIsStarted                  = false;
+  m_recordingId                 = 0;
+  m_demux                       = NULL;
   m_recordingBuf.alloc(1000000);
 }
 
@@ -67,26 +69,27 @@ bool CHTSPData::Open()
     return false;
   }
 
+  if (!m_demux)
+    m_demux = new CHTSPDemux(m_session);
+
   if(!SendEnableAsync())
   {
     XBMC->Log(LOG_ERROR, "%s - couldn't send EnableAsync().", __FUNCTION__);
     return false;
   }
 
-  CreateThread();
   m_started.Wait(m_mutex, m_bIsStarted, g_iConnectTimeout * 1000);
 
-  return IsRunning();
+  return m_bIsStarted;
 }
 
 void CHTSPData::Close()
 {
-  {
-    CLockObject lock(m_mutex);
-    if (m_session)
-      m_session->Close();
-  }
-  StopThread();
+  SAFE_DELETE(m_demux);
+  SAFE_DELETE(m_session);
+  CLockObject lock(m_mutex);
+  m_bIsStarted = false;
+  m_started.Broadcast();
 }
 
 void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
@@ -98,33 +101,7 @@ void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
     return;
   }
 
-  uint32_t seq = HTSPNextSequenceNumber();
-
-  SMessage &message(m_queue[seq]);
-  message.event = new CEvent;
-  message.msg   = NULL;
-
-  htsmsg_add_u32(m, "seq", seq);
-  if(!m_session->TransmitMessage(m))
-  {
-    XBMC->Log(LOG_ERROR, "%s - failed to send command", __FUNCTION__);
-    result.status = PVR_ERROR_UNKNOWN;
-  }
-  else if(!message.event->Wait(g_iResponseTimeout * 1000))
-  {
-    XBMC->Log(LOG_ERROR, "%s - request timed out after %d seconds", __FUNCTION__, g_iResponseTimeout);
-    result.status = PVR_ERROR_SERVER_TIMEOUT;
-  }
-  else
-  {
-    result.message = message.msg;
-  }
-
-  {
-    CLockObject lock(m_mutex);
-    delete message.event;
-    m_queue.erase(seq);
-  }
+  return m_session->ReadResult(m, result);
 }
 
 bool CHTSPData::GetDriveSpace(long long *total, long long *used)
@@ -686,83 +663,44 @@ PVR_ERROR CHTSPData::RenameRecording(const PVR_RECORDING &recording, const char 
 }
 
 
-void *CHTSPData::Process()
+bool CHTSPData::ProcessMessage(htsmsg* msg)
 {
-  XBMC->Log(LOG_DEBUG, "%s - starting", __FUNCTION__);
-
-  bool bInitialised(false);
-  htsmsg_t* msg;
-  while (!IsStopped())
-  {
-    if (!m_session->CheckConnection(1000))
-      continue;
-
-    /* if there's anything in the buffer, read it */
-    msg = m_session->ReadMessage(5);
-    if(msg == NULL || msg->hm_data == NULL)
-    {
-      if (msg)
-        htsmsg_destroy(msg);
-      Sleep(5);
-      continue;
-    }
-
-    uint32_t seq;
-    if(htsmsg_get_u32(msg, "seq", &seq) == 0)
-    {
-      CLockObject lock(m_mutex);
-      SMessages::iterator it = m_queue.find(seq);
-      if(it != m_queue.end())
-      {
-        it->second.msg = msg;
-        it->second.event->Broadcast();
-        continue;
-      }
-    }
-
-    const char* method;
-    if((method = htsmsg_get_str(msg, "method")) == NULL)
-    {
-      htsmsg_destroy(msg);
-      continue;
-    }
-
-    CLockObject lock(m_mutex);
-    if     (strstr(method, "channelAdd"))
-      ParseChannelUpdate(msg);
-    else if(strstr(method, "channelUpdate"))
-      ParseChannelUpdate(msg);
-    else if(strstr(method, "channelDelete"))
-      ParseChannelRemove(msg);
-    else if(strstr(method, "tagAdd"))
-      ParseTagUpdate(msg);
-    else if(strstr(method, "tagUpdate"))
-      ParseTagUpdate(msg);
-    else if(strstr(method, "tagDelete"))
-      ParseTagRemove(msg);
-    else if(strstr(method, "initialSyncCompleted"))
-    {
-      CLockObject lock(m_mutex);
-      bInitialised = true;
-      m_bIsStarted = true;
-      m_started.Broadcast();
-    }
-    else if(strstr(method, "dvrEntryAdd"))
-      ParseDVREntryUpdate(msg);
-    else if(strstr(method, "dvrEntryUpdate"))
-      ParseDVREntryUpdate(msg);
-    else if(strstr(method, "dvrEntryDelete"))
-      ParseDVREntryDelete(msg);
-    else
-      XBMC->Log(LOG_DEBUG, "%s - Unmapped action recieved '%s'", __FUNCTION__, method);
-
-    htsmsg_destroy(msg);
-  }
+  const char* method;
+  if((method = htsmsg_get_str(msg, "method")) == NULL)
+    return true;
 
   CLockObject lock(m_mutex);
-  m_started.Broadcast();
-  XBMC->Log(LOG_DEBUG, "%s - exiting", __FUNCTION__);
-  return NULL;
+  if      (m_demux && m_demux->ProcessMessage(msg))
+  {
+    // demux packet
+  }
+  else if (strstr(method, "channelAdd"))
+    ParseChannelUpdate(msg);
+  else if(strstr(method, "channelUpdate"))
+    ParseChannelUpdate(msg);
+  else if(strstr(method, "channelDelete"))
+    ParseChannelRemove(msg);
+  else if(strstr(method, "tagAdd"))
+    ParseTagUpdate(msg);
+  else if(strstr(method, "tagUpdate"))
+    ParseTagUpdate(msg);
+  else if(strstr(method, "tagDelete"))
+    ParseTagRemove(msg);
+  else if(strstr(method, "initialSyncCompleted"))
+  {
+    CLockObject lock(m_mutex);
+    m_bIsStarted = true;
+    m_started.Broadcast();
+  }
+  else if(strstr(method, "dvrEntryAdd"))
+    ParseDVREntryUpdate(msg);
+  else if(strstr(method, "dvrEntryUpdate"))
+    ParseDVREntryUpdate(msg);
+  else if(strstr(method, "dvrEntryDelete"))
+    ParseDVREntryDelete(msg);
+  else
+    XBMC->Log(LOG_DEBUG, "%s - Unmapped action recieved '%s'", __FUNCTION__, method);
+  return true;
 }
 
 SChannels CHTSPData::GetChannels()
@@ -884,7 +822,7 @@ bool CHTSPData::SendEnableAsync()
 {
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "enableAsyncMetadata");
-  return m_session->ReadSuccess(m, true, "enableAsyncMetadata failed");
+  return m_session->ReadSuccess(m, "enableAsyncMetadata");
 }
 
 void CHTSPData::ParseChannelRemove(htsmsg_t* msg)
@@ -1300,7 +1238,8 @@ int CHTSPData::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSi
   if (!m_recordingId) return -1;
 
   /* Fetch data */
-  if (m_recordingBuf.avail() <= iBufferSize) {
+  if (m_recordingBuf.avail() <= iBufferSize)
+  {
     const void *buf;
     size_t      len;
     htsmsg_t *msg = htsmsg_create_map();
@@ -1319,7 +1258,8 @@ int CHTSPData::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSi
       return -1;
     }
     ret = m_recordingBuf.write((unsigned char*)buf, len);
-    if (ret != len) {
+    if (ret != (ssize_t)len)
+    {
       XBMC->Log(LOG_ERROR, "%s - CircBuffer::write() partial %ld != %ld", __FUNCTION__, ret, len);
       return -1;
     }
@@ -1392,14 +1332,113 @@ long long CHTSPData::LengthRecordedStream(void)
   return size;
 }
 
-void CHTSPData::OnConnectionDropped(void)
+bool CHTSPData::OnConnectionDropped(void)
 {
-  CStdString strNotification(XBMC->GetLocalizedString(30500));
-  XBMC->QueueNotification(QUEUE_ERROR, strNotification, GetServerName());
+  if (m_demux)
+    m_demux->OnConnectionDropped();
+  m_bIsStarted = false;
+  if (m_connectionWarningTimeout.TimeLeft() == 0)
+  {
+    // don't show the warning more than once every 5 seconds
+    m_connectionWarningTimeout.Init(5000);
+
+    CStdString strNotification(XBMC->GetLocalizedString(30500));
+    XBMC->QueueNotification(QUEUE_ERROR, strNotification, GetServerName());
+  }
+  return true;
 }
 
-void CHTSPData::OnConnectionRestored(void)
+bool CHTSPData::OnConnectionRestored(void)
 {
+  if(!SendEnableAsync())
+    return false;
+
+  {
+    CLockObject lock(m_mutex);
+    if (!m_started.Wait(m_mutex, m_bIsStarted, g_iConnectTimeout * 1000))
+      return false;
+  }
+
+  if (m_demux)
+    m_demux->OnConnectionRestored();
+
   CStdString strNotification(XBMC->GetLocalizedString(30501));
   XBMC->QueueNotification(QUEUE_INFO, strNotification, GetServerName());
+  return true;
+}
+
+bool CHTSPData::OpenLiveStream(const PVR_CHANNEL &channel)
+{
+  CloseLiveStream();
+
+  if (!IsConnected() || !m_demux)
+    return false;
+
+  return m_demux->Open(channel);
+}
+
+void CHTSPData::CloseLiveStream(void)
+{
+  if (m_demux)
+    m_demux->Close();
+}
+
+int CHTSPData::GetCurrentClientChannel(void)
+{
+  return m_demux ?
+      m_demux->CurrentChannel() :
+      -1;
+}
+
+bool CHTSPData::SwitchChannel(const PVR_CHANNEL &channel)
+{
+  return m_demux ?
+      m_demux->SwitchChannel(channel) :
+      false;
+}
+
+PVR_ERROR CHTSPData::GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
+{
+  return m_demux && m_demux->GetStreamProperties(pProperties) ?
+      PVR_ERROR_NO_ERROR :
+      PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR CHTSPData::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
+{
+  return m_demux && m_demux->GetSignalStatus(signalStatus) ?
+      PVR_ERROR_NO_ERROR :
+      PVR_ERROR_SERVER_ERROR;
+}
+
+void CHTSPData::DemuxAbort(void)
+{
+  if (m_demux)
+    m_demux->Abort();
+}
+
+void CHTSPData::DemuxFlush(void)
+{
+  if (m_demux)
+    m_demux->Flush();
+}
+
+DemuxPacket* CHTSPData::DemuxRead(void)
+{
+  return m_demux ?
+      m_demux->Read() :
+      NULL;
+}
+
+bool CHTSPData::SeekTime(int time,bool backward,double *startpts)
+{
+  return m_demux && CanSeekLiveStream() ?
+      m_demux->SeekTime(time, backward, startpts) :
+      false;
+}
+
+void CHTSPData::SetSpeed(int speed)
+{
+  if (m_demux && CanTimeshift())
+      m_demux->SetSpeed(speed);
 }

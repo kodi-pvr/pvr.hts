@@ -59,7 +59,6 @@ CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHelper_libXBMC_gui   *GUI            = NULL;
 PVR_MENUHOOK          *menuHook       = NULL;
-CHTSPDemux *           HTSPDemuxer    = NULL;
 CHTSPData *            HTSPData       = NULL;
 CMutex g_seqMutex;
 
@@ -520,64 +519,56 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
-  CloseLiveStream();
-
-  if (!HTSPData || !HTSPData->IsConnected())
-    return false;
-
-  HTSPDemuxer = new CHTSPDemux;
-  return HTSPDemuxer->Open(channel);
+  return HTSPData ?
+      HTSPData->OpenLiveStream(channel) :
+      false;
 }
 
 void CloseLiveStream(void)
 {
-  SAFE_DELETE(HTSPDemuxer);
+  if (HTSPData)
+    HTSPData->CloseLiveStream();
 }
 
 int GetCurrentClientChannel(void)
 {
-  if (HTSPDemuxer)
-    return HTSPDemuxer->CurrentChannel();
-
-  return -1;
+  return HTSPData ?
+      HTSPData->GetCurrentClientChannel():
+      -1;
 }
 
 bool SwitchChannel(const PVR_CHANNEL &channel)
 {
-  if (HTSPDemuxer)
-    return HTSPDemuxer->SwitchChannel(channel);
-
-  return false;
+  return HTSPData ?
+      HTSPData->SwitchChannel(channel) :
+      false;
 }
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 {
-  if (HTSPDemuxer && HTSPDemuxer->GetStreamProperties(pProperties))
-    return PVR_ERROR_NO_ERROR;
-
-  return PVR_ERROR_SERVER_ERROR;
+  return HTSPData ?
+      HTSPData->GetStreamProperties(pProperties) :
+      PVR_ERROR_SERVER_ERROR;
 }
 
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-  if (HTSPDemuxer && HTSPDemuxer->GetSignalStatus(signalStatus))
-    return PVR_ERROR_NO_ERROR;
-
-  return PVR_ERROR_FAILED;
+  return HTSPData ?
+      HTSPData->SignalStatus(signalStatus) :
+      PVR_ERROR_SERVER_ERROR;
 }
 
 void DemuxAbort(void)
 {
-  if (HTSPDemuxer)
-    HTSPDemuxer->Abort();
+  if (HTSPData)
+    HTSPData->DemuxAbort();
 }
 
 DemuxPacket* DemuxRead(void)
 {
-  if (HTSPDemuxer)
-    return HTSPDemuxer->Read();
-  else
-    return NULL;
+  return HTSPData ?
+      HTSPData->DemuxRead() :
+      NULL;
 }
 
 int GetChannelGroupsAmount(void)
@@ -686,15 +677,21 @@ bool CanSeekStream(void)
 
 bool SeekTime(int time,bool backward,double *startpts)
 {
-  if (HTSPDemuxer && HTSPData && HTSPData->CanSeekLiveStream())
-    HTSPDemuxer->SeekTime(time, backward, startpts);
-  return false;
+  return HTSPData ?
+      HTSPData->SeekTime(time, backward, startpts) :
+      false;
 }
 
 void SetSpeed(int speed)
 {
-  if(HTSPDemuxer && HTSPData && HTSPData->CanTimeshift())
-    HTSPDemuxer->SetSpeed(speed);
+  if(HTSPData)
+    HTSPData->SetSpeed(speed);
+}
+
+void DemuxFlush(void)
+{
+  if (HTSPData)
+    HTSPData->DemuxFlush();
 }
 
 /** UNUSED API FUNCTIONS */
@@ -705,7 +702,6 @@ PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEME
 PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxReset(void) {}
-void DemuxFlush(void) {}
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
 long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) { return -1; }
 long long PositionLiveStream(void) { return -1; }

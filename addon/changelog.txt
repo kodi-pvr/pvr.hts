@@ -1,3 +1,11 @@
+1.6.8
+
+- refactor CHTSPConnection
+- fixed disconnection checks and reconnect when needed
+- consider the connection dropped if no data has been received for a while
+- more efficient data reading
+- shared connection between CHTSPDemux and CHTSPData
+
 1.6.7
 
 - add support for servers with transcoding capabilities

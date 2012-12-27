@@ -21,6 +21,7 @@
  *
  */
 
+#include "client.h"
 #include "HTSPTypes.h"
 #include "platform/threads/threads.h"
 
@@ -40,12 +41,53 @@ public:
   CHTSPConnectionCallback(void) {}
   virtual ~CHTSPConnectionCallback(void) {}
 
-  virtual void OnConnectionDropped(void) {}
-  virtual void OnConnectionRestored(void) {}
+  virtual bool OnConnectionDropped(void) { return true; }
+  virtual bool OnConnectionRestored(void) { return true; }
+  virtual bool ProcessMessage(htsmsg* msg) = 0;
+};
+
+struct SMessage
+{
+  PLATFORM::CEvent* event;
+  htsmsg_t*         msg;
+};
+typedef std::map<int, SMessage> SMessages;
+
+class CHTSResult
+{
+public:
+  CHTSResult(void) : message(NULL), status(PVR_ERROR_NO_ERROR) {}
+  ~CHTSResult(void)
+  {
+    if (message != NULL)
+      htsmsg_destroy(message);
+  }
+
+  // the actual message
+  htsmsg *message;
+  // the return code
+  PVR_ERROR status;
+};
+
+class CHTSPConnection;
+
+class CHTSPReconnect : public PLATFORM::CThread
+{
+public:
+  CHTSPReconnect(CHTSPConnection* connection) :
+    m_connection(connection) {}
+  virtual ~CHTSPReconnect(void) {}
+
+  void* Process(void);
+
+private:
+  CHTSPConnection* m_connection;
 };
 
 class CHTSPConnection : private PLATFORM::CThread
 {
+  friend class CHTSPReconnect;
+
 public:
   CHTSPConnection(CHTSPConnectionCallback* callback);
   ~CHTSPConnection();
@@ -58,21 +100,23 @@ public:
   const char *GetServerName() const { return m_strServerName.c_str(); }
   const char *GetVersion() const { return m_strVersion.c_str(); }
 
-  htsmsg_t *  ReadMessage(int iInitialTimeout = 10000, int iDatapacketTimeout = 10000);
   bool        TransmitMessage(htsmsg_t* m);
-  htsmsg_t *  ReadResult (htsmsg_t* m, bool sequence = true);
-  bool        ReadSuccess(htsmsg_t* m, bool sequence = true, std::string action = "");
+  void        ReadResult(htsmsg_t *m, CHTSResult &result, const char* strAction = NULL);
+  bool        ReadSuccess(htsmsg_t* m, const char* strAction = NULL);
 
   bool        CanTimeshift(void);
   bool        CanSeekLiveStream(void);
 
   bool        CanTranscode(void) const  { return m_bTranscodingSupport; }
+  void        SetReadTimeout(int iTimeout);
+  void        TriggerReconnect(void);
 
 private:
-  bool OpenSocket(void);
-  void* Process(void);
-  bool SendGreeting(void);
-  bool Auth(void);
+  bool       OpenSocket(void);
+  void*      Process(void);
+  bool       SendGreeting(void);
+  bool       Auth(void);
+  htsmsg_t*  ReadMessage(int iInitialTimeout = 1000, int iDatapacketTimeout = 1000);
 
   PLATFORM::CMutex          m_mutex;
   PLATFORM::CTcpConnection* m_socket;
@@ -95,4 +139,8 @@ private:
   const unsigned int        m_iQueueSize;
   CHTSPConnectionCallback*  m_callback;
   PLATFORM::CCondition<bool> m_connectEvent;
+  SMessages                  m_messageQueue;
+  PLATFORM::CTimeout        m_readTimeout;
+  int                       m_iReadTimeout;
+  CHTSPReconnect*           m_reconnect;
 };

@@ -26,13 +26,14 @@
 
 using namespace ADDON;
 
-CHTSPDemux::CHTSPDemux() :
-    m_session(NULL),
+CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
+    m_session(connection),
     m_bIsRadio(false),
     m_subs(0),
     m_channel(0),
     m_tag(0),
-    m_bHasIFrame(false)
+    m_bWaitForIFrame(false),
+    m_bIsOpen(false)
 {
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
     m_Streams.stream[i].iCodecType = AVMEDIA_TYPE_UNKNOWN;
@@ -43,39 +44,31 @@ CHTSPDemux::CHTSPDemux() :
 CHTSPDemux::~CHTSPDemux()
 {
   Close();
-  delete m_session;
 }
 
 bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
-  if (!m_session)
-    m_session = new CHTSPConnection(this);
+  m_channel        = channelinfo.iUniqueId;
+  m_bIsRadio       = channelinfo.bIsRadio;
+  m_bWaitForIFrame = !channelinfo.bIsRadio;
+  m_bIsOpen        = false;
 
-  m_channel = channelinfo.iUniqueId;
-  m_bIsRadio = channelinfo.bIsRadio;
-  return Connect();
-}
-
-bool CHTSPDemux::Connect(void)
-{
-  if(!m_session->Connect())
+  if(!m_session->CheckConnection(g_iConnectTimeout * 1000))
     return false;
 
-  if(!SendSubscribe(m_subs, m_channel))
-  {
-    Close();
+  if(!SendSubscribe(++m_subs, m_channel))
     return false;
-  }
 
-  m_Streams.iStreamCount  = 0;
-  return true;
+  m_Streams.iStreamCount = 0;
+  m_bIsOpen              = true;
+  return m_bIsOpen;
 }
 
 void CHTSPDemux::Close()
 {
-  if (m_session->IsConnected())
+  if (m_session->IsConnected() && m_subs > 0)
     SendUnsubscribe(m_subs);
-  m_session->Close();
+  m_subs = 0;
 }
 
 void CHTSPDemux::SetSpeed(int speed)
@@ -123,34 +116,33 @@ void CHTSPDemux::Abort()
   m_StreamIndex.clear();
 }
 
-DemuxPacket* CHTSPDemux::Read()
+void CHTSPDemux::Flush(void)
 {
-  if (!m_session->CheckConnection(1000))
-    return PVR->AllocateDemuxPacket(0);
+  DemuxPacket* pkt(NULL);
+  while (m_demuxPacketBuffer.Pop(pkt))
+    PVR->FreeDemuxPacket(pkt);
+}
 
-  htsmsg_t *msg = m_session->ReadMessage(1000, 1000);
-  if (!msg)
-    return PVR->AllocateDemuxPacket(0);
-
+bool CHTSPDemux::ProcessMessage(htsmsg* msg)
+{
+  uint32_t subs;
   const char *method = htsmsg_get_str(msg, "method");
   if (!method)
-    return PVR->AllocateDemuxPacket(0);
+    return true;
 
-  uint32_t subs;
-  if(htsmsg_get_u32(msg, "subscriptionId", &subs) || subs != m_subs)
-  {
-    // switching channels
-    htsmsg_destroy(msg);
-    return PVR->AllocateDemuxPacket(0);
-  }
-
-  if (strcmp("subscriptionStart",  method) == 0)
+  if (    strcmp("subscriptionStart",  method) == 0)
   {
     ParseSubscriptionStart(msg);
-    DemuxPacket* pkt  = PVR->AllocateDemuxPacket(0);
-    pkt->iStreamId    = DMX_SPECIALID_STREAMCHANGE;
-    htsmsg_destroy(msg);
-    return pkt;
+  }
+  else if(htsmsg_get_u32(msg, "subscriptionId", &subs))
+  {
+    // no subscription id set, ignore
+    return false;
+  }
+  else if (subs != m_subs)
+  {
+    // switching channels
+    return true;
   }
   else if(strcmp("subscriptionStop",   method) == 0)
     ParseSubscriptionStop(msg);
@@ -163,17 +155,27 @@ DemuxPacket* CHTSPDemux::Read()
   else if(strcmp("muxpkt"            , method) == 0)
   {
     DemuxPacket *pkt = ParseMuxPacket(msg);
-    htsmsg_destroy(msg);
-    return pkt;
+    m_demuxPacketBuffer.Push(pkt);
   }
-
-  if(msg)
+  else
   {
-    htsmsg_destroy(msg);
-    return PVR->AllocateDemuxPacket(0);
+    // not a demux message
+    return false;
   }
 
-  return NULL;
+  return true;
+}
+
+DemuxPacket* CHTSPDemux::Read()
+{
+  if (!m_session->CheckConnection(1000))
+    return PVR->AllocateDemuxPacket(0);
+
+  DemuxPacket* packet(NULL);
+  if (m_demuxPacketBuffer.Pop(packet, 100))
+    return packet;
+
+  return PVR->AllocateDemuxPacket(0);
 }
 
 DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
@@ -191,12 +193,10 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
     return PVR->AllocateDemuxPacket(0);
   }
 
-  if (!m_bIsRadio)
-  {
-    if (!m_bHasIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
-      return PVR->AllocateDemuxPacket(0);
-    m_bHasIFrame = true;
-  }
+  // wait for an iframe as first packet for tv channels
+  if (m_bWaitForIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
+    return PVR->AllocateDemuxPacket(0);
+  m_bWaitForIFrame = false;
 
   pkt = PVR->AllocateDemuxPacket(binlen);
   memcpy(pkt->pData, bin, binlen);
@@ -226,22 +226,31 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
     }
   }
 
+  // drop packets with an invalid stream id
+  if (pkt->iStreamId < 0)
+  {
+    PVR->FreeDemuxPacket(pkt);
+    pkt = PVR->AllocateDemuxPacket(0);
+  }
+
   return pkt;
 }
 
 bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
 {
-  XBMC->Log(LOG_DEBUG, "%s - changing to channel '%s'", __FUNCTION__, channelinfo.strChannelName);
+  XBMC->Log(LOG_INFO, "%s - changing to channel '%s'", __FUNCTION__, channelinfo.strChannelName);
 
   if (!SendUnsubscribe(m_subs))
     XBMC->Log(LOG_ERROR, "%s - failed to unsubscribe from previous channel", __FUNCTION__);
 
-  if (!SendSubscribe(m_subs+1, channelinfo.iUniqueId))
+  if (!SendSubscribe(++m_subs, channelinfo.iUniqueId))
+  {
     XBMC->Log(LOG_ERROR, "%s - failed to set channel", __FUNCTION__);
+    m_subs = 0;
+  }
   else
   {
-    m_channel           = channelinfo.iChannelNumber;
-    m_subs              = m_subs+1;
+    m_channel              = channelinfo.iUniqueId;
     m_Streams.iStreamCount = 0;
 
     return true;
@@ -279,8 +288,8 @@ inline void HTSPSetDemuxStreamInfoAudio(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
 
 inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream, htsmsg_t *msg)
 {
-  stream.iWidth  = htsmsg_get_u32_or_default(msg, "width" , 0);
-  stream.iHeight = htsmsg_get_u32_or_default(msg, "height" , 0);
+  stream.iWidth  = htsmsg_get_u32_or_default(msg,   "width" , 0);
+  stream.iHeight = htsmsg_get_u32_or_default(msg,   "height" , 0);
   unsigned int den = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
   if(den)
     stream.fAspect = (float)htsmsg_get_u32_or_default(msg, "aspect_num", 1) / den;
@@ -313,6 +322,15 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 
   htsmsg_t       *streams;
   htsmsg_field_t *f;
+  uint32_t        subs;
+
+  if(htsmsg_get_u32(m, "subscriptionId", &subs))
+  {
+    XBMC->Log(LOG_ERROR, "%s - invalid subscription id", __FUNCTION__);
+    return;
+  }
+  m_subs = subs;
+
   if((streams = htsmsg_get_list(m, "streams")) == NULL)
   {
     XBMC->Log(LOG_ERROR, "%s - malformed message", __FUNCTION__);
@@ -320,6 +338,7 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   }
 
   m_Streams.iStreamCount = 0;
+  m_bWaitForIFrame       = false;
 
   HTSMSG_FOREACH(f, streams)
   {
@@ -390,11 +409,15 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG2VIDEO;
+      if (!m_bIsOpen)
+        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "H264"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_H264;
+      if (!m_bIsOpen)
+        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "VP8"))
     {
@@ -405,6 +428,8 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG4;
+      if (!m_bIsOpen)
+        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "DVBSUB"))
     {
@@ -457,7 +482,7 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     if (itr == newStreamIndex.end())
     {
       m_Streams.stream[itl->second].iCodecType = AVMEDIA_TYPE_UNKNOWN;
-      m_Streams.stream[itl->second].iCodecId = CODEC_ID_NONE;
+      m_Streams.stream[itl->second].iCodecId   = CODEC_ID_NONE;
       m_StreamIndex.erase(itl);
       itl = m_StreamIndex.begin();
     }
@@ -514,24 +539,26 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   if (!m_StreamIndex.empty())
     m_Streams.iStreamCount++;
 
-  m_bHasIFrame = false;
+  DemuxPacket* pkt  = PVR->AllocateDemuxPacket(0);
+  pkt->iStreamId    = DMX_SPECIALID_STREAMCHANGE;
+  m_demuxPacketBuffer.Push(pkt);
 
   if (ParseSourceInfo(m))
   {
-    XBMC->Log(LOG_DEBUG, "%s - subscription started on adapter %s, mux %s, network %s, provider %s, service %s"
+    XBMC->Log(LOG_INFO, "%s - subscription started on adapter %s, mux %s, network %s, provider %s, service %s"
         , __FUNCTION__, m_SourceInfo.si_adapter.c_str(), m_SourceInfo.si_mux.c_str(),
         m_SourceInfo.si_network.c_str(), m_SourceInfo.si_provider.c_str(),
         m_SourceInfo.si_service.c_str());
   }
   else
   {
-    XBMC->Log(LOG_DEBUG, "%s - subscription started on an unknown device", __FUNCTION__);
+    XBMC->Log(LOG_INFO, "%s - subscription started on an unknown device", __FUNCTION__);
   }
 }
 
-void CHTSPDemux::ParseSubscriptionStop  (htsmsg_t *m)
+void CHTSPDemux::ParseSubscriptionStop(htsmsg_t *m)
 {
-  XBMC->Log(LOG_DEBUG, "%s - subscription ended on adapter %s", __FUNCTION__, m_SourceInfo.si_adapter.c_str());
+  XBMC->Log(LOG_INFO, "%s - subscription ended on adapter %s", __FUNCTION__, m_SourceInfo.si_adapter.c_str());
   m_Streams.iStreamCount = 0;
 
   /* reset the signal status */
@@ -542,13 +569,11 @@ void CHTSPDemux::ParseSubscriptionStop  (htsmsg_t *m)
   m_Quality.fe_unc    = -2;
 
   /* reset the source info */
-  m_SourceInfo.si_adapter = "";
-  m_SourceInfo.si_mux = "";
-  m_SourceInfo.si_network = "";
+  m_SourceInfo.si_adapter  = "";
+  m_SourceInfo.si_mux      = "";
+  m_SourceInfo.si_network  = "";
   m_SourceInfo.si_provider = "";
-  m_SourceInfo.si_service = "";
-
-  m_bHasIFrame = false;
+  m_SourceInfo.si_service  = "";
 }
 
 void CHTSPDemux::ParseSubscriptionStatus(htsmsg_t *m)
@@ -560,23 +585,31 @@ void CHTSPDemux::ParseSubscriptionStatus(htsmsg_t *m)
   else
   {
     m_Status = status;
-    XBMC->Log(LOG_DEBUG, "%s - %s", __FUNCTION__, status);
+    XBMC->Log(LOG_INFO, "%s - status = '%s'", __FUNCTION__, status);
     XBMC->QueueNotification(QUEUE_INFO, status);
   }
 }
 
 bool CHTSPDemux::SendUnsubscribe(int subscription)
 {
+  XBMC->Log(LOG_INFO, "%s - unsubscribe from subscription %d", __FUNCTION__, subscription);
+
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"        , "unsubscribe");
   htsmsg_add_s32(m, "subscriptionId", subscription);
-  return m_session->ReadSuccess(m, true, "unsubscribe from channel");
+  bool bReturn = m_session->ReadSuccess(m, "unsubscribe from channel");
+  m_session->SetReadTimeout(-1);
+  Flush();
+  m_bIsOpen = false;
+  return bReturn;
 }
 
 bool CHTSPDemux::SendSubscribe(int subscription, int channel)
 {
   const char *audioCodec;
   const char *videoCodec;
+
+  XBMC->Log(LOG_INFO, "%s - subscribe to channel '%d', subscription %d", __FUNCTION__, channel, subscription);
 
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"         , "subscribe");
@@ -624,33 +657,47 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
         break;
     }
 
-    htsmsg_add_u32(m, "maxResolution" , g_iResolution);
-    htsmsg_add_str(m, "audioCodec"    , audioCodec);
-    htsmsg_add_str(m, "videoCodec"    , videoCodec);
+    htsmsg_add_u32(m, "maxResolution", g_iResolution);
+    htsmsg_add_str(m, "audioCodec"   , audioCodec);
+    htsmsg_add_str(m, "videoCodec"   , videoCodec);
   }
 
-  return m_session->ReadSuccess(m, true, "subscribe to channel");
+  if (!m_session->ReadSuccess(m, "subscribe to channel"))
+  {
+    XBMC->Log(LOG_ERROR, "%s - failed to subscribe to channel %d, consider the connection dropped", __FUNCTION__, m_channel);
+    m_session->TriggerReconnect();
+    return false;
+  }
+
+  // TODO get this from the pvr api. hardcoded to 10 seconds now
+  m_session->SetReadTimeout(10000);
+  Flush();
+
+  XBMC->Log(LOG_DEBUG, "%s - new subscription for channel %d (%d)", __FUNCTION__, m_channel, m_subs);
+  return true;
 }
 
 bool CHTSPDemux::SendSpeed(int subscription, int speed)
 {
+  XBMC->Log(LOG_DEBUG, "%s(%d, %d)", __FUNCTION__, subscription, speed);
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"        , "subscriptionSpeed");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "speed"         , speed);
-  return m_session->ReadSuccess(m, true, "pause subscription");
+  return m_session->ReadSuccess(m, "pause subscription");
 }
 
 bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *startpts)
 {
+  XBMC->Log(LOG_DEBUG, "%s(%d, %d, %d)", __FUNCTION__, subscription, time, backward ? 1:0);
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"        , "subscriptionSeek");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "time"          , time);
   htsmsg_add_u32(m, "backward"      , backward);
-  htsmsg_add_float(m, "startpts"      , *startpts);
+  htsmsg_add_float(m, "startpts"    , *startpts);
 
-  return m_session->ReadSuccess(m, true, "seek subscription");
+  return m_session->ReadSuccess(m, "seek subscription");
 }
 
 bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)
@@ -675,16 +722,16 @@ bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)
 
 bool CHTSPDemux::ParseSignalStatus(htsmsg_t* msg)
 {
-  if(htsmsg_get_u32(msg, "feSNR", &m_Quality.fe_snr))
+  if(htsmsg_get_u32(msg, "feSNR",    &m_Quality.fe_snr))
     m_Quality.fe_snr = -2;
 
   if(htsmsg_get_u32(msg, "feSignal", &m_Quality.fe_signal))
     m_Quality.fe_signal = -2;
 
-  if(htsmsg_get_u32(msg, "feBER", &m_Quality.fe_ber))
+  if(htsmsg_get_u32(msg, "feBER",    &m_Quality.fe_ber))
     m_Quality.fe_ber = -2;
 
-  if(htsmsg_get_u32(msg, "feUNC", &m_Quality.fe_unc))
+  if(htsmsg_get_u32(msg, "feUNC",    &m_Quality.fe_unc))
     m_Quality.fe_unc = -2;
 
   const char* status;
@@ -692,10 +739,6 @@ bool CHTSPDemux::ParseSignalStatus(htsmsg_t* msg)
     m_Quality.fe_status = status;
   else
     m_Quality.fe_status = "(unknown)";
-
-//  XBMC->Log(LOG_DEBUG, "%s - updated signal status: snr=%d, signal=%d, ber=%d, unc=%d, status=%s"
-//      , __FUNCTION__, quality.fe_snr, quality.fe_signal, quality.fe_ber
-//      , quality.fe_unc, quality.fe_status.c_str());
 
   return true;
 }
@@ -738,7 +781,19 @@ bool CHTSPDemux::ParseSourceInfo(htsmsg_t* msg)
   return true;
 }
 
-void CHTSPDemux::OnConnectionRestored(void)
+bool CHTSPDemux::OnConnectionRestored(void)
 {
-  SendSubscribe(m_subs, m_channel);
+  if (m_subs == 0)
+    return true;
+
+  SendUnsubscribe(m_subs);
+
+  if (!SendSubscribe(++m_subs, m_channel))
+  {
+    m_subs = 0;
+    XBMC->Log(LOG_ERROR, "%s - failed to subscribe to channel %d", __FUNCTION__, m_channel);
+    return false;
+  }
+
+  return true;
 }

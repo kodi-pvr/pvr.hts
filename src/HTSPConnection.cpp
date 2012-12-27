@@ -50,26 +50,36 @@ CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_bTimeshiftSeekSupport(false),
     m_bTranscodingSupport(false),
     m_iQueueSize(1000),
-    m_callback(callback)
+    m_callback(callback),
+    m_iReadTimeout(-1),
+    m_reconnect(NULL)
 {
 }
 
 CHTSPConnection::~CHTSPConnection()
 {
+  // close the connection and stop the thread
   Close();
+
   delete m_socket;
-  m_socket = NULL;
-  for (deque<htsmsg_t*>::iterator it = m_queue.begin(); it != m_queue.end();)
-    delete *(it++);
-  m_queue.clear();
+  delete m_reconnect;
+}
+
+void CHTSPConnection::SetReadTimeout(int iTimeout)
+{
+  CLockObject lock(m_mutex);
+  m_iReadTimeout = iTimeout;
+  m_readTimeout.Init(iTimeout);
 }
 
 bool CHTSPConnection::OpenSocket(void)
 {
   CLockObject lock(m_mutex);
+  // already open
   if (m_socket && m_socket->IsOpen())
     return true;
 
+  // check if the socket could be created
   if (!m_socket)
   {
     XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (couldn't create a socket)", __FUNCTION__);
@@ -78,6 +88,7 @@ bool CHTSPConnection::OpenSocket(void)
 
   XBMC->Log(LOG_DEBUG, "%s - connecting to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
 
+  // try to open the socket
   CTimeout timeout(m_iConnectTimeout);
   while (!m_socket->IsOpen() && timeout.TimeLeft() > 0)
   {
@@ -85,12 +96,14 @@ bool CHTSPConnection::OpenSocket(void)
       CEvent::Sleep(100);
   }
 
+  // check if the socket is open
   if (!m_socket->IsOpen())
   {
     XBMC->Log(LOG_ERROR, "%s - failed to connect to the backend (%s)", __FUNCTION__, m_socket->GetError().c_str());
     return false;
   }
 
+  // socket opened
   m_bIsConnected = true;
   XBMC->Log(LOG_DEBUG, "%s - connected to '%s', port '%d'", __FUNCTION__, m_strHostname.c_str(), m_iPortnumber);
   return true;
@@ -99,12 +112,16 @@ bool CHTSPConnection::OpenSocket(void)
 bool CHTSPConnection::Connect(void)
 {
   CLockObject lock(m_mutex);
+
+  // already connected
   if (m_bIsConnected)
     return true;
 
+  // open a socket
   if (!OpenSocket())
     return false;
 
+  // send the greeting, get the protocol version and capabilities
   if (!SendGreeting())
   {
     XBMC->Log(LOG_ERROR, "%s - failed to read greeting from the backend", __FUNCTION__);
@@ -112,6 +129,7 @@ bool CHTSPConnection::Connect(void)
     return false;
   }
 
+  // check whether the proto is v2+
   if(m_iProtocol < 2)
   {
     XBMC->Log(LOG_ERROR, "%s - incompatible protocol version %d", __FUNCTION__, m_iProtocol);
@@ -119,6 +137,15 @@ bool CHTSPConnection::Connect(void)
     return false;
   }
 
+  // create reader thread
+  if (!IsRunning() && !CreateThread(true))
+  {
+    XBMC->Log(LOG_ERROR, "%s - failed to create data processing thread", __FUNCTION__);
+    Close();
+    return false;
+  }
+
+  // send authentication
   if (!Auth())
   {
     XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
@@ -126,28 +153,47 @@ bool CHTSPConnection::Connect(void)
     return false;
   }
 
+  // connected
   m_bIsConnected = true;
+  if (!m_reconnect)
+    m_reconnect = new CHTSPReconnect(this);
   m_connectEvent.Broadcast();
 
-  return CreateThread(true);
+  return true;
+}
+
+void CHTSPConnection::TriggerReconnect(void)
+{
+  CLockObject lock(m_mutex);
+  m_socket->Close();
+  m_bIsConnected = false;
 }
 
 void CHTSPConnection::Close()
 {
+  // stop the reader thread
   StopThread();
 
+  // close the socket
   CLockObject lock(m_mutex);
+  delete m_reconnect;
+  m_reconnect = NULL;
   m_bIsConnected = false;
 
   if(m_socket && m_socket->IsOpen())
     m_socket->Close();
 
+  // cleanup
   if(m_challenge)
   {
     free(m_challenge);
     m_challenge        = NULL;
     m_iChallengeLength = 0;
   }
+
+  for (deque<htsmsg_t*>::iterator it = m_queue.begin(); it != m_queue.end();)
+    delete *(it++);
+  m_queue.clear();
 
   m_connectEvent.Broadcast();
 }
@@ -157,6 +203,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
   void*    buf;
   uint32_t l;
 
+  // get the first queued message if any
   if(m_queue.size())
   {
     htsmsg_t* m = m_queue.front();
@@ -166,37 +213,45 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
 
   {
     CLockObject lock(m_mutex);
+    // check whether the socket is open
     if (!m_socket || !m_socket->IsOpen())
     {
       XBMC->Log(LOG_ERROR, "%s - not connected", __FUNCTION__);
       return NULL;
     }
 
+    // read the size
     if (m_socket->Read(&l, 4, iInitialTimeout) != 4)
     {
+      // timed out
       if(m_socket->GetErrorNumber() == ETIMEDOUT)
-        return htsmsg_create_map();
+        return NULL;
 
-      XBMC->Log(LOG_ERROR, "%s - Failed to read packet size (%s)", __FUNCTION__, m_socket->GetError().c_str());
-      Close();
+      // read error, close the connection
+      XBMC->Log(LOG_ERROR, "%s - failed to read packet size (%s)", __FUNCTION__, m_socket->GetError().c_str());
+      TriggerReconnect();
       return NULL;
     }
 
     l = ntohl(l);
+
+    // empty message
     if(l == 0)
       return htsmsg_create_map();
 
+    // read the data
     buf = malloc(l);
-
     if(m_socket->Read(buf, l, iDatapacketTimeout) != (ssize_t)l)
     {
-      XBMC->Log(LOG_ERROR, "%s - Failed to read packet (%s)", __FUNCTION__, m_socket->GetError().c_str());
+      // failed to read (wrong size), close the connection
+      XBMC->Log(LOG_ERROR, "%s - failed to read packet (%s)", __FUNCTION__, m_socket->GetError().c_str());
       free(buf);
-      Close();
+      TriggerReconnect();
       return NULL;
     }
   }
 
+  // return the data
   return htsmsg_binary_deserialize(buf, l, buf); /* consumes 'buf' */
 }
 
@@ -205,12 +260,15 @@ bool CHTSPConnection::TransmitMessage(htsmsg_t* m)
   void*  buf;
   size_t len;
 
+  // check whether the socket is open
   if (!m_socket || !m_socket->IsOpen())
   {
     XBMC->Log(LOG_ERROR, "%s - not connected", __FUNCTION__);
-    return NULL;
+    htsmsg_destroy(m);
+    return false;
   }
 
+  // serialise the data
   if(htsmsg_binary_serialize(m, &buf, &len, -1) < 0)
   {
     htsmsg_destroy(m);
@@ -218,116 +276,133 @@ bool CHTSPConnection::TransmitMessage(htsmsg_t* m)
   }
   htsmsg_destroy(m);
 
+  // write the data
   CLockObject lock(m_mutex);
   ssize_t iWriteResult = m_socket->Write(buf, len);
   if (iWriteResult != (ssize_t)len)
   {
-    XBMC->Log(LOG_ERROR, "%s - Failed to write packet (%s)", __FUNCTION__, m_socket->GetError().c_str());
+    // failed to write, close the connection
+    XBMC->Log(LOG_ERROR, "%s - failed to write packet (%s)", __FUNCTION__, m_socket->GetError().c_str());
     free(buf);
-    Close();
+    TriggerReconnect();
     return false;
   }
   free(buf);
   return true;
 }
 
-htsmsg_t* CHTSPConnection::ReadResult(htsmsg_t* m, bool sequence)
+void CHTSPConnection::ReadResult(htsmsg_t *m, CHTSResult &result, const char* strAction /* = NULL */)
 {
-  uint32_t iSequence = 0;
-  if(sequence)
+  // check whether we're connected
+  if (!IsConnected())
   {
-    iSequence = HTSPNextSequenceNumber();
-    htsmsg_add_u32(m, "seq", iSequence);
+    htsmsg_destroy(m);
+    result.status = PVR_ERROR_SERVER_ERROR;
+    if (strAction)
+      XBMC->Log(LOG_ERROR, "%s - '%s' failed - not connected", __FUNCTION__, strAction);
+    return;
   }
 
+  // store in the message queue
+  result.status = PVR_ERROR_NO_ERROR;
+  uint32_t seq = HTSPNextSequenceNumber();
+
+  SMessage &message(m_messageQueue[seq]);
+  message.event = new CEvent;
+  message.msg   = NULL;
+
+  // transmit the message
+  htsmsg_add_u32(m, "seq", seq);
   if(!TransmitMessage(m))
-    return NULL;
-
-  std::deque<htsmsg_t*> queue;
-  m_queue.swap(queue);
-
-  while((m = ReadMessage()))
   {
-    uint32_t seq;
-    if(!sequence)
-      break;
-    if(!htsmsg_get_u32(m, "seq", &seq) && seq == iSequence)
-      break;
-
-    queue.push_back(m);
-    if(queue.size() >= m_iQueueSize)
-    {
-      XBMC->Log(LOG_ERROR, "%s - maximum queue size (%u) reached", __FUNCTION__, m_iQueueSize);
-      m_queue.swap(queue);
-      return NULL;
-    }
+    // command couldn't be sent
+    if (strAction)
+      XBMC->Log(LOG_ERROR, "%s - '%s' failed - failed to send command", __FUNCTION__, strAction);
+    else
+      XBMC->Log(LOG_ERROR, "%s - failed to send command", __FUNCTION__);
+    result.status = PVR_ERROR_SERVER_ERROR;
+  }
+  else if(!message.event->Wait(g_iResponseTimeout * 1000))
+  {
+    // no response
+    if (strAction)
+      XBMC->Log(LOG_ERROR, "%s - '%s' failed - request timed out after %d seconds", __FUNCTION__, strAction, g_iResponseTimeout);
+    else
+      XBMC->Log(LOG_ERROR, "%s - request timed out after %d seconds", __FUNCTION__, g_iResponseTimeout);
+    result.status = PVR_ERROR_SERVER_TIMEOUT;
+  }
+  else
+  {
+    // response received
+    result.message = message.msg;
   }
 
-  m_queue.swap(queue);
-
-  const char* error;
-  if(m && (error = htsmsg_get_str(m, "error")))
+  // delete from the queue
   {
-    XBMC->Log(LOG_ERROR, "%s - error (%s)", __FUNCTION__, error);
-    htsmsg_destroy(m);
-    return NULL;
+    CLockObject lock(m_mutex);
+    delete message.event;
+    m_messageQueue.erase(seq);
   }
-  uint32_t noaccess;
-  if(m && !htsmsg_get_u32(m, "noaccess", &noaccess) && noaccess)
-  {
-
-    XBMC->Log(LOG_ERROR, "%s - access denied (%d)", __FUNCTION__, noaccess);
-    XBMC->QueueNotification(QUEUE_ERROR, "access denied (%d)", noaccess);
-    htsmsg_destroy(m);
-    return NULL;
-  }
-
-  return m;
 }
 
-bool CHTSPConnection::ReadSuccess(htsmsg_t* m, bool sequence, std::string action)
+bool CHTSPConnection::ReadSuccess(htsmsg_t* m, const char* strAction /* = NULL */)
 {
-  if((m = ReadResult(m, sequence)) == NULL)
-  {
-    XBMC->Log(LOG_DEBUG, "%s - failed to %s", __FUNCTION__, action.c_str());
-    return false;
-  }
-  htsmsg_destroy(m);
-  return true;
+  CHTSResult result;
+  ReadResult(m, result, strAction);
+  return result.status == PVR_ERROR_NO_ERROR;
 }
 
 bool CHTSPConnection::SendGreeting(void)
 {
   htsmsg_t *m, *cap;
   htsmsg_field_t *f;
-  const char *method, *server, *version;
+  const char *server, *version;
   const void * chall = NULL;
   size_t chall_len = 0;
   int32_t proto = 0;
 
-  /* send hello */
+  // send hello
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
   htsmsg_add_u32(m, "htspversion", 7);
 
-  /* read welcome */
-  if((m = ReadResult(m)) == NULL)
-    return false;
+  CLockObject lock(m_mutex);
 
-  method  = htsmsg_get_str(m, "method");
-            htsmsg_get_s32(m, "htspversion", &proto);
-  server  = htsmsg_get_str(m, "servername");
-  version = htsmsg_get_str(m, "serverversion");
-            htsmsg_get_bin(m, "challenge", &chall, &chall_len);
+  // read welcome
+  if (!TransmitMessage(m))
+  {
+    XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to transmit greeting", __FUNCTION__);
+    return false;
+  }
+
+  m = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
+  if (m == NULL || m->hm_data == NULL)
+  {
+    if (m)
+      htsmsg_destroy(m);
+    // no welcome received
+    XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed get a reply after the greeting", __FUNCTION__);
+    return false;
+  }
+
+            htsmsg_get_str(m,  "method");
+            htsmsg_get_s32(m,  "htspversion", &proto);
+  server  = htsmsg_get_str(m,  "servername");
+  version = htsmsg_get_str(m,  "serverversion");
+            htsmsg_get_bin(m,  "challenge", &chall, &chall_len);
   cap     = htsmsg_get_list(m, "servercapability");
 
-  /* Process capabilities */
-  m_bTimeshiftSupport = false;
+  // process capabilities
+  m_bTimeshiftSupport     = false;
   m_bTimeshiftSeekSupport = false;
-  if (cap) {
-    HTSMSG_FOREACH(f, cap) {
-      if (f->hmf_type == HMF_STR) {
+  m_bTranscodingSupport   = false;
+  if (cap)
+  {
+    HTSMSG_FOREACH(f, cap)
+    {
+      if (f->hmf_type == HMF_STR)
+      {
         if (!strcmp("timeshift", f->hmf_str))
           m_bTimeshiftSupport = true;
         else if (!strcmp("timeshiftseek", f->hmf_str))
@@ -341,7 +416,6 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
-  XBMC->Log(LOG_NOTICE, "CHTSPConnection - %s - connection opened, protocol v%d%s", __FUNCTION__, m_iProtocol, m_bTimeshiftSupport ? " (timeshift enabled)" : "");
 
   if(chall && chall_len)
   {
@@ -349,14 +423,16 @@ bool CHTSPConnection::SendGreeting(void)
     m_iChallengeLength = chall_len;
     memcpy(m_challenge, chall, chall_len);
   }
-
   htsmsg_destroy(m);
 
+  XBMC->Log(LOG_NOTICE, "CHTSPConnection - %s - connection opened to '%s %s', protocol v%d%s", __FUNCTION__, m_strServerName.c_str(), m_strVersion.c_str(), m_iProtocol, m_bTimeshiftSupport ? " (timeshift enabled)" : "");
   return true;
 }
 
 bool CHTSPConnection::Auth(void)
 {
+  CLockObject lock(m_mutex);
+  // no username set, don't authenticate
   if (m_strUsername.empty())
   {
     XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - no username set. not authenticating", __FUNCTION__);
@@ -367,7 +443,7 @@ bool CHTSPConnection::Auth(void)
   htsmsg_add_str(m, "method"  , "authenticate");
   htsmsg_add_str(m, "username", m_strUsername.c_str());
 
-  if(m_strPassword != "" && m_challenge)
+  if(!m_strPassword.empty() && m_challenge)
   {
     XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - authenticating as user '%s' with a password", __FUNCTION__, m_strUsername.c_str());
 
@@ -385,7 +461,23 @@ bool CHTSPConnection::Auth(void)
     XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - authenticating as user '%s' without a password", __FUNCTION__, m_strUsername.c_str());
   }
 
-  return ReadSuccess(m, false, "get reply from authentication with server");
+  if (!TransmitMessage(m))
+  {
+    XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to transmit auth command", __FUNCTION__);
+    return false;
+  }
+
+  m = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
+  if (m == NULL || m->hm_data == NULL)
+  {
+    if (m)
+      htsmsg_destroy(m);
+    XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to get a reply from the auth command", __FUNCTION__);
+    return false;
+  }
+
+  htsmsg_destroy(m);
+  return true;
 }
 
 bool CHTSPConnection::CheckConnection(uint32_t iTimeout)
@@ -415,39 +507,114 @@ bool CHTSPConnection::CanSeekLiveStream(void)
 
 void* CHTSPConnection::Process(void)
 {
-  bool bWarningDisplayed(false);
+  htsmsg_t* msg(NULL);
   while (!IsStopped())
   {
-    if (!m_socket || !m_socket->IsOpen())
+    if (!IsConnected() && !m_reconnect->IsRunning())
     {
-      if (!bWarningDisplayed)
+      XBMC->Log(LOG_ERROR, "connection dropped, trying to restore");
+      m_reconnect->CreateThread(true);
+    }
+    else
+    {
+      // if there's anything in the buffer, read it
       {
-        bWarningDisplayed = true;
-        XBMC->Log(LOG_ERROR, "connection dropped, trying to restore");
-        if (m_callback)
-          m_callback->OnConnectionDropped();
+        {
+          CLockObject lock(m_mutex);
+          msg = ReadMessage(5);
+        }
+        if(msg == NULL || msg->hm_data == NULL)
+        {
+          if (msg)
+            htsmsg_destroy(msg);
+
+          {
+            CLockObject lock(m_mutex);
+            if (!m_reconnect->IsRunning() && m_iReadTimeout > 0 && m_readTimeout.TimeLeft() == 0)
+            {
+              TriggerReconnect();
+              continue;
+            }
+          }
+
+          Sleep(5);
+          continue;
+        }
       }
 
-      if(m_challenge)
       {
-        free(m_challenge);
-        m_challenge        = NULL;
-        m_iChallengeLength = 0;
+        CLockObject lock(m_mutex);
+        if (!m_reconnect->IsRunning() && m_iReadTimeout > 0)
+          m_readTimeout.Init(m_iReadTimeout);
       }
 
-      if (Connect())
+      // signal if 'seq' is set
+      uint32_t seq;
+      if(htsmsg_get_u32(msg, "seq", &seq) == 0)
       {
-        bWarningDisplayed = false;
+        CLockObject lock(m_mutex);
+        SMessages::iterator it = m_messageQueue.find(seq);
+        if(it != m_messageQueue.end())
+        {
+          it->second.msg = msg;
+          it->second.event->Broadcast();
+          continue;
+        }
+      }
+
+      // process the message
+      m_callback->ProcessMessage(msg);
+    }
+  }
+
+  return NULL;
+}
+
+void* CHTSPReconnect::Process(void)
+{
+  if (m_connection->m_callback)
+    m_connection->m_callback->OnConnectionDropped();
+
+  while (!m_connection->IsConnected() && !IsStopped())
+  {
+    {
+      CLockObject lock(m_connection->m_mutex);
+      for (SMessages::iterator it = m_connection->m_messageQueue.begin(); it != m_connection->m_messageQueue.end(); it++)
+      {
+        it->second.event->Broadcast();
+        delete it->second.event;
+      }
+      m_connection->m_messageQueue.clear();
+
+      m_connection->m_bIsConnected = false;
+      if(m_connection->m_challenge)
+      {
+        free(m_connection->m_challenge);
+        m_connection->m_challenge        = NULL;
+        m_connection->m_iChallengeLength = 0;
+      }
+    }
+
+    if (m_connection->Connect())
+    {
+      if (m_connection->m_callback && m_connection->m_callback->OnConnectionRestored())
+      {
+        m_connection->m_bIsConnected = true;
+        if (m_connection->m_iReadTimeout > 0)
+          m_connection->m_readTimeout.Init(m_connection->m_iReadTimeout);
         XBMC->Log(LOG_DEBUG, "connection restored");
-        if (m_callback)
-          m_callback->OnConnectionRestored();
+      }
+      else
+      {
+        m_connection->TriggerReconnect();
+        Sleep(1000);
       }
     }
     else
     {
-      Sleep(250);
+      if (m_connection->m_callback)
+        m_connection->m_callback->OnConnectionDropped();
     }
   }
-
   return NULL;
 }
