@@ -32,7 +32,6 @@ CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
     m_subs(0),
     m_channel(0),
     m_tag(0),
-    m_bWaitForIFrame(false),
     m_bIsOpen(false)
 {
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
@@ -50,7 +49,6 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
   m_channel        = channelinfo.iUniqueId;
   m_bIsRadio       = channelinfo.bIsRadio;
-  m_bWaitForIFrame = !channelinfo.bIsRadio;
   m_bIsOpen        = false;
 
   if(!m_session->CheckConnection(g_iConnectTimeout * 1000))
@@ -188,11 +186,6 @@ void CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
     XBMC->Log(LOG_ERROR, "%s - malformed message", __FUNCTION__);
     return;
   }
-
-  // wait for an iframe as first packet for tv channels
-  if (m_bWaitForIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
-    return;
-  m_bWaitForIFrame = false;
 
   DemuxPacket* pkt = PVR->AllocateDemuxPacket(binlen);
   if (!pkt)
@@ -336,7 +329,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   }
 
   m_Streams.iStreamCount = 0;
-  m_bWaitForIFrame       = false;
 
   HTSMSG_FOREACH(f, streams)
   {
@@ -407,15 +399,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG2VIDEO;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "H264"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_H264;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "VP8"))
     {
@@ -426,8 +414,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG4;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "DVBSUB"))
     {

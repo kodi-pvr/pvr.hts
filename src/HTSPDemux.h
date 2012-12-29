@@ -70,7 +70,6 @@ private:
   SQuality                             m_Quality;
   SSourceInfo                          m_SourceInfo;
   std::map<int, unsigned int>          m_StreamIndex;
-  bool                                 m_bWaitForIFrame;
   PLATFORM::SyncedBuffer<DemuxPacket*> m_demuxPacketBuffer;
   bool                                 m_bIsOpen;
 };
