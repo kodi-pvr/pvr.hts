@@ -137,6 +137,10 @@ bool CHTSPConnection::Connect(void)
     return false;
   }
 
+  m_bIsConnected = true;
+  if (!m_reconnect)
+    m_reconnect = new CHTSPReconnect(this);
+
   // create reader thread
   if (!IsRunning() && !CreateThread(true))
   {
@@ -150,20 +154,18 @@ bool CHTSPConnection::Connect(void)
   {
     XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
     Close();
+    m_connectEvent.Broadcast();
     return false;
   }
 
   // connected
-  m_bIsConnected = true;
-  if (!m_reconnect)
-    m_reconnect = new CHTSPReconnect(this);
   m_connectEvent.Broadcast();
-
   return true;
 }
 
 void CHTSPConnection::TriggerReconnect(void)
 {
+  XBMC->Log(LOG_DEBUG, "reconnect triggered");
   CLockObject lock(m_mutex);
   m_socket->Close();
   m_bIsConnected = false;
@@ -564,6 +566,7 @@ void* CHTSPConnection::Process(void)
 
       // process the message
       m_callback->ProcessMessage(msg);
+      htsmsg_destroy(msg);
     }
   }
 
