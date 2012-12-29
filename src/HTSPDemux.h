@@ -46,17 +46,17 @@ public:
   void         Flush(void);
 
 private:
-  void         ParseSubscriptionStart (htsmsg_t *m);
-  void         ParseSubscriptionStop  (htsmsg_t *m);
-  void         ParseSubscriptionStatus(htsmsg_t *m);
-  bool         SendSubscribe  (int subscription, int channel);
-  bool         SendUnsubscribe(int subscription);
-  bool         SendSpeed      (int subscription, int speed);
-  bool         SendSeek       (int subscription, int time, bool backward, double *startpts);
-  DemuxPacket *ParseMuxPacket(htsmsg_t *m);
-  bool         ParseQueueStatus(htsmsg_t* msg);
-  bool         ParseSignalStatus(htsmsg_t* msg);
-  bool         ParseSourceInfo(htsmsg_t* msg);
+  void ParseSubscriptionStart (htsmsg_t *m);
+  void ParseSubscriptionStop  (htsmsg_t *m);
+  void ParseSubscriptionStatus(htsmsg_t *m);
+  bool SendSubscribe  (int subscription, int channel);
+  bool SendUnsubscribe(int subscription);
+  bool SendSpeed      (int subscription, int speed);
+  bool SendSeek       (int subscription, int time, bool backward, double *startpts);
+  void ParseMuxPacket(htsmsg_t *m);
+  bool ParseQueueStatus(htsmsg_t* msg);
+  bool ParseSignalStatus(htsmsg_t* msg);
+  bool ParseSourceInfo(htsmsg_t* msg);
 
   CHTSPConnection*                     m_session;
   bool                                 m_bIsRadio;

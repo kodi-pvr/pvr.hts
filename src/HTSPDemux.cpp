@@ -153,10 +153,7 @@ bool CHTSPDemux::ProcessMessage(htsmsg* msg)
   else if(strcmp("signalStatus"      , method) == 0)
     ParseSignalStatus(msg);
   else if(strcmp("muxpkt"            , method) == 0)
-  {
-    DemuxPacket *pkt = ParseMuxPacket(msg);
-    m_demuxPacketBuffer.Push(pkt);
-  }
+    ParseMuxPacket(msg);
   else
   {
     // not a demux message
@@ -178,9 +175,8 @@ DemuxPacket* CHTSPDemux::Read()
   return PVR->AllocateDemuxPacket(0);
 }
 
-DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
+void CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
 {
-  DemuxPacket* pkt = NULL;
   uint32_t    index, duration, frametype;
   const void* bin;
   size_t      binlen;
@@ -190,15 +186,17 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
      htsmsg_get_bin(msg, "payload", &bin, &binlen))
   {
     XBMC->Log(LOG_ERROR, "%s - malformed message", __FUNCTION__);
-    return PVR->AllocateDemuxPacket(0);
+    return;
   }
 
   // wait for an iframe as first packet for tv channels
   if (m_bWaitForIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
-    return PVR->AllocateDemuxPacket(0);
+    return;
   m_bWaitForIFrame = false;
 
-  pkt = PVR->AllocateDemuxPacket(binlen);
+  DemuxPacket* pkt = PVR->AllocateDemuxPacket(binlen);
+  if (!pkt)
+    return;
   memcpy(pkt->pData, bin, binlen);
 
   pkt->iSize = binlen;
@@ -230,10 +228,10 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
   if (pkt->iStreamId < 0)
   {
     PVR->FreeDemuxPacket(pkt);
-    pkt = PVR->AllocateDemuxPacket(0);
+    return;
   }
 
-  return pkt;
+  m_demuxPacketBuffer.Push(pkt);
 }
 
 bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
