@@ -1,3 +1,10 @@
+1.6.9
+
+- call to Close() didn't work in CHTSPData::Open()
+- don't delete and create CHTSPReconnect each time, just stop the thread
+- don't wait for an iframe but let tvheadend handle it
+- fixed missing htsmsg_destroy() call after processing an incoming message
+
 1.6.8
 
 - refactor CHTSPConnection
