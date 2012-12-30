@@ -385,6 +385,7 @@ void CHTSPConnection::ReadResult(htsmsg_t *m, CHTSResult &result, const char* st
         XBMC->Log(LOG_ERROR, "%s - '%s' failed - access denied", __FUNCTION__, strAction);
       else
         XBMC->Log(LOG_ERROR, "%s - command failed - access denied", __FUNCTION__);
+      XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
       result.status = PVR_ERROR_REJECTED;
     }
 
@@ -396,6 +397,7 @@ void CHTSPConnection::ReadResult(htsmsg_t *m, CHTSResult &result, const char* st
         XBMC->Log(LOG_ERROR, "%s - '%s' failed - %s", __FUNCTION__, strAction, strError.c_str());
       else
         XBMC->Log(LOG_ERROR, "%s - command failed - %s", __FUNCTION__, strError.c_str());
+      XBMC->QueueNotification(QUEUE_ERROR, "Command failed: %s", strError.c_str());
       result.status = PVR_ERROR_REJECTED;
     }
   }
@@ -527,19 +529,34 @@ bool CHTSPConnection::Auth(void)
   if (!TransmitMessage(m))
   {
     XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to transmit auth command", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
     return false;
   }
 
-  m = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
-  if (m == NULL || m->hm_data == NULL)
+  CHTSResult result;
+  result.message = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
+  if (result.message == NULL)
   {
-    if (m)
-      htsmsg_destroy(m);
     XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to get a reply from the auth command", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
+    return false;
+  }
+  else if (result.NoAccess())
+  {
+    // access denied
+    XBMC->Log(LOG_ERROR, "%s - auth failed - access denied", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
+    return false;
+  }
+  else if (result.IsError())
+  {
+    // server reported an error
+    string strError = result.GetErrorMessage();
+    XBMC->Log(LOG_ERROR, "%s - auth failed - %s", __FUNCTION__, strError.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
     return false;
   }
 
-  htsmsg_destroy(m);
   return true;
 }
 
