@@ -1,3 +1,8 @@
+1.6.10
+
+- fixed authentication
+- display an error message when an error is detected
+
 1.6.9
 
 - call to Close() didn't work in CHTSPData::Open()
