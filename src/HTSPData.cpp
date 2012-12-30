@@ -83,11 +83,11 @@ bool CHTSPData::Open()
 
 void CHTSPData::Close()
 {
-  SAFE_DELETE(m_demux);
-  SAFE_DELETE(m_session);
   CLockObject lock(m_mutex);
   m_bIsStarted = false;
   m_started.Broadcast();
+  SAFE_DELETE(m_demux);
+  SAFE_DELETE(m_session);
 }
 
 void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
