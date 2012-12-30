@@ -377,6 +377,27 @@ void CHTSPConnection::ReadResult(htsmsg_t *m, CHTSResult &result, const char* st
   {
     // response received
     result.message = message.msg;
+
+    if (result.NoAccess())
+    {
+      // access denied
+      if (strAction)
+        XBMC->Log(LOG_ERROR, "%s - '%s' failed - access denied", __FUNCTION__, strAction);
+      else
+        XBMC->Log(LOG_ERROR, "%s - command failed - access denied", __FUNCTION__);
+      result.status = PVR_ERROR_REJECTED;
+    }
+
+    if (result.IsError())
+    {
+      // server reported an error
+      string strError = result.GetErrorMessage();
+      if (strAction)
+        XBMC->Log(LOG_ERROR, "%s - '%s' failed - %s", __FUNCTION__, strAction, strError.c_str());
+      else
+        XBMC->Log(LOG_ERROR, "%s - command failed - %s", __FUNCTION__, strError.c_str());
+      result.status = PVR_ERROR_REJECTED;
+    }
   }
 
   // delete from the queue
