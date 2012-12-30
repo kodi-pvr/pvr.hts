@@ -111,52 +111,54 @@ bool CHTSPConnection::OpenSocket(void)
 
 bool CHTSPConnection::Connect(void)
 {
-  CLockObject lock(m_mutex);
-
-  // already connected
-  if (m_bIsConnected)
-    return true;
-
-  // open a socket
-  if (!OpenSocket())
-    return false;
-
-  // send the greeting, get the protocol version and capabilities
-  if (!SendGreeting())
+  bool bFailed(false);
   {
-    XBMC->Log(LOG_ERROR, "%s - failed to read greeting from the backend", __FUNCTION__);
-    Close();
-    return false;
+    CLockObject lock(m_mutex);
+
+    // already connected
+    if (m_bIsConnected)
+      return true;
+
+    // open a socket
+    if (!OpenSocket())
+      return false;
+
+    // send the greeting, get the protocol version and capabilities
+    if (!SendGreeting())
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to read greeting from the backend", __FUNCTION__);
+      m_socket->Close();
+      return false;
+    }
+
+    // check whether the proto is v2+
+    if(m_iProtocol < 2)
+    {
+      XBMC->Log(LOG_ERROR, "%s - incompatible protocol version %d", __FUNCTION__, m_iProtocol);
+      m_socket->Close();
+      return false;
+    }
+
+    // create reader thread
+    if (!IsRunning() && !CreateThread(true))
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to create data processing thread", __FUNCTION__);
+      bFailed = true;
+    }
+
+    // send authentication
+    if (!bFailed && !Auth())
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
+      bFailed = true;
+    }
   }
 
-  // check whether the proto is v2+
-  if(m_iProtocol < 2)
-  {
-    XBMC->Log(LOG_ERROR, "%s - incompatible protocol version %d", __FUNCTION__, m_iProtocol);
+  if (bFailed)
     Close();
-    return false;
-  }
-
-  m_bIsConnected = true;
-
-  // create reader thread
-  if (!IsRunning() && !CreateThread(true))
-  {
-    XBMC->Log(LOG_ERROR, "%s - failed to create data processing thread", __FUNCTION__);
-    Close();
-    return false;
-  }
-
-  // send authentication
-  if (!Auth())
-  {
-    XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
-    Close();
-    m_connectEvent.Broadcast();
-    return false;
-  }
 
   // connected
+  CLockObject lock(m_mutex);
   m_connectEvent.Broadcast();
   return true;
 }
@@ -171,8 +173,6 @@ void CHTSPConnection::TriggerReconnect(void)
 
 void CHTSPConnection::Close()
 {
-  m_reconnect->StopThread();
-
   // stop the reader thread
   StopThread();
 
@@ -567,6 +567,8 @@ void* CHTSPConnection::Process(void)
       htsmsg_destroy(msg);
     }
   }
+
+  m_reconnect->StopThread();
 
   return NULL;
 }
