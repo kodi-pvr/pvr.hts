@@ -310,7 +310,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
     int bNewValue = *(bool*) settingValue;
     XBMC->Log(LOG_INFO, "%s - Changed Setting 'transcode' from %u to %u", __FUNCTION__, g_bTranscode, bNewValue);
-    g_bTranscode = bNewValue;
+    g_bTranscode = (bNewValue == 1);
   }
   else if (str == "resolution")
   {

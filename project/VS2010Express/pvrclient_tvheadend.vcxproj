@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\CircBuffer.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\GUIDialogTranscode.cpp" />
     <ClCompile Include="..\..\src\HTSPConnection.cpp" />
     <ClCompile Include="..\..\src\HTSPData.cpp" />
     <ClCompile Include="..\..\src\HTSPDemux.cpp" />
@@ -85,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\CircBuffer.h" />
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\GUIDialogTranscode.h" />
     <ClInclude Include="..\..\src\HTSPConnection.h" />
     <ClInclude Include="..\..\src\HTSPData.h" />
     <ClInclude Include="..\..\src\HTSPDemux.h" />

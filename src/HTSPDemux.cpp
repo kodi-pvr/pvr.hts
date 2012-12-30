@@ -175,7 +175,7 @@ DemuxPacket* CHTSPDemux::Read()
 
 void CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
 {
-  uint32_t    index, duration, frametype;
+  uint32_t    index, duration;
   const void* bin;
   size_t      binlen;
   int64_t     ts;
