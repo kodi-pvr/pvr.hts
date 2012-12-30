@@ -35,6 +35,48 @@ using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 
+CHTSResult::CHTSResult(void) :
+    message(NULL),
+    status(PVR_ERROR_NO_ERROR)
+{
+}
+
+CHTSResult::~CHTSResult(void)
+{
+  if (message != NULL)
+    htsmsg_destroy(message);
+}
+
+
+string CHTSResult::GetErrorMessage(void)
+{
+  if (m_strError.empty())
+  {
+    if (!message)
+    {
+      m_strError = "No response received";
+    }
+    else
+    {
+      const char* error;
+      if((error = htsmsg_get_str(message, "error")))
+        m_strError = error;
+    }
+  }
+  return m_strError;
+}
+
+bool CHTSResult::IsError(void)
+{
+  return !GetErrorMessage().empty();
+}
+
+bool CHTSResult::NoAccess(void)
+{
+  uint32_t noaccess;
+  return (message && !htsmsg_get_u32(message, "noaccess", &noaccess) && noaccess);
+}
+
 CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_socket(new CTcpConnection(g_strHostname, g_iPortHTSP)),
     m_challenge(NULL),

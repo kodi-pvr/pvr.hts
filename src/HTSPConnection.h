@@ -56,17 +56,18 @@ typedef std::map<int, SMessage> SMessages;
 class CHTSResult
 {
 public:
-  CHTSResult(void) : message(NULL), status(PVR_ERROR_NO_ERROR) {}
-  ~CHTSResult(void)
-  {
-    if (message != NULL)
-      htsmsg_destroy(message);
-  }
+  CHTSResult(void);
+  ~CHTSResult(void);
 
-  // the actual message
-  htsmsg *message;
-  // the return code
-  PVR_ERROR status;
+  std::string GetErrorMessage(void);
+  bool        IsError(void);
+  bool        NoAccess(void);
+
+  htsmsg*   message;      /*!< the response message */
+  PVR_ERROR status;       /*!< the return code */
+
+private:
+  std::string m_strError; /*!< the error response */
 };
 
 class CHTSPConnection;
