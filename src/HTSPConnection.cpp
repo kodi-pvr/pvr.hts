@@ -51,9 +51,9 @@ CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_bTranscodingSupport(false),
     m_iQueueSize(1000),
     m_callback(callback),
-    m_iReadTimeout(-1),
-    m_reconnect(NULL)
+    m_iReadTimeout(-1)
 {
+  m_reconnect = new CHTSPReconnect(this);
 }
 
 CHTSPConnection::~CHTSPConnection()
@@ -138,8 +138,6 @@ bool CHTSPConnection::Connect(void)
   }
 
   m_bIsConnected = true;
-  if (!m_reconnect)
-    m_reconnect = new CHTSPReconnect(this);
 
   // create reader thread
   if (!IsRunning() && !CreateThread(true))
@@ -173,13 +171,13 @@ void CHTSPConnection::TriggerReconnect(void)
 
 void CHTSPConnection::Close()
 {
+  m_reconnect->StopThread();
+
   // stop the reader thread
   StopThread();
 
   // close the socket
   CLockObject lock(m_mutex);
-  delete m_reconnect;
-  m_reconnect = NULL;
   m_bIsConnected = false;
 
   if(m_socket && m_socket->IsOpen())
