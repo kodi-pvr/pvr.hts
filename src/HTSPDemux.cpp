@@ -668,7 +668,12 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
   htsmsg_add_str(m, "method"        , "subscriptionSpeed");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "speed"         , speed);
-  return m_session->ReadSuccess(m, "pause subscription");
+  if (m_session->ReadSuccess(m, "pause subscription"))
+  {
+    m_session->SetReadTimeout(speed == 0 ? -1 : 10000);
+    return true;
+  }
+  return false;
 }
 
 bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *startpts)
