@@ -799,15 +799,16 @@ PVR_ERROR CHTSPData::GetEvents(ADDON_HANDLE handle, uint32_t cid, time_t stop)
     return PVR_ERROR_UNKNOWN;
   }
 
+  retVal = PVR_ERROR_UNKNOWN;
   htsmsg_t *e;
   htsmsg_field_t *f;
   HTSMSG_FOREACH(f, msg)
   {
     if ((e = htsmsg_get_map_by_field(f)))
     {
-      if (!ParseEvent(handle, e, NULL, stop))
+      if (ParseEvent(handle, e, NULL, stop))
       {
-        retVal = PVR_ERROR_UNKNOWN;
+        retVal = PVR_ERROR_NO_ERROR;
       }
     }
   }
