@@ -1,3 +1,7 @@
+1.6.11
+
+- disable read timeout check while the stream is paused
+
 1.6.10
 
 - fixed authentication
