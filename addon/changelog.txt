@@ -1,3 +1,7 @@
+1.6.12
+
+- fix instant recordings when channel has no epg data
+
 1.6.11
 
 - disable read timeout check while the stream is paused
