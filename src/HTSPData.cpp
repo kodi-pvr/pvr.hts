@@ -913,7 +913,7 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
   }
 
   htsmsg_t *services;
-  bool bIsRadio(false);
+  bool bIsRadio = channel.radio;
   if((services = htsmsg_get_list(msg, "services")))
   {
     htsmsg_field_t *f;
