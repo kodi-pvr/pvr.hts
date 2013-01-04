@@ -558,7 +558,7 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method",      "addDvrEntry");
-  if ((GetProtocol() >= 6) && timer.iEpgUid)
+  if ((GetProtocol() >= 6) && timer.iEpgUid > 0)
   {
     htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
     htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
