@@ -874,10 +874,32 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 
   if((strIconPath = htsmsg_get_str(msg, "channelIcon")))
   {
-    if (channel.icon != strIconPath)
+    CStdString strIconURL;
+
+    if (strIconPath[0] != '/' || strIconPath[0] == '\0')
+    {
+      strIconURL = strIconPath;
+    }
+    else
+    {
+      strIconURL = "http://";
+
+      if (g_strUsername != "")
+      {
+        strIconURL += g_strUsername;
+        if (g_strPassword != "")
+        {
+          strIconURL += ":";
+          strIconURL += g_strPassword;
+        }
+        strIconURL += "@";
+      }
+      strIconURL.Format("%s%s:%i%s%s", strIconURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_session->GetWebroot(), strIconPath);
+    }
+    if (channel.icon != strIconURL)
     {
       bChannelChanged = true;
-      channel.icon = strIconPath;
+      channel.icon = strIconURL;
     }
   }
 
