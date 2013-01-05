@@ -421,7 +421,7 @@ bool CHTSPConnection::SendGreeting(void)
 {
   htsmsg_t *m, *cap;
   htsmsg_field_t *f;
-  const char *server, *version;
+  const char *server, *version, *webroot;
   const void * chall = NULL;
   size_t chall_len = 0;
   int32_t proto = 0;
@@ -457,6 +457,7 @@ bool CHTSPConnection::SendGreeting(void)
   version = htsmsg_get_str(m,  "serverversion");
             htsmsg_get_bin(m,  "challenge", &chall, &chall_len);
   cap     = htsmsg_get_list(m, "servercapability");
+  webroot = htsmsg_get_str(m,  "webroot");
 
   // process capabilities
   m_bTimeshiftSupport     = false;
@@ -481,6 +482,7 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
+  m_strWebroot    = webroot ?: "/";
 
   if(chall && chall_len)
   {

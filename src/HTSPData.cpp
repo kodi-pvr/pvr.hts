@@ -336,7 +336,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
           }
           strStreamURL += "@";
         }
-        strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
+        strStreamURL.Format("%s%s:%i%sdvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_session->GetWebroot(), recording.id);
       }
     }
 
