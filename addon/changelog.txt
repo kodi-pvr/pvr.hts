@@ -1,3 +1,8 @@
+1.6.13
+
+- make channel.radio to not reset to false during update if tvheadend not provided channel services
+- change handling of EPG events to not fail all events if only one/few events were broken/malformed
+
 1.6.12
 
 - fix instant recordings when channel has no epg data
