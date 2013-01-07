@@ -24,6 +24,8 @@
 #include "avcodec.h" // For codec id's
 #include "HTSPDemux.h"
 
+#define READ_TIMEOUT 20000
+
 using namespace ADDON;
 
 CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
@@ -654,7 +656,7 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
   }
 
   // TODO get this from the pvr api. hardcoded to 10 seconds now
-  m_session->SetReadTimeout(10000);
+  m_session->SetReadTimeout(READ_TIMEOUT);
   Flush();
 
   XBMC->Log(LOG_DEBUG, "%s - new subscription for channel %d (%d)", __FUNCTION__, m_channel, m_subs);
@@ -670,7 +672,7 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
   htsmsg_add_s32(m, "speed"         , speed);
   if (m_session->ReadSuccess(m, "pause subscription"))
   {
-    m_session->SetReadTimeout(speed == 0 ? -1 : 10000);
+    m_session->SetReadTimeout(speed == 0 ? -1 : READ_TIMEOUT);
     return true;
   }
   return false;
