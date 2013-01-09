@@ -495,9 +495,10 @@ bool CHTSPConnection::SendGreeting(void)
       if (f->hmf_type == HMF_STR)
       {
         if (!strcmp("timeshift", f->hmf_str))
+        {
           m_bTimeshiftSupport = true;
-        else if (!strcmp("timeshiftseek", f->hmf_str))
           m_bTimeshiftSeekSupport = true;
+        }
         else if (!strcmp("transcoding", f->hmf_str))
           m_bTranscodingSupport = true;
       }

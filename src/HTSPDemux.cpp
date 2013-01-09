@@ -27,6 +27,7 @@
 #define READ_TIMEOUT 20000
 
 using namespace ADDON;
+using namespace PLATFORM;
 
 CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
     m_session(connection),
@@ -36,6 +37,8 @@ CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
     m_tag(0),
     m_bIsOpen(false)
 {
+  m_seekEvent = new CEvent;
+  m_seekTime  = -1;
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
     m_Streams.stream[i].iCodecType = AVMEDIA_TYPE_UNKNOWN;
   m_Streams.iStreamCount = 0;
@@ -148,6 +151,10 @@ bool CHTSPDemux::ProcessMessage(htsmsg* msg)
     ParseSubscriptionStop(msg);
   else if(strcmp("subscriptionStatus", method) == 0)
     ParseSubscriptionStatus(msg);
+  else if(strcmp("subscriptionSkip"  , method) == 0)
+    ParseSubscriptionSkip(msg);
+  else if(strcmp("subscriptionSpeed" , method) == 0)
+    ParseSubscriptionSpeed(msg);
   else if(strcmp("queueStatus"       , method) == 0)
     ParseQueueStatus(msg);
   else if(strcmp("signalStatus"      , method) == 0)
@@ -576,6 +583,29 @@ void CHTSPDemux::ParseSubscriptionStatus(htsmsg_t *m)
   }
 }
 
+void CHTSPDemux::ParseSubscriptionSkip(htsmsg_t *m)
+{
+  int64_t s64;
+  uint32_t u32;
+  if (!htsmsg_get_u32(m, "error", &u32)   ||
+       htsmsg_get_u32(m, "absolute", &u32) ||
+       htsmsg_get_s64(m, "time", &s64)) {
+    m_seekTime = -1;
+  } else {
+    m_seekTime = (double)s64;
+  }
+  m_seekEvent->Broadcast();
+}
+
+void CHTSPDemux::ParseSubscriptionSpeed(htsmsg_t *m)
+{
+  uint32_t u32;
+  if (!htsmsg_get_u32(m, "speed", &u32)) {
+    XBMC->Log(LOG_INFO, "%s - speed = %u", __FUNCTION__, u32);
+    // TODO: need a way to pass this to player core
+  }
+}
+
 bool CHTSPDemux::SendUnsubscribe(int subscription)
 {
   XBMC->Log(LOG_INFO, "%s - unsubscribe from subscription %d", __FUNCTION__, subscription);
@@ -680,15 +710,27 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
 
 bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *startpts)
 {
-  XBMC->Log(LOG_DEBUG, "%s(%d, %d, %d)", __FUNCTION__, subscription, time, backward ? 1:0);
   htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_str(m, "method"        , "subscriptionSeek");
-  htsmsg_add_s32(m, "subscriptionId", subscription);
-  htsmsg_add_s32(m, "time"          , time);
-  htsmsg_add_u32(m, "backward"      , backward);
-  htsmsg_add_float(m, "startpts"    , *startpts);
+  int64_t seek;
 
-  return m_session->ReadSuccess(m, "seek subscription");
+  // Note: time is in ms not DVD time, TVH requires 1MHz (us) input
+  seek = time * 1000;
+
+  htsmsg_add_str(m, "method"        , "subscriptionSkip");
+  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_s64(m, "time"          , seek);
+
+  if (!m_session->ReadSuccess(m, "seek subscription"))
+    return false;
+
+  if (!m_seekEvent->Wait(g_iResponseTimeout * 1000))
+    return false;
+
+  if (m_seekTime < 0)
+    return false;
+
+  *startpts = m_seekTime;
+  return true;
 }
 
 bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)
