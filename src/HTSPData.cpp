@@ -306,7 +306,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
   for(SRecordings::const_iterator it = recordings.begin(); it != recordings.end(); ++it)
   {
     SRecording recording = it->second;
-    CStdString strStreamURL = "http://";
+    CStdString strStreamURL;
     CStdString strRecordingId;
     CStdString strDirectory = "/";
     std::string strChannelName = "";
@@ -319,25 +319,12 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
         strChannelName = itr->second.name.c_str();
 
       /* HTSPv7+ - use HTSP */
-      if (GetProtocol() >= 7) {
+      if (GetProtocol() >= 7)
         strStreamURL = "";
 
       /* HTSPv6- - use HTTP */
-      } else {
-        strStreamURL = "http://";
-
-        if (g_strUsername != "")
-        {
-          strStreamURL += g_strUsername;
-          if (g_strPassword != "")
-          {
-            strStreamURL += ":";
-            strStreamURL += g_strPassword;
-          }
-          strStreamURL += "@";
-        }
-        strStreamURL.Format("%s%s:%i%sdvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_session->GetWebroot(), recording.id);
-      }
+      else
+        strStreamURL = m_session->GetWebURL("dvrfile/%i", recording.id);
     }
 
     strRecordingId.Format("%i", recording.id);
@@ -877,25 +864,10 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
     CStdString strIconURL;
 
     if (strIconPath[0] != '/' || strIconPath[0] == '\0')
-    {
       strIconURL = strIconPath;
-    }
     else
-    {
-      strIconURL = "http://";
+      strIconURL = m_session->GetWebURL("%s", strIconPath);
 
-      if (g_strUsername != "")
-      {
-        strIconURL += g_strUsername;
-        if (g_strPassword != "")
-        {
-          strIconURL += ":";
-          strIconURL += g_strPassword;
-        }
-        strIconURL += "@";
-      }
-      strIconURL.Format("%s%s:%i%s%s", strIconURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_session->GetWebroot(), strIconPath);
-    }
     if (channel.icon != strIconURL)
     {
       bChannelChanged = true;

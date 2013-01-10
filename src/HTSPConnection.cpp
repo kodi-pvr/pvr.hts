@@ -47,7 +47,6 @@ CHTSResult::~CHTSResult(void)
     htsmsg_destroy(message);
 }
 
-
 string CHTSResult::GetErrorMessage(void)
 {
   if (m_strError.empty())
@@ -105,6 +104,32 @@ CHTSPConnection::~CHTSPConnection()
 
   delete m_socket;
   delete m_reconnect;
+}
+
+const CStdString CHTSPConnection::GetWebURL (const char *fmt, ...) const
+{
+  CStdString url;
+  CStdString auth;
+
+  /* Authentication */
+  if (!g_strUsername.empty()) {
+    auth = g_strUsername;
+    if (!g_strPassword.empty())
+      auth.AppendFormat(":%s", g_strPassword.c_str());
+    auth += "@";
+  } else {
+    auth = "";
+  }
+
+  /* URL root */
+  url.Format("http://%s%s:%i%s", auth.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_strWebroot.c_str());
+
+  va_list args;
+  va_start(args, fmt);
+  url.AppendFormatV(fmt, args);
+  va_end(args);
+
+  return url;
 }
 
 void CHTSPConnection::SetReadTimeout(int iTimeout)

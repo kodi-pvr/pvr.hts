@@ -101,6 +101,7 @@ public:
   const char *GetServerName() const { return m_strServerName.c_str(); }
   const char *GetVersion() const { return m_strVersion.c_str(); }
   const char *GetWebroot() const { return m_strWebroot.c_str(); }
+  const       CStdString GetWebURL(const char *fmt, ...) const;
 
   bool        TransmitMessage(htsmsg_t* m);
   void        ReadResult(htsmsg_t *m, CHTSResult &result, const char* strAction = NULL);
