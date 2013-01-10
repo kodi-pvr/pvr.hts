@@ -51,7 +51,7 @@ struct SMessage
   PLATFORM::CEvent* event;
   htsmsg_t*         msg;
 };
-typedef std::map<int, SMessage> SMessages;
+typedef std::map<uint32_t, SMessage> SMessages;
 
 class CHTSResult
 {
