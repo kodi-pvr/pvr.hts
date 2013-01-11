@@ -1,3 +1,8 @@
+1.6.16
+
+- correct some signed/unsigned mixups
+- added imagecache support (icons on the backend) 
+
 1.6.15
 
 - fix false disconnects by raising default (hardcoded) read timeout value when opening streams from 10 to 20 seconds.
