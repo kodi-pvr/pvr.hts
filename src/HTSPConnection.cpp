@@ -690,11 +690,7 @@ void* CHTSPReconnect::Process(void)
     {
       CLockObject lock(m_connection->m_mutex);
       for (SMessages::iterator it = m_connection->m_messageQueue.begin(); it != m_connection->m_messageQueue.end(); it++)
-      {
         it->second.event->Broadcast();
-        delete it->second.event;
-      }
-      m_connection->m_messageQueue.clear();
 
       m_connection->m_bIsConnected = false;
       if(m_connection->m_challenge)

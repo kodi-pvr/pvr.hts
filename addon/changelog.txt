@@ -1,3 +1,7 @@
+1.6.17
+
+- fixed possible crash after reconnecting
+
 1.6.16
 
 - correct some signed/unsigned mixups
