@@ -335,10 +335,9 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
       if (idx == 0 || idx == std::string::npos) {
         strDirectory = "/";
       } else {
-        i = recording.path[0] == '/' ? 1 : 0;
-        strDirectory = recording.path.substr(i, idx - i);
-        strDirectory.Replace("/", " - ");
-        strDirectory = "/" + strDirectory;
+        strDirectory = recording.path.substr(0, idx);
+        if (strDirectory[0] != '/')
+          strDirectory = "/" + strDirectory;
       }
     }
 
