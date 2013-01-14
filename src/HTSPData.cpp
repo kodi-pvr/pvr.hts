@@ -1026,10 +1026,18 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
     recording.error.clear();
   }
 
+  // Missing file (hide)
+  else if (recording.error == "File missing")
+  {
+    recording.state = ST_INVALID;
+    recording.error.clear();
+  }
+
+
 #if HTSP_DEBUGGING
-  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s'"
+  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s', error:'%s'"
       , __FUNCTION__, recording.id, state, recording.title.c_str()
-      , recording.description.c_str());
+      , recording.description.c_str(), recording.error.c_str());
 #endif
 
   m_recordings[recording.id] = recording;
