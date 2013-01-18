@@ -49,9 +49,10 @@ CHTSPDemux::~CHTSPDemux()
 
 bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
-  m_channel        = channelinfo.iUniqueId;
-  m_bIsRadio       = channelinfo.bIsRadio;
-  m_bIsOpen        = false;
+  m_channel              = channelinfo.iUniqueId;
+  m_bIsRadio             = channelinfo.bIsRadio;
+  m_bIsOpen              = false;
+  m_Streams.iStreamCount = 0;
 
   if(!m_session->CheckConnection(g_iConnectTimeout * 1000))
     return false;
@@ -59,7 +60,6 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
   if(!SendSubscribe(++m_subs, m_channel))
     return false;
 
-  m_Streams.iStreamCount = 0;
   m_bIsOpen              = true;
   return m_bIsOpen;
 }
