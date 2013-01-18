@@ -59,6 +59,7 @@ private:
   void ParseMuxPacket(htsmsg_t *m);
   bool ParseQueueStatus(htsmsg_t* msg);
   bool ParseSignalStatus(htsmsg_t* msg);
+  bool ParseTimeshiftStatus(htsmsg_t* msg);
   bool ParseSourceInfo(htsmsg_t* msg);
 
   CHTSPConnection*                     m_session;

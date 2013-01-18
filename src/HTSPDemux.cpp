@@ -159,6 +159,8 @@ bool CHTSPDemux::ProcessMessage(htsmsg* msg)
     ParseQueueStatus(msg);
   else if(strcmp("signalStatus"      , method) == 0)
     ParseSignalStatus(msg);
+  else if(strcmp("timeshiftStatus"   , method) == 0)
+    ParseTimeshiftStatus(msg);
   else if(strcmp("muxpkt"            , method) == 0)
     ParseMuxPacket(msg);
   else
@@ -773,6 +775,16 @@ bool CHTSPDemux::ParseSignalStatus(htsmsg_t* msg)
   else
     m_Quality.fe_status = "(unknown)";
 
+  return true;
+}
+
+bool CHTSPDemux::ParseTimeshiftStatus(htsmsg_t *msg)
+{
+  // TODO: placeholder for processing timeshiftStatus message when
+  //       we're ready to use the information.
+  //
+  //       For now this just ensures we don't spam logs with unecessary
+  //       info about unhandled messages.
   return true;
 }
 
