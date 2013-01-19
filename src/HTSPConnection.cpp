@@ -508,7 +508,7 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
-  m_strWebroot    = webroot ? webroot : "/";
+  m_strWebroot    = webroot ? webroot : "";
 
   if(chall && chall_len)
   {

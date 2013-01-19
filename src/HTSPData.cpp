@@ -324,7 +324,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
 
       /* HTSPv6- - use HTTP */
       else
-        strStreamURL = m_session->GetWebURL("dvrfile/%i", recording.id);
+        strStreamURL = m_session->GetWebURL("/dvrfile/%i", recording.id);
     }
 
     strRecordingId.Format("%i", recording.id);
