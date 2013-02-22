@@ -721,7 +721,9 @@ bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *sta
   htsmsg_add_str(m, "method"        , "subscriptionSkip");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s64(m, "time"          , seek);
+  htsmsg_add_u32(m, "absolute"      , 1);
 
+  XBMC->Log(LOG_DEBUG, "%s(%d)", __FUNCTION__, seek);
   if (!m_session->ReadSuccess(m, "seek subscription"))
     return false;
 
