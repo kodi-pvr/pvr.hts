@@ -596,6 +596,7 @@ void CHTSPDemux::ParseSubscriptionSkip(htsmsg_t *m)
   } else {
     m_seekTime = (double)s64;
   }
+  XBMC->Log(LOG_DEBUG, "HTSP::ParseSubscriptionSkip - skip = %lf\n", m_seekTime);
   m_seekEvent->Broadcast();
 }
 
@@ -715,15 +716,15 @@ bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *sta
   htsmsg_t *m = htsmsg_create_map();
   int64_t seek;
 
-  // Note: time is in ms not DVD time, TVH requires 1MHz (us) input
+  // Note: time is in MSEC not DVD_TIME_BASE, TVH requires 1MHz (us) input
   seek = time * 1000;
+  XBMC->Log(LOG_DEBUG, "%s(time=%d, seek=%ld)", __FUNCTION__, time, seek);
 
   htsmsg_add_str(m, "method"        , "subscriptionSkip");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s64(m, "time"          , seek);
   htsmsg_add_u32(m, "absolute"      , 1);
 
-  XBMC->Log(LOG_DEBUG, "%s(%d)", __FUNCTION__, seek);
   if (!m_session->ReadSuccess(m, "seek subscription"))
     return false;
 
@@ -733,7 +734,9 @@ bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *sta
   if (m_seekTime < 0)
     return false;
 
-  *startpts = m_seekTime;
+  // Note: return value is in DVD_TIME_BASE not MSEC
+  *startpts = m_seekTime * DVD_TIME_BASE / 1000000;
+  XBMC->Log(LOG_DEBUG, "%s(%ld) = %lf", __FUNCTION__, seek, *startpts);
   return true;
 }
 
