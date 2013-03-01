@@ -370,6 +370,18 @@ const char* GetMininumPVRAPIVersion(void)
   return strMinApiVersion;
 }
 
+const char* GetGUIAPIVersion(void)
+{
+  static const char *strGuiApiVersion = XBMC_GUI_API_VERSION;
+  return strGuiApiVersion;
+}
+
+const char* GetMininumGUIAPIVersion(void)
+{
+  static const char *strMinGuiApiVersion = XBMC_GUI_MIN_API_VERSION;
+  return strMinGuiApiVersion;
+}
+
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG              = true;
