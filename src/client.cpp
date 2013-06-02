@@ -619,7 +619,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
   return HTSPData->GetChannelGroupMembers(handle, group);
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 {
   if (!HTSPData || !HTSPData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
