@@ -25,6 +25,7 @@
 #include "HTSPConnection.h"
 #include "platform/util/buffer.h"
 #include "platform/threads/mutex.h"
+#include "xbmc_stream_utils.hpp"
 
 class CHTSPDemux : public CHTSPConnectionCallback
 {
@@ -68,14 +69,15 @@ private:
   int                                  m_channel;
   int                                  m_tag;
   std::string                          m_Status;
-  PVR_STREAM_PROPERTIES                m_Streams;
+  ADDON::XbmcStreamProperties          m_streams;
   SChannels                            m_channels;
   SQueueStatus                         m_QueueStatus;
   SQuality                             m_Quality;
   SSourceInfo                          m_SourceInfo;
-  std::map<int, unsigned int>          m_StreamIndex;
   PLATFORM::SyncedBuffer<DemuxPacket*> m_demuxPacketBuffer;
   bool                                 m_bIsOpen;
   PLATFORM::CEvent*                    m_seekEvent;
   double                               m_seekTime;
+  PLATFORM::CMutex                     m_mutex;
+  PLATFORM::CCondition<bool>           m_startedCondition;
 };

@@ -103,47 +103,23 @@ bool CGUIDialogTranscode::OnInit()
   m_spinVideoCodec->Clear();
   m_spinResolution->Clear();
 
-  m_spinAudioCodec->AddLabel("Passthrough", CODEC_ID_NONE);
-  m_spinVideoCodec->AddLabel("Passthrough", CODEC_ID_NONE);
+  m_spinAudioCodec->AddLabel("Passthrough", XBMC_INVALID_CODEC_ID);
+  m_spinVideoCodec->AddLabel("Passthrough", XBMC_INVALID_CODEC_ID);
 
-  for (CodecVector::iterator it = m_codecs.begin(); it != m_codecs.end(); ++it)
+  int iSelectedAudio(0), iSelectedVideo(0);
+  for (unsigned int iPtr = 0; iPtr < m_codecs.size(); iPtr++)
   {
-    switch (*it)
+    if (m_codecs.at(iPtr).Codec().codec_type == XBMC_CODEC_TYPE_AUDIO)
     {
-    case CODEC_ID_MP2:
-      m_spinAudioCodec->AddLabel("MPEG-2 Audio", CODEC_ID_MP2);
-      break;
-
-    case CODEC_ID_AAC:
-      m_spinAudioCodec->AddLabel("AAC", CODEC_ID_AAC);
-      break;
-
-    case CODEC_ID_AC3:
-      m_spinAudioCodec->AddLabel("AC3", CODEC_ID_AC3);
-      break;
-
-    case CODEC_ID_VORBIS:
-      m_spinAudioCodec->AddLabel("Vorbis", CODEC_ID_VORBIS);
-      break;
-
-    case CODEC_ID_MPEG2VIDEO:
-      m_spinVideoCodec->AddLabel("MPEG-2 Video", CODEC_ID_MPEG2VIDEO);
-      break;
-
-    case CODEC_ID_MPEG4:
-      m_spinVideoCodec->AddLabel("MPEG-4", CODEC_ID_MPEG4);
-      break;
-
-    case CODEC_ID_VP8:
-      m_spinVideoCodec->AddLabel("VP8", CODEC_ID_VP8);
-      break;
-
-    case CODEC_ID_H264:
-      m_spinVideoCodec->AddLabel("H264", CODEC_ID_H264);
-      break;
-
-    default:
-      break;
+      m_spinAudioCodec->AddLabel(m_codecs.at(iPtr).Name().c_str(), iPtr);
+      if (m_codecs.at(iPtr).Codec().codec_id == g_audioCodec.Codec().codec_id)
+        iSelectedAudio = iPtr;
+    }
+    else if (m_codecs.at(iPtr).Codec().codec_type == XBMC_CODEC_TYPE_VIDEO)
+    {
+      m_spinVideoCodec->AddLabel(m_codecs.at(iPtr).Name().c_str(), iPtr);
+      if (m_codecs.at(iPtr).Codec().codec_id == g_videoCodec.Codec().codec_id)
+        iSelectedVideo = iPtr;
     }
   }
 
@@ -168,8 +144,8 @@ bool CGUIDialogTranscode::OnInit()
     m_spinResolution->SetValue(720);
 
   m_radioTranscode->SetSelected(g_bTranscode);
-  m_spinAudioCodec->SetValue(g_iAudioCodec);
-  m_spinVideoCodec->SetValue(g_iVideoCodec);
+  m_spinAudioCodec->SetValue(iSelectedAudio);
+  m_spinVideoCodec->SetValue(iSelectedVideo);
 
   return true;
 }
@@ -189,8 +165,8 @@ bool CGUIDialogTranscode::OnClick(int controlId)
   {
     g_bTranscode = m_radioTranscode->IsSelected();
     g_iResolution = m_spinResolution->GetValue();
-    g_iAudioCodec = (CodecID) m_spinAudioCodec->GetValue();
-    g_iVideoCodec = (CodecID) m_spinVideoCodec->GetValue();
+    g_audioCodec = m_codecs.at(m_spinAudioCodec->GetValue());
+    g_videoCodec = m_codecs.at(m_spinVideoCodec->GetValue());
 
     m_window->Close();
 

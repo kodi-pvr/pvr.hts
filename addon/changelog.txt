@@ -1,3 +1,8 @@
+1.8.20
+
+- sync with PVR API v1.8.1
+- use XBMC's new callback methods for codec ids
+
 1.8.19
 
 - sync with PVR API v1.8.0

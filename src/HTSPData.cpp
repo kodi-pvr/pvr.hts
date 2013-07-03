@@ -187,29 +187,9 @@ CodecVector CHTSPData::GetTranscodingCodecs(void)
     if (f->hmf_type != HMF_STR)
       continue;
 
-    if (!strcmp("AAC", f->hmf_str))
-      v.push_back(CODEC_ID_AAC);
-
-    else if (!strcmp("MPEG2AUDIO", f->hmf_str))
-      v.push_back(CODEC_ID_MP2);
-
-    else if (!strcmp("AC3", f->hmf_str))
-      v.push_back(CODEC_ID_AC3);
-
-    else if (!strcmp("VORBIS", f->hmf_str))
-      v.push_back(CODEC_ID_VORBIS);
-
-    else if (!strcmp("MPEG2VIDEO", f->hmf_str))
-      v.push_back(CODEC_ID_MPEG2VIDEO);
-
-    else if (!strcmp("H264", f->hmf_str))
-      v.push_back(CODEC_ID_H264);
-
-    else if (!strcmp("VP8", f->hmf_str))
-      v.push_back(CODEC_ID_VP8);
-
-    else if (!strcmp("MPEG4VIDEO", f->hmf_str))
-      v.push_back(CODEC_ID_MPEG4);
+    CodecDescriptor codec = CodecDescriptor::GetCodecByName(f->hmf_str);
+    if (codec.Codec().codec_type != XBMC_CODEC_TYPE_UNKNOWN)
+      v.push_back(codec);
   }
 
   return v;

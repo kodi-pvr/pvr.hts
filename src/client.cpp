@@ -41,21 +41,22 @@ long         g_iPacketSequence = 0;
  * Default values are defined inside client.h
  * and exported to the other source files.
  */
-std::string g_strHostname             = DEFAULT_HOST;
-int         g_iPortHTSP               = DEFAULT_HTSP_PORT;
-int         g_iPortHTTP               = DEFAULT_HTTP_PORT;
-int         g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
-int         g_iResponseTimeout        = DEFAULT_RESPONSE_TIMEOUT;
-bool        g_bTranscode              = DEFAULT_TRANSCODE;
-CodecID     g_iAudioCodec             = DEFAULT_AUDIO_CODEC;
-CodecID     g_iVideoCodec             = DEFAULT_VIDEO_CODEC;
-int         g_iResolution             = DEFAULT_RESOLUTION;
-std::string g_strUsername             = "";
-std::string g_strPassword             = "";
-std::string g_strUserPath             = "";
-std::string g_strClientPath           = "";
+std::string     g_strHostname         = DEFAULT_HOST;
+int             g_iPortHTSP           = DEFAULT_HTSP_PORT;
+int             g_iPortHTTP           = DEFAULT_HTTP_PORT;
+int             g_iConnectTimeout     = DEFAULT_CONNECT_TIMEOUT;
+int             g_iResponseTimeout    = DEFAULT_RESPONSE_TIMEOUT;
+bool            g_bTranscode          = DEFAULT_TRANSCODE;
+CodecDescriptor g_audioCodec;
+CodecDescriptor g_videoCodec;
+int             g_iResolution         = DEFAULT_RESOLUTION;
+std::string     g_strUsername         = "";
+std::string     g_strPassword         = "";
+std::string     g_strUserPath         = "";
+std::string     g_strClientPath       = "";
 
 CHelper_libXBMC_addon *XBMC           = NULL;
+CHelper_libXBMC_codec *CODEC          = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHelper_libXBMC_gui   *GUI            = NULL;
 PVR_MENUHOOK          *menuHook       = NULL;
@@ -106,8 +107,6 @@ void ADDON_ReadSettings(void)
   else
     g_strPassword = "";
 
-  free (buffer);
-
   /* read setting "htsp_port" from settings.xml */
   if (!XBMC->GetSetting("htsp_port", &g_iPortHTSP))
     g_iPortHTSP = DEFAULT_HTSP_PORT;
@@ -128,17 +127,23 @@ void ADDON_ReadSettings(void)
   if (!XBMC->GetSetting("transcode", &g_bTranscode))
     g_bTranscode = DEFAULT_TRANSCODE;
 
-  /* read setting "audio_codec" from settings.xml */
-  if (!XBMC->GetSetting("audio_codec", &g_iAudioCodec))
-    g_iAudioCodec = DEFAULT_AUDIO_CODEC;
+  /* read setting "audio_codec_name" from settings.xml */
+  if (XBMC->GetSetting("audio_codec_name", buffer))
+    g_audioCodec = CodecDescriptor::GetCodecByName(buffer);
+  else
+    g_audioCodec = CodecDescriptor::GetCodecByName(DEFAULT_AUDIO_CODEC);
 
-  /* read setting "video_codec" from settings.xml */
-  if (!XBMC->GetSetting("video_codec", &g_iVideoCodec))
-    g_iVideoCodec = DEFAULT_VIDEO_CODEC;
+  /* read setting "video_codec_name" from settings.xml */
+  if (XBMC->GetSetting("video_codec_name", buffer))
+    g_videoCodec = CodecDescriptor::GetCodecByName(buffer);
+  else
+    g_videoCodec = CodecDescriptor::GetCodecByName(DEFAULT_VIDEO_CODEC);
 
   /* read setting "resolution" from settings.xml */
   if (!XBMC->GetSetting("resolution", &g_iResolution))
     g_iResolution = DEFAULT_RESOLUTION;
+
+  free(buffer);
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -163,10 +168,20 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  CODEC = new CHelper_libXBMC_codec;
+  if (!CODEC->RegisterMe(hdl))
+  {
+    SAFE_DELETE(CODEC);
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
@@ -184,6 +199,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (!HTSPData->Open())
   {
     SAFE_DELETE(HTSPData);
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(PVR);
     SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
@@ -218,6 +234,7 @@ void ADDON_Destroy()
 {
   m_bCreated = false;
   SAFE_DELETE(HTSPData);
+  SAFE_DELETE(CODEC);
   SAFE_DELETE(PVR);
   SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
@@ -322,23 +339,23 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_OK;
     }
   }
-  else if (str == "video_codec")
+  else if (str == "video_codec_name")
   {
-    int iNewValue = *(int*) settingValue + 1;
-    if (g_iVideoCodec != iNewValue)
+    string tmp_strCodecname = g_videoCodec.Name();
+    if (tmp_strCodecname != (const char*) settingValue)
     {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'video_codec' from %u to %u", __FUNCTION__, g_iVideoCodec, iNewValue);
-      g_iVideoCodec = (CodecID)iNewValue;
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'video_codec' from %s to %s", __FUNCTION__, tmp_strCodecname.c_str(), (const char*) settingValue);
+      g_videoCodec = CodecDescriptor::GetCodecByName((const char*) settingValue);
       return ADDON_STATUS_OK;
     }
   }
-  else if (str == "audio_codec")
+  else if (str == "audio_codec_name")
   {
-    int iNewValue = *(int*) settingValue + 1;
-    if (g_iAudioCodec != iNewValue)
+    string tmp_strCodecname = g_audioCodec.Name();
+    if (tmp_strCodecname != (const char*) settingValue)
     {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'audio_codec' from %u to %u", __FUNCTION__, g_iAudioCodec, iNewValue);
-      g_iAudioCodec = (CodecID)iNewValue;
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'audio_codec' from %s to %s", __FUNCTION__, tmp_strCodecname.c_str(), (const char*) settingValue);
+      g_audioCodec = CodecDescriptor::GetCodecByName((const char*) settingValue);
       return ADDON_STATUS_OK;
     }
   }
