@@ -37,6 +37,14 @@ typedef enum {
   DVR_PRIO_UNIMPORTANT,
 } dvr_prio_t;
 
+typedef enum {
+  DVR_ACTION_TYPE_CUT,
+  DVR_ACTION_TYPE_MUTE,
+  DVR_ACTION_TYPE_SCENE,
+  DVR_ACTION_TYPE_COMBREAK,
+  
+} dvr_action_type_t;
+
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
@@ -1426,4 +1434,90 @@ void CHTSPData::SetSpeed(int speed)
 {
   if (m_demux && CanTimeshift())
       m_demux->SetSpeed(speed);
+}
+
+PVR_ERROR CHTSPData::GetEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size)
+{
+  if (GetProtocol() < 12) return PVR_ERROR_NOT_IMPLEMENTED;
+  
+  XBMC->Log(LOG_DEBUG, "%s - dvrEntryId:%s", __FUNCTION__, recording.strRecordingId);
+  
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_str(msg, "method", "getDvrCutpoints");
+  htsmsg_add_u32(msg, "id",     atoi(recording.strRecordingId));
+  
+  CHTSResult result;
+  ReadResult(msg, result);
+  if (result.status != PVR_ERROR_NO_ERROR)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Failed to get EDL data.", __FUNCTION__);
+    return result.status;
+  }
+  
+  htsmsg_t *edlList = htsmsg_get_list(result.message, "cutpoints");
+  if(!edlList)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - No EDL list found.", __FUNCTION__);
+    *size = 0;
+    return PVR_ERROR_NO_ERROR;
+  }
+  
+  htsmsg_field_t *field;
+  int index = 0;
+  HTSMSG_FOREACH(field, edlList)
+  {
+    if(field->hmf_type != HMF_MAP)
+      continue;
+    
+    if(index < *size)
+    {
+      htsmsg_t *edl = &field->hmf_msg;
+
+      // start and end are in milliseconds
+      unsigned int start, end, type;
+
+      if (htsmsg_get_u32(edl, "start", &start) != 0 || 
+          htsmsg_get_u32(edl, "end", &end) != 0 ||
+          htsmsg_get_u32(edl, "type", &type) != 0) 
+      {
+	continue;
+      }
+      
+      PVR_EDL_ENTRY entry;
+      entry.start = start;
+      entry.end   = end;
+
+      switch(type)
+      {
+        case DVR_ACTION_TYPE_CUT:
+          entry.type = PVR_EDL_TYPE_CUT;
+          break;
+        case DVR_ACTION_TYPE_MUTE:
+          entry.type = PVR_EDL_TYPE_MUTE;
+          break;
+        case DVR_ACTION_TYPE_SCENE:
+          entry.type = PVR_EDL_TYPE_SCENE;
+          break;
+        case DVR_ACTION_TYPE_COMBREAK:
+          entry.type = PVR_EDL_TYPE_COMBREAK;
+          break;
+        default:
+          entry.type = PVR_EDL_TYPE_COMBREAK;
+          break;
+      }
+      
+      XBMC->Log(LOG_DEBUG, "%s - EDL: start: %d, end: %d, action: %d", __FUNCTION__, entry.start, entry.end, entry.type);
+      
+      entries[index] = entry;
+      index++;
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "%s - Maximum number of EDL entries reached for recordingId: %s", __FUNCTION__, recording.strRecordingId);
+      break;
+    }
+  }
+  *size = index;
+  
+  return PVR_ERROR_NO_ERROR;
 }
