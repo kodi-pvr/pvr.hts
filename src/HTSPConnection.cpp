@@ -269,6 +269,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
 {
   void*    buf;
   uint32_t l;
+  uint8_t  lb[4];
 
   // get the first queued message if any
   if(m_queue.size())
@@ -288,7 +289,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
     }
 
     // read the size
-    if (m_socket->Read(&l, 4, iInitialTimeout) != 4)
+    if (m_socket->Read(&lb, 4, iInitialTimeout) != 4)
     {
       // timed out
       if(m_socket->GetErrorNumber() == ETIMEDOUT)
@@ -300,7 +301,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
       return NULL;
     }
 
-    l = ntohl(l);
+    l = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
 
     // empty message
     if(l == 0)
