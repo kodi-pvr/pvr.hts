@@ -270,6 +270,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
   void*    buf;
   uint32_t l;
   uint8_t  lb[4];
+  size_t   bytes_read;
 
   // get the first queued message if any
   if(m_queue.size())
@@ -289,16 +290,25 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
     }
 
     // read the size
-    if (m_socket->Read(&lb, 4, iInitialTimeout) != 4)
+    if ((bytes_read = m_socket->Read(&lb, 4, iInitialTimeout)) != 4)
     {
       // timed out
       if(m_socket->GetErrorNumber() == ETIMEDOUT)
-        return NULL;
+      {
+        // we did read something. try to finish the read
+        if (bytes_read > 0)
+          bytes_read += m_socket->Read(&lb + bytes_read, 4 - bytes_read, iDatapacketTimeout);
+        else
+          return NULL;
+      }
 
       // read error, close the connection
-      XBMC->Log(LOG_ERROR, "%s - failed to read packet size (%s)", __FUNCTION__, m_socket->GetError().c_str());
-      TriggerReconnect();
-      return NULL;
+      if (bytes_read != 4)
+      {
+        XBMC->Log(LOG_ERROR, "%s - failed to read packet size (%s)", __FUNCTION__, m_socket->GetError().c_str());
+        TriggerReconnect();
+        return NULL;
+      }
     }
 
     l = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
@@ -630,7 +640,7 @@ void* CHTSPConnection::Process(void)
       {
         {
           CLockObject lock(m_mutex);
-          msg = ReadMessage(5);
+          msg = ReadMessage(5, g_iResponseTimeout * 1000);
         }
         if(msg == NULL || msg->hm_data == NULL)
         {
