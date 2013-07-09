@@ -1,3 +1,8 @@
+1.8.21
+
+- fixed connection being dropped incorrectly, when a packet size timed out with a one or more bytes read, but less than 4 bytes read
+- tvheadend uses it's own byte order. don't use ntohl
+
 1.8.20
 
 - sync with PVR API v1.8.1
