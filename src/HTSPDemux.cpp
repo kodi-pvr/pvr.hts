@@ -235,6 +235,10 @@ bool CHTSPDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
 
   strncpy(qualityinfo.strAdapterName, m_SourceInfo.si_adapter.c_str(), sizeof(qualityinfo.strAdapterName));
   strncpy(qualityinfo.strAdapterStatus, m_Quality.fe_status.c_str(), sizeof(qualityinfo.strAdapterStatus));
+  strncpy(qualityinfo.strServiceName, m_SourceInfo.si_service.c_str(), sizeof(qualityinfo.strServiceName));
+  strncpy(qualityinfo.strProviderName, m_SourceInfo.si_provider.c_str(), sizeof(qualityinfo.strProviderName));
+  strncpy(qualityinfo.strMuxName, m_SourceInfo.si_mux.c_str(), sizeof(qualityinfo.strMuxName));
+
   qualityinfo.iSignal       = (uint16_t)m_Quality.fe_signal;
   qualityinfo.iSNR          = (uint16_t)m_Quality.fe_snr;
   qualityinfo.iBER          = (uint32_t)m_Quality.fe_ber;
