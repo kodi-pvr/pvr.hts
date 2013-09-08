@@ -25,6 +25,7 @@
 #include <vector>
 
 #define READ_TIMEOUT 20000
+#define STREAM_PROPS_TIMEOUT_MS 500
 
 using namespace std;
 using namespace ADDON;
@@ -82,7 +83,7 @@ bool CHTSPDemux::SeekTime(int time, bool backward, double *startpts)
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
   CLockObject lock(m_mutex);
-  if (!m_startedCondition.Wait(m_mutex, m_bIsOpen))
+  if (!m_startedCondition.Wait(m_mutex, m_bIsOpen, STREAM_PROPS_TIMEOUT_MS))
     return false;
   return m_streams.GetProperties(props);
 }
