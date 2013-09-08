@@ -24,7 +24,7 @@
 #include "HTSPDemux.h"
 #include <vector>
 
-#define READ_TIMEOUT 20000
+#define READ_TIMEOUT_MS         20000
 #define STREAM_PROPS_TIMEOUT_MS 500
 
 using namespace std;
@@ -500,7 +500,7 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
   }
 
   // TODO get this from the pvr api. hardcoded to 10 seconds now
-  m_session->SetReadTimeout(READ_TIMEOUT);
+  m_session->SetReadTimeout(READ_TIMEOUT_MS);
   Flush();
 
   XBMC->Log(LOG_DEBUG, "%s - new subscription for channel %d (%d)", __FUNCTION__, m_channel, m_subs);
@@ -516,7 +516,7 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
   htsmsg_add_s32(m, "speed"         , speed);
   if (m_session->ReadSuccess(m, "pause subscription"))
   {
-    m_session->SetReadTimeout(speed == 0 ? -1 : READ_TIMEOUT);
+    m_session->SetReadTimeout(speed == 0 ? -1 : READ_TIMEOUT_MS);
     return true;
   }
   return false;
