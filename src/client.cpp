@@ -746,5 +746,7 @@ int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; 
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
-
+time_t GetPlayingTime() { return 0; }
+time_t GetBufferTimeStart() { return 0; }
+time_t GetBufferTimeEnd() { return 0; }
 }

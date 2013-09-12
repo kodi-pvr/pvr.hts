@@ -1,3 +1,6 @@
+1.8.23
+- add timeshift buffer functions
+
 1.8.21
 
 - fixed connection being dropped incorrectly, when a packet size timed out with a one or more bytes read, but less than 4 bytes read
