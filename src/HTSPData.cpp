@@ -311,7 +311,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
 
     if (recording.path != "")
     {
-      size_t i, idx = recording.path.rfind("/");
+      size_t idx = recording.path.rfind("/");
       if (idx == 0 || idx == std::string::npos) {
         strDirectory = "/";
       } else {
