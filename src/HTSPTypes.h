@@ -67,58 +67,6 @@ private:
 
 typedef std::vector<CodecDescriptor> CodecVector;
 
-typedef struct htsmsg htsmsg_t;
-
-template<typename T>
-class const_circular_iter :
-  public std::iterator< typename std::iterator_traits<T>::iterator_category,
-                        typename std::iterator_traits<T>::value_type,
-                        typename std::iterator_traits<T>::difference_type,
-                        typename std::iterator_traits<T>::pointer,
-                        typename std::iterator_traits<T>::reference>
-{
-protected:
-  T begin;
-  T end;
-  T iter;
-
-public:
-  typedef typename std::iterator_traits<T>::value_type      value_type;
-  typedef typename std::iterator_traits<T>::difference_type difference_type;
-  typedef typename std::iterator_traits<T>::pointer         pointer;
-  typedef typename std::iterator_traits<T>::reference       reference;
-
-  const_circular_iter(const const_circular_iter& src)     : begin(src.begin), end(src.end), iter(src.iter) {};
-  const_circular_iter(const T& b, const T& e)             : begin(b), end(e), iter(b) {};
-  const_circular_iter(const T& b, const T& e, const T& c) : begin(b), end(e), iter(c) {};
-  const_circular_iter<T>& operator++()
-  {
-    if(begin == end)
-      return(*this);
-    ++iter;
-    if (iter == end)
-      iter = begin;
-    return(*this);
-  }
-
-  const_circular_iter<T>& operator--()
-  {
-    if(begin == end)
-      return(*this);
-    if (iter == begin)
-      iter = end;
-    iter--;
-    return(*this);
-  }
-
-  reference operator*() const { return (*iter);  }
-  const pointer operator->() const { return &(*iter); }
-  bool operator==(const const_circular_iter<T>&  rhs) const { return (iter == rhs.iter); }
-  bool operator==(const T& rhs) const { return (iter == rhs); }
-  bool operator!=(const const_circular_iter<T>&  rhs) const { return ! operator==(rhs); }
-  bool operator!=(const T& rhs) const { return ! operator==(rhs); }
-};
-
 struct STag
 {
   int              id;
