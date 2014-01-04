@@ -345,10 +345,13 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 
       if (codecId.Codec().codec_type == XBMC_CODEC_TYPE_SUBTITLE)
       {
-        uint32_t composition_id = 0, ancillary_id = 0;
-        htsmsg_get_u32(sub, "composition_id", &composition_id);
-        htsmsg_get_u32(sub, "ancillary_id"  , &ancillary_id);
-        newStream.iIdentifier = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+        if (!strcmp(type, "DVBSUB"))
+        {
+          uint32_t composition_id = 0, ancillary_id = 0;
+          htsmsg_get_u32(sub, "composition_id", &composition_id);
+          htsmsg_get_u32(sub, "ancillary_id"  , &ancillary_id);
+          newStream.iIdentifier = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+        }
         HTSPSetDemuxStreamInfoLanguage(newStream, sub);
       }
     }
