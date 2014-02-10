@@ -191,6 +191,6 @@ bool CGUIDialogTranscode::OnAction(int actionId)
       || actionId == ADDON_ACTION_PREVIOUS_MENU)
     return OnClick(BUTTON_CANCEL);
   else
-    return true;
+    return false;
 }
 
