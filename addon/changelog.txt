@@ -1,3 +1,6 @@
+1.9.24
+- add EDL support
+
 1.9.23
 - add timeshift buffer functions
 
