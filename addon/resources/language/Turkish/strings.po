@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
@@ -17,6 +16,18 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend ana bilgisayar adı veya IP adresi"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP portu"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP portu"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "Kullanıcı adı"
@@ -24,6 +35,26 @@ msgstr "Kullanıcı adı"
 msgctxt "#30004"
 msgid "Password"
 msgstr "Parola"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Saniye cinsinden bağlantı zaman aşımı"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Saniye cinsinden yanıt zaman aşımı süresi"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend  dönüştürme ayarları"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Dönüştürme ayarları"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Dönüştürmeyi etkinleştir"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -36,3 +67,11 @@ msgstr "Video codec"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "Çözünürlük"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "'%s' Bağlantı kesilecek"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Tekrar bağlanmaya '%s'"

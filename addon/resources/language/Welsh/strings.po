@@ -1,0 +1,77 @@
+# XBMC Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Lars Op den Kamp, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Welsh (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/cy/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Enw gwesteiwr neu gyfeiriad IP Tvheadend"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "Porth HTTP"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "Porth HTSP"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Enw defnyddiwr"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Cyfrinair"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Amser allan cysylltu mewn eiliadau"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Ymateb amser allan mewn eiliadau"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Gosodiadau trawscodio Tvheadend"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Gosodiadau trawscodio"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Galluogi trawscodio"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "Codec sain"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "Codec fideo"
+
+msgctxt "#30105"
+msgid "Resolution"
+msgstr "Cydraniad"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Datgysylltwyd o '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Ail gysylltwyd â '%s'"

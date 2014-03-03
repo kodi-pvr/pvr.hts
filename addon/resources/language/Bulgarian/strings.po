@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""

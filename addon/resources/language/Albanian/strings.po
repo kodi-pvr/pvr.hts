@@ -1,0 +1,77 @@
+# XBMC Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Lars Op den Kamp, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Albanian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/sq/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sq\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend hostname ose adresa IP"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP porti"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP porti"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Emër-përdoruesi"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Fjalkalimi"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Timeout i lidhjes në sekonda"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Timeout i përgjigjjes në eskonda"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Cilësimet e transkodimit për Tvheadend"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Cilësimet e transkodimit"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Aktivo transkodimin"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "Audio codec'i"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "Video codec'i"
+
+msgctxt "#30105"
+msgid "Resolution"
+msgstr "Zbërthimi"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "U ndërpre nga '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "U rilidh me '%s'"

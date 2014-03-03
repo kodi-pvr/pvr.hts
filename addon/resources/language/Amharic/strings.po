@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
@@ -32,6 +31,22 @@ msgstr "የተጠቃሚ ስም "
 msgctxt "#30004"
 msgid "Password"
 msgstr "የመግቢያ ቃል"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "ግንኙነት ማስቆሚያ በ ሰከንዶች"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "መመለሻ ጊዜ በ ሰከንዶች"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "የ ድምፅ codec"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "የ ቪዲዮ codec"
 
 msgctxt "#30105"
 msgid "Resolution"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
@@ -17,6 +16,18 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend主機名稱或IP位址"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP端口"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP端口"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "帳號"
@@ -24,6 +35,26 @@ msgstr "帳號"
 msgctxt "#30004"
 msgid "Password"
 msgstr "密碼"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "連接超時（秒）"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "回應超時（秒）"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend轉碼設定"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "轉碼設定"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "啟動轉碼"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -36,3 +67,11 @@ msgstr "影片編碼"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "解析度"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "從 '%s' 斷開連線"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "從 '%s' 重新連線"

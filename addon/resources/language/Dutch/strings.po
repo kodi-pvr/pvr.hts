@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
@@ -44,6 +43,18 @@ msgstr "Verbinding timeout in seconden"
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Antwoord timeout in seconden"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend transcoderingsinstellingen"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Transcoderingsinstellingen"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Gebruik transcodering"
 
 msgctxt "#30103"
 msgid "Audio codec"

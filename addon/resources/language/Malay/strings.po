@@ -1,0 +1,77 @@
+# XBMC Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Lars Op den Kamp, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Malay (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ms/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ms\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nama hos atau alamat IP Tvheadend"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "Port HTTP"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "Port HTSP"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Nama Pengguna"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Kata Laluan"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Had masa tamat sambung dalam saat"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Had masa tamat respons dalam saat"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tetapan transkod "
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Tetapan transkod"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Benarkan transkod"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "Kodeks audio"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "Kodeks video"
+
+msgctxt "#30105"
+msgid "Resolution"
+msgstr "Resolusi"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Terputus dari '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Bersambung semula dengan '%s'"

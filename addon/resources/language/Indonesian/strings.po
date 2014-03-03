@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
@@ -17,6 +16,18 @@ msgstr ""
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Hostname atau alamat IP Tvheadend"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "Port HTTP"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "Port HTSP"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "NamaPengguna"
@@ -25,6 +36,42 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Password"
 
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Timeout Koneksi dalam detik"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Timeout response dalam deti"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Pengaturan transcoding Tvheadend"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Pengaturan Transcoding"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Fungsikan Transcoding"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "Kodek Audio"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "Kodek video"
+
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "Resolusi"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Terputus dari '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Tersambung lagi pada '%s'"

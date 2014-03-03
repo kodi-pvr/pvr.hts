@@ -1,0 +1,77 @@
+# XBMC Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Lars Op den Kamp, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Tamil (India) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ta_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend பின்தள புரவலன் பெயர் அல்லது ஐபி"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP துறை"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP துறை"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "பயனர்பெயர்"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "அடையாளச் சொல்"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "எத்தனை நொடியில் இணைப்பை முடித்தல்"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "எத்தனை நொடியில் பதில் எதிபார்ப்பை முடித்தல்"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend டிரான்ஸ்கோடிங்கு அமைப்புகள்"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "டிரான்ஸ்கோடிங்கு அமைப்புகள்"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "டிரான்ஸ்கோடிங்கு செயல்படுத்து"
+
+msgctxt "#30103"
+msgid "Audio codec"
+msgstr "கேட்பொலி கோடெக் குறியாக்கி / விலக்கி"
+
+msgctxt "#30104"
+msgid "Video codec"
+msgstr "நிகழ்பட கோடெக் குறியாக்கி / விலக்கி"
+
+msgctxt "#30105"
+msgid "Resolution"
+msgstr "திரைத்திறன்"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "'%s' இருந்து துண்டிக்கப்பட்டது"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "'%s' க்கு மறுஇணைப்பு"
