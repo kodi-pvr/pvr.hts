@@ -298,13 +298,19 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     CStdString strRecordingId;
     CStdString strDirectory = "/";
     std::string strChannelName = "";
+    std::string strIconPath = "";
 
     /* lock */
     {
       CLockObject lock(m_mutex);
+      
+      /* determine channel name and icon */
       SChannels::const_iterator itr = m_channels.find(recording.channel);
       if (itr != m_channels.end())
-        strChannelName = itr->second.name.c_str();
+      {
+        strChannelName = itr->second.name;
+        strIconPath = itr->second.icon;
+      }
 
       /* HTSPv7+ - use HTSP */
       if (GetProtocol() >= 7)
@@ -338,6 +344,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     strncpy(tag.strDirectory, strDirectory.c_str(), sizeof(tag.strDirectory) - 1);
     strncpy(tag.strPlot, recording.description.c_str(), sizeof(tag.strPlot) - 1);
     strncpy(tag.strChannelName, strChannelName.c_str(), sizeof(tag.strChannelName) - 1);
+    strncpy(tag.strIconPath, strIconPath.c_str(), sizeof(tag.strIconPath) - 1);
     tag.recordingTime  = recording.start;
     tag.iDuration      = recording.stop - recording.start;
 
