@@ -4,25 +4,57 @@
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend хост или IP адрес"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP порт"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP порт"
+
 msgctxt "#30003"
 msgid "Username"
-msgstr "Потребител"
+msgstr "Потребителско име"
 
 msgctxt "#30004"
 msgid "Password"
 msgstr "Парола"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Таймаут при свързване в секунди"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Таймаут за отговор в секунди"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Настройки за Tvheadend прекодиране"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Настройки за прекодиране"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Включи прекодирането"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -35,3 +67,11 @@ msgstr "Видео кодек"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "Резолюция"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Изключен от '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Повторно свързан с '%s'"

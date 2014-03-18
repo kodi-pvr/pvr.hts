@@ -4,12 +4,12 @@
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend主机名或IP地址"
+msgstr "Tvheadend 主机名或 IP 地址"
 
 msgctxt "#30001"
 msgid "HTTP port"
-msgstr "HTTP端口"
+msgstr "HTTP 端口"
 
 msgctxt "#30002"
 msgid "HTSP port"
-msgstr "HTSP端口"
+msgstr "HTSP 端口"
 
 msgctxt "#30003"
 msgid "Username"
@@ -46,7 +46,7 @@ msgstr "响应超时（秒）"
 
 msgctxt "#30100"
 msgid "Tvheadend transcoding settings"
-msgstr "Tvheadend转码设置"
+msgstr "Tvheadend 转码设置"
 
 msgctxt "#30101"
 msgid "Transcoding settings"

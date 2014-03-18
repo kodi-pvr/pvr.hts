@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="1.9.25"
+  version="1.9.26"
   name="Tvheadend HTSP Client"
   provider-name="Lars Op den Kamp, Team XBMC">
   <requires>
@@ -20,6 +20,7 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="af">XBMC se voorprogram vir Tvheadend</summary>
     <summary lang="be">XBMC's frontend for Tvheadend</summary>
+    <summary lang="bg">XBMC клиент за DVBViewer</summary>
     <summary lang="ca">Frontal de l'XBMC pel Tvheadend</summary>
     <summary lang="cs">Rozhraní XBMC pro Tvheadend</summary>
     <summary lang="cy">Blaen XBMC ar gyfer Tvheadend</summary>
@@ -27,11 +28,13 @@
     <summary lang="de">XBMC Oberfläche für Tvheadend</summary>
     <summary lang="el">Το frontend του XBMC για το Tvheadend</summary>
     <summary lang="en">XBMC's frontend for Tvheadend</summary>
+    <summary lang="en_NZ">XBMC's frontend for Tvheadend</summary>
     <summary lang="es">Interfaz XBMC para Tvheadend</summary>
     <summary lang="es_AR">Interfaz XBMC para Tvheadend</summary>
     <summary lang="et">XBMC esi Tvheadend'ile</summary>
     <summary lang="fi">XBMC:n Tvheadend-tuki</summary>
     <summary lang="fr">Enregistreur Vidéo XBMC pour Tvheadend</summary>
+    <summary lang="fr_CA">Frontal XBMC pour Tvheadend</summary>
     <summary lang="gl">Interface do XBMC para Tvheadend</summary>
     <summary lang="he">ממשק קדמי XBMC עבורTvheadend</summary>
     <summary lang="hr">XBMC sučelje za Tvheadend</summary>
@@ -47,7 +50,7 @@
     <summary lang="ms">Bahagian hadapan XBMC untuk </summary>
     <summary lang="nl">XBMC's frontend voor Tvheadend</summary>
     <summary lang="no">XBMC sitt frontend for Tvheadend</summary>
-    <summary lang="pl">Interfejs XBMC dla Tvheadend</summary>
+    <summary lang="pl">Klient XBMC dla Tvheadend</summary>
     <summary lang="pt">Frontend XBMC para Tvheadend</summary>
     <summary lang="pt_BR">Frontend XBMC para Tvheadend</summary>
     <summary lang="ro">Frontend XBMC pentru Tvheadend</summary>
@@ -57,13 +60,15 @@
     <summary lang="sq">Frontend i XBMC'së për Tvheadend</summary>
     <summary lang="sv">XBMC's frontend för Tvheadend</summary>
     <summary lang="ta_IN">Tvheadend காண XBMC முன்நிலை</summary>
+    <summary lang="tg">Интерфейси XBMC барои Tvheadend</summary>
     <summary lang="tr">XBMC'nin Tvheadend için arayüzü</summary>
     <summary lang="uk">Накладка на XBMC для Tvheadend</summary>
     <summary lang="vi">Giao tiếp XBMC cho Tvheadend</summary>
-    <summary lang="zh">XBMC的Tvheadend前端</summary>
+    <summary lang="zh">XBMC 的 Tvheadend 前端</summary>
     <summary lang="zh_TW">XBMC的前端Tvheadend</summary>
     <description lang="af">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="be">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
+    <description lang="bg">Tvheadend клиент. Поддържа стрийминг и записване на телевизия, електронен програмен справочник и броячи.</description>
     <description lang="ca">Interfície per al Tvheadend; suportant fluxes de TV en directe i enregistraments, EPG, temporitzadors</description>
     <description lang="cs">Rozhraní Tvheadend. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače.</description>
     <description lang="cy">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
@@ -71,14 +76,16 @@
     <description lang="de">Tvheadend Oberfläche; Unterstützung von Live TV &amp; Aufnahmen, EPG und Timern.</description>
     <description lang="el">Frontend για το Tvheadend. Υποστηρίζει ροές Live TV &amp; Εγγραφές, EPG, Χρονοδιακόπτες</description>
     <description lang="en">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
+    <description lang="en_NZ">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="es">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="es_AR">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="et">Tvheadend esi. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi">Tvheadend; tukee reaaliaikaisen television ja nauhoituksien streamausta, EPGtä ja nauhoituksien ajastusta.</description>
     <description lang="fr">Enregistreur Vidéo pour Tvheadend supportant la lecture en continu du direct télévision et des enregistrements, les guides de programme TV, les minuteries</description>
-    <description lang="gl">Interface Tvheadend; soporta a transmisión de TV ao vivo e Gravacións, EPG, temporizadores</description>
+    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
+    <description lang="gl">Interface Tvheadend; soporta a transmisión de TV ao vivo e Gravacións, Guía, temporizadores</description>
     <description lang="he">ממשק קדמיTvheadend:תומך בטלוויזיה חיה והקלטות. לוחות שידורים,והקלטה מתוזמנת.</description>
-    <description lang="hr">Tvheadend sučelje podržava stremanje i snimanje TV programa, elektronski programski vodič (EPG), vremenski zadano snimanje</description>
+    <description lang="hr">Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje.</description>
     <description lang="hu">TVHeadend előtér-kiszolgáló. Élő adások és felvételek sugárzásának támogatása EPG-vel és időzítéssel</description>
     <description lang="id">Frontend Tvheadend; mendukung menangkap siaran TV Live &amp; Rekaman, EPG, Timer</description>
     <description lang="it">Frontend di Tvheadend; supporta lo streaming di Live TV &amp; Registrazione, EPG, Timers</description>
@@ -91,7 +98,7 @@
     <description lang="ms">Bahagian hadapan Tvheadend; menyokong penstirman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="nl">Tvheadend frontend, het ondersteunen streaming van Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="no">Tvheadend frontend; støtte for visning av direkte TV og opptakk, EPG, tidstakere</description>
-    <description lang="pl">Warstwa prezentacji Tvheadend; wspiera TV na żywo i nagrywanie, EPG oraz liczniki czasu</description>
+    <description lang="pl">Klient Tvheadend. Wspiera strumieniowanie kanałów telewizyjnych, nagrywanie, planowanie nagrań oraz funkcje przewodnika TV.</description>
     <description lang="pt">Frontend Tvheadend; suporta transmissão de TV em Directo e Gravações, EPG, Temporizadores</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
     <description lang="ro">Frontend Tvheadend; se poate difuza în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
@@ -101,14 +108,15 @@
     <description lang="sq">Tvheadend frotnend përkrahën transmetimin e Live TV'së, EPG'së dhe "timer'ë"</description>
     <description lang="sv">Tvheadend frontend; stödjer strömning av direktsänd TV &amp; inspelningar, EPG, Timers</description>
     <description lang="ta_IN">NextPVR முன்நிலை. லைவ் டிவி &amp; பதிவுகளின் ஸ்ட்ரீமிங், EPG கேட்கவும் துணைபுரிகிறது.</description>
+    <description lang="tg">Интерфейси Tvheadend; дастгирии ҷараёни Сабтҳо, Вақтсанҷҳо, Live TV ва EPG</description>
     <description lang="tr">Tvheadend arayüzü; Canlı Yayın içi akış desteği &amp; Kayıt yapabilme, EPG, Zamanlayıcılar</description>
     <description lang="uk">Накладка для Tvheadend; підтримує стрім потоку Live TV і записування, EPG (телегіду), таймерів</description>
     <description lang="vi">Giao tiếp cho Tvheadend; hỗ trợ truyền phát và thu chương trình Live TV, hẹn giờ, và hiển thị lịch chiếu (EPG)</description>
-    <description lang="zh">Tvheadend前端，支持直播电视播放和录制、电子节目单、定时器</description>
+    <description lang="zh">Tvheadend 前端，支持直播电视和录像流媒体、电子节目单、定时器</description>
     <description lang="zh_TW">Tvheadend前端，支援的串流媒體包含有直播電視和錄製節目，電子節目表，定時器 等</description>
     <disclaimer lang="af">Hierdie is onstabiele sagteware! Die outeurs is op geen manier verantwoordelik vir gefaalde opnames, inkorrekte tydhouers, vermorsde ure, of enige ander ongewensde effekte...</disclaimer>
     <disclaimer lang="be">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
-    <disclaimer lang="bg">Тази програма е нестабилна! Авторите не носят отговорност за неизпълнение на записването, погрешните таймери, пропилените часове, или някакви други нежелани ефекти.</disclaimer>
+    <disclaimer lang="bg">Тази програма е нестабилна! Авторите не носят отговорност за неуспешно записване, некоректни броячи, пропиляното време и други нежелани ефекти.</disclaimer>
     <disclaimer lang="ca">Això és programari inestable! Els autors no són de cap manera responsables dels enregistraments que han fallat, temporitzadors incorrectes, hores perdudes, o qualssevol altres efectes no desitjats..</disclaimer>
     <disclaimer lang="cs">Tento software není stabilní. Autoři nejsou žádným způsobem zodpovědní za selhání při nahrávání, neplatné časovače, ztracený čas, či jakékoliv jiné nežádoucí události...</disclaimer>
     <disclaimer lang="cy">Mae hwn yn feddalwedd ansad! Nid yw'r awduron yn gyfrifol mewn unrhyw ffordd am fethu recordio, amseru gwallus, oriau wedi eu gwastraffu nac effeithiau anymunol eraill.</disclaimer>
@@ -116,12 +124,14 @@
     <disclaimer lang="de">Dies ist instabile Software! Die Autoren sind in keiner Weise verantwortlich für fehlgeschlagene Aufnahmen, falsche Timer, verschwendete Zeit oder andere ungewünschte Effekte.</disclaimer>
     <disclaimer lang="el">Ασταθές πρόγραμμα! Οι δημιουργοί δεν είναι σε καμία περίπτωση υπεύθυνοι για αποτυχημένες εγγραφές, λανθασμένους χρονοδιακόπτες, χαμένες ώρες, ή κάθε είδους ανεπιθύμητα αποτελέσματα..</disclaimer>
     <disclaimer lang="en">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
+    <disclaimer lang="en_NZ">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
     <disclaimer lang="es">¡Este software es inestable! Los autores no se responsabilizan de grabaciones fallidas, temporizadores incorrectos, horas perdidas, o cualquier otro efecto no deseado...</disclaimer>
     <disclaimer lang="es_AR">¡Este software es inestable! Los autores no se responsabilizan por grabaciones fallidas, temporizadores incorrectos, horas perdidas, o cualquier otro efecto no deseado..</disclaimer>
     <disclaimer lang="es_MX">¡Esto es software inestable! Los autores no son de ninguna manera responsables por grabaciones fallidas, temporizadores incorrectos, horas perdidas o cualquier otro efecto no deseado...</disclaimer>
     <disclaimer lang="et">See on ebastabiilne tarkvara! Autorid ei ole kuidagi moodi vastutavad nurjunud salvestiste, ebaõige aegrelee, raisatud tundide ega muude soovimatute asjade eest.</disclaimer>
     <disclaimer lang="fi">Tämä on epävakaa ohjelma! Ohjelman kirjoittavat eivät vastaa millään tavalla epäonnistuneista nauhoituksista, ajastimen väärästä toiminnasta, hukatusta ajasta tai muista ei-halutuista tapahtumista.</disclaimer>
     <disclaimer lang="fr">Ce programme est instable ! Les auteurs ne sont en aucun cas responsables de l'échec des enregistrements, des minuteries inexactes, du temps perdu ou tous autres effets indésirables.</disclaimer>
+    <disclaimer lang="fr_CA">Ce logiciel est instable! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
     <disclaimer lang="gl">Este é software non estable, os autores non se fan responsábeis dos erros na gravacións, temporizadores incorrectos, e outros efectos non desexados.</disclaimer>
     <disclaimer lang="he">זוהי תוכנה בלתי יציבה!מחברי התכנה אינם אחראים להקלטות כושלות,מתזמני הקלטות שגויים,שעות מבוזבזות,או כל תוצאה בלתי רצויה...</disclaimer>
     <disclaimer lang="hr">Ovo je nestabilan softver! Autori nisu ni na koji način odgovorni za neuspjelo snimanje, netočna vremena snimanja, izgubljene sate, ili bilo koje druge nepoželjne učinke...</disclaimer>
@@ -138,7 +148,7 @@
     <disclaimer lang="ms">Ini merupakan perisian tidak stabil! Pengarang tidak bertanggungjawab atas kegagalan rakaman, pemasa tidak betul, masa yang dibazirkan, atau apa jua kesan yang tidak dikehendaki..</disclaimer>
     <disclaimer lang="nl">Dit is mogelijk onstabiele software! De auteurs zijn op geen enkele wijze verantwoordelijk voor de mislukte opnames, onjuiste timers, verspilde uren, of een andere ongewenste effecten ..</disclaimer>
     <disclaimer lang="no">Dette er ustabilt programvare! Forfatterne er ikke ansvarlig på noen måte for ødelagte opptak, feile timere, bortkastede timer, eller andre uønskede hendinger...</disclaimer>
-    <disclaimer lang="pl">To oprogramowanie jest niestabilne! Autorzy w żaden sposób nie odpowiadają za nieudane nagrania, źle działające liczniki czasu, stracone godziny czy też jakiekolwiek inne niepożądane efekty.</disclaimer>
+    <disclaimer lang="pl">Oprogramowanie nadal jest w fazie rozwoju i jest niestabilne! Autorzy w żaden sposób nie są odpowiedzialni za błędne nagrania, błędy planowaniu nagrań, zmarnowany czas ani jakiekolwiek inne niepożądane efekty.</disclaimer>
     <disclaimer lang="pt">Este software é instável! Os autores não são de forma alguma responsáveis por gravações falhadas, temporizadores incorrectos, horas desperdiçadas, ou qualquer outro tipo de efeitos indesejáveis..</disclaimer>
     <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas desperdiçadas, ou quaisquer outros efeitos indesejáveis...</disclaimer>
     <disclaimer lang="ro">Acest software nu este stabil! Autorii nu sunt în niciun caz responsabili pentru înregistrările eșuate, cronometre incorecte, ore pierdute sau orice alt efect nedorit.</disclaimer>
@@ -149,10 +159,11 @@
     <disclaimer lang="sr">Овај софтвер је нестабилан! Аутори ни на који начин нису одговорни за неуспела снимања, неисправна заказана снимања, изгубљене сате или друге нежељене ефекте.</disclaimer>
     <disclaimer lang="sv">Detta är ostabil programvara! Upphovsmännen är inte ansvariga för felaktiga inspelningar, inkorrekta timers, slösad tid eller andra oönskade effekter..</disclaimer>
     <disclaimer lang="ta_IN">இந்த நிலையற்ற மென்பொருள்! தோல்வியடைந்தது பதிவுகள், தவறான டைமர்கள், வீணாகி மணி, அல்லது வேறு எந்த விரும்பத்தகாத விளைவுகலுக்கு இதன் ஆசிரியர்கள் பொறுப்பு இல்லை.</disclaimer>
+    <disclaimer lang="tg">Ин нармафзори ноустувор аст! Муаллифон барои вайрониҳои сабт, вақтсанҷҳои нодуруст, соатҳои бефоида ва дигар таъсирҳои номатлуб ҷавобгар намебошанд.</disclaimer>
     <disclaimer lang="tr">Bu stabil olmayan program! Yapımcılar hatalı kayıtlardan, bozuk sürelerden, harcanan vakitten veya herhangi bir olumsuz etkiden dolayı sorumlu tutulamaz.</disclaimer>
     <disclaimer lang="uk">Це нестабільна програма! Автори не несуть відповідальності за попсуті записи, неправильні таймери, втрачений час та інші небажані ефекти.</disclaimer>
     <disclaimer lang="vi">Đây là phần mềm không ổn định! Các tác giả không chịu trách nhiệm đối với bản ghi âm thất bại, giờ không chính xác, giờ lãng phí, hoặc bất kỳ tác dụng không mong muốn khác..</disclaimer>
-    <disclaimer lang="zh">这是不稳定版的软件！作者不对录制失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
+    <disclaimer lang="zh">这是不稳定版的软件！作者不对录像失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
     <disclaimer lang="zh_TW">這是測試版軟體！其原創作者並無法對於以下情況負責，包含：錄影失敗，不正確的定時設定，多餘時數，或任何產生的其它不良影響...</disclaimer>
     <platform>@OS@</platform>
   </extension>
