@@ -1,3 +1,6 @@
+1.9.27
+- fix channel icons for recordings
+
 1.9.24
 - add EDL support
 
