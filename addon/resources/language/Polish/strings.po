@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Tvheadend hostname or IP address"
-msgstr "Nazwa hosta lub IP"
+msgstr "Nazwa hosta lub adres IP"
 
 msgctxt "#30001"
 msgid "HTTP port"
@@ -30,7 +30,7 @@ msgstr "Port HTSP"
 
 msgctxt "#30003"
 msgid "Username"
-msgstr "Nazwa użytkownika"
+msgstr "Użytkownik"
 
 msgctxt "#30004"
 msgid "Password"
@@ -54,7 +54,7 @@ msgstr "Ustawienia transkodowania"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Włącz transkodowanie"
+msgstr "Aktywuj transkodowanie"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -70,7 +70,7 @@ msgstr "Rozdzielczość"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
-msgstr "Odłączono od '%s'"
+msgstr "Rozłączono z '%s'"
 
 msgctxt "#30501"
 msgid "Reconnected to '%s'"

@@ -34,7 +34,7 @@ msgstr "பயனர்பெயர்"
 
 msgctxt "#30004"
 msgid "Password"
-msgstr "அடையாளச் சொல்"
+msgstr "கடவுச்சொல்"
 
 msgctxt "#30006"
 msgid "Connect timeout in seconds"

@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Tvheadend hostname or IP address"
-msgstr "nome do host ou enderezo IP"
+msgstr "Nome do host ou enderezo IP"
 
 msgctxt "#30001"
 msgid "HTTP port"

@@ -16,6 +16,10 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nafn eða IP tala Tvheadend"
+
 msgctxt "#30001"
 msgid "HTTP port"
 msgstr "HTTP gátt"
@@ -32,13 +36,33 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Lykilorð"
 
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Tímatakmörk tengingar í sekúndum"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Tímatakmörk svartíma í sekúndum"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Stillingar umkóðara Tvheadend"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Stillingar umkóðara"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Virkja umkóðun"
+
 msgctxt "#30103"
 msgid "Audio codec"
-msgstr "Hljóðkótari"
+msgstr "Hljóðkóðari"
 
 msgctxt "#30104"
 msgid "Video codec"
-msgstr "Myndkótari"
+msgstr "Myndkóðari"
 
 msgctxt "#30105"
 msgid "Resolution"
@@ -50,4 +74,4 @@ msgstr "Aftengdur frá '%s'"
 
 msgctxt "#30501"
 msgid "Reconnected to '%s'"
-msgstr "Tengdur við '%s'"
+msgstr "Endurtengdur við '%s'"

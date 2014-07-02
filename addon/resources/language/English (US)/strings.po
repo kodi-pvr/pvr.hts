@@ -16,6 +16,18 @@ msgstr ""
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend hostname or IP address"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP port"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP port"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "Username"
@@ -23,6 +35,26 @@ msgstr "Username"
 msgctxt "#30004"
 msgid "Password"
 msgstr "Password"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Connect timeout in seconds"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Response timeout in seconds"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend transcoding settings"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Transcoding settings"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -35,3 +67,11 @@ msgstr "Video codec"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "Resolution"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Disconnected from '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Reconnected to '%s'"
