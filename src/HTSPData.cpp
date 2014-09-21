@@ -636,7 +636,7 @@ PVR_ERROR CHTSPData::RenameRecording(const PVR_RECORDING &recording, const char 
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  if (success > 0)
+  if (success > 0 && m_bIsStarted)
     PVR->TriggerRecordingUpdate();
 
   return success > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
@@ -824,7 +824,8 @@ void CHTSPData::ParseChannelRemove(htsmsg_t* msg)
 
   m_channels.erase(id);
 
-  PVR->TriggerChannelUpdate();
+  if (m_bIsStarted)
+    PVR->TriggerChannelUpdate();
 }
 
 void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
@@ -943,10 +944,13 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
       __FUNCTION__, iChannelId, strName ? strName : "(null)", strIconPath ? strIconPath : "(null)", iEventId);
 #endif
 
-  if (bChannelChanged)
-    PVR->TriggerChannelUpdate();
-  if (bTagsChanged)
-    PVR->TriggerChannelGroupsUpdate();
+  if (m_bIsStarted)
+  {
+    if (bChannelChanged)
+      PVR->TriggerChannelUpdate();
+    if (bTagsChanged)
+      PVR->TriggerChannelGroupsUpdate();
+  }
 }
 
 void CHTSPData::ParseDVREntryDelete(htsmsg_t* msg)
@@ -964,8 +968,11 @@ void CHTSPData::ParseDVREntryDelete(htsmsg_t* msg)
 
   m_recordings.erase(id);
 
-  PVR->TriggerTimerUpdate();
-  PVR->TriggerRecordingUpdate();
+  if (m_bIsStarted)
+  {
+    PVR->TriggerTimerUpdate();
+    PVR->TriggerRecordingUpdate();
+  }
 }
 
 void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
@@ -1038,10 +1045,13 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
 
   m_recordings[recording.id] = recording;
 
-  PVR->TriggerTimerUpdate();
+  if (m_bIsStarted)
+  {
+    PVR->TriggerTimerUpdate();
 
-  if (recording.state == ST_RECORDING)
-   PVR->TriggerRecordingUpdate();
+    if (recording.state == ST_RECORDING)
+      PVR->TriggerRecordingUpdate();
+  }
 }
 
 bool CHTSPData::ParseEvent(ADDON_HANDLE handle, htsmsg_t* msg, uint32_t *id, time_t end)
@@ -1141,7 +1151,8 @@ void CHTSPData::ParseTagRemove(htsmsg_t* msg)
 
   m_tags.erase(id);
 
-  PVR->TriggerChannelGroupsUpdate();
+  if (m_bIsStarted)
+    PVR->TriggerChannelGroupsUpdate();
 }
 
 void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
@@ -1183,7 +1194,8 @@ void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
       , __FUNCTION__, id, name ? name : "(null)", icon ? icon : "(null)");
 #endif
 
-  PVR->TriggerChannelGroupsUpdate();
+  if (m_bIsStarted)
+    PVR->TriggerChannelGroupsUpdate();
 }
 
 bool CHTSPData::OpenRecordedStream(const PVR_RECORDING &recording)
@@ -1351,6 +1363,12 @@ bool CHTSPData::OnConnectionDropped(void)
 
 bool CHTSPData::OnConnectionRestored(void)
 {
+  // Clear cached data. They may be invalid due to changes on tvh side
+  // while connection was down (e.g. deleted timers).
+  m_channels.clear();
+  m_tags.clear();
+  m_recordings.clear();
+
   if(!SendEnableAsync())
     return false;
 
@@ -1359,6 +1377,11 @@ bool CHTSPData::OnConnectionRestored(void)
     if (!m_started.Wait(m_mutex, m_bIsStarted, g_iConnectTimeout * 1000))
       return false;
   }
+
+  PVR->TriggerChannelUpdate();
+  PVR->TriggerChannelGroupsUpdate();
+  PVR->TriggerRecordingUpdate();
+  PVR->TriggerTimerUpdate();
 
   if (m_demux)
     m_demux->OnConnectionRestored();
