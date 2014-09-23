@@ -348,6 +348,8 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     strncpy(tag.strIconPath, strIconPath.c_str(), sizeof(tag.strIconPath) - 1);
     tag.recordingTime  = recording.start;
     tag.iDuration      = recording.stop - recording.start;
+    tag.iPriority      = recording.priority;
+    tag.iLifetime      = recording.retention;
 
     PVR->TransferRecordingEntry(handle, &tag);
   }
@@ -465,14 +467,14 @@ PVR_ERROR CHTSPData::GetTimers(ADDON_HANDLE handle)
     strncpy(tag.strTitle, recording.title.c_str(), sizeof(tag.strTitle) - 1);
     strncpy(tag.strSummary, recording.description.c_str(), sizeof(tag.strSummary) - 1);
     tag.state             = (PVR_TIMER_STATE) recording.state;
-    tag.iPriority         = 0;     // unused
-    tag.iLifetime         = 0;     // unused
+    tag.iPriority         = recording.priority;
+    tag.iLifetime         = recording.retention;
     tag.bIsRepeating      = false; // unused
     tag.firstDay          = 0;     // unused
     tag.iWeekdays         = 0;     // unused
     tag.iEpgUid           = 0;     // unused
-    tag.iMarginStart      = 0;     // unused
-    tag.iMarginEnd        = 0;     // unused
+    tag.iMarginStart      = recording.startExtra;
+    tag.iMarginEnd        = recording.stopExtra;
     tag.iGenreType        = 0;     // unused
     tag.iGenreSubType     = 0;     // unused
 
@@ -543,8 +545,6 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
   if ((GetProtocol() >= 6) && timer.iEpgUid > 0)
   {
     htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
-    htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
-    htsmsg_add_s64(msg, "stopExtra",   timer.iMarginEnd);
   }
   else
   {
@@ -555,6 +555,13 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
     htsmsg_add_str(msg, "description", timer.strSummary);
     htsmsg_add_u32(msg, "eventId",     -1);
   }
+
+  htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
+  htsmsg_add_s64(msg, "stopExtra",   timer.iMarginEnd);
+
+  if (GetProtocol() > 12)
+    htsmsg_add_u32(msg, "retention", timer.iLifetime);
+
   htsmsg_add_u32(msg, "priority",    prio);
   htsmsg_add_str(msg, "creator",     "XBMC");
 
@@ -588,11 +595,33 @@ PVR_ERROR CHTSPData::UpdateTimer(const PVR_TIMER &timer)
   XBMC->Log(LOG_DEBUG, "%s - channelUid=%d title=%s epgid=%d", __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
 
   htsmsg_t *msg = htsmsg_create_map();
-  htsmsg_add_str(msg, "method", "updateDvrEntry");
-  htsmsg_add_u32(msg, "id",     timer.iClientIndex);
-  htsmsg_add_str(msg, "title",  timer.strTitle);
-  htsmsg_add_u32(msg, "start",  timer.startTime);
-  htsmsg_add_u32(msg, "stop",   timer.endTime);
+  htsmsg_add_str(msg, "method",     "updateDvrEntry");
+  htsmsg_add_u32(msg, "id",         timer.iClientIndex);
+  htsmsg_add_str(msg, "title",      timer.strTitle);
+  htsmsg_add_u32(msg, "start",      timer.startTime);
+  htsmsg_add_u32(msg, "stop",       timer.endTime);
+  htsmsg_add_s64(msg, "startExtra", timer.iMarginStart);
+  htsmsg_add_s64(msg, "stopExtra",  timer.iMarginEnd);
+
+  if (GetProtocol() > 12)
+  {
+    htsmsg_add_u32(msg, "retention", timer.iLifetime);
+
+    /* Priority */
+    dvr_prio_t prio = DVR_PRIO_UNIMPORTANT;
+    if (timer.iPriority <= 20)
+      prio = DVR_PRIO_UNIMPORTANT;
+    else if (timer.iPriority <= 40)
+      prio =  DVR_PRIO_LOW;
+    else if (timer.iPriority <= 60)
+      prio =  DVR_PRIO_NORMAL;
+    else if (timer.iPriority <= 80)
+      prio =  DVR_PRIO_HIGH;
+    else
+      prio = DVR_PRIO_IMPORTANT;
+
+    htsmsg_add_u32(msg, "priority", (int)prio);
+  }
 
   CHTSResult result;
   ReadResult(msg, result);
@@ -979,7 +1008,10 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
 {
   SRecording recording;
   const char *state;
+  int64_t    startExtra, stopExtra;
+  uint32_t   retention, priority;
 
+  /* Required fields */
   if(htsmsg_get_u32(msg, "id",      &recording.id)
   || htsmsg_get_u32(msg, "channel", &recording.channel)
   || htsmsg_get_u32(msg, "start",   &recording.start)
@@ -1000,6 +1032,42 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
     recording.state = ST_COMPLETED;
   else if(strstr(state, "invalid"))
     recording.state = ST_INVALID;
+
+  /* Optional fields */
+  if(!htsmsg_get_s64(msg, "startExtra", &startExtra))
+    recording.startExtra = startExtra;
+
+  if(!htsmsg_get_s64(msg, "stopExtra",  &stopExtra))
+    recording.stopExtra = stopExtra;
+
+  if(!htsmsg_get_u32(msg, "retention",  &retention))
+    recording.retention = retention;
+
+  if(!htsmsg_get_u32(msg, "priority",   &priority))
+  {
+    switch (priority)
+    {
+      case DVR_PRIO_IMPORTANT:
+        recording.priority = 100;
+        break;
+      case DVR_PRIO_HIGH:
+        recording.priority = 75;
+        break;
+      case DVR_PRIO_NORMAL:
+        recording.priority = 50;
+        break;
+      case DVR_PRIO_LOW:
+        recording.priority = 25;
+        break;
+      case DVR_PRIO_UNIMPORTANT:
+        recording.priority = 0;
+        break;
+      default:
+        XBMC->Log(LOG_ERROR, "%s - malformed message received", __FUNCTION__);
+        htsmsg_print(msg);
+        return;
+    }
+  }
 
   const char* str;
   if((str = htsmsg_get_str(msg, "title")) == NULL)

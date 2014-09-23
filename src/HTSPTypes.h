@@ -126,20 +126,26 @@ struct SRecording
   uint32_t         channel;
   uint32_t         start;
   uint32_t         stop;
+  int64_t          startExtra;
+  int64_t          stopExtra;
   std::string      title;
   std::string      path;
   std::string      description;
   ERecordingState  state;
   std::string      error;
+  uint32_t         retention;
+  uint32_t         priority;
 
   SRecording() { Clear(); }
   void Clear()
   {
-    id = channel = start = stop = 0;
+    id = channel = start = stop = startExtra = stopExtra = 0;
     title.clear();
     description.clear();
     state = ST_INVALID;
     error.clear();
+    retention = 99; // xbmc default - 99 days
+    priority  = 50; // xbmc default - "normal"
   }
 };
 
