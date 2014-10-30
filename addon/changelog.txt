@@ -1,3 +1,6 @@
+1.9.40
+- added getBackendHostname function
+
 1.9.38
 - change library name to Kodi
 
