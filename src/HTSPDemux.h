@@ -40,7 +40,8 @@ public:
   void         Abort();
   DemuxPacket* Read();
   bool         SwitchChannel(const PVR_CHANNEL &channelinfo);
-  int         CurrentChannel() { return m_channel; }
+  int          CurrentChannel() { return m_channel; }
+  double       GetTimeshiftTime() const { return m_timeshiftStatus.shift; }
   bool         GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
   bool         SeekTime(int time, bool backward, double *startpts);
   void         SetSpeed(int speed);
@@ -74,6 +75,7 @@ private:
   SChannels                            m_channels;
   SQueueStatus                         m_QueueStatus;
   SQuality                             m_Quality;
+  STimeshiftStatus                     m_timeshiftStatus;
   SSourceInfo                          m_SourceInfo;
   PLATFORM::SyncedBuffer<DemuxPacket*> m_demuxPacketBuffer;
   bool                                 m_bIsOpen;

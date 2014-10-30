@@ -94,6 +94,8 @@ public:
   bool         SeekTime(int time,bool backward,double *startpts);
   void         SetSpeed(int speed);
   PVR_ERROR    GetEdl(const PVR_RECORDING &recinfo, PVR_EDL_ENTRY entries[], int *size);
+  double       DemuxGetTimeshiftTime(void);
+
 private:
   SChannels GetChannels();
   SChannels GetChannels(int tag);

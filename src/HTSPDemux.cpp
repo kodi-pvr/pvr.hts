@@ -598,11 +598,18 @@ bool CHTSPDemux::ParseSignalStatus(htsmsg_t* msg)
 
 bool CHTSPDemux::ParseTimeshiftStatus(htsmsg_t *msg)
 {
-  // TODO: placeholder for processing timeshiftStatus message when
-  //       we're ready to use the information.
-  //
-  //       For now this just ensures we don't spam logs with unecessary
-  //       info about unhandled messages.
+  uint32_t u32;
+  int64_t s64;
+
+  if (!htsmsg_get_u32(msg, "full", &u32))
+    m_timeshiftStatus.full = (bool)u32;
+  if (!htsmsg_get_s64(msg, "shift", &s64))
+    m_timeshiftStatus.shift = s64;
+  if (!htsmsg_get_s64(msg, "start", &s64))
+    m_timeshiftStatus.start = s64;
+  if (!htsmsg_get_s64(msg, "end", &s64))
+    m_timeshiftStatus.end = s64;
+
   return true;
 }
 

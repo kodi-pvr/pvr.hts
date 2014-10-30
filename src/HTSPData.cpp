@@ -1579,7 +1579,7 @@ PVR_ERROR CHTSPData::GetEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entrie
           htsmsg_get_u32(edl, "end", &end) != 0 ||
           htsmsg_get_u32(edl, "type", &type) != 0) 
       {
-	continue;
+        continue;
       }
       
       PVR_EDL_ENTRY entry;
@@ -1619,4 +1619,11 @@ PVR_ERROR CHTSPData::GetEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entrie
   *size = index;
   
   return PVR_ERROR_NO_ERROR;
+}
+
+double CHTSPData::DemuxGetTimeshiftTime(void)
+{
+  return m_demux ?
+      m_demux->GetTimeshiftTime() :
+      0;
 }

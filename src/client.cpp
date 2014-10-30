@@ -737,6 +737,16 @@ PVR_ERROR GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[
   return HTSPData->GetEdl(recording, &*entries, size);
 }
 
+time_t GetPlayingTime()
+{
+  int seconds = 0;
+
+  if (HTSPData)
+    seconds = HTSPData->DemuxGetTimeshiftTime() / 1000000;
+
+  return (time(NULL) - seconds);
+}
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -755,7 +765,6 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
-time_t GetPlayingTime() { return 0; }
 time_t GetBufferTimeStart() { return 0; }
 time_t GetBufferTimeEnd() { return 0; }
 }
