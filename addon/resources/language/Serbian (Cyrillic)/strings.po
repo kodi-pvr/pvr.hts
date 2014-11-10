@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
 # Addon Provider: Lars Op den Kamp, Team XBMC
@@ -8,13 +8,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Serbian (Cyrillic) (http://www.transifex.com/projects/p/xbmc-main/language/sr_RS/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: sr_RS\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "Tvheadend hostname or IP address"
+msgstr "Име хоста или ИП адреса Tvheadend-а"
+
+msgctxt "#30001"
+msgid "HTTP port"
+msgstr "HTTP прикључак"
+
+msgctxt "#30002"
+msgid "HTSP port"
+msgstr "HTSP прикључак"
 
 msgctxt "#30003"
 msgid "Username"
@@ -23,6 +35,14 @@ msgstr "Корисничко име"
 msgctxt "#30004"
 msgid "Password"
 msgstr "Лозинка"
+
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Чекање повезивања у секундама"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Чекање одговора у секундама"
 
 msgctxt "#30103"
 msgid "Audio codec"
@@ -35,3 +55,11 @@ msgstr "Видео кодек"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "Резолуција"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Искључен из '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Повово прикључен на '%s'"
