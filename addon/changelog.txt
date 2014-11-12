@@ -1,3 +1,8 @@
+1.9.35
+- improve sync after connection restore (@ksooo)
+- added support for getting and setting startExtra, stopExtra, retention, priority properties of recordings and timers (@ksooo)
+- backported GetPlayingTime from pvr.tvh (@ksooo)
+
 1.9.31
 - updated to API v1.9.2
 
