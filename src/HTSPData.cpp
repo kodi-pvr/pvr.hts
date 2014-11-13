@@ -224,6 +224,7 @@ PVR_ERROR CHTSPData::GetChannels(ADDON_HANDLE handle, bool bRadio)
     tag.iUniqueId         = channel.id;
     tag.bIsRadio          = channel.radio;
     tag.iChannelNumber    = channel.num;
+    tag.iSubChannelNumber = channel.numMinor;
     strncpy(tag.strChannelName, channel.name.c_str(), sizeof(tag.strChannelName) - 1);
     tag.iEncryptionSystem = channel.caid;
     strncpy(tag.strIconPath, channel.icon.c_str(), sizeof(tag.strIconPath) - 1);
@@ -860,7 +861,7 @@ void CHTSPData::ParseChannelRemove(htsmsg_t* msg)
 void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 {
   bool bChannelChanged(false), bTagsChanged(false);
-  uint32_t iChannelId, iEventId = 0, iChannelNumber = 0, iCaid = 0;
+  uint32_t iChannelId, iEventId = 0, iChannelNumber = 0, iSubChannelNumber = 0, iCaid = 0;
   const char *strName, *strIconPath;
   if(htsmsg_get_u32(msg, "channelId", &iChannelId))
   {
@@ -907,6 +908,16 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
     {
       bChannelChanged = true;
       channel.num = iNewChannelNumber;
+    }
+  }
+
+  /* ATSC subchannel number */
+  if (!htsmsg_get_u32(msg, "channelNumberMinor", &iSubChannelNumber))
+  {
+    if (channel.numMinor != iSubChannelNumber)
+    {
+      bChannelChanged = true;
+      channel.numMinor = iSubChannelNumber;
     }
   }
 
