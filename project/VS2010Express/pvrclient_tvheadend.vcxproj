@@ -44,7 +44,7 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>XBMC_Tvheadend_win32</TargetName>
+    <TargetName>Kodi_Tvheadend_win32</TargetName>
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
