@@ -12,12 +12,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_Tvheadend.pvr"
-    library_osx="XBMC_Tvheadend.pvr"
-    library_freebsd="XBMC_Tvheadend.pvr"
-    library_wingl="XBMC_Tvheadend_win32.dll"
-    library_windx="XBMC_Tvheadend_win32.dll"
-    library_android="libXBMC_Tvheadend.so"/>
+    library_linux="Kodi_Tvheadend.pvr"
+    library_osx="Kodi_Tvheadend.pvr"
+    library_freebsd="Kodi_Tvheadend.pvr"
+    library_wingl="Kodi_Tvheadend_win32.dll"
+    library_windx="Kodi_Tvheadend_win32.dll"
+    library_android="libKodi_Tvheadend.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">Kodi se voorprogram vir Tvheadend</summary>
     <summary lang="be">Kodi's frontend for Tvheadend</summary>

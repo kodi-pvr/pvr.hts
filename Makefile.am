@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_Tvheadend
+ADDONBINNAME    = Kodi_Tvheadend
 ADDONNAME       = pvr.hts
 LIBNAME         = libtvheadend-addon
 lib_LTLIBRARIES = libtvheadend-addon.la
