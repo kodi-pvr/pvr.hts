@@ -36,6 +36,26 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Нууц үг"
 
+msgctxt "#30006"
+msgid "Connect timeout in seconds"
+msgstr "Холболтын хугацаа хэтрэлт, секундээр"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Хариу хугацаа хэтрэлт, секундээр"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Tvheadend код хөрвүүлэлтийн тохиргоо"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Код хөрвүүлэлтийн тохиргоо"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Код хөрвүүлэлтийг идэвхижүүлэх"
+
 msgctxt "#30103"
 msgid "Audio codec"
 msgstr "Аудио кодек"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="1.9.38"
+  version="1.9.39"
   name="Tvheadend HTSP Client"
   provider-name="Lars Op den Kamp, Team XBMC">
   <requires>
@@ -39,7 +39,7 @@
     <summary lang="fr">Interface logicielle pour Tvheadend</summary>
     <summary lang="fr_CA">Frontal Kodi pour Tvheadend</summary>
     <summary lang="gl">Interface do Kodi para Tvheadend</summary>
-    <summary lang="he">קליינט PVR עבור Tvheadend</summary>
+    <summary lang="he">לקוח טלוויזיה חיה עבור Tvheadend</summary>
     <summary lang="hr">Kodi sučelje za Tvheadend</summary>
     <summary lang="hu">Kodi TVHeadend előtér-kiszolgáló</summary>
     <summary lang="id">Frontend Kodi untuk Tvheadend</summary>
@@ -64,7 +64,6 @@
     <summary lang="sl">Kodi-jev vmesnik za Tvheadend</summary>
     <summary lang="sq">Frontend i Kodi'së për Tvheadend</summary>
     <summary lang="sv">Kodi's frontend för Tvheadend</summary>
-    <summary lang="ta_IN">Tvheadend காண Kodi முன்நிலை</summary>
     <summary lang="tg">Интерфейси Kodi барои Tvheadend</summary>
     <summary lang="tr">Tvheadend için Kodi ön ucu</summary>
     <summary lang="uk">Інтерфейс Kodi для Tvheadend</summary>
@@ -91,7 +90,7 @@
     <description lang="fr">Interface logicielle pour Tvheadend supportant la lecture en continu du direct télévision et des enregistrements, les guides de programme TV, les minuteries</description>
     <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
     <description lang="gl">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
-    <description lang="he">קליינט Tvheadend:תומך בהזרמת טלוויזיה חיה והקלטות, לוח שידורים ותזמון הקלטות.</description>
+    <description lang="he">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
     <description lang="hr">Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje.</description>
     <description lang="hu">TVHeadend előtér-kiszolgáló. Élő adások és felvételek sugárzásának támogatása EPG-vel és időzítéssel</description>
     <description lang="id">Frontend Tvheadend; mendukung menangkap siaran TV Live &amp; Rekaman, EPG, Timer</description>
@@ -103,10 +102,11 @@
     <description lang="lt">Tvheadend sąsaja remia transliacijos Live TV &amp; Įrašus, EPG, Laikmačiai</description>
     <description lang="lv">Tvheadend galasistēma; atbalsta tieštaides TV un ierakstu straumēšanu, EPG, taimerus</description>
     <description lang="mk">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
+    <description lang="mn_MN">Tvheadend нүүр; Live TV &amp; бичлэг дамжуулалт, EPG, Timer</description>
     <description lang="ms">Bahagian hadapan Tvheadend; menyokong penstirman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="nl">Tvheadend frontend, het ondersteunen streaming van Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="no">Tvheadend frontend; støtte for visning av direkte TV og opptakk, EPG, tidstakere</description>
-    <description lang="pl">Klient Tvheadend wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika TV.</description>
+    <description lang="pl">Klient Tvheadend wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend Tvheadend; suporta transmissão de TV em directo e gravações, EPG, temporizadores</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
     <description lang="ro">Frontend Tvheadend; se poate difuza în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
@@ -115,7 +115,6 @@
     <description lang="sl">Vmesnik za Tvheadend; podpira pretakanje televizije v živo &amp; posnetkov, EPG, časovnike</description>
     <description lang="sq">Tvheadend frotnend përkrahën transmetimin e Live TV'së, EPG'së dhe "timer'ë"</description>
     <description lang="sv">Tvheadend frontend; stödjer strömning av direktsänd TV &amp; inspelningar, EPG, Timers</description>
-    <description lang="ta_IN">NextPVR முன்நிலை. லைவ் டிவி &amp; பதிவுகளின் ஸ்ட்ரீமிங், EPG கேட்கவும் துணைபுரிகிறது.</description>
     <description lang="tg">Интерфейси Tvheadend; дастгирии ҷараёни Сабтҳо, Вақтсанҷҳо, Live TV ва EPG</description>
     <description lang="tr">Tvheadend ön ucu; Canlı TV akışı ve kayıt yapabilme, EPG ve zamanlayıcıları destekler</description>
     <description lang="uk">Інтерфейс для Tvheadend; підтримує передачу і запис потокового телебачення, EPG (телегід) і таймери.</description>
@@ -171,7 +170,6 @@
     <disclaimer lang="sq">Ky program nuk është ende stabil! Autorët e këtij programi nuk janë në as një menyr përgjegjës për rregistrime të gabuara, timer të pasaktë, kohë të humbur ose efekte të tilla të padëshirueshme.</disclaimer>
     <disclaimer lang="sr">Овај софтвер је нестабилан! Аутори ни на који начин нису одговорни за неуспела снимања, неисправна заказана снимања, изгубљене сате или друге нежељене ефекте.</disclaimer>
     <disclaimer lang="sv">Detta är ostabil programvara! Upphovsmännen är inte ansvariga för felaktiga inspelningar, inkorrekta timers, slösad tid eller andra oönskade effekter..</disclaimer>
-    <disclaimer lang="ta_IN">இந்த நிலையற்ற மென்பொருள்! தோல்வியடைந்தது பதிவுகள், தவறான டைமர்கள், வீணாகி மணி, அல்லது வேறு எந்த விரும்பத்தகாத விளைவுகலுக்கு இதன் ஆசிரியர்கள் பொறுப்பு இல்லை.</disclaimer>
     <disclaimer lang="tg">Ин нармафзори ноустувор аст! Муаллифон барои вайрониҳои сабт, вақтсанҷҳои нодуруст, соатҳои бефоида ва дигар таъсирҳои номатлуб ҷавобгар намебошанд.</disclaimer>
     <disclaimer lang="tr">Bu stabil olmayan program! Yapımcılar hatalı kayıtlardan, bozuk sürelerden, harcanan vakitten veya herhangi bir olumsuz etkiden dolayı sorumlu tutulamaz.</disclaimer>
     <disclaimer lang="uk">Це нестабільна програма! Автори не несуть відповідальності за зіпсовані записи, неправильні таймери, втрачений час та інші небажані ефекти.</disclaimer>

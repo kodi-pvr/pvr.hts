@@ -43,3 +43,11 @@ msgstr "ترميز الفيديو"
 msgctxt "#30105"
 msgid "Resolution"
 msgstr "دقة"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "قطع الاتصال من '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "أعيد الاتصال بـ '%s'"
