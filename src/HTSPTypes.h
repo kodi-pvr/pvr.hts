@@ -16,8 +16,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -27,62 +26,85 @@
 #include <vector>
 #include <map>
 #include "platform/util/StdString.h"
-#include "libXBMC_codec.h"
 #include "client.h"
-#include "xbmc_codec_descriptor.hpp"
 
-typedef std::vector<CodecDescriptor> CodecVector;
+typedef enum {
+  DVR_PRIO_IMPORTANT,
+  DVR_PRIO_HIGH,
+  DVR_PRIO_NORMAL,
+  DVR_PRIO_LOW,
+  DVR_PRIO_UNIMPORTANT
+} dvr_prio_t;
+
+typedef enum {
+  DVR_ACTION_TYPE_CUT,
+  DVR_ACTION_TYPE_MUTE,
+  DVR_ACTION_TYPE_SCENE,
+  DVR_ACTION_TYPE_COMBREAK,
+  
+} dvr_action_type_t;
+
+enum eHTSPEventType
+{
+  HTSP_EVENT_NONE = 0,
+  HTSP_EVENT_CHN_UPDATE = 1,
+  HTSP_EVENT_TAG_UPDATE = 2,
+  HTSP_EVENT_EPG_UPDATE = 3,
+  HTSP_EVENT_REC_UPDATE = 4,
+};
 
 struct STag
 {
-  int              id;
-  std::string      name;
-  std::string      icon;
-  std::vector<int> channels;
+  bool                  del;
+  uint32_t              id;
+  std::string           name;
+  std::string           icon;
+  std::vector<uint32_t> channels;
 
   STag() { Clear(); }
   void Clear()
   {
+    del   = false;
     id    = 0;
     name.clear();
     icon.clear();
     channels.clear();
   }
-  bool BelongsTo(int channel) const
+
+  inline bool operator==(const STag &right)
   {
-    return std::find(channels.begin(), channels.end(), channel) != channels.end();
+    return id == right.id && name == right.name &&
+           icon == right.icon && channels == right.channels;
   }
 
+  inline bool operator!=(const STag &right)
+  {
+    return !(*this == right);
+  }
 };
 
 struct SChannel
 {
-  int              id;
+  bool             del;
+  uint32_t         id;
+  uint32_t         num;
+  uint32_t         numMinor;
+  bool             radio;
+  uint32_t         caid;
   std::string      name;
   std::string      icon;
-  int              event;
-  int              num;
-  int              numMinor;
-  bool             radio;
-  int              caid;
-  std::vector<int> tags;
 
   SChannel() { Clear(); }
   void Clear()
   {
+    del   = false;
     id    = 0;
-    event = 0;
     num   = 0;
     numMinor = 0;
     radio = false;
     caid  = 0;
     name.clear();
     icon.clear();
-    tags.clear();
-  }
-  bool MemberOf(int tag) const
-  {
-    return std::find(tags.begin(), tags.end(), tag) != tags.end();
   }
   bool operator<(const SChannel &right) const
   {
@@ -90,50 +112,20 @@ struct SChannel
   }
 };
 
-struct SEvent
-{
-  int         id;
-  int         next;
-  int         chan_id;
-
-  int         content;
-  int         start;
-  int         stop;
-  std::string title;
-  std::string descs;
-
-  SEvent() { Clear(); }
-  void Clear()
-  {
-    id    = 0;
-    next  = 0;
-    start = 0;
-    stop  = 0;
-    title.clear();
-    descs.clear();
-  }
-};
-
-typedef enum recording_state {
-  ST_INVALID   = 0,
-  ST_SCHEDULED = 1,
-  ST_RECORDING = 2,
-  ST_COMPLETED = 3,
-  ST_ABORTED   = 4
-} ERecordingState;
-
 struct SRecording
 {
+  bool             del;
   uint32_t         id;
   uint32_t         channel;
-  uint32_t         start;
-  uint32_t         stop;
+  uint32_t         eventId;
+  int64_t          start;
+  int64_t          stop;
   int64_t          startExtra;
   int64_t          stopExtra;
   std::string      title;
   std::string      path;
   std::string      description;
-  ERecordingState  state;
+  PVR_TIMER_STATE  state;
   std::string      error;
   uint32_t         retention;
   uint32_t         priority;
@@ -141,15 +133,104 @@ struct SRecording
   SRecording() { Clear(); }
   void Clear()
   {
-    id = channel = start = stop = startExtra = stopExtra = 0;
+    del        = false;
+    id         = 0;
+    channel    = 0;
+    eventId    = 0;
+    start      = 0;
+    stop       = 0;
+    startExtra = 0;
+    stopExtra  = 0;
+
+    state   = PVR_TIMER_STATE_ERROR;
     title.clear();
     description.clear();
-    state = ST_INVALID;
     error.clear();
-    retention = 99; // xbmc default - 99 days
-    priority  = 50; // xbmc default - "normal"
+
+    retention = 99; // kodi default - "99 days"
+    priority  = 50; // kodi default - "normal"
+  }
+  
+  bool IsRecording () const
+  {
+    return state == PVR_TIMER_STATE_COMPLETED ||
+           state == PVR_TIMER_STATE_ABORTED   ||
+           state == PVR_TIMER_STATE_RECORDING;
+  }
+
+  bool IsTimer () const
+  {
+    return state == PVR_TIMER_STATE_SCHEDULED ||
+           state == PVR_TIMER_STATE_RECORDING;
   }
 };
+
+struct SEvent
+{
+  bool        del;
+  uint32_t    id;
+  uint32_t    next;
+  uint32_t    channel;
+  uint32_t    content;
+  time_t      start;
+  time_t      stop;
+  uint32_t    stars;
+  uint32_t    age;
+  time_t      aired;
+  uint32_t    season;
+  uint32_t    episode;
+  uint32_t    part;
+  std::string title;
+  std::string desc;
+  std::string summary;
+  std::string image;
+  uint32_t    recordingId;
+
+  SEvent() { Clear(); }
+  void Clear()
+  {
+    del     = false;
+    id      = 0;
+    next    = 0;
+    channel = 0;
+    content = 0;
+    start   = 0;
+    stop    = 0;
+    stars   = 0;
+    age     = 0;
+    aired   = 0;
+    season  = 0;
+    episode = 0;
+    part    = 0;
+    title.clear();
+    desc.clear();
+    summary.clear();
+    image.clear();
+    recordingId = 0;
+  }
+};
+
+typedef std::map<uint32_t, SChannel>   SChannels;
+typedef std::map<uint32_t, STag>       STags;
+typedef std::map<uint32_t, SEvent>     SEvents;
+typedef std::map<uint32_t, SRecording> SRecordings;
+
+struct SSchedule
+{
+  bool     del;
+  uint32_t channel;
+  SEvents events;
+
+  SSchedule() { Clear(); }
+  void Clear ()
+  {
+    del     = false;
+    channel = 0;
+    events.clear();
+  }
+};
+
+typedef std::map<int, SSchedule>  SSchedules;
 
 struct SQueueStatus
 {
@@ -178,7 +259,7 @@ struct STimeshiftStatus
   int64_t shift;
   int64_t start;
   int64_t end;
-
+  
   STimeshiftStatus() { Clear(); }
   void Clear()
   {
@@ -196,6 +277,16 @@ struct SQuality
   uint32_t    fe_signal;
   uint32_t    fe_ber;
   uint32_t    fe_unc;
+  
+  SQuality() { Clear(); }
+  void Clear ()
+  {
+    fe_status.clear();
+    fe_snr    = 0;
+    fe_signal = 0;
+    fe_ber    = 0;
+    fe_unc    = 0;
+  }
 };
 
 struct SSourceInfo
@@ -205,9 +296,56 @@ struct SSourceInfo
   std::string si_mux;
   std::string si_provider;
   std::string si_service;
+
+  SSourceInfo() { Clear(); }
+  void Clear ()
+  {
+    si_adapter.clear();
+    si_network.clear();
+    si_mux.clear();
+    si_provider.clear();
+    si_service.clear();
+  }
 };
 
-typedef std::map<int, SChannel>   SChannels;
-typedef std::map<int, STag>       STags;
-typedef std::map<int, SEvent>     SEvents;
-typedef std::map<int, SRecording> SRecordings;
+struct SHTSPEvent
+{
+  eHTSPEventType m_type;
+  uint32_t       m_idx;
+
+  SHTSPEvent ( eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0 )
+  {
+    m_type = type;
+    m_idx  = idx;
+  }
+  
+  bool operator==(const SHTSPEvent &right) const
+  {
+    return m_type == right.m_type && m_idx == right.m_idx;
+  }
+
+  bool operator!=(const SHTSPEvent &right) const
+  {
+    return !(*this == right);
+  }
+};
+
+typedef std::vector<SHTSPEvent> SHTSPEventList;
+
+class SSubscription
+{
+public:
+    uint32_t subscriptionId;
+    uint32_t channelId;
+    int      speed;
+    bool     active;
+    
+    SSubscription()
+    {
+        speed = 1000;
+        active = false;
+        
+        static int previousId = 0;
+        subscriptionId = ++previousId;
+    }
+};
