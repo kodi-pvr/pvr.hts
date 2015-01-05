@@ -282,7 +282,8 @@ private:
 /*
  * HTSP VFS - recordings
  */
-class CHTSPVFS
+class CHTSPVFS 
+  : public PLATFORM::CThread
 {
   friend class CTvheadend;
 
@@ -296,8 +297,13 @@ private:
   CHTSPConnection &m_conn;
   CStdString      m_path;
   uint32_t        m_fileId;
-  CCircBuffer     m_buffer;
   int64_t         m_offset;
+
+  CCircBuffer                  m_buffer;
+  PLATFORM::CMutex             m_mutex;
+  bool                         m_bHasData;
+  PLATFORM::CCondition<bool>   m_condition;
+  size_t                       m_currentReadLength;
 
   bool      Open   ( const PVR_RECORDING &rec );
   void      Close  ( void );
@@ -305,12 +311,19 @@ private:
   long long Seek   ( long long pos, int whence );
   long long Tell   ( void );
   long long Size   ( void );
+  void      Reset  ( void );
+
+  void *Process();
 
   bool      SendFileOpen  ( bool force = false );
   void      SendFileClose ( void );
+  bool      SendFileRead  ( void );
   long long SendFileSeek  ( int64_t pos, int whence, bool force = false );
   
-  static const int MAX_BUFFER_SIZE = 1000000;
+  static const int MAX_BUFFER_SIZE = 5242880; // 5 MB
+  static const int INITAL_READ_LENGTH = 131072; // 128 KB
+  static const int MAX_READ_LENGTH = 1048576; // 1 MB
+  
 };
 
 /*
