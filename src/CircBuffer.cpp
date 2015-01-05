@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+using namespace PLATFORM;
+
 CCircBuffer::CCircBuffer(void)
   : m_buffer(NULL), m_alloc(0), m_size(0), m_count(0), m_pin(0), m_pout(0)
 {
@@ -64,6 +66,7 @@ void CCircBuffer::unalloc(void)
 
 void CCircBuffer::reset(void)
 {
+  CLockObject lock(m_mutex);
   m_pin   = 0;
   m_pout  = 0;
   m_count = 0;
@@ -71,21 +74,25 @@ void CCircBuffer::reset(void)
 
 size_t CCircBuffer::size(void) const
 {
+  CLockObject lock(m_mutex);
   return m_size;
 }
 
 size_t CCircBuffer::avail(void) const
 {
+  CLockObject lock(m_mutex);
   return m_count;
 }
 
 size_t CCircBuffer::free(void) const
 {
+  CLockObject lock(m_mutex);
   return m_size - m_count - 1;
 }
 
 ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 {
+  CLockObject lock(m_mutex);
   if (m_size < 2)
     return -1;
   if (len > free())
@@ -111,6 +118,7 @@ ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 
 ssize_t CCircBuffer::read(unsigned char* data, size_t len)
 {
+  CLockObject lock(m_mutex);
   if (m_size < 2)
     return -1;
   if (len > avail())

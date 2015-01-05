@@ -22,6 +22,7 @@
  */
 
 #include "platform/os.h"
+#include "platform/threads/mutex.h"
 
 class CCircBuffer
 {
@@ -47,5 +48,8 @@ protected:
   size_t m_count;
   size_t m_pin;
   size_t m_pout;
+
+private:
+  mutable PLATFORM::CMutex m_mutex;
 
 };
