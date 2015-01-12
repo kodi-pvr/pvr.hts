@@ -86,29 +86,29 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\CircBuffer.cpp" />
-    <ClCompile Include="..\..\src\client.cpp" />
-    <ClCompile Include="..\..\src\GUIDialogTranscode.cpp" />
-    <ClCompile Include="..\..\src\HTSPConnection.cpp" />
-    <ClCompile Include="..\..\src\HTSPData.cpp" />
-    <ClCompile Include="..\..\src\HTSPDemux.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\CircBuffer.h" />
-    <ClInclude Include="..\..\src\client.h" />
-    <ClInclude Include="..\..\src\GUIDialogTranscode.h" />
-    <ClInclude Include="..\..\src\HTSPConnection.h" />
-    <ClInclude Include="..\..\src\HTSPData.h" />
-    <ClInclude Include="..\..\src\HTSPDemux.h" />
-    <ClInclude Include="..\..\src\HTSPTypes.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\..\lib\libhts\Win32\libhts_2010.vcxproj">
       <Project>{00700e12-a63b-4e54-b962-4011a90584bd}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\AsyncState.cpp" />
+    <ClCompile Include="..\..\src\CircBuffer.cpp" />
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\HTSPConnection.cpp" />
+    <ClCompile Include="..\..\src\HTSPDemuxer.cpp" />
+    <ClCompile Include="..\..\src\HTSPVFS.cpp" />
+    <ClCompile Include="..\..\src\Tvheadend.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\AsyncState.h" />
+    <ClInclude Include="..\..\src\CircBuffer.h" />
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\HTSPTypes.h" />
+    <ClInclude Include="..\..\src\Settings.h" />
+    <ClInclude Include="..\..\src\Tvheadend.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
