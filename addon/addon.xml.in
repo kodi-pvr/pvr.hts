@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.0.0"
+  version="2.0.1"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp">
   <requires>
@@ -22,7 +22,7 @@
     <summary lang="af">Kodi se voorprogram vir Tvheadend</summary>
     <summary lang="be">Kodi's frontend for Tvheadend</summary>
     <summary lang="bg">Kodi клиент за Tvheadend</summary>
-    <summary lang="ca">Frontal de l'Kodi pel Tvheadend</summary>
+    <summary lang="ca">Frontal del Kodi pel Tvheadend</summary>
     <summary lang="cs">Rozhraní Kodi pro Tvheadend</summary>
     <summary lang="cy">Blaen Kodi ar gyfer Tvheadend</summary>
     <summary lang="da">Kodi's frontend til Tvheadend</summary>
@@ -61,7 +61,7 @@
     <summary lang="ro">Frontend Kodi pentru Tvheadend</summary>
     <summary lang="ru">Интерфейс Kodi для Tvheadend</summary>
     <summary lang="sk">Kodi rozhranie pre Tvheadend</summary>
-    <summary lang="sl">Kodi-jev vmesnik za Tvheadend</summary>
+    <summary lang="sl">Kodijev vmesnik za Tvheadend</summary>
     <summary lang="sq">Frontend i Kodi'së për Tvheadend</summary>
     <summary lang="sv">Kodi's frontend för Tvheadend</summary>
     <summary lang="tg">Интерфейси Kodi барои Tvheadend</summary>
@@ -73,7 +73,7 @@
     <description lang="af">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="be">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="bg">Tvheadend клиент. Поддържа стрийминг и записване на телевизия, електронен програмен справочник и броячи.</description>
-    <description lang="ca">Interfície per al Tvheadend; suportant fluxes de TV en directe i enregistraments, EPG, temporitzadors</description>
+    <description lang="ca">Interfície per al Tvheadend; compatible amb la transmissió de TV en viu i enregistraments, EPG, temporitzadors</description>
     <description lang="cs">Rozhraní Tvheadend. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače.</description>
     <description lang="cy">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
     <description lang="da">Tvheadend frontend; understøtter streaming af direkte TV og optagelser, EPG og timere</description>
@@ -106,7 +106,7 @@
     <description lang="ms">Bahagian hadapan Tvheadend; menyokong penstirman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="nl">Tvheadend frontend, het ondersteunen streaming van Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="no">Tvheadend frontend; støtte for visning av direkte TV og opptakk, EPG, tidstakere</description>
-    <description lang="pl">Klient Tvheadend wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient Tvheadend obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend Tvheadend; suporta transmissão de TV em directo e gravações, EPG, temporizadores</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
     <description lang="ro">Frontend Tvheadend; se poate difuza în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
