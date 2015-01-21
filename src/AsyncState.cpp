@@ -32,7 +32,7 @@ using namespace PLATFORM;
 AsyncState::AsyncState(int timeout)
 {
   m_state   = ASYNC_NONE;
-  m_timeout = timeout * 1000;
+  m_timeout = timeout;
 }
 
 void AsyncState::SetState(eAsyncState state)

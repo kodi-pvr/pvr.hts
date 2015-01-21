@@ -133,7 +133,7 @@ bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {
     tvhtrace("waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, tvh->GetSettings().iConnectTimeout * 1000);
+    m_regCond.Wait(m_mutex, m_ready, tvh->GetSettings().iConnectTimeout);
   }
   return m_ready;
 }
@@ -214,7 +214,7 @@ bool CHTSPConnection::ReadMessage ( void )
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, tvh->GetSettings().iResponseTimeout * 1000);
+    r = m_socket->Read((char*)buf + cnt, len - cnt, tvh->GetSettings().iResponseTimeout);
     if (r < 0)
     {
       tvherror("failed to read packet (%s)",
@@ -327,7 +327,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   }
 
   /* Wait for response */
-  msg = resp.Get(m_mutex, iResponseTimeout * 1000);
+  msg = resp.Get(m_mutex, iResponseTimeout);
   m_messages.erase(seq);
   if (!msg)
   {
@@ -506,7 +506,7 @@ void* CHTSPConnection::Process ( void )
     CStdString host = settings.strHostname;
     int port, timeout;
     port = settings.iPortHTSP;
-    timeout = settings.iConnectTimeout * 1000;
+    timeout = settings.iConnectTimeout;
 
     /* Create socket (ensure mutex protection) */
     {

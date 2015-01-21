@@ -137,10 +137,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   settings.iPortHTTP = g_iPortHTTP;
   settings.strUsername = g_strUsername;
   settings.strPassword = g_strPassword;
-  settings.iConnectTimeout = g_iConnectTimeout;
-  settings.iResponseTimeout = g_iResponseTimeout;
   settings.bTraceDebug = g_bTraceDebug;
   settings.bAsyncEpg = g_bAsyncEpg;
+
+  /* Timeouts are defined in seconds but we expect them to be in milliseconds. 
+     Furthermore, the value from the settings is actually the index of the 
+     selected value, which is zero-based, so we need to increment by one. */
+  settings.iConnectTimeout = (g_iConnectTimeout + 1) * 1000;
+  settings.iResponseTimeout = (g_iResponseTimeout + 1) * 1000;
 
   tvh = new CTvheadend(settings);
   tvh->Start();
