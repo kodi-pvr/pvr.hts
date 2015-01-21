@@ -16,6 +16,30 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nom d'hôte ou adresse IP de Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Port HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Port HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Utilisateur"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Mot de passe"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Temporisation de réponse en secondes"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Débogage"

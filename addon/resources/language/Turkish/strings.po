@@ -16,6 +16,30 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend ana bilgisayar adı veya IP adresi"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP portu"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP portu"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Kullanıcı adı"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Parola"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Saniye cinsinden yanıt zaman aşımı süresi"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Hata ayıklama"

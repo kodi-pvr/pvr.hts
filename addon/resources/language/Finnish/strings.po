@@ -16,6 +16,30 @@ msgstr ""
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend-palvelimen nimi tai IP-osoite"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP-portti"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP-portti"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Salasana"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Vastauksen aikakatkaisu sekunneissa"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Debugging"

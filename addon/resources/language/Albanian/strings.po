@@ -16,6 +16,30 @@ msgstr ""
 "Language: sq\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend hostname ose adresa IP"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP porti"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP porti"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Emër-kalues"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Fjalkalim"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Timeout i përgjigjjes në eskonda"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Debugging"

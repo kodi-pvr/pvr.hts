@@ -16,6 +16,30 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nafn eða IP tala Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP gátt"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP gátt"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Notandanafn"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Lykilorð"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Tímatakmörk svartíma í sekúndum"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Kembing"

@@ -16,6 +16,30 @@ msgstr ""
 "Language: tg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Суроғаи IP ва номи мизбони Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Порти HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Порти HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Номи корбар"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Парол"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Хотимаи вақти посух дар сонияҳо"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Ислоҳи хатоҳо"

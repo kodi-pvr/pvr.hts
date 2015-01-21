@@ -16,6 +16,30 @@ msgstr ""
 "Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Názov hostiteľa Tvheadend alebo IP adresa"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP port"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP port"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Používateľské meno"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Heslo"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Časový limit pre odpoveď v sekundách"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Ladenie / Debug"

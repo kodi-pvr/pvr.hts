@@ -16,6 +16,50 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "Verbindingsinstellingen"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend server naam of IP adres"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP poort"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP poort"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "Verbindingswachttijd in seconden"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Antwoord timeout in seconden"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "Gegevensoverdracht"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Asynchrone EPG-overdracht"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Foutregistratie"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Loggen (in detail)"

@@ -16,6 +16,30 @@ msgstr ""
 "Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend хост или IP адреса"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP порта"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP порта"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Корисничко име"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Лозинка"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Тајмаут на реакција во секунди"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Барање грешки"

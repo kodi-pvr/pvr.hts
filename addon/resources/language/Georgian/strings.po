@@ -16,6 +16,26 @@ msgstr ""
 "Language: ka\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend-ის სერვერის სახელი ან IP მისამართი"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP პორტი"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP პორტი"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "მომხმარებელი"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "პაროლი"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "პასუხის დაგვიანება წამებში"

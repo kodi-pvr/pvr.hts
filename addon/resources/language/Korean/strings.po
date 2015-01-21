@@ -16,6 +16,50 @@ msgstr ""
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "연결 설정"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend 호스트네임 또는 IP 주소"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP 포트"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP 포트"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "사용자명"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "비밀번호"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "연결 타임아웃 (초)"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "응답시간 제한 (초)"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "데이터 전송"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "비동기 EPG 전송"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "디버깅"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "추적 (상세)"

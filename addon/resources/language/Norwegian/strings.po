@@ -16,6 +16,30 @@ msgstr ""
 "Language: no\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend vertsnavn eller IP-adresse"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP-port"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP-port"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Brukernavn"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Passord"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Tidsavbrudd ved venting på respons"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Feilsøking"

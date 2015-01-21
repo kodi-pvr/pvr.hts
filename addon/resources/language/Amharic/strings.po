@@ -16,6 +16,22 @@ msgstr ""
 "Language: am\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP port"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP port"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "የተጠቃሚ ስም "
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "የመግቢያ ቃል"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "መመለሻ ጊዜ በ ሰከንዶች"

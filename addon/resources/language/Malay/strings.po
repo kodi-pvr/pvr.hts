@@ -16,6 +16,26 @@ msgstr ""
 "Language: ms\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nama hos atau alamat IP Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Port HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Port HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Nama Pengguna"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Kata Laluan"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Had masa tamat respons dalam saat"

@@ -16,6 +16,30 @@ msgstr ""
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "TVHeadend kiszolgálónév vagy IP cím"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP Port"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP port"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Felhasználónév"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Jelszó"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Válasz időkorlát másodpercben"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Hibakeresés"

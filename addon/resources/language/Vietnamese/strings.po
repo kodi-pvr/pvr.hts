@@ -16,6 +16,30 @@ msgstr ""
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tên miền hoặc địa chỉ IP của Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Cổng HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Cổng HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Tên truy nhập"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Mật khẩu"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Số giây tự ngắt chờ"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Tìm sửa lỗi"

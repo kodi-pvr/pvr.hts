@@ -16,6 +16,30 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend主機名稱或IP位址"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP端口"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP端口"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "帳號"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "密碼"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "回應超時（秒）"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "除錯"

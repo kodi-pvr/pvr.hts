@@ -16,6 +16,50 @@ msgstr ""
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "Ρυθμίσεις Σύνδεσης"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Όνομα Υπολογιστή ή διεύθυνση IP του Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Θύρα HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Θύρα HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Κωδικός πρόσβασης"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "Χρονικό όριο σύνδεσης σε δευτερόλεπτα"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Χρόνος απόκρισης σε δευτερόλεπτα"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "Μεταφορά Δεδομένων"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Ασύγχρονη μεταφορά EPG"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Εντοπισμός σφαλμάτων"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Ανίχνευση (αναλυτικά)"

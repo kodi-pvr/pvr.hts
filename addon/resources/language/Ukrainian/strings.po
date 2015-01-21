@@ -16,6 +16,30 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Ім'я серверу Tvheadend або його IP адреса"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Порт HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Порт HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Ім'я користувача"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Пароль"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Затримка відклику в секундах"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Налагодження"

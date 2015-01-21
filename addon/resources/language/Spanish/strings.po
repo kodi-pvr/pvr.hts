@@ -16,6 +16,50 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "Ajustes de Conexión"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend nombre o dirección IP"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Puerto HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Puerto HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Usuario"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Contraseña"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "Tiempo de espera de conexión en segundos"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Tiempo de espera de respuesta en segundos"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "Transferencia de Datos"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Transferencia asíncrona de EPG"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Depuración"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Traza (detallada)"
