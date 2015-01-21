@@ -1,3 +1,7 @@
+2.0.3
+- rebrand of HTSP client identifier
+- improve the VFS slightly by doing reading and buffering on separate threads, as well as tweaking the read length
+
 2.0.2
 - language files from Transifex
 - minor changes to conform with C++11
