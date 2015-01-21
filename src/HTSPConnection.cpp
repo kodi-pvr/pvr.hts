@@ -379,7 +379,7 @@ bool CHTSPConnection::SendHello ( void )
 {
   /* Build message */
   htsmsg_t *msg = htsmsg_create_map();
-  htsmsg_add_str(msg, "clientname", "XBMC Media Center");
+  htsmsg_add_str(msg, "clientname", "Kodi Media Center");
   htsmsg_add_u32(msg, "htspversion", HTSP_API_VERSION);
 
   /* Send and Wait */
