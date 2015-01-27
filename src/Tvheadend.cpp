@@ -20,6 +20,7 @@
  */
 
 #include <sstream>
+#include <algorithm>
 #include "Tvheadend.h"
 
 #include "platform/util/util.h"
@@ -258,7 +259,8 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
   htsmsg_add_u32(m, "id", id);
 
   /* Send and wait a bit longer than usual */
-  if ((m = m_conn.SendAndWait(method, m, 30)) == NULL)
+  if ((m = m_conn.SendAndWait(method, m,
+            std::max(30000, tvh->GetSettings().iResponseTimeout))) == NULL)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
