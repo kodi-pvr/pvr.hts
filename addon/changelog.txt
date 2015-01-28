@@ -1,3 +1,6 @@
+2.0.5
+- fixed incorrect timeout value when deleting recordings (thanks @ksooo)
+
 2.0.4
 - added a missing commit that somehow got lost when making v2.0.3
 
