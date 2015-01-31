@@ -312,7 +312,7 @@ int CTvheadend::GetRecordingCount ( void )
 PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
-    return PVR_ERROR_NO_ERROR;
+    return PVR_ERROR_FAILED;
   
   std::vector<PVR_RECORDING> recs;
   {
