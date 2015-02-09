@@ -89,7 +89,7 @@ void ADDON_ReadSettings(void)
   UPDATE_STR(g_strUsername, "user", buffer, "");
   UPDATE_STR(g_strPassword, "pass", buffer, "");
   UPDATE_INT(g_iPortHTSP,   "htsp_port", DEFAULT_HTSP_PORT);
-  UPDATE_INT(g_iPortHTTP,   "http_port", DEFAULT_HTSP_PORT);
+  UPDATE_INT(g_iPortHTTP,   "http_port", DEFAULT_HTTP_PORT);
   UPDATE_INT(g_iConnectTimeout,  "connect_timeout",  DEFAULT_CONNECT_TIMEOUT);
   UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_RESPONSE_TIMEOUT);
 
