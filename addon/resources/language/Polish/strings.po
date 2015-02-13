@@ -58,7 +58,7 @@ msgstr "Asynchroniczny transfer danych przewodnika"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Diagnozowanie błędów"
+msgstr "Diagnostyka"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"

@@ -16,6 +16,10 @@ msgstr ""
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "Настройки на връзката"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend хост или IP адрес"
@@ -36,10 +40,26 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Парола"
 
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "Време на изчакване при свързване в секунди"
+
 msgctxt "#30007"
 msgid "Response timeout in seconds"
-msgstr "Таймаут за отговор в секунди"
+msgstr "Време на изчакване за отговор в секунди"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "Пренос на данни"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Асинхронно актуализиране на ЕПС"
 
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Дебъгване"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Проследяване (подробно)"

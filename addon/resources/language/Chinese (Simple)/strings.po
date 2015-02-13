@@ -54,7 +54,7 @@ msgstr "数据传输"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "异步EPG传输"
+msgstr "异步电子节目单传输"
 
 msgctxt "#30200"
 msgid "Debugging"
