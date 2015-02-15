@@ -310,6 +310,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsTV               = true;
   pCapabilities->bSupportsRadio            = true;
   pCapabilities->bSupportsRecordings       = true;
+  pCapabilities->bSupportsRecordingsUndelete = false;
   pCapabilities->bSupportsTimers           = true;
   pCapabilities->bSupportsChannelGroups    = true;
   pCapabilities->bHandlesInputStream       = true;
@@ -476,12 +477,12 @@ PVR_ERROR GetEPGForChannel
  * Recording Management
  * *************************************************************************/
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   return tvh->GetRecordingCount();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   return tvh->GetRecordings(handle);
 }
@@ -500,6 +501,16 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &rec)
 PVR_ERROR RenameRecording(const PVR_RECORDING &rec)
 {
   return tvh->RenameRecording(rec);
+}
+
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR DeleteAllRecordingsFromTrash()
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 int GetTimersAmount(void)
@@ -584,7 +595,7 @@ int GetRecordingLastPlayedPosition(const PVR_RECORDING &_unused(recording))
 }
 
 /* Channel Management */
-PVR_ERROR DialogChannelScan(void)
+PVR_ERROR OpenDialogChannelScan(void)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -600,11 +611,11 @@ PVR_ERROR MoveChannel(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
