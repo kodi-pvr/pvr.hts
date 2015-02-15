@@ -799,6 +799,9 @@ bool CTvheadend::Connected ( void )
   htsmsg_t *msg;
   STags::iterator tit;
   SChannels::iterator cit;
+  SRecordings::iterator rit;
+  SSchedules::iterator sit;
+  SEvents::iterator eit;
 
   /* Rebuild state */
   m_dmx.Connected();
@@ -809,6 +812,15 @@ bool CTvheadend::Connected ( void )
     cit->second.del = true;
   for (tit = m_tags.begin(); tit != m_tags.end(); ++tit)
     tit->second.del = true;
+  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+    rit->second.del = true;
+  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
+  {
+    sit->second.del = true;
+
+    for (eit = sit->second.events.begin(); eit != sit->second.events.end(); ++eit)
+      eit->second.del = true;
+  }
 
   /* Request Async data */
   m_asyncState.SetState(ASYNC_NONE);
