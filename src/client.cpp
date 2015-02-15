@@ -626,7 +626,7 @@ time_t GetBufferTimeStart()
 }
 time_t GetBufferTimeEnd()
 {
-  return 0; }
+  return 0;
 }
 
 /* Live stream (VFS interface - not relevant) */
@@ -652,3 +652,5 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
 {
   return "";
 }
+
+} /* extern "C" */
