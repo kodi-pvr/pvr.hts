@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.1.0"
+  version="2.1.1"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp">
   <requires>

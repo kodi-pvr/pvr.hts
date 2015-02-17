@@ -1,4 +1,4 @@
-2.1.0
+2.1.1
 - Updated to PVR API v1.9.4
 - Updated to GUI API v5.8.0
 - Updated to Codec API v1.0.1
