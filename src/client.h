@@ -20,12 +20,12 @@
  *
  */
 
-#include "platform/os.h"
-#include "platform/threads/mutex.h"
-#include "libXBMC_addon.h"
-#include "libXBMC_pvr.h"
-#include "libXBMC_gui.h"
-#include "libXBMC_codec.h"
+#include "kodi/os.h"
+#include "kodi/threads/mutex.h"
+#include "kodi/libXBMC_addon.h"
+#include "kodi/libXBMC_pvr.h"
+#include "kodi/libXBMC_gui.h"
+#include "kodi/libXBMC_codec.h"
 
 extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;

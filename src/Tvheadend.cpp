@@ -23,10 +23,10 @@
 #include <algorithm>
 #include "Tvheadend.h"
 
-#include "platform/util/util.h"
+#include "kodi/util/util.h"
 
 extern "C" {
-#include "platform/util/atomic.h"
+#include "kodi/util/atomic.h"
 #include "libhts/htsmsg_binary.h"
 }
 
