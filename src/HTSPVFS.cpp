@@ -142,6 +142,7 @@ void CHTSPVFS::Reset()
 int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
   ssize_t ret;
+  CLockObject lock(m_mutex);
 
   /* Not opened */
   if (!m_fileId)
@@ -151,14 +152,12 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
      requested length so we don't wait unnecessarily long */
   if (m_buffer.avail() < len)
   {
-    CLockObject lock(m_mutex);
     m_bHasData = false;
     m_currentReadLength = len;
     m_condition.Broadcast();
   }
 
   /* Wait for data */
-  CLockObject lock(m_mutex);
   m_condition.Wait(m_mutex, m_bHasData, 5000);
 
   /* Read */
