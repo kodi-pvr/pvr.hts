@@ -66,7 +66,9 @@ void *CHTSPVFS::Process(void)
 */
 CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
   : m_conn(conn), m_path(""), m_fileId(0), m_offset(0), 
-  m_currentReadLength(INITAL_READ_LENGTH)
+  m_currentReadLength(INITAL_READ_LENGTH),
+  m_bHasData(false),
+  m_bSeekDone(true)
 {
   m_buffer.alloc(MAX_BUFFER_SIZE);
 
@@ -136,7 +138,9 @@ void CHTSPVFS::Reset()
   CLockObject lock(m_mutex);
   m_buffer.reset();
   m_bHasData = false;
+  m_bSeekDone = true;
   m_currentReadLength = INITAL_READ_LENGTH;
+  m_seekCondition.Signal();
 }
 
 int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
@@ -147,6 +151,8 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
   /* Not opened */
   if (!m_fileId)
     return -1;
+
+  m_seekCondition.Wait(m_mutex, m_bSeekDone, 5000);
 
   /* Signal that we need more data in the buffer. Reset the read length to the 
      requested length so we don't wait unnecessarily long */
@@ -171,6 +177,7 @@ long long CHTSPVFS::Seek ( long long pos, int whence )
   CLockObject lock(m_conn.Mutex());
   if (m_fileId == 0)
     return -1;
+  m_bSeekDone = false;
   return SendFileSeek(pos, whence);
 }
 

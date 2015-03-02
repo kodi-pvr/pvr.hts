@@ -302,7 +302,9 @@ private:
   CCircBuffer                  m_buffer;
   PLATFORM::CMutex             m_mutex;
   bool                         m_bHasData;
+  bool                         m_bSeekDone;
   PLATFORM::CCondition<bool>   m_condition;
+  PLATFORM::CCondition<bool>   m_seekCondition;
   size_t                       m_currentReadLength;
 
   bool      Open   ( const PVR_RECORDING &rec );
