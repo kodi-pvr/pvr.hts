@@ -48,7 +48,8 @@ CTvheadend::CTvheadend(tvheadend::Settings settings)
 
 CTvheadend::~CTvheadend()
 {
-  m_conn.StopThread();
+  m_conn.StopThread(-1);
+  m_conn.Disconnect();
   StopThread();
 }
 
