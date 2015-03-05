@@ -19,7 +19,6 @@
  *
  */
 
-#include <sstream>
 #include <algorithm>
 #include "Tvheadend.h"
 
@@ -49,7 +48,8 @@ CTvheadend::CTvheadend(tvheadend::Settings settings)
 
 CTvheadend::~CTvheadend()
 {
-  m_conn.StopThread();
+  m_conn.StopThread(-1);
+  m_conn.Disconnect();
   StopThread();
 }
 
@@ -377,6 +377,9 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
         }
       }
 
+      /* EPG event id */
+      rec.iEpgEventId = rit->second.eventId;
+
       recs.push_back(rec);
     }
   }
@@ -687,11 +690,6 @@ void CTvheadend::TransferEvent
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
 
-  std::stringstream ss;
-  ss << event.recordingId;
-  const std::string recordingId = ss.str();
-  epg.strRecordingId = recordingId.c_str();
-  
   /* Callback. */
   PVR->TransferEpgEntry(handle, &epg);
 }
