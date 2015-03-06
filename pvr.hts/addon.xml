@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.1.2"
+  version="2.1.3"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp">
   <requires>
     <c-pluff version="0.1"/>
     <import addon="xbmc.pvr" version="1.9.5"/>
     <import addon="xbmc.codec" version="1.0.1"/>
-    <import addon="xbmc.gui" version="5.8.0"/>
   </requires>
   <extension
     point="xbmc.pvrclient"

@@ -1,5 +1,10 @@
-2.1.2
+2.1.3
 - Updated to PVR API v1.9.5
+- added: avahi discovery
+- fixed: lock on exit
+- fixed: race when seeking within recordings
+- fixed: CHTSPVFS::Read() needs the mutex locked
+- removed guilib dep
 
 2.1.1
 - Updated to PVR API v1.9.4
