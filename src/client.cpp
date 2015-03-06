@@ -59,7 +59,6 @@ bool       g_bAsyncEpg           = false;
  */
 CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
-CHelper_libXBMC_gui   *GUI       = NULL;
 CHelper_libXBMC_codec *CODEC     = NULL;
 PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
@@ -112,16 +111,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   
   /* Instantiate helpers */
   XBMC  = new CHelper_libXBMC_addon;
-  GUI   = new CHelper_libXBMC_gui;
   CODEC = new CHelper_libXBMC_codec;
   PVR   = new CHelper_libXBMC_pvr;
   
-  if (!XBMC->RegisterMe(hdl) || !GUI->RegisterMe(hdl) ||
+  if (!XBMC->RegisterMe(hdl) ||
       !CODEC->RegisterMe(hdl) || !PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
-    SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
@@ -154,7 +151,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     SAFE_DELETE(tvh);
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
-    SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_LOST_CONNECTION;
   }
@@ -180,7 +176,6 @@ void ADDON_Destroy()
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
   SAFE_DELETE(CODEC);
-  SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);
   m_CurStatus = ADDON_STATUS_UNKNOWN;
@@ -283,22 +278,6 @@ const char* GetMininumPVRAPIVersion(void)
   static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
   return strMinApiVersion;
 }
-
-#ifdef XBMC_GUI_API_VERSION
-const char* GetGUIAPIVersion(void)
-{
-  static const char *strGuiApiVersion = XBMC_GUI_API_VERSION;
-  return strGuiApiVersion;
-}
-#endif
-
-#ifdef XBMC_GUI_MIN_API_VERSION
-const char* GetMininumGUIAPIVersion(void)
-{
-  static const char *strMinGuiApiVersion = XBMC_GUI_MIN_API_VERSION;
-  return strMinGuiApiVersion;
-}
-#endif
 
 /* **************************************************************************
  * Capabilities / Info
