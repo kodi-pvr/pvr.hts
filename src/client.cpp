@@ -21,6 +21,7 @@
 
 #include "client.h"
 #include "kodi/xbmc_pvr_dll.h"
+#include "kodi/libKODI_guilib.h"
 #include "kodi/threads/mutex.h"
 #include "kodi/util/atomic.h"
 #include "kodi/util/util.h"
@@ -641,6 +642,16 @@ long long LengthLiveStream(void)
 const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
 {
   return "";
+}
+
+const char* GetGUIAPIVersion(void)
+{
+  return KODI_GUILIB_API_VERSION;
+}
+
+const char* GetMininumGUIAPIVersion(void)
+{
+  return KODI_GUILIB_MIN_API_VERSION;
 }
 
 } /* extern "C" */
