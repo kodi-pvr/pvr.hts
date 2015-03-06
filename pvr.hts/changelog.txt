@@ -1,4 +1,4 @@
-2.1.3
+2.1.4
 - Updated to PVR API v1.9.5
 - added: avahi discovery
 - fixed: lock on exit
