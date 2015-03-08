@@ -23,7 +23,7 @@
 #include "kodi/xbmc_pvr_dll.h"
 #include "kodi/libKODI_guilib.h"
 #include "kodi/threads/mutex.h"
-#include "kodi/util/atomic.h"
+#include "kodi/threads/atomics.h"
 #include "kodi/util/util.h"
 #include "Settings.h"
 #include "Tvheadend.h"
