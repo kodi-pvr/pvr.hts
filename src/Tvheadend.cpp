@@ -23,9 +23,9 @@
 #include "Tvheadend.h"
 
 #include "kodi/util/util.h"
+#include "kodi/threads/atomics.h"
 
 extern "C" {
-#include "kodi/util/atomic.h"
 #include "libhts/htsmsg_binary.h"
 }
 
