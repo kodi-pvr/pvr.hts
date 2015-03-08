@@ -205,11 +205,12 @@ long long CHTSPVFS::Size ( void )
   if ((m = m_conn.SendAndWait("fileStat", m)) == NULL)
     return -1;
 
-  /* Process */
+  /* Get size. Note: 'size' field is optional. */
   if (htsmsg_get_s64(m, "size", &ret))
-    tvherror("vfs fileStat malformed response");
+    ret = -1;
   else
     tvhtrace("vfs stat size=%lld", (long long)ret);
+
   htsmsg_destroy(m);
 
   return ret;
@@ -238,11 +239,15 @@ bool CHTSPVFS::SendFileOpen ( bool force )
     return false;
 
   /* Get ID */
-  htsmsg_get_u32(m, "id", &m_fileId);
-  htsmsg_destroy(m);
-  tvhtrace("vfs opened id=%d", m_fileId);
+  if (htsmsg_get_u32(m, "id", &m_fileId))
+  {
+    tvherror("malformed fileOpen response: 'id' missing");
+    m_fileId = 0;
+  }
+  else
+    tvhtrace("vfs opened id=%d", m_fileId);
 
-  /* Log */
+  htsmsg_destroy(m);
   return m_fileId > 0;
 }
 
@@ -260,7 +265,6 @@ void CHTSPVFS::SendFileClose ( void )
   m = m_conn.SendAndWait("fileClose", m);
   if (m)
     htsmsg_destroy(m);
-  // Note: ignore the return;
 }
 
 long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
@@ -288,9 +292,10 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   if (m == NULL)
     return false;
 
-  /* Get new offset */
+  /* Get new offset. Note: 'offset' field is optional.*/
   if (htsmsg_get_s64(m, "offset", &ret))
-    tvherror("vfs malformed fileSeek response");
+    ret = -1;
+
   htsmsg_destroy(m);
   
   /* Update */
@@ -345,7 +350,7 @@ bool CHTSPVFS::SendFileRead()
   if (htsmsg_get_bin(m, "data", &buf, &len))
   {
     htsmsg_destroy(m);
-    tvherror("vfs fileRead malformed response");
+    tvherror("malformed fileRead response: 'data' missing");
     return false;
   }
 

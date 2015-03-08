@@ -1,3 +1,6 @@
+2.1.5
+- improved HTSP specification compliance
+
 2.1.4
 - Updated to PVR API v1.9.5
 - added: avahi discovery

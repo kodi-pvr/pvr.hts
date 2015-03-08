@@ -361,7 +361,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   if (htsmsg_get_u32(m, "stream", &idx) ||
       htsmsg_get_bin(m, "payload", &bin, &binlen))
   { 
-    tvherror("malformed muxpkt");
+    tvherror("malformed muxpkt: 'stream'/'payload' missing");
     return;
   }
 
@@ -420,7 +420,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   /* Validate */
   if ((l = htsmsg_get_list(m, "streams")) == NULL)
   {
-    tvherror("malformed subscriptionStart");
+    tvherror("malformed subscriptionStart: 'streams' missing");
     return;
   }
   m_streamStat.clear();
@@ -633,6 +633,10 @@ void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
     tvhtrace("  status : %s", str);
     m_signalInfo.fe_status = str;
   }
+  else
+  {
+    tvherror("malformed signalStatus: 'feStatus' missing, ignoring");
+  }
   if (!htsmsg_get_u32(m, "feSNR", &u32))
   {
     tvhtrace("  snr    : %d", u32);
@@ -659,19 +663,35 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   int64_t s64;
-  
-  if (!htsmsg_get_u32(m, "full", &u32))
-    m_timeshiftStatus.full = (bool)u32;
-  if (!htsmsg_get_s64(m, "shift", &s64))
-    m_timeshiftStatus.shift = s64;
-  if (!htsmsg_get_s64(m, "start", &s64))
-    m_timeshiftStatus.start = s64;
-  if (!htsmsg_get_s64(m, "end", &s64))
-    m_timeshiftStatus.end = s64;
-  
+
+  /* Parse */
   tvhtrace("timeshiftStatus:");
-  tvhtrace("  full  : %d", m_timeshiftStatus.full);
-  tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
-  tvhtrace("  start : %lld", m_timeshiftStatus.start);
-  tvhtrace("  end   : %lld", m_timeshiftStatus.end);
+  if (!htsmsg_get_u32(m, "full", &u32))
+  {
+    tvhtrace("  full  : %d", m_timeshiftStatus.full);
+    m_timeshiftStatus.full = (bool)u32;
+  }
+  else
+  {
+    tvherror("malformed timeshiftStatus: 'full' missing, ignoring");
+  }
+  if (!htsmsg_get_s64(m, "shift", &s64))
+  {
+    tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
+    m_timeshiftStatus.shift = s64;
+  }
+  else
+  {
+    tvherror("malformed timeshiftStatus: 'shift' missing, ignoring");
+  }
+  if (!htsmsg_get_s64(m, "start", &s64))
+  {
+    tvhtrace("  start : %lld", m_timeshiftStatus.start);
+    m_timeshiftStatus.start = s64;
+  }
+  if (!htsmsg_get_s64(m, "end", &s64))
+  {
+    tvhtrace("  end   : %lld", m_timeshiftStatus.end);
+    m_timeshiftStatus.end = s64;
+  }
 }
