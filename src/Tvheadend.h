@@ -442,19 +442,19 @@ private:
   /*
    * Channel/Tags/Recordings/Events
    */
-  void SyncChannelsCompleted ( void );
-  void SyncDvrCompleted      ( void );
-  void SyncEpgCompleted      ( void );
-  void SyncCompleted         ( void );
-  void ParseTagUpdate       ( htsmsg_t *m );
-  void ParseTagDelete       ( htsmsg_t *m );
-  void ParseChannelUpdate   ( htsmsg_t *m );
-  void ParseChannelDelete   ( htsmsg_t *m );
-  void ParseRecordingUpdate ( htsmsg_t *m );
-  void ParseRecordingDelete ( htsmsg_t *m );
-  void ParseEventUpdate     ( htsmsg_t *m );
-  void ParseEventDelete     ( htsmsg_t *m );
-  bool ParseEvent           ( htsmsg_t *msg, SEvent &evt );
+  void SyncChannelsCompleted     ( void );
+  void SyncDvrCompleted          ( void );
+  void SyncEpgCompleted          ( void );
+  void SyncCompleted             ( void );
+  void ParseTagAddOrUpdate       ( htsmsg_t *m, bool bAdd );
+  void ParseTagDelete            ( htsmsg_t *m );
+  void ParseChannelAddOrUpdate   ( htsmsg_t *m, bool bAdd );
+  void ParseChannelDelete        ( htsmsg_t *m );
+  void ParseRecordingAddOrUpdate ( htsmsg_t *m, bool bAdd );
+  void ParseRecordingDelete      ( htsmsg_t *m );
+  void ParseEventAddOrUpdate     ( htsmsg_t *m, bool bAdd );
+  void ParseEventDelete          ( htsmsg_t *m );
+  bool ParseEvent                ( htsmsg_t *msg, bool bAdd, SEvent &evt );
 
 public:
   /*

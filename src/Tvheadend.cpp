@@ -86,7 +86,7 @@ PVR_ERROR CTvheadend::GetDriveSpace ( long long *total, long long *used )
 
 error:
   htsmsg_destroy(m);
-  tvherror("malformed getDiskSpace response");
+  tvherror("malformed getDiskSpace response: 'totaldiskspace'/'freediskspace' missing");
   return PVR_ERROR_SERVER_ERROR;
 }
 
@@ -260,13 +260,13 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
 
   /* Send and wait a bit longer than usual */
   if ((m = m_conn.SendAndWait(method, m,
-            std::max(30000, tvh->GetSettings().iResponseTimeout))) == NULL)
+            std::max(30000, m_settings.iResponseTimeout))) == NULL)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    tvherror("failed to parse cancelDvrEntry response");
+    tvherror("malformed deleteDvrEntry/cancelDvrEntry response: 'success' missing");
   }
   htsmsg_destroy(m);
 
@@ -289,7 +289,7 @@ PVR_ERROR CTvheadend::SendDvrUpdate( htsmsg_t* m )
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    tvherror("failed to parse updateDvrEntry response");
+    tvherror("malformed updateDvrEntry response: 'success' missing");
   }
 
   return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
@@ -419,12 +419,12 @@ PVR_ERROR CTvheadend::GetRecordingEdl
       return PVR_ERROR_SERVER_ERROR;
   }
 
-  /* Validate */
+  /* Check for optional "cutpoints" reply message field */
   if (!(list = htsmsg_get_list(m, "cutpoints")))
   {
-    tvherror("malformed getDvrCutpoints response");
+    *num = 0;
     htsmsg_destroy(m);
-    return PVR_ERROR_FAILED;
+    return PVR_ERROR_NO_ERROR;
   }
 
   /* Process */
@@ -445,7 +445,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
         htsmsg_get_u32(&f->hmf_msg, "end",   &end)   ||
         htsmsg_get_u32(&f->hmf_msg, "type",  &type))
     {
-      tvherror("malformed EDL entry, will ignore");
+      tvherror("malformed getDvrCutpoints response: invalid EDL entry, will ignore");
       continue;
     }
 
@@ -613,7 +613,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    tvherror("failed to parse addDvrEntry response");
+    tvherror("malformed addDvrEntry response: 'success' missing");
   }
   htsmsg_destroy(m);
 
@@ -759,7 +759,7 @@ PVR_ERROR CTvheadend::GetEpg
     if (!(l = htsmsg_get_list(msg, "events")))
     {
       htsmsg_destroy(msg);
-      tvherror("malformed getEvents response");
+      tvherror("malformed getEvents response: 'events' missing");
       return PVR_ERROR_SERVER_ERROR;
     }
     HTSMSG_FOREACH(f, l)
@@ -767,7 +767,7 @@ PVR_ERROR CTvheadend::GetEpg
       SEvent event;
       if (f->hmf_type == HMF_MAP)
       {
-        if (ParseEvent(&f->hmf_msg, event))
+        if (ParseEvent(&f->hmf_msg, true, event))
         {
           /* Callback. */
           TransferEvent(handle, event);
@@ -871,30 +871,34 @@ void* CTvheadend::Process ( void )
       CLockObject lock(m_mutex);
 
       /* Channels */
-      if (!strcmp("channelAdd", method) ||
-          !strcmp("channelUpdate", method))
-        ParseChannelUpdate(msg.m_msg);
+      if (!strcmp("channelAdd", method))
+        ParseChannelAddOrUpdate(msg.m_msg, true);
+      else if (!strcmp("channelUpdate", method))
+        ParseChannelAddOrUpdate(msg.m_msg, false);
       else if (!strcmp("channelDelete", method))
         ParseChannelDelete(msg.m_msg);
 
       /* Tags */
-      else if (!strcmp("tagAdd", method) ||
-               !strcmp("tagUpdate", method))
-        ParseTagUpdate(msg.m_msg);
+      else if (!strcmp("tagAdd", method))
+        ParseTagAddOrUpdate(msg.m_msg, true);
+      else if (!strcmp("tagUpdate", method))
+        ParseTagAddOrUpdate(msg.m_msg, false);
       else if (!strcmp("tagDelete", method))
         ParseTagDelete(msg.m_msg);
 
       /* Recordings */
-      else if (!strcmp("dvrEntryAdd", method) || 
-               !strcmp("dvrEntryUpdate", method))
-        ParseRecordingUpdate(msg.m_msg);
+      else if (!strcmp("dvrEntryAdd", method))
+        ParseRecordingAddOrUpdate(msg.m_msg, true);
+      else if (!strcmp("dvrEntryUpdate", method))
+        ParseRecordingAddOrUpdate(msg.m_msg, false);
       else if (!strcmp("dvrEntryDelete", method))
         ParseRecordingDelete(msg.m_msg);
 
       /* EPG */
-      else if (!strcmp("eventAdd", method) ||
-               !strcmp("eventUpdate", method))
-        ParseEventUpdate(msg.m_msg);
+      else if (!strcmp("eventAdd", method))
+        ParseEventAddOrUpdate(msg.m_msg, true);
+      else if (!strcmp("eventUpdate", method))
+        ParseEventAddOrUpdate(msg.m_msg, false);
       else if (!strcmp("eventDelete", method))
         ParseEventDelete(msg.m_msg);
 
@@ -1073,7 +1077,7 @@ void CTvheadend::SyncEpgCompleted ( void )
     tvhinfo("epg updated");
 }
 
-void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
+void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   uint32_t u32;
   const char *str;
@@ -1082,7 +1086,7 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
   {
-    tvherror("malformed tagUpdate");
+    tvherror("malformed tagAdd/tagUpdate: 'tagId' missing");
     return;
   }
 
@@ -1097,6 +1101,11 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
   /* Name */
   if ((str = htsmsg_get_str(msg, "tagName")) != NULL)
     tag.name = str;
+  else if (bAdd)
+  {
+    tvherror("malformed tagAdd: 'tagName' missing");
+    return;
+  }
 
   /* Icon */
   if ((str = htsmsg_get_str(msg, "tagIcon")) != NULL)
@@ -1131,7 +1140,7 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
   {
-    tvherror("malformed tagDelete");
+    tvherror("malformed tagDelete: 'tagId' missing");
     return;
   }
   tvhdebug("delete tag %u", u32);
@@ -1141,7 +1150,7 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
   TriggerChannelGroupsUpdate();
 }
 
-void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
+void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   bool update = false;
   uint32_t u32;
@@ -1151,7 +1160,7 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "channelId", &u32))
   {
-    tvherror("malformed channelUpdate");
+    tvherror("malformed channelAdd/channelUpdate: 'channelId' missing");
     return;
   }
 
@@ -1162,13 +1171,26 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
 
   /* Channel name */
   if ((str = htsmsg_get_str(msg, "channelName")) != NULL)
+  {
     UPDATE(channel.name, str);
+  }
+  else if (bAdd)
+  {
+    tvherror("malformed channelAdd: 'channelName' missing");
+    return;
+  }
 
   /* Channel number */
   if (!htsmsg_get_u32(msg, "channelNumber", &u32))
   {
-    if (!u32) u32 = GetNextUnnumberedChannelNumber();
+    if (!u32)
+      u32 = GetNextUnnumberedChannelNumber();
     UPDATE(channel.num, u32);
+  }
+  else if (bAdd)
+  {
+    tvherror("malformed channelAdd: 'channelNumber' missing");
+    return;
   }
   else if (!channel.num)
   {
@@ -1215,7 +1237,7 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   }
   
 
-  /* Update XBMC */
+  /* Update Kodi */
   if (update) {
     tvhdebug("channel update id:%u, name:%s",
               channel.id, channel.name.c_str());
@@ -1231,7 +1253,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "channelId", &u32))
   {
-    tvherror("malformed channelUpdate");
+    tvherror("malformed channelDelete: 'channelId' missing");
     return;
   }
   tvhdebug("delete channel %u", u32);
@@ -1241,7 +1263,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   TriggerChannelUpdate();
 }
 
-void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
+void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   bool update = false;
   const char *state, *str;
@@ -1252,13 +1274,33 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   SyncChannelsCompleted();
 
   /* Validate */
-  if (htsmsg_get_u32(msg, "id",      &id)      ||
-      htsmsg_get_u32(msg, "channel", &channel) ||
-      htsmsg_get_s64(msg, "start",   &start)   ||
-      htsmsg_get_s64(msg, "stop",    &stop)    ||
-      ((state = htsmsg_get_str(msg, "state")) == NULL))
+  if (htsmsg_get_u32(msg, "id", &id))
   {
-    tvherror("malformed dvrEntryAdd/dvrEntryUpdate");
+    tvherror("malformed dvrEntryAdd/dvrEntryUpdate: 'id' missing");
+    return;
+  }
+
+  if (htsmsg_get_u32(msg, "channel", &channel) && bAdd)
+  {
+    tvherror("malformed dvrEntryAdd: 'channel' missing");
+    return;
+  }
+
+  if (htsmsg_get_s64(msg, "start", &start) && bAdd)
+  {
+    tvherror("malformed dvrEntryAdd: 'start' missing");
+    return;
+  }
+
+  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
+  {
+    tvherror("malformed dvrEntryAdd: 'stop' missing");
+    return;
+  }
+
+  if (((state = htsmsg_get_str(msg, "state")) == NULL) && bAdd)
+  {
+    tvherror("malformed dvrEntryAdd: 'state' missing");
     return;
   }
 
@@ -1270,28 +1312,37 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
 
-  /* Add optional fields */
-  if (!htsmsg_get_u32(msg, "eventId",    &eventId))
-  {
-    UPDATE(rec.eventId, eventId);
-  }
-
   if (!htsmsg_get_s64(msg, "startExtra", &startExtra))
   {
     UPDATE(rec.startExtra, startExtra);
   }
+  else if (bAdd && (m_conn.GetProtocol() > 12))
+  {
+    tvherror("malformed dvrEntryAdd: 'startExtra' missing");
+    return;
+  }
 
-  if (!htsmsg_get_s64(msg, "stopExtra",  &stopExtra))
+  if (!htsmsg_get_s64(msg, "stopExtra", &stopExtra))
   {
     UPDATE(rec.stopExtra,  stopExtra);
   }
+  else if (bAdd && (m_conn.GetProtocol() > 12))
+  {
+    tvherror("malformed dvrEntryAdd: 'stopExtra' missing");
+    return;
+  }
 
-  if (!htsmsg_get_u32(msg, "retention",  &retention))
+  if (!htsmsg_get_u32(msg, "retention", &retention))
   {
     UPDATE(rec.retention, retention);
   }
+  else if (bAdd)
+  {
+    tvherror("malformed dvrEntryAdd: 'retention' missing");
+    return;
+  }
 
-  if (!htsmsg_get_u32(msg, "priority",   &priority))
+  if (!htsmsg_get_u32(msg, "priority", &priority))
   {
     switch (priority)
     {
@@ -1311,9 +1362,14 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
         UPDATE(rec.priority, 0);
         break;
       default:
-        tvherror("malformed dvrEntryAdd/dvrEntryUpdate");
+        tvherror("malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value");
         return;
     }
+  }
+  else if (bAdd && (m_conn.GetProtocol() > 12))
+  {
+    tvherror("malformed dvrEntryAdd: 'priority' missing");
+    return;
   }
 
   /* Parse state */
@@ -1338,11 +1394,19 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
     UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
   }
 
-  /* Info */
+  /* Add optional fields */
+  if (!htsmsg_get_u32(msg, "eventId", &eventId))
+  {
+    UPDATE(rec.eventId, eventId);
+  }
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
+  {
     UPDATE(rec.title, str);
+  }
   if ((str = htsmsg_get_str(msg, "path")) != NULL)
+  {
     UPDATE(rec.path, str);
+  }
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
   {
     UPDATE(rec.description, str);
@@ -1394,7 +1458,7 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "id", &u32))
   {
-    tvherror("malformed dvrEntryDelete");
+    tvherror("malformed dvrEntryDelete: 'id' missing");
     return;
   }
   tvhdebug("delete recording %u", u32);
@@ -1407,7 +1471,7 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   TriggerRecordingUpdate();
 }
 
-bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
+bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
 {
   const char *str;
   uint32_t u32, id, channel;
@@ -1417,13 +1481,27 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   SyncDvrCompleted();
 
   /* Validate */
-  if (htsmsg_get_u32(msg, "eventId",   &id)      ||
-      htsmsg_get_u32(msg, "channelId", &channel) ||
-      htsmsg_get_s64(msg, "start",     &start)   ||
-      htsmsg_get_s64(msg, "stop",      &stop)    ||
-      (str = htsmsg_get_str(msg, "title")) == NULL)
+  if (htsmsg_get_u32(msg, "eventId", &id))
   {
-    tvherror("malformed eventUpdate message");
+    tvherror("malformed eventAdd/eventUpdate: 'eventId' missing");
+    return false;
+  }
+
+  if (htsmsg_get_u32(msg, "channelId", &channel) && bAdd)
+  {
+    tvherror("malformed eventAdd: 'channelId' missing");
+    return false;
+  }
+
+  if (htsmsg_get_s64(msg, "start", &start) && bAdd)
+  {
+    tvherror("malformed eventAdd: 'start' missing");
+    return false;
+  }
+
+  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
+  {
+    tvherror("malformed eventAdd: 'stop' missing");
     return false;
   }
 
@@ -1431,8 +1509,10 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   evt.channel = channel;
   evt.start   = (time_t)start;
   evt.stop    = (time_t)stop;
-  evt.title   = str;
 
+  /* Add optional fields */
+  if ((str = htsmsg_get_str(msg, "title")) != NULL)
+    evt.title   = str;
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
     evt.summary  = str;
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
@@ -1463,13 +1543,13 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   return true;
 }
 
-void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
+void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   bool update = false;
   SEvent tmp;
 
   /* Parse */
-  if (!ParseEvent(msg, tmp))
+  if (!ParseEvent(msg, bAdd, tmp))
     return;
 
   /* Get event handle */
@@ -1512,7 +1592,7 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId", &u32))
   {
-    tvherror("malformed eventDelete");
+    tvherror("malformed eventDelete: 'eventId' missing");
     return;
   }
   tvhtrace("delete event %u", u32);
