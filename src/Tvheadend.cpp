@@ -535,7 +535,12 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
               sizeof(tmr.strTitle) - 1);
       strncpy(tmr.strSummary, rit->second.description.c_str(),
               sizeof(tmr.strSummary) - 1);
-      tmr.state             = rit->second.state;
+
+      if (rit->second.error.empty())
+        tmr.state             = rit->second.state;
+      else
+        tmr.state             = PVR_TIMER_STATE_ERROR;
+
       tmr.iPriority         = rit->second.priority;
       tmr.iLifetime         = rit->second.retention;
       tmr.bIsRepeating      = false; // unused
