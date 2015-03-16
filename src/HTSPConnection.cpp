@@ -277,9 +277,13 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
   uint32_t seq;
 
   if (!htsmsg_get_u32(msg, "seq", &seq))
+  {
     tvhtrace("sending message [%s : %d]", method, seq);
+  }
   else
+  {
     tvhtrace("sending message [%s]", method);
+  }
   htsmsg_add_str(msg, "method", method);
 
   /* Serialise */
@@ -350,7 +354,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   else
   {
     const char* strError;
-    if(strError = htsmsg_get_str(msg, "error"))
+    if((strError = htsmsg_get_str(msg, "error")) != NULL)
     {
       //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: %s", method, strError);
       tvherror("Command %s failed: %s", method, strError);

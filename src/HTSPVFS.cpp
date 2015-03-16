@@ -66,9 +66,9 @@ void *CHTSPVFS::Process(void)
 */
 CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
   : m_conn(conn), m_path(""), m_fileId(0), m_offset(0), 
-  m_currentReadLength(INITAL_READ_LENGTH),
   m_bHasData(false),
-  m_bSeekDone(true)
+  m_bSeekDone(true),
+  m_currentReadLength(INITAL_READ_LENGTH)
 {
   m_buffer.alloc(MAX_BUFFER_SIZE);
 
