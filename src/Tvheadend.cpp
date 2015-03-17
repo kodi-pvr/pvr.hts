@@ -127,9 +127,10 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      tag.bIsRadio = false;
+      tag.bIsRadio = false; // TODO: support for radio channel groups.
       strncpy(tag.strGroupName, it->second.name.c_str(),
               sizeof(tag.strGroupName));
+      tag.iPosition = it->second.index;
       tags.push_back(tag);
     }
   }
@@ -875,7 +876,7 @@ void* CTvheadend::Process ( void )
       else if (!strcmp("channelDelete", method))
         ParseChannelDelete(msg.m_msg);
 
-      /* Tags */
+      /* Channel Tags (aka channel groups)*/
       else if (!strcmp("tagAdd", method))
         ParseTagAddOrUpdate(msg.m_msg, true);
       else if (!strcmp("tagUpdate", method))
@@ -1094,6 +1095,10 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Create new object */
   STag tag;
   tag.id = u32;
+
+  /* Index */
+  if (!htsmsg_get_u32(msg, "tagIndex", &u32))
+    tag.index = u32;
 
   /* Name */
   if ((str = htsmsg_get_str(msg, "tagName")) != NULL)

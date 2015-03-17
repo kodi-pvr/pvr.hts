@@ -57,19 +57,21 @@ struct STag
 {
   bool                  del;
   uint32_t              id;
+  uint32_t              index;
   std::string           name;
   std::string           icon;
   std::vector<uint32_t> channels;
 
   STag() :
     del(false),
-    id (0)
+    id (0),
+    index(0)
   {
   }
 
   inline bool operator==(const STag &right)
   {
-    return id == right.id && name == right.name &&
+    return id == right.id && index == right.index && name == right.name &&
            icon == right.icon && channels == right.channels;
   }
 
