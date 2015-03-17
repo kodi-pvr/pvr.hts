@@ -1393,6 +1393,10 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
   }
+  else /* treat unknown states as errors. */
+  {
+    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
+  }
 
   /* Add optional fields */
   if (!htsmsg_get_u32(msg, "eventId", &eventId))
@@ -1419,20 +1423,10 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)
   {
-    if (!strcmp(str, "300"))
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ABORTED);
-    }
-    else if (strstr(str, "missing") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-    }
-    else
-    {
-      UPDATE(rec.error, str);
-    }
+    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
+    UPDATE(rec.error, str);
   }
-  
+
   /* Update */
   if (update)
   {

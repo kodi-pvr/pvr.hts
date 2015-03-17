@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "kodi/util/StdString.h"
+#include <string>
 #include "client.h"
 
 typedef enum {
@@ -142,7 +142,8 @@ struct SRecording
     startExtra = 0;
     stopExtra  = 0;
 
-    state   = PVR_TIMER_STATE_ERROR;
+    state      = PVR_TIMER_STATE_NEW;
+
     title.clear();
     description.clear();
     error.clear();
@@ -161,7 +162,8 @@ struct SRecording
   bool IsTimer () const
   {
     return state == PVR_TIMER_STATE_SCHEDULED ||
-           state == PVR_TIMER_STATE_RECORDING;
+           state == PVR_TIMER_STATE_RECORDING ||
+           state == PVR_TIMER_STATE_ERROR;
   }
 };
 
