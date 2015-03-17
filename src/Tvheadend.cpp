@@ -1385,14 +1385,6 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.state, PVR_TIMER_STATE_COMPLETED);
   }
-  else if (strstr(state, "missed") != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-  }
-  else if (strstr(state, "invalid")   != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-  }
 
   /* Add optional fields */
   if (!htsmsg_get_u32(msg, "eventId", &eventId))
@@ -1419,18 +1411,18 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)
   {
-    if (!strcmp(str, "300"))
+    if (strstr(str, "missing") != NULL)
     {
-      UPDATE(rec.state, PVR_TIMER_STATE_ABORTED);
+      // to prevent that recordings with missing files will show up in the GUI
+      UPDATE(rec.state, PVR_TIMER_STATE_NEW);
     }
-    else if (strstr(str, "missing") != NULL)
+    else if (rec.IsTimer())
     {
+      // only set error for timers
       UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
     }
-    else
-    {
-      UPDATE(rec.error, str);
-    }
+
+    UPDATE(rec.error, str);
   }
   
   /* Update */
