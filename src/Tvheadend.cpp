@@ -291,6 +291,7 @@ PVR_ERROR CTvheadend::SendDvrUpdate( htsmsg_t* m )
   {
     tvherror("malformed updateDvrEntry response: 'success' missing");
   }
+  htsmsg_destroy(m);
 
   return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
@@ -490,9 +491,7 @@ PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
   htsmsg_add_u32(m, "id",     atoi(rec.strRecordingId));
   htsmsg_add_str(m, "title",  rec.strTitle);
 
-  PVR_ERROR e = SendDvrUpdate(m);
-  htsmsg_destroy(m);
-  return e;
+  return SendDvrUpdate(m);
 }
 
 int CTvheadend::GetTimerCount ( void )
@@ -659,9 +658,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_u32(m, "priority",   (int)prio);
   }
 
-  PVR_ERROR e = SendDvrUpdate(m);
-  htsmsg_destroy(m);
-  return e;
+  return SendDvrUpdate(m);
 }
 
 /* **************************************************************************
