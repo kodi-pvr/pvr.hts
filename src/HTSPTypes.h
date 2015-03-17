@@ -61,14 +61,10 @@ struct STag
   std::string           icon;
   std::vector<uint32_t> channels;
 
-  STag() { Clear(); }
-  void Clear()
+  STag() :
+    del(false),
+    id (0)
   {
-    del   = false;
-    id    = 0;
-    name.clear();
-    icon.clear();
-    channels.clear();
   }
 
   inline bool operator==(const STag &right)
@@ -94,18 +90,16 @@ struct SChannel
   std::string      name;
   std::string      icon;
 
-  SChannel() { Clear(); }
-  void Clear()
+  SChannel() :
+    del     (false),
+    id      (0),
+    num     (0),
+    numMinor(0),
+    radio   (false),
+    caid    (0)
   {
-    del   = false;
-    id    = 0;
-    num   = 0;
-    numMinor = 0;
-    radio = false;
-    caid  = 0;
-    name.clear();
-    icon.clear();
   }
+
   bool operator<(const SChannel &right) const
   {
     return num < right.num;
@@ -130,27 +124,21 @@ struct SRecording
   uint32_t         retention;
   uint32_t         priority;
 
-  SRecording() { Clear(); }
-  void Clear()
+  SRecording() :
+    del       (false),
+    id        (0),
+    channel   (0),
+    eventId   (0),
+    start     (0),
+    stop      (0),
+    startExtra(0),
+    stopExtra (0),
+    state     (PVR_TIMER_STATE_ERROR),
+    retention (99), // Kodi default - "99 days"
+    priority  (50) // Kodi default - "normal"
   {
-    del        = false;
-    id         = 0;
-    channel    = 0;
-    eventId    = 0;
-    start      = 0;
-    stop       = 0;
-    startExtra = 0;
-    stopExtra  = 0;
-
-    state   = PVR_TIMER_STATE_ERROR;
-    title.clear();
-    description.clear();
-    error.clear();
-
-    retention = 99; // kodi default - "99 days"
-    priority  = 50; // kodi default - "normal"
   }
-  
+
   bool IsRecording () const
   {
     return state == PVR_TIMER_STATE_COMPLETED ||
@@ -186,27 +174,22 @@ struct SEvent
   std::string image;
   uint32_t    recordingId;
 
-  SEvent() { Clear(); }
-  void Clear()
+  SEvent() :
+    del        (false),
+    id         (0),
+    next       (0),
+    channel    (0),
+    content    (0),
+    start      (0),
+    stop       (0),
+    stars      (0),
+    age        (0),
+    aired      (0),
+    season     (0),
+    episode    (0),
+    part       (0),
+    recordingId(0)
   {
-    del     = false;
-    id      = 0;
-    next    = 0;
-    channel = 0;
-    content = 0;
-    start   = 0;
-    stop    = 0;
-    stars   = 0;
-    age     = 0;
-    aired   = 0;
-    season  = 0;
-    episode = 0;
-    part    = 0;
-    title.clear();
-    desc.clear();
-    summary.clear();
-    image.clear();
-    recordingId = 0;
   }
 };
 
@@ -219,14 +202,12 @@ struct SSchedule
 {
   bool     del;
   uint32_t channel;
-  SEvents events;
+  SEvents  events;
 
-  SSchedule() { Clear(); }
-  void Clear ()
+  SSchedule() :
+    del    (false),
+    channel(0)
   {
-    del     = false;
-    channel = 0;
-    events.clear();
   }
 };
 
@@ -241,15 +222,14 @@ struct SQueueStatus
   uint32_t pdrops;  // Number of P-frames dropped
   uint32_t idrops;  // Number of I-frames dropped
 
-  SQueueStatus() { Clear(); }
-  void Clear()
+  SQueueStatus() :
+    packets(0),
+    bytes  (0),
+    delay  (0),
+    bdrops (0),
+    pdrops (0),
+    idrops (0)
   {
-    packets = 0;
-    bytes   = 0;
-    delay   = 0;
-    bdrops  = 0;
-    pdrops  = 0;
-    idrops  = 0;
   }
 };
 
@@ -260,25 +240,31 @@ struct STimeshiftStatus
   int64_t start;
   int64_t end;
   
-  STimeshiftStatus() { Clear(); }
-  void Clear()
+  STimeshiftStatus() :
+    full (0),
+    shift(0),
+    start(0),
+    end  (0)
   {
-    full  = 0;
-    shift = 0;
-    start = 0;
-    end   = 0;
   }
 };
 
 struct SQuality
 {
   std::string fe_status;
-  uint32_t    fe_snr;
-  uint32_t    fe_signal;
-  uint32_t    fe_ber;
-  uint32_t    fe_unc;
+  uint32_t fe_snr;
+  uint32_t fe_signal;
+  uint32_t fe_ber;
+  uint32_t fe_unc;
   
-  SQuality() { Clear(); }
+  SQuality() :
+    fe_snr   (0),
+    fe_signal(0),
+    fe_ber   (0),
+    fe_unc   (0)
+  {
+  }
+
   void Clear ()
   {
     fe_status.clear();
@@ -297,7 +283,6 @@ struct SSourceInfo
   std::string si_provider;
   std::string si_service;
 
-  SSourceInfo() { Clear(); }
   void Clear ()
   {
     si_adapter.clear();
@@ -313,10 +298,10 @@ struct SHTSPEvent
   eHTSPEventType m_type;
   uint32_t       m_idx;
 
-  SHTSPEvent ( eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0 )
+  SHTSPEvent (eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0) :
+    m_type(type),
+    m_idx (idx)
   {
-    m_type = type;
-    m_idx  = idx;
   }
   
   bool operator==(const SHTSPEvent &right) const
@@ -332,20 +317,18 @@ struct SHTSPEvent
 
 typedef std::vector<SHTSPEvent> SHTSPEventList;
 
-class SSubscription
+struct SSubscription
 {
-public:
-    uint32_t subscriptionId;
-    uint32_t channelId;
-    int      speed;
-    bool     active;
-    
-    SSubscription()
-    {
-        speed = 1000;
-        active = false;
-        
-        static int previousId = 0;
-        subscriptionId = ++previousId;
-    }
+  uint32_t subscriptionId;
+  uint32_t channelId;
+  int      speed;
+  bool     active;
+
+  SSubscription() :
+    speed (1000),
+    active(false)
+  {
+    static int previousId = 0;
+    subscriptionId = ++previousId;
+  }
 };
