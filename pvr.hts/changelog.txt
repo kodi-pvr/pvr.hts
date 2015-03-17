@@ -1,8 +1,13 @@
+2.1.6
+- updated to PVR API v1.9.6
+- added: support for channel group sort index
+- fixed: crash while adding/updating timers on the client (double free of a htsp message)
+
 2.1.5
 - improved HTSP specification compliance
 
 2.1.4
-- Updated to PVR API v1.9.5
+- updated to PVR API v1.9.5
 - added: avahi discovery
 - fixed: lock on exit
 - fixed: race when seeking within recordings
@@ -10,9 +15,9 @@
 - removed guilib dep
 
 2.1.1
-- Updated to PVR API v1.9.4
-- Updated to GUI API v5.8.0
-- Updated to Codec API v1.0.1
+- updated to PVR API v1.9.4
+- updated to GUI API v5.8.0
+- updated to Codec API v1.0.1
 
 2.0.5
 - fixed incorrect timeout value when deleting recordings (thanks @ksooo)

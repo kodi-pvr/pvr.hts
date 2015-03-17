@@ -127,9 +127,10 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      tag.bIsRadio = false;
+      tag.bIsRadio = false; // TODO: support for radio channel groups.
       strncpy(tag.strGroupName, it->second.name.c_str(),
               sizeof(tag.strGroupName));
+      tag.iPosition = it->second.index;
       tags.push_back(tag);
     }
   }
@@ -679,13 +680,24 @@ void CTvheadend::TransferEvent
   epg.endTime             = event.stop;
   epg.strPlotOutline      = event.summary.c_str();
   epg.strPlot             = event.desc.c_str();
+  epg.strOriginalTitle    = NULL; /* not supported by tvh */
+  epg.strCast             = NULL; /* not supported by tvh */
+  epg.strDirector         = NULL; /* not supported by tvh */
+  epg.strWriter           = NULL; /* not supported by tvh */
+  epg.iYear               = 0;    /* not supported by tvh */
+  epg.strIMDBNumber       = NULL; /* not supported by tvh */
   epg.strIconPath         = event.image.c_str();
   epg.iGenreType          = event.content & 0xF0;
   epg.iGenreSubType       = event.content & 0x0F;
+  epg.strGenreDescription = NULL; /* not supported by tvh */
   epg.firstAired          = event.aired;
+  epg.iParentalRating     = 0; /* TODO: add support (seems to be only partially implemented => SEvent::age */
+  epg.iStarRating         = 0; /* TODO: add support (seems to be only partially implemented => SEvent::stars */
+  epg.bNotify             = false; /* not supported by tvh */
   epg.iSeriesNumber       = event.season;
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
+  epg.strEpisodeName      = NULL; /* not supported by tvh */
 
   /* Callback. */
   PVR->TransferEpgEntry(handle, &epg);
@@ -875,7 +887,7 @@ void* CTvheadend::Process ( void )
       else if (!strcmp("channelDelete", method))
         ParseChannelDelete(msg.m_msg);
 
-      /* Tags */
+      /* Channel Tags (aka channel groups)*/
       else if (!strcmp("tagAdd", method))
         ParseTagAddOrUpdate(msg.m_msg, true);
       else if (!strcmp("tagUpdate", method))
@@ -1094,6 +1106,10 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Create new object */
   STag tag;
   tag.id = u32;
+
+  /* Index */
+  if (!htsmsg_get_u32(msg, "tagIndex", &u32))
+    tag.index = u32;
 
   /* Name */
   if ((str = htsmsg_get_str(msg, "tagName")) != NULL)
