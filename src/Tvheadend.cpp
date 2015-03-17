@@ -680,13 +680,24 @@ void CTvheadend::TransferEvent
   epg.endTime             = event.stop;
   epg.strPlotOutline      = event.summary.c_str();
   epg.strPlot             = event.desc.c_str();
+  epg.strOriginalTitle    = NULL; /* not supported by tvh */
+  epg.strCast             = NULL; /* not supported by tvh */
+  epg.strDirector         = NULL; /* not supported by tvh */
+  epg.strWriter           = NULL; /* not supported by tvh */
+  epg.iYear               = 0;    /* not supported by tvh */
+  epg.strIMDBNumber       = NULL; /* not supported by tvh */
   epg.strIconPath         = event.image.c_str();
   epg.iGenreType          = event.content & 0xF0;
   epg.iGenreSubType       = event.content & 0x0F;
+  epg.strGenreDescription = NULL; /* not supported by tvh */
   epg.firstAired          = event.aired;
+  epg.iParentalRating     = 0; /* TODO: add support (seems to be only partially implemented => SEvent::age */
+  epg.iStarRating         = 0; /* TODO: add support (seems to be only partially implemented => SEvent::stars */
+  epg.bNotify             = false; /* not supported by tvh */
   epg.iSeriesNumber       = event.season;
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
+  epg.strEpisodeName      = NULL; /* not supported by tvh */
 
   /* Callback. */
   PVR->TransferEpgEntry(handle, &epg);
