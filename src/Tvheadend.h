@@ -351,7 +351,7 @@ public:
   PVR_ERROR GetDriveSpace     ( long long *total, long long *used );
 
   int       GetTagCount       ( void );
-  PVR_ERROR GetTags           ( ADDON_HANDLE handle );
+  PVR_ERROR GetTags           ( ADDON_HANDLE handle, bool bRadio );
   PVR_ERROR GetTagMembers     ( ADDON_HANDLE handle,
                                 const PVR_CHANNEL_GROUP &group );
 
@@ -374,7 +374,8 @@ public:
                                 time_t start, time_t end );
   
 private:
-  uint32_t GetNextUnnumberedChannelNumber();
+  uint32_t GetNextUnnumberedChannelNumber ( void );
+  bool     TagContainsChannelType         ( const STag &tag, bool bRadio ) const;
   
   PLATFORM::CMutex            m_mutex;
   const tvheadend::Settings   m_settings;

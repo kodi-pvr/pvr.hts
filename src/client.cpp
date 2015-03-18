@@ -421,11 +421,7 @@ int GetChannelGroupsAmount(void)
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-  // tvheadend doesn't support separate groups for radio and TV
-  if (bRadio)
-    return PVR_ERROR_NO_ERROR;
-  
-  return tvh->GetTags(handle);
+  return tvh->GetTags(handle, bRadio);
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)

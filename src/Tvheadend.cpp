@@ -113,7 +113,23 @@ int CTvheadend::GetTagCount ( void )
   return m_tags.size();
 }
 
-PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
+bool CTvheadend::TagContainsChannelType ( const STag &tag, bool bRadio ) const
+{
+  vector<uint32_t>::const_iterator it;
+  SChannels::const_iterator cit;
+
+  for (it = tag.channels.begin(); it != tag.channels.end(); ++it)
+  {
+    if ((cit = m_channels.find(*it)) != m_channels.end())
+    {
+      if (bRadio == cit->second.radio)
+        return true;
+    }
+  }
+  return false;
+}
+
+PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
 {
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return PVR_ERROR_FAILED;
@@ -124,12 +140,18 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
     STags::const_iterator it;
     for (it = m_tags.begin(); it != m_tags.end(); ++it)
     {
+      /* Does group contain channels of the requested type?             */
+      /* Note: tvheadend groups can contain both radio and tv channels. */
+      /*       Thus, one tvheadend group can 'map' to two Kodi groups.  */
+      if (!TagContainsChannelType(it->second, bRadio))
+        continue;
+
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      tag.bIsRadio = false; // TODO: support for radio channel groups.
       strncpy(tag.strGroupName, it->second.name.c_str(),
               sizeof(tag.strGroupName));
+      tag.bIsRadio = bRadio;
       tag.iPosition = it->second.index;
       tags.push_back(tag);
     }
@@ -166,6 +188,9 @@ PVR_ERROR CTvheadend::GetTagMembers
         {
           if ((cit = m_channels.find(*it)) != m_channels.end())
           {
+            if (group.bIsRadio != cit->second.radio)
+              continue;
+
             PVR_CHANNEL_GROUP_MEMBER gm;
             memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
             strncpy(
