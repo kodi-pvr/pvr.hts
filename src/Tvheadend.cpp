@@ -113,22 +113,6 @@ int CTvheadend::GetTagCount ( void )
   return m_tags.size();
 }
 
-bool CTvheadend::TagContainsChannelType ( const STag &tag, bool bRadio ) const
-{
-  vector<uint32_t>::const_iterator it;
-  SChannels::const_iterator cit;
-
-  for (it = tag.channels.begin(); it != tag.channels.end(); ++it)
-  {
-    if ((cit = m_channels.find(*it)) != m_channels.end())
-    {
-      if (bRadio == cit->second.radio)
-        return true;
-    }
-  }
-  return false;
-}
-
 PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
 {
   if (!m_asyncState.WaitForState(ASYNC_DVR))
@@ -137,22 +121,22 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
   std::vector<PVR_CHANNEL_GROUP> tags;
   {
     CLockObject lock(m_mutex);
-    STags::const_iterator it;
+    htsp::Tags::const_iterator it;
     for (it = m_tags.begin(); it != m_tags.end(); ++it)
     {
       /* Does group contain channels of the requested type?             */
       /* Note: tvheadend groups can contain both radio and tv channels. */
       /*       Thus, one tvheadend group can 'map' to two Kodi groups.  */
-      if (!TagContainsChannelType(it->second, bRadio))
+      if (!it->second.ContainsChannelType(bRadio))
         continue;
 
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      strncpy(tag.strGroupName, it->second.name.c_str(),
+      strncpy(tag.strGroupName, it->second.GetName().c_str(),
               sizeof(tag.strGroupName));
       tag.bIsRadio = bRadio;
-      tag.iPosition = it->second.index;
+      tag.iPosition = it->second.GetIndex();
       tags.push_back(tag);
     }
   }
@@ -178,13 +162,13 @@ PVR_ERROR CTvheadend::GetTagMembers
     CLockObject lock(m_mutex);
     vector<uint32_t>::const_iterator it;
     SChannels::const_iterator cit;
-    STags::const_iterator     tit = m_tags.begin();
+    htsp::Tags::const_iterator tit = m_tags.begin();
     while (tit != m_tags.end())
     {
-      if (tit->second.name == group.strGroupName)
+      if (tit->second.GetName() == group.strGroupName)
       {
-        for (it = tit->second.channels.begin();
-             it != tit->second.channels.end(); ++it)
+        for (it = tit->second.GetChannels().begin();
+             it != tit->second.GetChannels().end(); ++it)
         {
           if ((cit = m_channels.find(*it)) != m_channels.end())
           {
@@ -829,7 +813,7 @@ void CTvheadend::Disconnected ( void )
 bool CTvheadend::Connected ( void )
 {
   htsmsg_t *msg;
-  STags::iterator tit;
+  htsp::Tags::iterator tit;
   SChannels::iterator cit;
   SRecordings::iterator rit;
   SSchedules::iterator sit;
@@ -843,7 +827,7 @@ bool CTvheadend::Connected ( void )
   for (cit = m_channels.begin(); cit != m_channels.end(); ++cit)
     cit->second.del = true;
   for (tit = m_tags.begin(); tit != m_tags.end(); ++tit)
-    tit->second.del = true;
+    tit->second.SetDirty(true);
   for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
     rit->second.del = true;
   for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
@@ -999,13 +983,13 @@ void CTvheadend::SyncChannelsCompleted ( void )
 
   bool update;
   SChannels::iterator   cit = m_channels.begin();
-  STags::iterator       tit = m_tags.begin();
+  htsp::Tags::iterator  tit = m_tags.begin();
 
   /* Tags */
   update = false;
   while (tit != m_tags.end())
   {
-    if (tit->second.del)
+    if (tit->second.IsDirty())
     {
       update = true;
       m_tags.erase(tit++);
@@ -1125,20 +1109,19 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Locate object */
-  STag &existingTag = m_tags[u32];
-  existingTag.del   = false;
+  htsp::Tag &existingTag = m_tags[u32];
+  existingTag.SetDirty(false);
   
   /* Create new object */
-  STag tag;
-  tag.id = u32;
+  htsp::Tag tag(u32);
 
   /* Index */
   if (!htsmsg_get_u32(msg, "tagIndex", &u32))
-    tag.index = u32;
+    tag.SetIndex(u32);
 
   /* Name */
   if ((str = htsmsg_get_str(msg, "tagName")) != NULL)
-    tag.name = str;
+    tag.SetName(str);
   else if (bAdd)
   {
     tvherror("malformed tagAdd: 'tagName' missing");
@@ -1147,7 +1130,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Icon */
   if ((str = htsmsg_get_str(msg, "tagIcon")) != NULL)
-    tag.icon = GetImageURL(str);
+    tag.SetIcon(GetImageURL(str));
 
   /* Members */
   if ((list = htsmsg_get_list(msg, "members")) != NULL)
@@ -1156,7 +1139,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     HTSMSG_FOREACH(f, list)
     {
       if (f->hmf_type != HMF_S64) continue;
-      tag.channels.push_back((int)f->hmf_s64);
+      tag.GetChannels().push_back((int)f->hmf_s64);
     }
   }
 
@@ -1165,7 +1148,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     existingTag = tag;
     tvhdebug("tag updated id:%u, name:%s",
-              existingTag.id, existingTag.name.c_str());
+              existingTag.GetId(), existingTag.GetName().c_str());
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelGroupsUpdate();
   }

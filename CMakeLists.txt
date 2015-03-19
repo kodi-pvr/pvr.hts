@@ -18,6 +18,7 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/client.cpp
                 src/HTSPConnection.cpp
                 src/HTSPDemuxer.cpp
+                src/HTSPTypes.cpp
                 src/HTSPVFS.cpp
                 src/Tvheadend.cpp)
 

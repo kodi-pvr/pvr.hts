@@ -53,33 +53,47 @@ enum eHTSPEventType
   HTSP_EVENT_REC_UPDATE = 4,
 };
 
-struct STag
+namespace htsp
 {
-  bool                  del;
-  uint32_t              id;
-  uint32_t              index;
-  std::string           name;
-  std::string           icon;
-  std::vector<uint32_t> channels;
 
-  STag() :
-    del(false),
-    id (0),
-    index(0)
-  {
-  }
+class Tag
+{
+public:
+  Tag(uint32_t id = 0);
 
-  inline bool operator==(const STag &right)
-  {
-    return id == right.id && index == right.index && name == right.name &&
-           icon == right.icon && channels == right.channels;
-  }
+  bool operator==(const Tag &right);
+  bool operator!=(const Tag &right);
 
-  inline bool operator!=(const STag &right)
-  {
-    return !(*this == right);
-  }
+  bool IsDirty() const;
+  void SetDirty(bool bDirty);
+
+  uint32_t GetId() const;
+
+  uint32_t GetIndex() const;
+  void SetIndex(uint32_t index);
+
+  const std::string& GetName() const;
+  void SetName(const std::string& name);
+
+  void SetIcon(const std::string& icon);
+
+  const std::vector<uint32_t>& GetChannels() const;
+  std::vector<uint32_t>& GetChannels();
+
+  bool ContainsChannelType(bool bRadio) const;
+
+private:
+  bool                  m_dirty;
+  uint32_t              m_id;
+  uint32_t              m_index;
+  std::string           m_name;
+  std::string           m_icon;
+  std::vector<uint32_t> m_channels;
 };
+
+typedef std::map<uint32_t, Tag> Tags;
+
+} // namespace htsp
 
 struct SChannel
 {
@@ -196,7 +210,6 @@ struct SEvent
 };
 
 typedef std::map<uint32_t, SChannel>   SChannels;
-typedef std::map<uint32_t, STag>       STags;
 typedef std::map<uint32_t, SEvent>     SEvents;
 typedef std::map<uint32_t, SRecording> SRecordings;
 

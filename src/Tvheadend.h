@@ -344,9 +344,15 @@ public:
   bool Connected      ( void );
   bool ProcessMessage ( const char *method, htsmsg_t *msg );
 
-  inline const tvheadend::Settings& GetSettings() {
+  inline const tvheadend::Settings& GetSettings () const
+  {
     return m_settings;
   };
+
+  inline const SChannels& GetChannels () const
+  {
+    return m_channels;
+  }
 
   PVR_ERROR GetDriveSpace     ( long long *total, long long *used );
 
@@ -375,7 +381,6 @@ public:
   
 private:
   uint32_t GetNextUnnumberedChannelNumber ( void );
-  bool     TagContainsChannelType         ( const STag &tag, bool bRadio ) const;
   
   PLATFORM::CMutex            m_mutex;
   const tvheadend::Settings   m_settings;
@@ -387,7 +392,7 @@ private:
   CHTSPMessageQueue           m_queue;
 
   SChannels                   m_channels;
-  STags                       m_tags;
+  htsp::Tags                  m_tags;
   SRecordings                 m_recordings;
   SSchedules                  m_schedules;
 
