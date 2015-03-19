@@ -691,8 +691,8 @@ void CTvheadend::TransferEvent
   epg.iGenreSubType       = event.content & 0x0F;
   epg.strGenreDescription = NULL; /* not supported by tvh */
   epg.firstAired          = event.aired;
-  epg.iParentalRating     = 0; /* TODO: add support (seems to be only partially implemented => SEvent::age */
-  epg.iStarRating         = 0; /* TODO: add support (seems to be only partially implemented => SEvent::stars */
+  epg.iParentalRating     = event.age;
+  epg.iStarRating         = event.stars;
   epg.bNotify             = false; /* not supported by tvh */
   epg.iSeriesNumber       = event.season;
   epg.iEpisodeNumber      = event.episode;
