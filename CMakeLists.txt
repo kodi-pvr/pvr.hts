@@ -30,6 +30,10 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/Settings.h
                 src/Tvheadend.cpp
                 src/Tvheadend.h
+                src/TimeRecordings.cpp
+                src/TimeRecordings.h
+                src/AutoRecordings.cpp
+                src/AutoRecordings.h
                 src/xbmc_codec_descriptor.hpp)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
