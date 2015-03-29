@@ -344,14 +344,20 @@ public:
   bool Connected      ( void );
   bool ProcessMessage ( const char *method, htsmsg_t *msg );
 
-  inline const tvheadend::Settings& GetSettings() {
+  inline const tvheadend::Settings& GetSettings () const
+  {
     return m_settings;
   };
+
+  inline const SChannels& GetChannels () const
+  {
+    return m_channels;
+  }
 
   PVR_ERROR GetDriveSpace     ( long long *total, long long *used );
 
   int       GetTagCount       ( void );
-  PVR_ERROR GetTags           ( ADDON_HANDLE handle );
+  PVR_ERROR GetTags           ( ADDON_HANDLE handle, bool bRadio );
   PVR_ERROR GetTagMembers     ( ADDON_HANDLE handle,
                                 const PVR_CHANNEL_GROUP &group );
 
@@ -374,7 +380,7 @@ public:
                                 time_t start, time_t end );
   
 private:
-  uint32_t GetNextUnnumberedChannelNumber();
+  uint32_t GetNextUnnumberedChannelNumber ( void );
   
   PLATFORM::CMutex            m_mutex;
   const tvheadend::Settings   m_settings;
@@ -386,7 +392,7 @@ private:
   CHTSPMessageQueue           m_queue;
 
   SChannels                   m_channels;
-  STags                       m_tags;
+  htsp::Tags                  m_tags;
   SRecordings                 m_recordings;
   SSchedules                  m_schedules;
 
