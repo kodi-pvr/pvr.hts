@@ -1,3 +1,7 @@
+2.1.7
+- added: support for radio channel groups
+- added: support for star and parental rating (read only)
+
 2.1.6
 - updated to PVR API v1.9.6
 - added: support for channel group sort index

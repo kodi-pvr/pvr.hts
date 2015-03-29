@@ -178,8 +178,8 @@ struct SEvent
   uint32_t    content;
   time_t      start;
   time_t      stop;
-  uint32_t    stars;
-  uint32_t    age;
+  uint32_t    stars; /* 1 - 5 */
+  uint32_t    age;   /* years */
   time_t      aired;
   uint32_t    season;
   uint32_t    episode;
