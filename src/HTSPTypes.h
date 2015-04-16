@@ -135,6 +135,8 @@ struct SRecording
   std::string      title;
   std::string      path;
   std::string      description;
+  std::string      timerecId;
+  std::string      autorecId;
   PVR_TIMER_STATE  state;
   std::string      error;
   uint32_t         retention;
