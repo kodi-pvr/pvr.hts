@@ -22,8 +22,8 @@
 #include <algorithm>
 #include "Tvheadend.h"
 
-#include "kodi/util/util.h"
-#include "kodi/threads/atomics.h"
+#include "platform/util/util.h"
+#include "platform/threads/atomics.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"

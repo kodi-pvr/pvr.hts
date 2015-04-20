@@ -21,8 +21,8 @@
  *
  */
 
-#include "kodi/os.h"
-#include "kodi/threads/mutex.h"
+#include "platform/os.h"
+#include "platform/threads/mutex.h"
 
 class CCircBuffer
 {
