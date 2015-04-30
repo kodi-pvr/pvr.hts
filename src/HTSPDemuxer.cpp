@@ -44,6 +44,7 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME)
 {
+  m_lastUse = 0;
 }
 
 CHTSPDemuxer::~CHTSPDemuxer ( void )
@@ -84,7 +85,7 @@ void CHTSPDemuxer::Abort0 ( void )
 }
 
 
-bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
+bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
 {
   CLockObject lock(m_conn.Mutex());
   tvhdebug("demux open");
@@ -94,7 +95,8 @@ bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
   
   /* Create new subscription */
   m_subscription = SSubscription();
-  m_subscription.channelId = chn.iUniqueId;
+  m_subscription.channelId = channelId;
+  m_subscription.weight = weight;
 
   /* Open */
   SendSubscribe();
@@ -102,6 +104,8 @@ bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.active)
     SendUnsubscribe();
+  else
+    m_lastUse = time(NULL);
   
   return m_subscription.active;
 }
@@ -116,6 +120,7 @@ void CHTSPDemuxer::Close ( void )
 DemuxPacket *CHTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
+  m_lastUse = time(NULL);
   if (m_pktBuffer.Pop(pkt, 1000)) {
     tvhtrace("demux read idx :%d pts %lf len %lld",
              pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
@@ -131,6 +136,18 @@ void CHTSPDemuxer::Flush ( void )
   DemuxPacket *pkt;
   tvhtrace("demux flush");
   while (m_pktBuffer.Pop(pkt))
+    PVR->FreeDemuxPacket(pkt);
+}
+
+void CHTSPDemuxer::Trim ( void )
+{
+  DemuxPacket *pkt;
+
+  tvhtrace("demux trim");
+  /* reduce used buffer space to what is needed for DVDPlayer to resume
+   * playback without buffering. This depends on the bitrate, so we don't set
+   * this too small. */
+  while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
 
@@ -191,6 +208,14 @@ void CHTSPDemuxer::Speed ( int speed )
   SendSpeed();
 }
 
+void CHTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
+{
+  if (!m_subscription.active || m_subscription.weight == weight)
+    return;
+  m_subscription.weight = weight;
+  SendWeight();
+}
+
 PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 {
   CLockObject lock(m_mutex);
@@ -239,6 +264,7 @@ void CHTSPDemuxer::SendSubscribe ( bool force )
   m = htsmsg_create_map();
   htsmsg_add_s32(m, "channelId",       m_subscription.channelId);
   htsmsg_add_u32(m, "subscriptionId",  m_subscription.subscriptionId);
+  htsmsg_add_u32(m, "weight",          m_subscription.weight);
   htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
   htsmsg_add_u32(m, "normts",          1);
   htsmsg_add_u32(m, "queueDepth",      2000000);
@@ -298,26 +324,33 @@ void CHTSPDemuxer::SendSpeed ( bool force )
     htsmsg_destroy(m);
 }
 
+void CHTSPDemuxer::SendWeight ( void )
+{
+  CLockObject lock(m_conn.Mutex());
+  htsmsg_t *m;
+
+  /* Build message */
+  m = htsmsg_create_map();
+  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
+  htsmsg_add_s32(m, "weight",         m_subscription.weight);
+  tvhdebug("demux send weight %u", m_subscription.weight);
+
+  /* Send and Wait */
+  m = m_conn.SendAndWait("subscriptionChangeWeight", m);
+  if (m)
+    htsmsg_destroy(m);
+}
+
 /* **************************************************************************
  * Parse incoming data
  * *************************************************************************/
 
 bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
 {
-  uint32_t subId;
-
   CLockObject lock(m_mutex);
 
-  /* No subscriptionId - not for demuxer */
-  if (htsmsg_get_u32(m, "subscriptionId", &subId))
-    return false;
-
-  /* Not current subscription - ignore */
-  else if (subId != m_subscription.subscriptionId)
-    return true;
-
   /* Subscription messages */
-  else if (!strcmp("muxpkt", method))
+  if (!strcmp("muxpkt", method))
     ParseMuxPacket(m);
   else if (!strcmp("subscriptionStatus", method))
     ParseSubscriptionStatus(m);
@@ -588,6 +621,10 @@ void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
 {
   const char *status;
   status = htsmsg_get_str(m, "status");
+
+  // not for preTuning subscriptions
+  if (m_subscription.weight != SUBSCRIPTION_WEIGHT_DEFAULT)
+    return;
 
   // this field is absent when everything is fine
   if (status != NULL)

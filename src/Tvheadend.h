@@ -242,6 +242,22 @@ public:
   {
     return (time_t)m_timeshiftStatus.shift;
   }
+  inline uint32_t GetSubscriptionId() const
+  {
+    return m_subscription.subscriptionId;
+  }
+  inline uint32_t GetChannelId() const
+  {
+    if (m_subscription.active)
+      return m_subscription.channelId;
+    return 0;
+  }
+  inline time_t GetLastUse() const
+  {
+    if (m_subscription.active)
+      return m_lastUse;
+    return 0;
+  }
 
 private:
   PLATFORM::CMutex                        m_mutex;
@@ -255,16 +271,20 @@ private:
   SQuality                                m_signalInfo;
   STimeshiftStatus                        m_timeshiftStatus;
   SSubscription                           m_subscription;
+  time_t                                  m_lastUse;
   
   void         Close0         ( void );
   void         Abort0         ( void );
-  bool         Open           ( const PVR_CHANNEL &chn );
+  bool         Open           ( uint32_t channelId,
+                                enum eSubscriptionWeight weight = SUBSCRIPTION_WEIGHT_DEFAULT );
   void         Close          ( void );
   DemuxPacket *Read           ( void );
+  void         Trim           ( void );
   void         Flush          ( void );
   void         Abort          ( void );
   bool         Seek           ( int time, bool backwards, double *startpts );
   void         Speed          ( int speed );
+  void         Weight         ( enum eSubscriptionWeight weight );
   int          CurrentId      ( void );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
@@ -272,6 +292,7 @@ private:
   void SendSubscribe   ( bool force = false );
   void SendUnsubscribe ( void );
   void SendSpeed       ( bool force = false );
+  void SendWeight      ( void );
   
   void ParseMuxPacket           ( htsmsg_t *m );
   void ParseSourceInfo          ( htsmsg_t *m );
@@ -398,7 +419,10 @@ private:
   const tvheadend::Settings   m_settings;
 
   CHTSPConnection             m_conn;
-  CHTSPDemuxer                m_dmx;
+
+  std::vector<CHTSPDemuxer*>  m_dmx;
+  CHTSPDemuxer*               m_dmx_active;
+  bool                        m_streamchange;
   CHTSPVFS                    m_vfs;
 
   CHTSPMessageQueue           m_queue;
@@ -416,6 +440,12 @@ private:
   AutoRecordings              m_autoRecordings;
 
   CStdString  GetImageURL     ( const char *str );
+
+  /*
+   * Predictive tuning
+   */
+  void PredictiveTune         ( uint32_t fromChannelId, uint32_t toChannelId );
+  void TuneOnOldest           ( uint32_t channelId );
 
   /*
    * Message processing
@@ -516,48 +546,18 @@ public:
   }
 
   /*
-   * Demuxer (pass-thru)
+   * Demuxer
    */
-  inline bool         DemuxOpen           ( const PVR_CHANNEL &chn )
-  {
-    return m_dmx.Open(chn);
-  }
-  inline void         DemuxClose          ( void )
-  {
-    m_dmx.Close();
-  }
-  inline DemuxPacket *DemuxRead           ( void )
-  {
-    return m_dmx.Read();
-  }
-  inline void         DemuxFlush          ( void )
-  {
-    m_dmx.Flush();
-  }
-  inline void         DemuxAbort          ( void )
-  {
-    m_dmx.Abort();
-  }
-  inline bool         DemuxSeek           ( int time, bool backward, double *startpts )
-  {
-    return m_dmx.Seek(time, backward, startpts);
-  }
-  inline void         DemuxSpeed          ( int speed )
-  {
-    return m_dmx.Speed(speed);
-  }
-  inline PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
-  {
-    return m_dmx.CurrentStreams(streams);
-  }
-  inline PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig )
-  {
-    return m_dmx.CurrentSignal(sig);
-  }
-  inline time_t       DemuxGetTimeshiftTime() const
-  {
-    return m_dmx.GetTimeshiftTime();
-  }
+  bool         DemuxOpen           ( const PVR_CHANNEL &chn );
+  void         DemuxClose          ( void );
+  DemuxPacket *DemuxRead           ( void );
+  void         DemuxFlush          ( void );
+  void         DemuxAbort          ( void );
+  bool         DemuxSeek           ( int time, bool backward, double *startpts );
+  void         DemuxSpeed          ( int speed );
+  PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
+  PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+  time_t       DemuxGetTimeshiftTime() const;
 
   /*
    * VFS (pass-thru)

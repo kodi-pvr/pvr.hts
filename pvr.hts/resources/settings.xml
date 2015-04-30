@@ -14,6 +14,11 @@
 	<setting id="epg_async" type="bool" label="30101" default="false"/>
   </category>
 
+  <category label="30400">
+	<setting id="total_tuners" type="number" option="int" label="30401" default="1" />
+	<setting id="pretuner_closedelay" type="number" option="int" label="30402" default="10" />
+  </category>
+
   <category label="30200">
 	<setting id="trace_debug" type="bool" label="30201" default="false"/>
   </category>

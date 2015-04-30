@@ -55,6 +55,8 @@ string     g_strUsername         = "";
 string     g_strPassword         = "";
 bool       g_bTraceDebug         = false;
 bool       g_bAsyncEpg           = false;
+int        g_iTotalTuners        = DEFAULT_TOTAL_TUNERS;
+int        g_iPreTunerCloseDelay = DEFAULT_PRETUNER_CLOSEDELAY;
 
 /*
  * Global state
@@ -93,6 +95,8 @@ void ADDON_ReadSettings(void)
   UPDATE_INT(g_iPortHTTP,   "http_port", DEFAULT_HTTP_PORT);
   UPDATE_INT(g_iConnectTimeout,  "connect_timeout",  DEFAULT_CONNECT_TIMEOUT);
   UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_RESPONSE_TIMEOUT);
+  UPDATE_INT(g_iTotalTuners,  "total_tuners",  DEFAULT_TOTAL_TUNERS);
+  UPDATE_INT(g_iPreTunerCloseDelay, "pretuner_closedelay",  DEFAULT_PRETUNER_CLOSEDELAY);
 
   /* Data Transfer */
   UPDATE_INT(g_bAsyncEpg,   "epg_async", false);
@@ -144,6 +148,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
      selected value, which is zero-based, so we need to increment by one. */
   settings.iConnectTimeout = (g_iConnectTimeout + 1) * 1000;
   settings.iResponseTimeout = (g_iResponseTimeout + 1) * 1000;
+
+  settings.iTotalTuners = g_iTotalTuners;
+  settings.iPreTuneCloseDelay = g_iPreTunerCloseDelay;
 
   tvh = new CTvheadend(settings);
   tvh->Start();
@@ -249,6 +256,10 @@ ADDON_STATUS ADDON_SetSetting
 
   /* Debug */
   UPDATE_INT("trace_debug", bool, g_bTraceDebug);
+
+  /* Predictive Tuning */
+  UPDATE_INT("total_tuners", int, g_iTotalTuners);
+  UPDATE_INT("pretuner_closedelay", int, g_iPreTunerCloseDelay);
 
   return ADDON_STATUS_OK;
 

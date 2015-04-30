@@ -150,3 +150,16 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr ""
 
+#empty strings from id 30362 to 30399
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr ""
+
+msgctxt "#30401"
+msgid "Number of tuners to use"
+msgstr ""
+
+msgctxt "#30402"
+msgid "Unused subscription close delay"
+msgstr ""

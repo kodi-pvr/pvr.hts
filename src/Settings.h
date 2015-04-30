@@ -35,6 +35,8 @@ namespace tvheadend {
     int         iResponseTimeout;
     bool        bTraceDebug;
     bool        bAsyncEpg;
+    int         iTotalTuners;
+    int         iPreTuneCloseDelay;
   };
 
 }

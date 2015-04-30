@@ -42,14 +42,23 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
-  : m_settings(settings), m_dmx(m_conn), m_vfs(m_conn), 
+  : m_settings(settings), m_vfs(m_conn),
     m_queue((size_t)-1), m_asyncState(settings.iResponseTimeout),
     m_timeRecordings(m_conn), m_autoRecordings(m_conn)
 {
+  for (int i = 0; i < 1 || i < m_settings.iTotalTuners; i++)
+  {
+    m_dmx.push_back(new CHTSPDemuxer(m_conn));
+  }
+  m_dmx_active = m_dmx[0];
 }
 
 CTvheadend::~CTvheadend()
 {
+  for (auto *dmx : m_dmx)
+  {
+    delete dmx;
+  }
   m_conn.StopThread(-1);
   m_conn.Disconnect();
   StopThread();
@@ -1204,7 +1213,10 @@ bool CTvheadend::Connected ( void )
   SEvents::iterator eit;
 
   /* Rebuild state */
-  m_dmx.Connected();
+  for (auto *dmx : m_dmx)
+  {
+    dmx->Connected();
+  }
   m_vfs.Connected();
 
   /* Flag all async fields in case they've been deleted */
@@ -1246,9 +1258,18 @@ bool CTvheadend::Connected ( void )
 
 bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
 {
-  /* Demuxer */
-  if (m_dmx.ProcessMessage(method, msg))
+  uint32_t subId;
+
+  if (!htsmsg_get_u32(msg, "subscriptionId", &subId))
+  {
+    /* subscriptionId found - for a Demuxer */
+    for (auto *dmx : m_dmx)
+    {
+      if (dmx->GetSubscriptionId() == subId)
+        return dmx->ProcessMessage(method, msg);
+    }
     return true;
+  }
 
   /* Store */
   m_queue.Push(CHTSPMessage(method, msg));
@@ -2086,4 +2107,178 @@ uint32_t CTvheadend::GetNextUnnumberedChannelNumber()
 {
   static uint32_t number = UNNUMBERED_CHANNEL;
   return number++;
+}
+
+void CTvheadend::TuneOnOldest( uint32_t channelId )
+{
+  CHTSPDemuxer* oldest = NULL;
+
+  for (auto *dmx : m_dmx)
+  {
+    if (dmx->GetChannelId() == channelId)
+    {
+      dmx->Weight(SUBSCRIPTION_WEIGHT_PRETUNING);
+      return;
+    }
+    if (dmx == m_dmx_active)
+      continue;
+    if (oldest == NULL || dmx->GetLastUse() <= oldest->GetLastUse())
+      oldest = dmx;
+  }
+  if (oldest)
+  {
+    tvhtrace("pretuning channel %u on subscription %u",
+             m_channels[channelId].num, oldest->GetSubscriptionId());
+    oldest->Open(channelId, SUBSCRIPTION_WEIGHT_PRETUNING);
+  }
+}
+
+void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
+{
+  SChannels::const_iterator it;
+  CLockObject lock(m_mutex);
+  uint32_t fromNum, toNum;
+
+  fromNum = m_channels[fromChannelId].num;
+  toNum = m_channels[toChannelId].num;
+
+  if (fromNum + 1 == toNum || toNum == 1)
+  {
+    /* tuning up, or to channel 1 */
+    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    {
+      if (toNum + 1 == it->second.num)
+        TuneOnOldest(it->second.id);
+    }
+  }
+  else if (fromNum - 1 == toNum)
+  {
+    /* tuning down */
+    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    {
+      if (toNum - 1 == it->second.num)
+        TuneOnOldest(it->second.id);
+    }
+  }
+}
+
+bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
+{
+  CHTSPDemuxer *oldest;
+  uint32_t prevId;
+  bool ret;
+
+  oldest = m_dmx[0];
+
+  for (auto *dmx : m_dmx)
+  {
+    if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
+    {
+      tvhtrace("retuning channel %u on subscription %u",
+               m_channels[chn.iUniqueId].num, dmx->GetSubscriptionId());
+      dmx->Weight(SUBSCRIPTION_WEIGHT_DEFAULT);
+      m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+      prevId = m_dmx_active->GetChannelId();
+      m_dmx_active = dmx;
+      PredictiveTune(prevId, chn.iUniqueId);
+      m_streamchange = true;
+      return true;
+    }
+    if (dmx->GetLastUse() < oldest->GetLastUse())
+      oldest = dmx;
+  }
+
+  tvhtrace("tuning channel %u on subscription %u",
+           m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
+  prevId = m_dmx_active->GetChannelId();
+  ret = oldest->Open(chn.iUniqueId);
+  m_dmx_active = oldest;
+  if (ret && m_dmx.size() > 1)
+    PredictiveTune(prevId, chn.iUniqueId);
+  return ret;
+}
+
+DemuxPacket* CTvheadend::DemuxRead ( void )
+{
+  DemuxPacket *pkt;
+
+  if (m_streamchange)
+  {
+    /* when switching to a previously used channel, we have to trigger a stream
+     * change update through kodi. We don't queue that through the dmx packet
+     * buffer, as we really want to use the currently queued packets for
+     * immediate playback. */
+    pkt = PVR->AllocateDemuxPacket(0);
+    pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+    m_streamchange = false;
+    return pkt;
+  }
+
+  for (auto *dmx : m_dmx)
+  {
+    if (dmx == m_dmx_active)
+      pkt = dmx->Read();
+    else
+    {
+      if (dmx->GetChannelId() && m_settings.iPreTuneCloseDelay &&
+          dmx->GetLastUse() + m_settings.iPreTuneCloseDelay < time(NULL))
+      {
+        tvhtrace("untuning channel %u on subscription %u",
+                 m_channels[dmx->GetChannelId()].num, dmx->GetSubscriptionId());
+        dmx->Close();
+      }
+      else
+        dmx->Trim();
+    }
+  }
+  return pkt;
+}
+
+void CTvheadend::DemuxClose ( void )
+{
+  for (auto *dmx : m_dmx)
+  {
+    dmx->Close();
+  }
+}
+
+void CTvheadend::DemuxFlush ( void )
+{
+  for (auto *dmx : m_dmx)
+  {
+    dmx->Flush();
+  }
+}
+
+void CTvheadend::DemuxAbort ( void )
+{
+  for (auto *dmx : m_dmx)
+  {
+    dmx->Abort();
+  }
+}
+
+bool CTvheadend::DemuxSeek ( int time, bool backward, double *startpts )
+{
+  return m_dmx_active->Seek(time, backward, startpts);
+}
+
+void CTvheadend::DemuxSpeed ( int speed )
+{
+  m_dmx_active->Speed(speed);
+}
+
+PVR_ERROR CTvheadend::DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
+{
+  return m_dmx_active->CurrentStreams(streams);
+}
+
+PVR_ERROR CTvheadend::DemuxCurrentSignal ( PVR_SIGNAL_STATUS &sig )
+{
+  return m_dmx_active->CurrentSignal(sig);
+}
+
+time_t CTvheadend::DemuxGetTimeshiftTime() const
+{
+  return m_dmx_active->GetTimeshiftTime();
 }
