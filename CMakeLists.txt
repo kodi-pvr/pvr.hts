@@ -14,13 +14,20 @@ include_directories(${kodiplatform_INCLUDE_DIRS}
 add_definitions(-DUSE_DEMUX)
 
 set(HTS_SOURCES src/AsyncState.cpp
+                src/AsyncState.h
                 src/CircBuffer.cpp
+                src/CircBuffer.h
+                src/client.h
                 src/client.cpp
                 src/HTSPConnection.cpp
                 src/HTSPDemuxer.cpp
+                src/HTSPTypes.h
                 src/HTSPTypes.cpp
                 src/HTSPVFS.cpp
-                src/Tvheadend.cpp)
+                src/Settings.h
+                src/Tvheadend.cpp
+                src/Tvheadend.h
+                src/xbmc_codec_descriptor.hpp)
 
 add_subdirectory(lib/libhts)
 
