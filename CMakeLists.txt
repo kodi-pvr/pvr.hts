@@ -13,6 +13,7 @@ include_directories(${kodiplatform_INCLUDE_DIRS}
 
 add_definitions(-DUSE_DEMUX)
 
+# Sources and headers
 set(HTS_SOURCES src/AsyncState.cpp
                 src/AsyncState.h
                 src/CircBuffer.cpp
@@ -28,6 +29,23 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/Tvheadend.cpp
                 src/Tvheadend.h
                 src/xbmc_codec_descriptor.hpp)
+                
+source_group("Source Files" FILES ${HTS_SOURCES})
+
+# Resource files
+set(HTS_RESOURCES 
+                README.md
+                pvr.hts/addon.xml
+                pvr.hts/changelog.txt
+                pvr.hts/icon.png
+                pvr.hts/resources/settings.xml
+                pvr.hts/resources/language/English/strings.po)
+                
+source_group("Resource Files" FILES ${HTS_RESOURCES})
+
+# Combine the file lists
+list(APPEND HTS_SOURCES
+            ${HTS_RESOURCES})
 
 add_subdirectory(lib/libhts)
 
