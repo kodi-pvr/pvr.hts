@@ -706,7 +706,7 @@ void CTvheadend::TransferEvent
   epg.iSeriesNumber       = event.season;
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
-  epg.strEpisodeName      = NULL; /* not supported by tvh */
+  epg.strEpisodeName      = event.subtitle.c_str();
 
   /* Callback. */
   PVR->TransferEpgEntry(handle, &epg);
@@ -1534,6 +1534,8 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
   /* Add optional fields */
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
     evt.title   = str;
+  if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
+    evt.subtitle   = str;
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
     evt.summary  = str;
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
@@ -1582,6 +1584,7 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   
   /* Store */
   UPDATE(evt.title,    tmp.title);
+  UPDATE(evt.subtitle, tmp.subtitle);
   UPDATE(evt.start,    tmp.start);
   UPDATE(evt.stop,     tmp.stop);
   UPDATE(evt.channel,  tmp.channel);
