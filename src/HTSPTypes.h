@@ -187,6 +187,7 @@ struct SEvent
   uint32_t    episode;
   uint32_t    part;
   std::string title;
+  std::string subtitle; /* episode name */
   std::string desc;
   std::string summary;
   std::string image;
