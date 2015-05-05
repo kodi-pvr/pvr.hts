@@ -376,6 +376,8 @@ public:
   PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force );
   PVR_ERROR UpdateTimer       ( const PVR_TIMER &tmr );
 
+  PVR_ERROR AddTimeRecording  ( const PVR_TIMER &tmr );
+
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   

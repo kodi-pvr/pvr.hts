@@ -575,6 +575,14 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   uint32_t u32;
   dvr_prio_t prio;
 
+  if (timer.bIsRepeating && timer.iWeekdays)
+  {
+    if (m_conn.GetProtocol() >= 18)
+      return AddTimeRecording(timer);
+    else
+      return PVR_ERROR_NOT_IMPLEMENTED;
+  }
+
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   if (timer.iEpgUid > 0)
@@ -669,6 +677,61 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
   }
 
   return SendDvrUpdate(m);
+}
+
+PVR_ERROR CTvheadend::AddTimeRecording ( const PVR_TIMER &timer )
+{
+  uint32_t u32;
+  dvr_prio_t prio;
+
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_u32(m, "daysOfWeek",   timer.iWeekdays);
+  htsmsg_add_str(m, "title",        timer.strTitle);
+  htsmsg_add_str(m, "name",         timer.strTitle);
+  htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
+  htsmsg_add_str(m, "description",  timer.strSummary);
+  htsmsg_add_str(m, "comment",      "Created by Kodi Media Center");
+
+  /* Convert start and stop time to time after midnight */
+  struct tm *tmi;
+  tmi = localtime(&timer.startTime);
+  htsmsg_add_u32(m, "start",        (tmi->tm_hour*60 + tmi->tm_min));
+  tmi = localtime(&timer.endTime);
+  htsmsg_add_u32(m, "stop",         (tmi->tm_hour*60 + tmi->tm_min));
+
+  /* Retention */
+  if (m_conn.GetProtocol() > 12)
+    htsmsg_add_u32(m, "retention", timer.iLifetime);
+
+  /* Priority */
+  if (timer.iPriority > 80)
+    prio = DVR_PRIO_IMPORTANT;
+  else if (timer.iPriority > 60)
+    prio = DVR_PRIO_HIGH;
+  else if (timer.iPriority > 40)
+    prio = DVR_PRIO_NORMAL;
+  else if (timer.iPriority > 20)
+    prio = DVR_PRIO_LOW;
+  else
+    prio = DVR_PRIO_UNIMPORTANT;
+
+  htsmsg_add_u32(m, "priority", (int)prio);
+
+  /* Send and Wait */
+  CLockObject lock(m_conn.Mutex());
+  m = m_conn.SendAndWait("addTimerecEntry", m);
+
+  if (m == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  /* Check for error */
+  if (htsmsg_get_u32(m, "success", &u32))
+    tvherror("malformed addTimerecEntry response: 'success' missing");
+
+  htsmsg_destroy(m);
+
+  return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 /* **************************************************************************
@@ -1435,6 +1498,14 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   else if ((str = htsmsg_get_str(msg, "summary")) != NULL)
   {
     UPDATE(rec.description, str);
+  }
+  if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
+  {
+    UPDATE(rec.autorecId, str);
+  }
+  if ((str = htsmsg_get_str(msg, "timerecId")) != NULL)
+  {
+    UPDATE(rec.timerecId, str);
   }
 
   /* Error */
