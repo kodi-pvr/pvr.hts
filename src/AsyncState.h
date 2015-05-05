@@ -22,7 +22,7 @@
 #ifndef ASYNCSTATE_H
 #define	ASYNCSTATE_H
 
-#include "kodi/threads/mutex.h"
+#include "platform/threads/mutex.h"
 
 /**
  * Represents the possible states

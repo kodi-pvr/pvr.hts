@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "kodi/util/StdString.h"
+#include "platform/util/StdString.h"
 #include "client.h"
 
 typedef enum {

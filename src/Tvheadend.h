@@ -22,10 +22,10 @@
  */
 
 #include "client.h"
-#include "kodi/sockets/tcp.h"
-#include "kodi/threads/threads.h"
-#include "kodi/threads/mutex.h"
-#include "kodi/util/buffer.h"
+#include "platform/sockets/tcp.h"
+#include "platform/threads/threads.h"
+#include "platform/threads/mutex.h"
+#include "platform/util/buffer.h"
 #include "kodi/xbmc_codec_types.h"
 #include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"

@@ -19,10 +19,10 @@
  *
  */
 
-#include "kodi/threads/mutex.h"
-#include "kodi/threads/atomics.h"
-#include "kodi/util/timeutils.h"
-#include "kodi/sockets/tcp.h"
+#include "platform/threads/mutex.h"
+#include "platform/threads/atomics.h"
+#include "platform/util/timeutils.h"
+#include "platform/sockets/tcp.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"
