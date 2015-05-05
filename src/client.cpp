@@ -199,7 +199,7 @@ ADDON_STATUS ADDON_SetSetting
 #define UPDATE_STR(key, var)\
   if (!strcmp(settingName, key))\
   {\
-    if (!strcmp(var.c_str(), (const char*)settingValue))\
+    if (strcmp(var.c_str(), (const char*)settingValue) != 0)\
     {\
       tvhdebug("update %s from '%s' to '%s'",\
                settingName, var.c_str(), settingValue);\
