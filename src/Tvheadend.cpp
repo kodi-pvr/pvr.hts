@@ -1456,26 +1456,29 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  /* Parse state */
-  if      (strstr(state, "scheduled") != NULL)
+  if (state != NULL)
   {
-    UPDATE(rec.state, PVR_TIMER_STATE_SCHEDULED);
-  }
-  else if (strstr(state, "recording") != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_RECORDING);
-  }
-  else if (strstr(state, "completed") != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_COMPLETED);
-  }
-  else if (strstr(state, "missed") != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-  }
-  else if (strstr(state, "invalid")   != NULL)
-  {
-    UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
+    /* Parse state */
+    if      (strstr(state, "scheduled") != NULL)
+    {
+      UPDATE(rec.state, PVR_TIMER_STATE_SCHEDULED);
+    }
+    else if (strstr(state, "recording") != NULL)
+    {
+      UPDATE(rec.state, PVR_TIMER_STATE_RECORDING);
+    }
+    else if (strstr(state, "completed") != NULL)
+    {
+      UPDATE(rec.state, PVR_TIMER_STATE_COMPLETED);
+    }
+    else if (strstr(state, "missed") != NULL)
+    {
+      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
+    }
+    else if (strstr(state, "invalid")   != NULL)
+    {
+      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
+    }
   }
 
   /* Add optional fields */
