@@ -343,6 +343,7 @@ struct SSubscription
   bool     active;
 
   SSubscription() :
+    channelId(0),
     speed (1000),
     active(false)
   {
