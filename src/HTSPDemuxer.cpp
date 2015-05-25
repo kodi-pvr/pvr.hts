@@ -202,16 +202,18 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 {
   CLockObject lock(m_mutex);
   
+  memset(&sig, 0, sizeof(sig));
+
   strncpy(sig.strAdapterName,   m_sourceInfo.si_adapter.c_str(),
-          sizeof(sig.strAdapterName));
+          sizeof(sig.strAdapterName) - 1);
   strncpy(sig.strAdapterStatus, m_signalInfo.fe_status.c_str(),
-          sizeof(sig.strAdapterStatus));
+          sizeof(sig.strAdapterStatus) - 1);
   strncpy(sig.strServiceName,   m_sourceInfo.si_service.c_str(),
-          sizeof(sig.strServiceName));
+          sizeof(sig.strServiceName) - 1);
   strncpy(sig.strProviderName,  m_sourceInfo.si_provider.c_str(),
-          sizeof(sig.strProviderName));
+          sizeof(sig.strProviderName) - 1);
   strncpy(sig.strMuxName,       m_sourceInfo.si_mux.c_str(),
-          sizeof(sig.strMuxName));
+          sizeof(sig.strMuxName) - 1);
   
   sig.iSNR      = m_signalInfo.fe_snr;
   sig.iSignal   = m_signalInfo.fe_signal;
@@ -471,7 +473,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
         const char *language;
         
         if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage));
+          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
       }
 
       /* Audio data */

@@ -134,7 +134,7 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
       memset(&tag, 0, sizeof(tag));
 
       strncpy(tag.strGroupName, it->second.GetName().c_str(),
-              sizeof(tag.strGroupName));
+              sizeof(tag.strGroupName) - 1);
       tag.bIsRadio = bRadio;
       tag.iPosition = it->second.GetIndex();
       tags.push_back(tag);
@@ -344,10 +344,10 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       if ((cit = m_channels.find(rit->second.channel)) != m_channels.end())
       {
         strncpy(rec.strChannelName, cit->second.name.c_str(),
-                sizeof(rec.strChannelName));
+                sizeof(rec.strChannelName) - 1);
 
         strncpy(rec.strIconPath, cit->second.icon.c_str(),
-                sizeof(rec.strIconPath));
+                sizeof(rec.strIconPath) - 1);
       }
 
       /* URL ( HTSP < v7 ) */
@@ -355,13 +355,13 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 
       /* ID */
       snprintf(buf, sizeof(buf), "%i", rit->second.id);
-      strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId));
+      strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
 
       /* Title */
-      strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle));
+      strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle) - 1);
 
       /* Description */
-      strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot));
+      strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot) - 1);
 
       /* Time/Duration */
       rec.recordingTime = (time_t)rit->second.start;
@@ -378,13 +378,13 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       {
         size_t idx = rit->second.path.rfind("/");
         if (idx == 0 || idx == string::npos)
-          strncpy(rec.strDirectory, "/", sizeof(rec.strDirectory));
+          strncpy(rec.strDirectory, "/", sizeof(rec.strDirectory) - 1);
         else
         {
           CStdString d = rit->second.path.substr(0, idx);
           if (d[0] != '/')
             d = "/" + d;
-          strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory));
+          strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory) - 1);
         }
       }
 
