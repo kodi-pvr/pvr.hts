@@ -1623,7 +1623,13 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
     evt.age     = u32;
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
     evt.aired   = (time_t)s64;
-  
+  if (!htsmsg_get_u32(msg, "seasonNumber", &u32))
+    evt.season  = u32;
+  if (!htsmsg_get_u32(msg, "episodeNumber", &u32))
+    evt.episode = u32;
+  if (!htsmsg_get_u32(msg, "partNumber", &u32))
+    evt.part    = u32;
+
   /* Add optional recording link */
   for (SRecordings::const_iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
