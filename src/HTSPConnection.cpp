@@ -473,6 +473,16 @@ void CHTSPConnection::Register ( void )
       goto fail;
     }
 
+    /* Check htsp server version against client minimum htsp version */
+    if (m_htspVersion < HTSP_API_VERSION)
+    {
+      tvherror("server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_API_VERSION);
+      Disconnect();
+      m_ready = false;
+      m_regCond.Broadcast();
+      return;
+    }
+
     /* Send Auth */
     tvhdebug("sending auth");
     
@@ -536,7 +546,7 @@ void* CHTSPConnection::Process ( void )
     tvhtrace("waiting for connection...");
     if (!m_socket->Open(timeout))
     {
-      /* Unable to connect, inform the user */
+      /* Unable to connect */
       tvherror("unable to connect to %s:%d", host.c_str(), port);
       
       // Retry a few times with a short interval, after that with the default timeout

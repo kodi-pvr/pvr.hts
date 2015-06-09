@@ -69,3 +69,9 @@ msgstr ""
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr ""
+
+#empty strings from id 30202 to 30299
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr ""

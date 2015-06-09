@@ -485,6 +485,10 @@ public:
   {
     return m_conn.GetServerString();
   }
+  inline int GetProtocol ( void ) const
+  {
+    return m_conn.GetProtocol();
+  }
   inline bool HasCapability(const std::string &capability) const
   {
       return m_conn.HasCapability(capability);
