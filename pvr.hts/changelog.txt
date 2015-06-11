@@ -1,3 +1,8 @@
+2.1.9
+- fixed: packaging issues
+- fixed: minor issues found by static analysis
+- added: support for season/episode/part numbers for EPG tags
+
 2.1.8
 - added: support for epg subtitles, aka episode names
 - added: support for creating repeating timers, aka time schedules
