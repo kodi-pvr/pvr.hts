@@ -1427,41 +1427,28 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
-  bool update;
   SChannels::iterator   cit = m_channels.begin();
   htsp::Tags::iterator  tit = m_tags.begin();
 
   /* Tags */
-  update = false;
   while (tit != m_tags.end())
   {
     if (tit->second.IsDirty())
-    {
-      update = true;
       m_tags.erase(tit++);
-    }
     else
       ++tit;
   }
   TriggerChannelGroupsUpdate();
-  if (update)
-    tvhinfo("tags updated");
 
   /* Channels */
-  update = false;
   while (cit != m_channels.end())
   {
     if (cit->second.del)
-    {
-      update = true;
       m_channels.erase(cit++);
-    }
     else
       ++cit;
   }
   TriggerChannelUpdate();
-  if (update)
-    tvhinfo("channels updated");
   
   /* Next */
   m_asyncState.SetState(ASYNC_DVR);
