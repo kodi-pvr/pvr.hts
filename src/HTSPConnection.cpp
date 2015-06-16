@@ -384,7 +384,7 @@ bool CHTSPConnection::SendHello ( void )
   /* Build message */
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "clientname", "Kodi Media Center");
-  htsmsg_add_u32(msg, "htspversion", HTSP_API_VERSION);
+  htsmsg_add_u32(msg, "htspversion", HTSP_CLIENT_VERSION);
 
   /* Send and Wait */
   if (!(msg = SendAndWait0("hello", msg)))
@@ -474,9 +474,9 @@ void CHTSPConnection::Register ( void )
     }
 
     /* Check htsp server version against client minimum htsp version */
-    if (m_htspVersion < HTSP_API_VERSION)
+    if (m_htspVersion < HTSP_MIN_SERVER_VERSION)
     {
-      tvherror("server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_API_VERSION);
+      tvherror("server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
       Disconnect();
       m_ready = false;
       m_regCond.Broadcast();

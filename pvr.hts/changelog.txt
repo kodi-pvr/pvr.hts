@@ -1,3 +1,6 @@
+2.1.10
+- fixed: lowered required HTSP version to 10 to allow using Tvheadend 3.4 again.
+
 2.1.9
 - fixed: packaging issues
 - fixed: minor issues found by static analysis
