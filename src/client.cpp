@@ -150,10 +150,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   /* Wait for connection */
   if (!tvh->WaitForConnection())
   {
-    if (tvh->GetProtocol() < HTSP_MIN_SERVER_VERSION)
+    if (tvh->GetProtocol() < HTSP_API_VERSION)
     {
       /* client/server API version mismatch */
-      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_MIN_SERVER_VERSION);
+      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_API_VERSION);
     }
 
     SAFE_DELETE(tvh);
