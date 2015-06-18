@@ -1,3 +1,6 @@
+2.1.11
+- reverted HTSP version checks
+
 2.1.9
 - fixed: packaging issues
 - fixed: minor issues found by static analysis
