@@ -55,11 +55,7 @@ extern "C" {
 /*
  * Configuration defines
  */
-#define HTSP_MIN_SERVER_VERSION       (10) // Server must support at least this htsp version (10 == tvheadend 3.4)
-#define HTSP_CLIENT_VERSION           (18) // Client uses HTSP features up to this version. If the respective
-                                           // addon feature requires htsp features introduced after
-                                           // HTSP_MIN_SERVER_VERSION this feature will only be available if the
-                                           // actual server HTSP version matches (runtime htsp version check).
+#define HTSP_API_VERSION           (12)
 #define FAST_RECONNECT_ATTEMPTS     (5)
 #define FAST_RECONNECT_INTERVAL   (500) // ms
 #define UNNUMBERED_CHANNEL      (10000)
@@ -488,10 +484,6 @@ public:
   inline const char *GetServerString  ( void )
   {
     return m_conn.GetServerString();
-  }
-  inline int GetProtocol ( void ) const
-  {
-    return m_conn.GetProtocol();
   }
   inline bool HasCapability(const std::string &capability) const
   {

@@ -148,19 +148,11 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   tvh->Start();
 
   /* Wait for connection */
-  if (!tvh->WaitForConnection())
-  {
-    if (tvh->GetProtocol() < HTSP_MIN_SERVER_VERSION)
-    {
-      /* client/server API version mismatch */
-      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_MIN_SERVER_VERSION);
-    }
-
+  if (!tvh->WaitForConnection()) {
     SAFE_DELETE(tvh);
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
     SAFE_DELETE(XBMC);
-
     return ADDON_STATUS_LOST_CONNECTION;
   }
 

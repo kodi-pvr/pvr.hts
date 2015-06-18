@@ -384,7 +384,7 @@ bool CHTSPConnection::SendHello ( void )
   /* Build message */
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "clientname", "Kodi Media Center");
-  htsmsg_add_u32(msg, "htspversion", HTSP_CLIENT_VERSION);
+  htsmsg_add_u32(msg, "htspversion", HTSP_API_VERSION);
 
   /* Send and Wait */
   if (!(msg = SendAndWait0("hello", msg)))
@@ -473,16 +473,6 @@ void CHTSPConnection::Register ( void )
       goto fail;
     }
 
-    /* Check htsp server version against client minimum htsp version */
-    if (m_htspVersion < HTSP_MIN_SERVER_VERSION)
-    {
-      tvherror("server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
-      Disconnect();
-      m_ready = false;
-      m_regCond.Broadcast();
-      return;
-    }
-
     /* Send Auth */
     tvhdebug("sending auth");
     
@@ -546,7 +536,7 @@ void* CHTSPConnection::Process ( void )
     tvhtrace("waiting for connection...");
     if (!m_socket->Open(timeout))
     {
-      /* Unable to connect */
+      /* Unable to connect, inform the user */
       tvherror("unable to connect to %s:%d", host.c_str(), port);
       
       // Retry a few times with a short interval, after that with the default timeout
