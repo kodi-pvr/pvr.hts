@@ -2,7 +2,6 @@
 - fixed: packaging issues
 - fixed: minor issues found by static analysis
 - added: support for season/episode/part numbers for EPG tags
-- added: check htsp version upon connect. Refuse to use servers with HTSP version not matching minimal HTSP version required by client.
 
 2.1.8
 - added: support for epg subtitles, aka episode names
