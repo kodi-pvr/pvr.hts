@@ -40,6 +40,7 @@ using namespace PLATFORM;
  * Client state
  */
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
+bool         m_bAlertHtspVersionMismatch = true;
 
 /*
  * Global configuration
@@ -150,10 +151,16 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   /* Wait for connection */
   if (!tvh->WaitForConnection())
   {
-    if (tvh->GetProtocol() < HTSP_MIN_SERVER_VERSION)
+    if (m_bAlertHtspVersionMismatch &&
+        (tvh->GetProtocol() > 0) && // 0 => tvh server down
+        (tvh->GetProtocol() < HTSP_MIN_SERVER_VERSION))
     {
+      m_bAlertHtspVersionMismatch = false; // alert max once during addon lifetime
+
       /* client/server API version mismatch */
-      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_MIN_SERVER_VERSION);
+      XBMC->QueueNotification(
+        QUEUE_ERROR,
+        XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_MIN_SERVER_VERSION);
     }
 
     SAFE_DELETE(tvh);
