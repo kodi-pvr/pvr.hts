@@ -93,7 +93,12 @@ error:
 CStdString CTvheadend::GetImageURL ( const char *str )
 {
   if (*str != '/')
+  {
+    if (strncmp(str, "imagecache/", 11) == 0)
+      return m_conn.GetWebURL("/%s", str);
+
     return str;
+  }
   else
   {
     return m_conn.GetWebURL("%s", str);
