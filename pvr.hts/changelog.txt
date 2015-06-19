@@ -1,5 +1,6 @@
 2.1.12
 - fixed: channel icon compatibility issue with recent tvheadend servers.
+- fixed: EPG events update (some data was not updated correctly)
 
 2.1.11
 - fixed: do not show HTSP version mismatch error if tvheadend server is down.
