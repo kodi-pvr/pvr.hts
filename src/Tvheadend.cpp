@@ -1668,19 +1668,23 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   evt.del          = false;
   
   /* Store */
-  UPDATE(evt.title,    tmp.title);
-  UPDATE(evt.subtitle, tmp.subtitle);
-  UPDATE(evt.start,    tmp.start);
-  UPDATE(evt.stop,     tmp.stop);
-  UPDATE(evt.channel,  tmp.channel);
-  UPDATE(evt.summary,  tmp.summary);
-  UPDATE(evt.desc,     tmp.desc);
-  UPDATE(evt.image,    tmp.image);
-  UPDATE(evt.next,     tmp.next);
-  UPDATE(evt.content,  tmp.content);
-  UPDATE(evt.stars,    tmp.stars);
-  UPDATE(evt.age,      tmp.age);
-  UPDATE(evt.aired,    tmp.aired);
+  UPDATE(evt.title,       tmp.title);
+  UPDATE(evt.subtitle,    tmp.subtitle);
+  UPDATE(evt.start,       tmp.start);
+  UPDATE(evt.stop,        tmp.stop);
+  UPDATE(evt.channel,     tmp.channel);
+  UPDATE(evt.summary,     tmp.summary);
+  UPDATE(evt.desc,        tmp.desc);
+  UPDATE(evt.image,       tmp.image);
+  UPDATE(evt.next,        tmp.next);
+  UPDATE(evt.content,     tmp.content);
+  UPDATE(evt.stars,       tmp.stars);
+  UPDATE(evt.age,         tmp.age);
+  UPDATE(evt.aired,       tmp.aired);
+  UPDATE(evt.season,      tmp.season);
+  UPDATE(evt.episode,     tmp.episode);
+  UPDATE(evt.part,        tmp.part);
+  UPDATE(evt.recordingId, tmp.recordingId);
 
   /* Update */
   if (update)
