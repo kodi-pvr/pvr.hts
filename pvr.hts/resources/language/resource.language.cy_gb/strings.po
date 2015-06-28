@@ -1,0 +1,45 @@
+# Kodi Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld
+msgid ""
+msgstr ""
+"Project-Id-Version: KODI Main\n"
+"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Welsh (United Kingdom) (http://www.transifex.com/projects/p/kodi-main/language/cy_GB/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy_GB\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Enw gwesteiwr neu gyfeiriad IP Tvheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Porth HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Porth HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Enw defnyddiwr"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Cyfrinair"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Ymateb amser allan mewn eiliadau"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Dadfygio"

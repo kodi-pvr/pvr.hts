@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: Tvheadend HTSP Client
+# Addon id: pvr.hts
+# Addon Provider: Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld
+msgid ""
+msgstr ""
+"Project-Id-Version: KODI Main\n"
+"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Telugu (India) (http://www.transifex.com/projects/p/kodi-main/language/te_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: te_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "కనెక్షన్ సెట్టింగులు"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend హోస్ట్ పేరు లేదా IP చిరునామా"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP పోర్ట్"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP పోర్ట్"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "వాడుకరి పేరు"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "సంకేతపదం"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "సెకన్లలో కనెక్షన్  టైమ్అవుట్"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "సెకన్లలో స్పందన  టైమ్అవుట్"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "డేటా బదిలీ"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "ఎసిన్క్రోనస్ EPG బదిలీ"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "డీబగ్గింగ్"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "ట్రేస్ (వివరణాత్మక)"
