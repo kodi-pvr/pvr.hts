@@ -41,7 +41,7 @@ set(HTS_RESOURCES
                 pvr.hts/changelog.txt
                 pvr.hts/icon.png
                 pvr.hts/resources/settings.xml
-                pvr.hts/resources/language/English/strings.po)
+                pvr.hts/resources/language/resource.language.en_gb/strings.po)
                 
 source_group("Resource Files" FILES ${HTS_RESOURCES})
 
