@@ -33,6 +33,8 @@
 #include "Settings.h"
 #include "HTSPTypes.h"
 #include "AsyncState.h"
+#include "TimeRecordings.h"
+#include "AutoRecordings.h"
 #include <map>
 #include <queue>
 #include <cstdarg>
@@ -55,8 +57,8 @@ extern "C" {
 /*
  * Configuration defines
  */
-#define HTSP_MIN_SERVER_VERSION       (10) // Server must support at least this htsp version (10 == tvheadend 3.4)
-#define HTSP_CLIENT_VERSION           (18) // Client uses HTSP features up to this version. If the respective
+#define HTSP_MIN_SERVER_VERSION       (19) // Server must support at least this htsp version
+#define HTSP_CLIENT_VERSION           (22) // Client uses HTSP features up to this version. If the respective
                                            // addon feature requires htsp features introduced after
                                            // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                            // actual server HTSP version matches (runtime htsp version check).
@@ -374,23 +376,27 @@ public:
                                 int *num );
   PVR_ERROR DeleteRecording   ( const PVR_RECORDING &rec );
   PVR_ERROR RenameRecording   ( const PVR_RECORDING &rec );
+  PVR_ERROR GetTimerTypes     ( PVR_TIMER_TYPE types[], int *size );
   int       GetTimerCount     ( void );
   PVR_ERROR GetTimers         ( ADDON_HANDLE handle );
   PVR_ERROR AddTimer          ( const PVR_TIMER &tmr );
-  PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force );
+  PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force,
+                                bool deleteScheduled );
   PVR_ERROR UpdateTimer       ( const PVR_TIMER &tmr );
-
-  PVR_ERROR AddTimeRecording  ( const PVR_TIMER &tmr );
 
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   
 private:
+  bool      CreateTimer          ( const SRecording &tvhTmr, PVR_TIMER &tmr );
+  PVR_ERROR DeleteRepeatingTimer ( const PVR_TIMER &timer,
+                                   bool deleteScheduled, bool timerec );
+
   uint32_t GetNextUnnumberedChannelNumber ( void );
-  
+
   PLATFORM::CMutex            m_mutex;
   const tvheadend::Settings   m_settings;
-  
+
   CHTSPConnection             m_conn;
   CHTSPDemuxer                m_dmx;
   CHTSPVFS                    m_vfs;
@@ -405,7 +411,10 @@ private:
   SHTSPEventList              m_events;
 
   AsyncState                  m_asyncState;
-  
+
+  TimeRecordings              m_timeRecordings;
+  AutoRecordings              m_autoRecordings;
+
   CStdString  GetImageURL     ( const char *str );
 
   /*
@@ -466,7 +475,7 @@ private:
   void ParseRecordingDelete      ( htsmsg_t *m );
   void ParseEventAddOrUpdate     ( htsmsg_t *m, bool bAdd );
   void ParseEventDelete          ( htsmsg_t *m );
-  bool ParseEvent                ( htsmsg_t *msg, bool bAdd, SEvent &evt );
+  bool ParseEvent                ( htsmsg_t *m, bool bAdd, SEvent &evt );
 
 public:
   /*

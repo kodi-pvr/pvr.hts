@@ -1,8 +1,8 @@
 #pragma once
 
 /*
- *      Copyright (C) 2005-2011 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2005-2015 Team Kodi
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,11 +29,12 @@
 #include "client.h"
 
 typedef enum {
-  DVR_PRIO_IMPORTANT,
-  DVR_PRIO_HIGH,
-  DVR_PRIO_NORMAL,
-  DVR_PRIO_LOW,
-  DVR_PRIO_UNIMPORTANT
+  DVR_PRIO_IMPORTANT   = 0,
+  DVR_PRIO_HIGH        = 1,
+  DVR_PRIO_NORMAL      = 2,
+  DVR_PRIO_LOW         = 3,
+  DVR_PRIO_UNIMPORTANT = 4,
+  DVR_PRIO_NOT_SET     = 5
 } dvr_prio_t;
 
 typedef enum {
@@ -43,6 +44,15 @@ typedef enum {
   DVR_ACTION_TYPE_COMBREAK,
   
 } dvr_action_type_t;
+
+typedef enum {
+  DVR_AUTOREC_RECORD_ALL = 0,
+  DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER = 1,
+  DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE = 2,
+  DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION = 3,
+  DVR_AUTOREC_RECORD_ONCE_PER_WEEK = 4,
+  DVR_AUTOREC_RECORD_ONCE_PER_DAY = 5
+} dvr_autorec_dedup_t;
 
 enum eHTSPEventType
 {
@@ -84,6 +94,7 @@ public:
 
 private:
   bool                  m_dirty;
+
   uint32_t              m_id;
   uint32_t              m_index;
   std::string           m_name;
@@ -92,6 +103,136 @@ private:
 };
 
 typedef std::map<uint32_t, Tag> Tags;
+
+class RecordingBase
+{
+protected:
+  RecordingBase(const std::string &id = "");
+
+  bool operator==(const RecordingBase &right);
+  bool operator!=(const RecordingBase &right);
+
+public:
+  unsigned int GetIntId() const;
+
+  bool IsDirty() const;
+  void SetDirty(bool bDirty);
+
+  std::string GetStringId() const;
+  void SetStringId(const std::string &id);
+
+  bool IsEnabled() const;
+  void SetEnabled(uint32_t enabled);
+
+  int GetDaysOfWeek() const;
+  void SetDaysOfWeek(uint32_t daysOfWeek);
+
+  uint32_t GetRetention() const;
+  void SetRetention(uint32_t retention);
+
+  uint32_t GetPriority() const;
+  void SetPriority(uint32_t priority);
+
+  const std::string& GetTitle() const;
+  void SetTitle(const std::string &title);
+
+  const std::string& GetName() const;
+  void SetName(const std::string &name);
+
+  const std::string& GetDirectory() const;
+  void SetDirectory(const std::string &directory);
+
+  void SetOwner(const std::string &owner);
+
+  void SetCreator(const std::string &creator);
+
+  uint32_t GetChannel() const;
+  void SetChannel(uint32_t channel);
+
+protected:
+  static time_t LocaltimeToUTC(int32_t lctime);
+
+private:
+  static int    GetNextIntId();
+
+  const unsigned int m_iId;
+  bool               m_dirty;
+
+  std::string m_id;         // ID (string!) of dvr[Time|Auto]recEntry.
+  uint32_t    m_enabled;    // If [time|auto]rec entry is enabled (activated).
+  uint32_t    m_daysOfWeek; // Bitmask - Days of week (0x01 = Monday, 0x40 = Sunday, 0x7f = Whole Week, 0 = Not set).
+  uint32_t    m_retention;  // Retention time (in days).
+  uint32_t    m_priority;   // Priority (0 = Important, 1 = High, 2 = Normal, 3 = Low, 4 = Unimportant).
+  std::string m_title;      // Title (pattern) for the recording files.
+  std::string m_name;       // Name.
+  std::string m_directory;  // Directory for the recording files.
+  std::string m_owner;      // Owner.
+  std::string m_creator;    // Creator.
+  uint32_t    m_channel;    // Channel ID.
+};
+
+class TimeRecording : public RecordingBase
+{
+public:
+  TimeRecording(const std::string &id = "");
+
+  bool operator==(const TimeRecording &right);
+  bool operator!=(const TimeRecording &right);
+
+  time_t GetStart() const;
+  void SetStart(int32_t start);
+
+  time_t GetStop() const;
+  void SetStop(int32_t stop);
+
+private:
+  int32_t m_start; // Start time in minutes from midnight (up to 24*60).
+  int32_t m_stop;  // Stop time in minutes from midnight (up to 24*60).
+};
+
+typedef std::map<std::string, TimeRecording> TimeRecordingsMap;
+
+class AutoRecording : public RecordingBase
+{
+public:
+  AutoRecording(const std::string &id = "");
+
+  bool operator==(const AutoRecording &right);
+  bool operator!=(const AutoRecording &right);
+
+  void SetMinDuration(uint32_t minDuration);
+  void SetMaxDuration(uint32_t maxDuration);
+
+  time_t GetStart() const;
+  void SetStart(int32_t start);
+
+  time_t GetStop() const;
+
+  int64_t GetMarginStart() const;
+  void SetMarginStart(int64_t startExtra);
+
+  int64_t GetMarginEnd() const;
+  void SetMarginEnd(int64_t stopExtra);
+
+  uint32_t GetDupDetect() const;
+  void SetDupDetect(uint32_t dupDetect);
+
+  bool GetFulltext() const;
+  void SetFulltext(uint32_t fulltext);
+
+private:
+  uint32_t m_minDuration; // Minimal duration in seconds (0 = Any).
+  uint32_t m_maxDuration; // Maximal duration in seconds (0 = Any).
+  int32_t  m_approxTime;  // Minutes from midnight (up to 24*60).
+  int64_t  m_startExtra;  // Extra start minutes (pre-time).
+  int64_t  m_stopExtra;   // Extra stop minutes (post-time).
+  uint32_t m_dupDetect;   // duplicate episode detect (record: 0 = all, 1 = different episode number,
+                          //                                   2 = different subtitle, 3 = different description,
+                          //                                   4 = once per week, 5 = once per day).
+  uint32_t m_fulltext;    // Fulltext epg search.
+};
+
+typedef std::map<std::string, AutoRecording> AutoRecordingsMap;
 
 } // namespace htsp
 
@@ -153,7 +294,7 @@ struct SRecording
     stopExtra (0),
     state     (PVR_TIMER_STATE_ERROR),
     retention (99), // Kodi default - "99 days"
-    priority  (50) // Kodi default - "normal"
+    priority  (DVR_PRIO_NORMAL)
   {
   }
 
@@ -167,7 +308,8 @@ struct SRecording
   bool IsTimer () const
   {
     return state == PVR_TIMER_STATE_SCHEDULED ||
-           state == PVR_TIMER_STATE_RECORDING;
+           state == PVR_TIMER_STATE_RECORDING ||
+           state == PVR_TIMER_STATE_DISABLED;
   }
 };
 

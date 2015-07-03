@@ -42,7 +42,8 @@ using namespace PLATFORM;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
   : m_settings(settings), m_dmx(m_conn), m_vfs(m_conn), 
-    m_queue((size_t)-1), m_asyncState(settings.iResponseTimeout)
+    m_queue((size_t)-1), m_asyncState(settings.iResponseTimeout),
+    m_timeRecordings(m_conn), m_autoRecordings(m_conn)
 {
 }
 
@@ -357,9 +358,6 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
                 sizeof(rec.strIconPath) - 1);
       }
 
-      /* URL ( HTSP < v7 ) */
-      // TODO: do I care!
-
       /* ID */
       snprintf(buf, sizeof(buf), "%i", rit->second.id);
       strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
@@ -415,10 +413,6 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 PVR_ERROR CTvheadend::GetRecordingEdl
   ( const PVR_RECORDING &rec, PVR_EDL_ENTRY edl[], int *num )
 {
-  /* Not supported */
-  if (m_conn.GetProtocol() < 12)
-    return PVR_ERROR_NOT_IMPLEMENTED;
-  
   htsmsg_t *list;
   htsmsg_field_t *f;
   int idx;
@@ -511,6 +505,215 @@ PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
   return SendDvrUpdate(m);
 }
 
+namespace
+{
+struct TimerType : PVR_TIMER_TYPE
+{
+  TimerType(unsigned int id,
+            unsigned int attributes,
+            const std::string &description,
+            const std::vector< std::pair<int, std::string> > &priorityValues
+              = std::vector< std::pair<int, std::string> >(),
+            int priorityDefault
+              = DVR_PRIO_NORMAL,
+            const std::vector< std::pair<int, std::string> > &dupEpisodesValues
+              = std::vector< std::pair<int, std::string> >(),
+            int dupEpisodesDefault
+              = DVR_AUTOREC_RECORD_ALL)
+  {
+    memset(this, 0, sizeof(PVR_TIMER_TYPE));
+
+    iId                              = id;
+    iAttributes                      = attributes;
+    iPrioritiesSize                  = priorityValues.size();
+    iPrioritiesDefault               = priorityDefault;
+    iPreventDuplicateEpisodesSize    = dupEpisodesValues.size();
+    iPreventDuplicateEpisodesDefault = dupEpisodesDefault;
+
+    strncpy(strDescription, description.c_str(), sizeof(strDescription) - 1);
+
+    int i = 0;
+    for (auto it = priorityValues.begin(); it != priorityValues.end(); ++it, ++i)
+    {
+      priorities[i].iValue = it->first;
+      strncpy(priorities[i].strDescription, it->second.c_str(), sizeof(priorities[i].strDescription) - 1);
+    }
+
+    i = 0;
+    for (auto it = dupEpisodesValues.begin(); it != dupEpisodesValues.end(); ++it, ++i)
+    {
+      preventDuplicateEpisodes[i].iValue = it->first;
+      strncpy(preventDuplicateEpisodes[i].strDescription, it->second.c_str(), sizeof(preventDuplicateEpisodes[i].strDescription) - 1);
+    }
+  }
+};
+
+} // unnamed namespace
+
+PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
+{
+  /* PVR_Timer.iPriority values and presentation.*/
+  static std::vector< std::pair<int, std::string> > priorityValues;
+  if (priorityValues.size() == 0)
+  {
+    priorityValues.push_back(std::make_pair(DVR_PRIO_UNIMPORTANT, XBMC->GetLocalizedString(30355)));
+    priorityValues.push_back(std::make_pair(DVR_PRIO_LOW,         XBMC->GetLocalizedString(30354)));
+    priorityValues.push_back(std::make_pair(DVR_PRIO_NORMAL,      XBMC->GetLocalizedString(30353)));
+    priorityValues.push_back(std::make_pair(DVR_PRIO_HIGH,        XBMC->GetLocalizedString(30352)));
+    priorityValues.push_back(std::make_pair(DVR_PRIO_IMPORTANT,   XBMC->GetLocalizedString(30351)));
+  }
+
+  /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
+  static std::vector< std::pair<int, std::string> > deDupValues;
+  if (deDupValues.size() == 0)
+  {
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+  }
+
+  static const unsigned int TIMER_ONCE_MANUAL_ATTRIBS
+    = PVR_TIMER_TYPE_IS_MANUAL               |
+      PVR_TIMER_TYPE_SUPPORTS_CHANNELS       |
+      PVR_TIMER_TYPE_SUPPORTS_START_END_TIME |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY       |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
+
+  static const unsigned int TIMER_ONCE_EPG_ATTRIBS
+    = PVR_TIMER_TYPE_SUPPORTS_CHANNELS         |
+      PVR_TIMER_TYPE_SUPPORTS_START_END_TIME   |
+      PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY         |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
+
+  /* Timer types definition.*/
+  static std::vector<TimerType> timerTypes;
+  if (timerTypes.size() == 0)
+  {
+    timerTypes.push_back(
+      /* One-shot manual (time and channel based) */
+      TimerType(
+        /* Type id. */
+        TIMER_ONCE_MANUAL,
+        /* Attributes. */
+        TIMER_ONCE_MANUAL_ATTRIBS,
+        /* Let Kodi generate the description. */
+        "",
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL));
+
+    timerTypes.push_back(
+      /* One-shot epg based */
+      TimerType(
+        /* Type id. */
+        TIMER_ONCE_EPG,
+        /* Attributes. */
+        TIMER_ONCE_EPG_ATTRIBS,
+        /* Let Kodi generate the description. */
+        "",
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL));
+
+    timerTypes.push_back(
+      /* Read-only one-shot for timers generated by timerec */
+      TimerType(
+        /* Type id. */
+        TIMER_ONCE_CREATED_BY_TIMEREC,
+        /* Attributes. */
+        TIMER_ONCE_MANUAL_ATTRIBS  |
+        PVR_TIMER_TYPE_IS_READONLY |
+        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+        /* Description. */
+        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL));
+
+    timerTypes.push_back(
+      /* Read-only one-shot for timers generated by autorec */
+      TimerType(
+        /* Type id. */
+        TIMER_ONCE_CREATED_BY_AUTOREC,
+        /* Attributes. */
+        TIMER_ONCE_EPG_ATTRIBS     |
+        PVR_TIMER_TYPE_IS_READONLY |
+        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+        /* Description. */
+        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL));
+
+    timerTypes.push_back(
+      /* Repeating manual (time and channel based) - timerec */
+      TimerType(
+        /* Type id. */
+        TIMER_REPEATING_MANUAL,
+        /* Attributes. */
+        PVR_TIMER_TYPE_IS_MANUAL                  |
+        PVR_TIMER_TYPE_IS_REPEATING               |
+        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE    |
+        PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
+        PVR_TIMER_TYPE_SUPPORTS_START_END_TIME    |
+        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS          |
+        PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
+        PVR_TIMER_TYPE_SUPPORTS_LIFETIME          |
+        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
+        /* Let Kodi generate the description. */
+        "",
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL));
+
+    unsigned int TIMER_REPEATING_EPG_ATTRIBS
+      = PVR_TIMER_TYPE_IS_REPEATING                |
+        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
+        PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
+        PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
+        PVR_TIMER_TYPE_SUPPORTS_START_END_TIME     |
+        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
+        PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
+        PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
+        PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
+        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
+
+    if (m_conn.GetProtocol() >= 20)
+    {
+      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
+      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
+    }
+
+    timerTypes.push_back(
+      /* Repeating epg based - autorec */
+      TimerType(
+        /* Type id. */
+        TIMER_REPEATING_EPG,
+        /* Attributes. */
+        TIMER_REPEATING_EPG_ATTRIBS,
+        /* Let Kodi generate the description. */
+        "",
+        /* Values definitions for priorities. */
+        priorityValues,
+        DVR_PRIO_NORMAL,
+        /* Values definitions for prevent duplicate episodes. */
+        deDupValues,
+        DVR_AUTOREC_RECORD_ALL));
+  }
+
+  /* Copy data to target array. */
+  int i = 0;
+  for (auto it = timerTypes.begin(); it != timerTypes.end(); ++it, ++i)
+    types[i] = *it;
+
+  *size = timerTypes.size();
+  return PVR_ERROR_NO_ERROR;
+}
+
 int CTvheadend::GetTimerCount ( void )
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
@@ -522,7 +725,56 @@ int CTvheadend::GetTimerCount ( void )
   for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
     if (rit->second.IsTimer())
       ret++;
+
+  ret += m_timeRecordings.GetTimerecTimerCount();
+
+  ret += m_autoRecordings.GetAutorecTimerCount();
+
   return ret;
+}
+
+bool CTvheadend::CreateTimer ( const SRecording &tvhTmr, PVR_TIMER &tmr )
+{
+  memset(&tmr, 0, sizeof(tmr));
+
+  tmr.iClientIndex       = tvhTmr.id;
+  tmr.iClientChannelUid  = (tvhTmr.channel > 0) ? tvhTmr.channel : -1;
+  tmr.startTime          = static_cast<time_t>(tvhTmr.start);
+  tmr.endTime            = static_cast<time_t>(tvhTmr.stop);
+  strncpy(tmr.strTitle,
+          tvhTmr.title.c_str(), sizeof(tmr.strTitle) - 1);
+  strncpy(tmr.strEpgSearchString,
+          "", sizeof(tmr.strEpgSearchString) - 1); // n/a for one-shot timers
+  strncpy(tmr.strDirectory,
+          "", sizeof(tmr.strDirectory) - 1);       // n/a for one-shot timers
+  strncpy(tmr.strSummary,
+          tvhTmr.description.c_str(), sizeof(tmr.strSummary) - 1);
+  tmr.state              = tvhTmr.state;
+  tmr.iTimerType         = !tvhTmr.timerecId.empty()
+                            ? TIMER_ONCE_CREATED_BY_TIMEREC
+                            : !tvhTmr.autorecId.empty()
+                              ? TIMER_ONCE_CREATED_BY_AUTOREC
+                              : tvhTmr.eventId
+                                ? TIMER_ONCE_EPG
+                                : TIMER_ONCE_MANUAL;
+  tmr.iPriority          = tvhTmr.priority;
+  tmr.iLifetime          = tvhTmr.retention;
+  tmr.iRecordingGroup    = 0;                // not supported by tvh
+  tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
+  tmr.firstDay           = 0;                // not supported by tvh
+  tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
+  tmr.iEpgUid            = (tvhTmr.eventId > 0) ? tvhTmr.eventId : -1;
+  tmr.iMarginStart       = tvhTmr.startExtra;
+  tmr.iMarginEnd         = tvhTmr.stopExtra;
+  tmr.iGenreType         = 0;                // not supported by tvh?
+  tmr.iGenreSubType      = 0;                // not supported by tvh?
+  tmr.bFullTextEpgSearch = false;            // n/a for one-shot timers
+  tmr.iParentClientIndex = tmr.iTimerType == TIMER_ONCE_CREATED_BY_TIMEREC
+                            ? m_timeRecordings.GetTimerIntIdFromStringId(tvhTmr.timerecId)
+                            : tmr.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC
+                              ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.autorecId)
+                              : 0;
+  return true;
 }
 
 PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
@@ -533,38 +785,28 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
   std::vector<PVR_TIMER> timers;
   {
     CLockObject lock(m_mutex);
-    SRecordings::const_iterator rit;
 
+    /*
+     * One-shot timers
+     */
+
+    SRecordings::const_iterator rit;
     for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
     {
-      if (!rit->second.IsTimer()) continue;
+      if (!rit->second.IsTimer())
+        continue;
 
       /* Setup entry */
       PVR_TIMER tmr;
-      memset(&tmr, 0, sizeof(tmr));
-
-      tmr.iClientIndex      = rit->second.id;
-      tmr.iClientChannelUid = rit->second.channel;
-      tmr.startTime         = (time_t)rit->second.start;
-      tmr.endTime           = (time_t)rit->second.stop;
-      strncpy(tmr.strTitle, rit->second.title.c_str(), 
-              sizeof(tmr.strTitle) - 1);
-      strncpy(tmr.strSummary, rit->second.description.c_str(),
-              sizeof(tmr.strSummary) - 1);
-      tmr.state             = rit->second.state;
-      tmr.iPriority         = rit->second.priority;
-      tmr.iLifetime         = rit->second.retention;
-      tmr.bIsRepeating      = false; // unused
-      tmr.firstDay          = 0;     // unused
-      tmr.iWeekdays         = 0;     // unused
-      tmr.iEpgUid           = 0;     // unused
-      tmr.iMarginStart      = rit->second.startExtra;
-      tmr.iMarginEnd        = rit->second.stopExtra;
-      tmr.iGenreType        = 0;     // unused
-      tmr.iGenreSubType     = 0;     // unused
-
-      timers.push_back(tmr);
+      if (CreateTimer(rit->second, tmr))
+        timers.push_back(tmr);
     }
+
+    /* Time-based repeating timers */
+    m_timeRecordings.GetTimerecTimers(timers);
+
+    /* EPG-query-based repeating timers */
+    m_autoRecordings.GetAutorecTimers(timers);
   }
 
   std::vector<PVR_TIMER>::const_iterator it;
@@ -579,169 +821,221 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
 
 PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 {
-  uint32_t u32;
-  dvr_prio_t prio;
-
-  if (timer.bIsRepeating && timer.iWeekdays)
+  if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
+      (timer.iTimerType == TIMER_ONCE_EPG))
   {
-    if (m_conn.GetProtocol() >= 18)
-      return AddTimeRecording(timer);
+    /* one shot timer */
+
+    uint32_t u32;
+
+    /* Build message */
+    htsmsg_t *m = htsmsg_create_map();
+    if (timer.iEpgUid > 0)
+    {
+      /* EPG-based timer */
+      htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
+    }
     else
-      return PVR_ERROR_NOT_IMPLEMENTED;
-  }
+    {
+      /* manual timer */
+      htsmsg_add_str(m, "title",        timer.strTitle);
+      htsmsg_add_s64(m, "start",        timer.startTime);
+      htsmsg_add_s64(m, "stop",         timer.endTime);
+      htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
+      htsmsg_add_str(m, "description",  timer.strSummary);
+    }
 
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  if (timer.iEpgUid > 0)
+    htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
+    htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
+    htsmsg_add_u32(m, "retention",  timer.iLifetime);
+    htsmsg_add_u32(m, "priority",   timer.iPriority);
+
+    /* Send and Wait */
+    {
+      CLockObject lock(m_conn.Mutex());
+      m = m_conn.SendAndWait("addDvrEntry", m);
+    }
+
+    if (m == NULL)
+      return PVR_ERROR_SERVER_ERROR;
+
+    /* Check for error */
+    if (htsmsg_get_u32(m, "success", &u32))
+    {
+      tvherror("malformed addDvrEntry response: 'success' missing");
+      u32 = PVR_ERROR_FAILED;
+    }
+    htsmsg_destroy(m);
+
+    return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
+  }
+  else if (timer.iTimerType == TIMER_REPEATING_MANUAL)
   {
-    htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
+    /* time-based repeating timer */
+    return m_timeRecordings.SendTimerecAdd(timer);
+  }
+  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  {
+    /* EPG-query-based repeating timers */
+    return m_autoRecordings.SendAutorecAdd(timer);
   }
   else
   {
-    htsmsg_add_str(m, "title",        timer.strTitle);
-    htsmsg_add_s64(m, "start",        timer.startTime);
-    htsmsg_add_s64(m, "stop",         timer.endTime);
-    htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
-    htsmsg_add_str(m, "description",  timer.strSummary);
+    /* unknown timer */
+    tvherror("unknown timer type");
+    return PVR_ERROR_INVALID_PARAMETERS;
   }
+}
 
-  htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
-  htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
-
-  if (m_conn.GetProtocol() > 12)
-    htsmsg_add_u32(m, "retention", timer.iLifetime);
-
-  /* Priority */
-  if (timer.iPriority > 80)
-    prio = DVR_PRIO_IMPORTANT;
-  else if (timer.iPriority > 60)
-    prio = DVR_PRIO_HIGH;
-  else if (timer.iPriority > 40)
-    prio = DVR_PRIO_NORMAL;
-  else if (timer.iPriority > 20)
-    prio = DVR_PRIO_LOW;
-  else
-    prio = DVR_PRIO_UNIMPORTANT;
-
-  htsmsg_add_u32(m, "priority", (int)prio);
-
-  /* Send and Wait */
+PVR_ERROR CTvheadend::DeleteRepeatingTimer
+  ( const PVR_TIMER &timer, bool deleteScheduled, bool timerec )
+{
+  if (deleteScheduled)
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("addDvrEntry", m);
+    if (timerec)
+      return m_timeRecordings.SendTimerecDelete(timer);
+    else
+      return m_autoRecordings.SendAutorecDelete(timer);
   }
 
-  if (m == NULL)
-    return PVR_ERROR_SERVER_ERROR;
+  /* Deleting repeating timer's scheduled timers is tvh standard behavior. */
+  /* Thus, clone the scheduled timers before deleting the repeating timer, */
+  /* add them after deleting the repeating timer (adding clones before     */
+  /* deleting the repeating timer will not work due to tvheadend internal  */
+  /* check for duplicates)                                                 */
 
-  /* Check for error */
-  if (htsmsg_get_u32(m, "success", &u32))
+  /* obtain the children of the timer, if any. */
+  std::string id = timerec
+    ? m_timeRecordings.GetTimerStringIdFromIntId(timer.iClientIndex)
+    : m_autoRecordings.GetTimerStringIdFromIntId(timer.iClientIndex);
+
+  if (id.empty())
   {
-    tvherror("malformed addDvrEntry response: 'success' missing");
-    u32 = PVR_ERROR_FAILED;
+    tvherror("unable to obtain string id from int id");
+    return PVR_ERROR_FAILED;
   }
-  htsmsg_destroy(m);
 
-  return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
+  std::vector<PVR_TIMER> clones;
+  for (auto rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+  {
+    if (!rit->second.IsTimer())
+      continue;
+
+    if ((timerec && (rit->second.timerecId) == id) || (rit->second.autorecId == id))
+    {
+      PVR_TIMER tmr;
+      if (!CreateTimer(rit->second, tmr))
+      {
+        clones.clear();
+        return PVR_ERROR_FAILED;
+      }
+
+      /* adjust timer type. */
+      tmr.iTimerType = (rit->second.eventId > 0) ? TIMER_ONCE_EPG : TIMER_ONCE_MANUAL;
+
+      clones.push_back(tmr);
+    }
+  }
+
+  PVR_ERROR error = timerec
+    ? m_timeRecordings.SendTimerecDelete(timer)
+    : m_autoRecordings.SendAutorecDelete(timer);
+
+  if (error == PVR_ERROR_NO_ERROR)
+  {
+    for (auto it = clones.begin(); it != clones.end(); ++it)
+      AddTimer(*it); // TODO ksooo: error handling
+  }
+
+  return error;
 }
 
 PVR_ERROR CTvheadend::DeleteTimer
-  ( const PVR_TIMER &timer, bool _unused(force) )
+  ( const PVR_TIMER &timer, bool _unused(force), bool deleteScheduled )
 {
-  return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
+  if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
+      (timer.iTimerType == TIMER_ONCE_EPG))
+  {
+    /* one shot timer */
+    return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
+  }
+  else if (timer.iTimerType == TIMER_REPEATING_MANUAL)
+  {
+    /* time-based repeating timer */
+    return DeleteRepeatingTimer(timer, deleteScheduled, true);
+  }
+  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  {
+    /* EPG-query-based repeating timer */
+    return DeleteRepeatingTimer(timer, deleteScheduled, false);
+  }
+  else
+  {
+    /* unknown timer */
+    tvherror("unknown timer type");
+    return PVR_ERROR_INVALID_PARAMETERS;
+  }
 }
 
 PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 {
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "id",           timer.iClientIndex);
-  htsmsg_add_str(m, "title",        timer.strTitle);
-  htsmsg_add_s64(m, "start",        timer.startTime);
-  htsmsg_add_s64(m, "stop",         timer.endTime);
-  htsmsg_add_str(m, "description",  timer.strSummary);
-  htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
-  htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
-
-  if (m_conn.GetProtocol() > 12)
+  if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
+      (timer.iTimerType == TIMER_ONCE_EPG))
   {
-    dvr_prio_t prio;
+    /* one shot timer */
 
-    htsmsg_add_u32(m, "retention", timer.iLifetime);
+    /* Build message */
+    htsmsg_t *m = htsmsg_create_map();
+    htsmsg_add_u32(m, "id",           timer.iClientIndex);
 
-    /* Priority */
-    if (timer.iPriority > 80)
-      prio = DVR_PRIO_IMPORTANT;
-    else if (timer.iPriority > 60)
-      prio = DVR_PRIO_HIGH;
-    else if (timer.iPriority > 40)
-      prio = DVR_PRIO_NORMAL;
-    else if (timer.iPriority > 20)
-      prio = DVR_PRIO_LOW;
+    if (m_conn.GetProtocol() >= 22)
+    {
+      /* support for updating the channel was added very late to the htsp protocol. */
+      htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);
+    }
     else
-      prio = DVR_PRIO_UNIMPORTANT;
+    {
+      const auto &it = m_recordings.find(timer.iClientIndex);
+      if (it == m_recordings.end())
+      {
+        tvherror("cannot find the timer to update");
+        return PVR_ERROR_INVALID_PARAMETERS;
+      }
 
-    htsmsg_add_u32(m, "priority",   (int)prio);
+      if (it->second.channel != static_cast<uint32_t>(timer.iClientChannelUid))
+      {
+        tvherror("updating channels of one-shot timers not supported by HTSP v%d", m_conn.GetProtocol());
+        return PVR_ERROR_NOT_IMPLEMENTED;
+      }
+    }
+
+    htsmsg_add_str(m, "title",        timer.strTitle);
+    htsmsg_add_s64(m, "start",        timer.startTime);
+    htsmsg_add_s64(m, "stop",         timer.endTime);
+    htsmsg_add_str(m, "description",  timer.strSummary);
+    htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
+    htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
+    htsmsg_add_u32(m, "retention",    timer.iLifetime);
+    htsmsg_add_u32(m, "priority",     timer.iPriority);
+
+    return SendDvrUpdate(m);
   }
-
-  return SendDvrUpdate(m);
-}
-
-PVR_ERROR CTvheadend::AddTimeRecording ( const PVR_TIMER &timer )
-{
-  uint32_t u32;
-  dvr_prio_t prio;
-
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "daysOfWeek",   timer.iWeekdays);
-  htsmsg_add_str(m, "title",        timer.strTitle);
-  htsmsg_add_str(m, "name",         timer.strTitle);
-  htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
-  htsmsg_add_str(m, "description",  timer.strSummary);
-  htsmsg_add_str(m, "comment",      "Created by Kodi Media Center");
-
-  /* Convert start and stop time to time after midnight */
-  struct tm *tmi;
-  tmi = localtime(&timer.startTime);
-  htsmsg_add_u32(m, "start",        (tmi->tm_hour*60 + tmi->tm_min));
-  tmi = localtime(&timer.endTime);
-  htsmsg_add_u32(m, "stop",         (tmi->tm_hour*60 + tmi->tm_min));
-
-  /* Retention */
-  if (m_conn.GetProtocol() > 12)
-    htsmsg_add_u32(m, "retention", timer.iLifetime);
-
-  /* Priority */
-  if (timer.iPriority > 80)
-    prio = DVR_PRIO_IMPORTANT;
-  else if (timer.iPriority > 60)
-    prio = DVR_PRIO_HIGH;
-  else if (timer.iPriority > 40)
-    prio = DVR_PRIO_NORMAL;
-  else if (timer.iPriority > 20)
-    prio = DVR_PRIO_LOW;
+  else if (timer.iTimerType == TIMER_REPEATING_MANUAL)
+  {
+    /* time-based repeating timer */
+    return m_timeRecordings.SendTimerecUpdate(timer);
+  }
+  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  {
+    /* EPG-query-based repeating timers */
+    return m_autoRecordings.SendAutorecUpdate(timer);
+  }
   else
-    prio = DVR_PRIO_UNIMPORTANT;
-
-  htsmsg_add_u32(m, "priority", (int)prio);
-
-  /* Send and Wait */
-  CLockObject lock(m_conn.Mutex());
-  m = m_conn.SendAndWait("addTimerecEntry", m);
-
-  if (m == NULL)
-    return PVR_ERROR_SERVER_ERROR;
-
-  /* Check for error */
-  if (htsmsg_get_u32(m, "success", &u32)) {
-    tvherror("malformed addTimerecEntry response: 'success' missing");
-    u32 = PVR_ERROR_FAILED;
+  {
+    /* unknown timer */
+    tvherror("unknown timer type");
+    return PVR_ERROR_INVALID_PARAMETERS;
   }
-
-  htsmsg_destroy(m);
-
-  return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
 /* **************************************************************************
@@ -910,6 +1204,8 @@ bool CTvheadend::Connected ( void )
     for (eit = sit->second.events.begin(); eit != sit->second.events.end(); ++eit)
       eit->second.del = true;
   }
+  m_timeRecordings.Connected();
+  m_autoRecordings.Connected();
 
   /* Request Async data */
   m_asyncState.SetState(ASYNC_NONE);
@@ -956,7 +1252,8 @@ void* CTvheadend::Process ( void )
     if (!msg.m_msg)
       continue;
     method = msg.m_method.c_str();
-    
+
+    SHTSPEventList eventsCopy;
     /* Scope lock for processing */
     {
       CLockObject lock(m_mutex);
@@ -985,6 +1282,40 @@ void* CTvheadend::Process ( void )
       else if (!strcmp("dvrEntryDelete", method))
         ParseRecordingDelete(msg.m_msg);
 
+      /* Timerec */
+      else if (!strcmp("timerecEntryAdd", method))
+      {
+        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.m_msg, true))
+          TriggerTimerUpdate();
+      }
+      else if (!strcmp("timerecEntryUpdate", method))
+      {
+        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.m_msg, false))
+          TriggerTimerUpdate();
+      }
+      else if (!strcmp("timerecEntryDelete", method))
+      {
+        if (m_timeRecordings.ParseTimerecDelete(msg.m_msg))
+          TriggerTimerUpdate();
+      }
+
+      /* Autorec */
+      else if (!strcmp("autorecEntryAdd", method))
+      {
+        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.m_msg, true))
+          TriggerTimerUpdate();
+      }
+      else if (!strcmp("autorecEntryUpdate", method))
+      {
+        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.m_msg, false))
+          TriggerTimerUpdate();
+      }
+      else if (!strcmp("autorecEntryDelete", method))
+      {
+        if (m_autoRecordings.ParseAutorecDelete(msg.m_msg))
+          TriggerTimerUpdate();
+      }
+
       /* EPG */
       else if (!strcmp("eventAdd", method))
         ParseEventAddOrUpdate(msg.m_msg, true);
@@ -1000,6 +1331,10 @@ void* CTvheadend::Process ( void )
       /* Unknown */
       else  
         tvhdebug("unhandled message [%s]", method);
+
+      /* make a copy of events list to process it without lock. */
+      eventsCopy = m_events;
+      m_events.clear();
     }
   
     /* Manual delete rather than waiting */
@@ -1011,7 +1346,7 @@ void* CTvheadend::Process ( void )
      *       m_mutex held!
      */
     SHTSPEventList::const_iterator it;
-    for (it = m_events.begin(); it != m_events.end(); ++it)
+    for (it = eventsCopy.begin(); it != eventsCopy.end(); ++it)
     {
       switch (it->m_type)
       {
@@ -1032,7 +1367,6 @@ void* CTvheadend::Process ( void )
           break;
       }
     }
-    m_events.clear();
   }
 
   /* Local */
@@ -1115,6 +1449,13 @@ void CTvheadend::SyncDvrCompleted ( void )
     else
       ++rit;
   }
+
+  /* Time-based repeating timers */
+  update = m_timeRecordings.SyncDvrCompleted();
+
+  /* EPG-query-based repeating timers */
+  update = m_autoRecordings.SyncDvrCompleted();
+
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
   if (update)
@@ -1410,7 +1751,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.startExtra, startExtra);
   }
-  else if (bAdd && (m_conn.GetProtocol() > 12))
+  else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'startExtra' missing");
     return;
@@ -1420,7 +1761,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.stopExtra,  stopExtra);
   }
-  else if (bAdd && (m_conn.GetProtocol() > 12))
+  else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'stopExtra' missing");
     return;
@@ -1430,7 +1771,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.retention, retention);
   }
-  else if (bAdd && (m_conn.GetProtocol() > 12))
+  else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'retention' missing");
     return;
@@ -1441,26 +1782,18 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     switch (priority)
     {
       case DVR_PRIO_IMPORTANT:
-        UPDATE(rec.priority, 100);
-        break;
       case DVR_PRIO_HIGH:
-        UPDATE(rec.priority, 75);
-        break;
       case DVR_PRIO_NORMAL:
-        UPDATE(rec.priority, 50);
-        break;
       case DVR_PRIO_LOW:
-        UPDATE(rec.priority, 25);
-        break;
       case DVR_PRIO_UNIMPORTANT:
-        UPDATE(rec.priority, 0);
+        UPDATE(rec.priority, priority);
         break;
       default:
-        tvherror("malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value");
+        tvherror("malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value %d", priority);
         return;
     }
   }
-  else if (bAdd && (m_conn.GetProtocol() > 12))
+  else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'priority' missing");
     return;
@@ -1512,13 +1845,13 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.description, str);
   }
-  if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
-  {
-    UPDATE(rec.autorecId, str);
-  }
   if ((str = htsmsg_get_str(msg, "timerecId")) != NULL)
   {
     UPDATE(rec.timerecId, str);
+  }
+  if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
+  {
+    UPDATE(rec.autorecId, str);
   }
 
   /* Error */

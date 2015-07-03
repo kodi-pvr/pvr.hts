@@ -75,3 +75,78 @@ msgstr ""
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr ""
+
+#empty strings from id 30301 to 30349
+
+#. Timer type representation
+#: src/Tvheadend.cpp
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr ""
+
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr ""
+
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30352"
+msgid "High"
+msgstr ""
+
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30353"
+msgid "Normal"
+msgstr ""
+
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30354"
+msgid "Low"
+msgstr ""
+
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr ""
+
