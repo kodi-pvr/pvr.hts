@@ -282,6 +282,7 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
   if (htsmsg_get_u32(m, "success", &u32))
   {
     tvherror("malformed deleteDvrEntry/cancelDvrEntry response: 'success' missing");
+    u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
 
@@ -305,6 +306,7 @@ PVR_ERROR CTvheadend::SendDvrUpdate( htsmsg_t* m )
   if (htsmsg_get_u32(m, "success", &u32))
   {
     tvherror("malformed updateDvrEntry response: 'success' missing");
+    u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
 
@@ -636,6 +638,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   if (htsmsg_get_u32(m, "success", &u32))
   {
     tvherror("malformed addDvrEntry response: 'success' missing");
+    u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
 
@@ -731,8 +734,10 @@ PVR_ERROR CTvheadend::AddTimeRecording ( const PVR_TIMER &timer )
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
-  if (htsmsg_get_u32(m, "success", &u32))
+  if (htsmsg_get_u32(m, "success", &u32)) {
     tvherror("malformed addTimerecEntry response: 'success' missing");
+    u32 = PVR_ERROR_FAILED;
+  }
 
   htsmsg_destroy(m);
 
@@ -1425,7 +1430,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     UPDATE(rec.retention, retention);
   }
-  else if (bAdd)
+  else if (bAdd && (m_conn.GetProtocol() > 12))
   {
     tvherror("malformed dvrEntryAdd: 'retention' missing");
     return;
