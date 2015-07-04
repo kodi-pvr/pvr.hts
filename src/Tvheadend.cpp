@@ -1451,10 +1451,10 @@ void CTvheadend::SyncDvrCompleted ( void )
   }
 
   /* Time-based repeating timers */
-  update = m_timeRecordings.SyncDvrCompleted();
+  update |= m_timeRecordings.SyncDvrCompleted();
 
   /* EPG-query-based repeating timers */
-  update = m_autoRecordings.SyncDvrCompleted();
+  update |= m_autoRecordings.SyncDvrCompleted();
 
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
