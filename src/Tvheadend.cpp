@@ -875,6 +875,167 @@ PVR_ERROR CTvheadend::GetEpg
 }
 
 /* **************************************************************************
+ * Menu Hooks
+ * *************************************************************************/
+
+PVR_ERROR CTvheadend::CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item )
+{
+  if (menuhook.category == PVR_MENUHOOK_EPG)
+  {
+    SEvent event;
+    if (GetEventFromId(item.data.iEpgUid, event))
+    {
+      /* Check if event is already scheduled for recording */
+      for (SRecordings::const_iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+      {
+        if (it->second.eventId == event.id)
+        {
+          if (!it->second.autorecId.empty())
+          {
+            XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(30257));
+            // 30257 = 'This show is already scheduled for recording'
+            return PVR_ERROR_NO_ERROR;
+          }
+        }
+      }
+
+      return AddAutoRecording(menuhook.iHookId, event);
+    }
+    else
+      return PVR_ERROR_SERVER_ERROR;
+  }
+  else if (menuhook.category == PVR_MENUHOOK_TIMER)
+  {
+    SRecording rec = m_recordings.at(item.data.timer.iClientIndex);
+
+    /* Delete complete schedule if possible */
+    if (menuhook.iHookId == TIMER_DELETESCHEDULE)
+    {
+      if (!rec.autorecId.empty())
+        return SendScheduleDelete(rec.autorecId, "deleteAutorecEntry");
+
+      if (!rec.timerecId.empty())
+        return SendScheduleDelete(rec.timerecId, "deleteTimerecEntry");
+    }
+
+    /* Delete timer */
+    if (menuhook.iHookId == TIMER_DELETEDVRENTRY ||
+        menuhook.iHookId == TIMER_DELETESCHEDULE)
+    {
+      return SendDvrDelete(item.data.timer.iClientIndex, "cancelDvrEntry");
+    }
+  }
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR CTvheadend::AddAutoRecording( uint32_t typeId, const SEvent &event )
+{
+    uint32_t u32, days_of_week;
+    int32_t approx_time;
+    dvr_prio_t prio;
+    struct tm *tmi;
+
+    /* Time conversion */
+    tmi=localtime(&event.start);
+    approx_time = (tmi->tm_hour*60)+(tmi->tm_min);
+    days_of_week = tmi->tm_wday > 0 ? (1<<(tmi->tm_wday-1)) : (1<<6);
+
+    /* Build message */
+    htsmsg_t *m = htsmsg_create_map();
+    htsmsg_add_u32(m, "channelId",    event.channel);
+    htsmsg_add_str(m, "title",        event.title.c_str());
+    htsmsg_add_str(m, "name",         event.title.c_str());
+    htsmsg_add_str(m, "comment",      "Created by Kodi Media Center");
+
+    if (typeId == REC_EVERY_WEEK_THIS_TIME || typeId == REC_EVERY_DAY_THIS_TIME )
+      htsmsg_add_s32(m, "approxTime", approx_time >= 0 ? approx_time : -1);
+    if (typeId == REC_EVERYTIME || typeId == REC_EVERY_DAY_THIS_TIME || typeId == REC_ALL_NEW_EPISODES)
+      htsmsg_add_u32(m, "daysOfWeek", 0x007F);
+    if (typeId == REC_WEEKENDS)
+      htsmsg_add_u32(m, "daysOfWeek", 0x0060);
+    if (typeId == REC_WEEKDAYS)
+      htsmsg_add_u32(m, "daysOfWeek", 0x001F);
+    if (typeId == REC_EVERY_WEEK_THIS_TIME)
+      htsmsg_add_u32(m, "daysOfWeek", days_of_week);
+    if (typeId == REC_ALL_NEW_EPISODES)
+    {
+      htsmsg_add_u32(m, "dupDetect",
+          event.episode > 0 ? (int)DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER :    // episode number available?      -> use it for duplicate detection
+          (!event.subtitle.empty() ? (int)DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE :   // subtitle available?            -> use it for duplicate detection
+          (int)DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION));                          // no episode number or subtitle  -> use description
+    }
+
+    /* Send and Wait */
+    {
+      CLockObject lock(m_conn.Mutex());
+      m = m_conn.SendAndWait("addAutorecEntry", m);
+    }
+
+    if (m == NULL)
+      return PVR_ERROR_SERVER_ERROR;
+
+    /* Check for error */
+    if (htsmsg_get_u32(m, "success", &u32))
+    {
+     tvherror("failed to parse addDvrAutorecEntry response");
+    }
+
+    htsmsg_destroy(m);
+
+    return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
+}
+
+PVR_ERROR CTvheadend::SendScheduleDelete ( std::string id, const char *method )
+{
+  uint32_t u32;
+
+  CLockObject lock(m_conn.Mutex());
+
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_str(m, "id", id.c_str());
+
+  /* Send and wait a bit longer than usual */
+  if ((m = m_conn.SendAndWait(method, m,
+            std::max(30000, m_settings.iResponseTimeout))) == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  /* Check for error */
+  if (htsmsg_get_u32(m, "success", &u32))
+  {
+    tvherror("malformed %s response: 'success' missing", method);
+  }
+  htsmsg_destroy(m);
+
+  return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
+}
+
+bool CTvheadend::GetEventFromId ( uint32_t id, SEvent &evt )
+{
+  uint32_t u32;
+  bool bReturn = false;
+
+  /* Build message */
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_u32(msg, "eventId", id);
+
+  /* Send and Wait */
+  {
+    CLockObject lock(m_conn.Mutex());
+
+    if ((msg = m_conn.SendAndWait("getEvent", msg)) != NULL)
+      bReturn = true;
+  }
+
+  if (bReturn)
+    bReturn = ParseEvent(msg, true, evt);
+
+  htsmsg_destroy(msg);
+
+  return bReturn;
+}
+
+/* **************************************************************************
  * Connection
  * *************************************************************************/
 
