@@ -20,6 +20,7 @@
  */
 
 #include <algorithm>
+#include <ctime>
 #include "Tvheadend.h"
 
 #include "platform/util/util.h"
@@ -839,7 +840,15 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     {
       /* manual timer */
       htsmsg_add_str(m, "title",        timer.strTitle);
-      htsmsg_add_s64(m, "start",        timer.startTime);
+
+      int64_t start = timer.startTime;
+      if (start == 0)
+      {
+        /* Instant timer. Adjust start time to 'now'. */
+        start = time(NULL);
+      }
+
+      htsmsg_add_s64(m, "start",        start);
       htsmsg_add_s64(m, "stop",         timer.endTime);
       htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
       htsmsg_add_str(m, "description",  timer.strSummary);
@@ -1010,7 +1019,15 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     }
 
     htsmsg_add_str(m, "title",        timer.strTitle);
-    htsmsg_add_s64(m, "start",        timer.startTime);
+
+    int64_t start = timer.startTime;
+    if (start == 0)
+    {
+      /* Instant timer. Adjust start time to 'now'. */
+      start = time(NULL);
+    }
+
+    htsmsg_add_s64(m, "start",        start);
     htsmsg_add_s64(m, "stop",         timer.endTime);
     htsmsg_add_str(m, "description",  timer.strSummary);
     htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
