@@ -365,6 +365,11 @@ bool CanSeekStream(void)
   return tvh->HasCapability("timeshift");
 }
 
+bool IsTimeshifting(void)
+{
+  return tvh->DemuxGetTimeshiftTime() != 0;
+}
+
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
   return tvh->DemuxOpen(channel);
