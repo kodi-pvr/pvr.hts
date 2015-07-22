@@ -63,6 +63,12 @@ enum eHTSPEventType
   HTSP_EVENT_REC_UPDATE = 4,
 };
 
+enum eSubscriptionWeight {
+  SUBSCRIPTION_WEIGHT_DEFAULT = 150,
+  SUBSCRIPTION_WEIGHT_PRETUNING = 50,
+  SUBSCRIPTION_WEIGHT_POSTTUNING = 40,
+};
+
 namespace htsp
 {
 
@@ -483,11 +489,13 @@ struct SSubscription
   uint32_t channelId;
   int      speed;
   bool     active;
+  enum eSubscriptionWeight weight;
 
   SSubscription() :
     channelId(0),
     speed (1000),
-    active(false)
+    active(false),
+    weight(SUBSCRIPTION_WEIGHT_DEFAULT)
   {
     static int previousId = 0;
     subscriptionId = ++previousId;

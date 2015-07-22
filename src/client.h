@@ -30,11 +30,13 @@ extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;
 extern CHelper_libXBMC_codec*         CODEC;
 
-#define DEFAULT_HOST             "127.0.0.1"
-#define DEFAULT_HTTP_PORT        9981
-#define DEFAULT_HTSP_PORT        9982
-#define DEFAULT_CONNECT_TIMEOUT  10
-#define DEFAULT_RESPONSE_TIMEOUT 5
+#define DEFAULT_HOST                "127.0.0.1"
+#define DEFAULT_HTTP_PORT           9981
+#define DEFAULT_HTSP_PORT           9982
+#define DEFAULT_CONNECT_TIMEOUT     10
+#define DEFAULT_RESPONSE_TIMEOUT    5
+#define DEFAULT_TOTAL_TUNERS        1
+#define DEFAULT_PRETUNER_CLOSEDELAY 10
 
 /* timer type ids */
 #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
