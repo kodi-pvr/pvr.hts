@@ -1,3 +1,8 @@
+2.2.4
+- added: Predictive tuning (thanks @martinwilli)
+- added: Include satpos in mux description (thanks @Glenn-1990)
+- fixed: Crashes due to memory corruption (stack overflow)
+
 2.2.3
 - Updated to PVR API v2.1.0
 
