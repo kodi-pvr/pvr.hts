@@ -567,6 +567,22 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   if (!m) return;
   
   tvhtrace("demux sourceInfo:");
+
+  /* include position in mux name
+   * as users might receive multiple satellite positions */
+  m_sourceInfo.si_mux.clear();
+  if ((str = htsmsg_get_str(m, "satpos")) != NULL)
+  {
+    tvhtrace("  satpos : %s", str);
+    m_sourceInfo.si_mux.append(str);
+    m_sourceInfo.si_mux.append(": ");
+  }
+  if ((str = htsmsg_get_str(m, "mux")) != NULL)
+  {
+    tvhtrace("  mux     : %s", str);
+    m_sourceInfo.si_mux.append(str);
+  }
+
   if ((str = htsmsg_get_str(m, "adapter")) != NULL)
   {
     tvhtrace("  adapter : %s", str);
@@ -576,11 +592,6 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   {
     tvhtrace("  network : %s", str);
     m_sourceInfo.si_network  = str;
-  }
-  if ((str = htsmsg_get_str(m, "mux")) != NULL)
-  {
-    tvhtrace("  mux     : %s", str);
-    m_sourceInfo.si_mux      = str;
   }
   if ((str = htsmsg_get_str(m, "provider")) != NULL)
   {
