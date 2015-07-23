@@ -32,6 +32,11 @@
 #include "Settings.h"
 #include "HTSPTypes.h"
 #include "AsyncState.h"
+#include "tvheadend/entity/Tag.h"
+#include "tvheadend/entity/Channel.h"
+#include "tvheadend/entity/Recording.h"
+#include "tvheadend/entity/Event.h"
+#include "tvheadend/entity/Schedule.h"
 #include "TimeRecordings.h"
 #include "AutoRecordings.h"
 #include <map>
@@ -373,7 +378,7 @@ public:
     return m_settings;
   };
 
-  inline const SChannels& GetChannels () const
+  const tvheadend::entity::Channels& GetChannels () const
   {
     return m_channels;
   }
@@ -405,7 +410,7 @@ public:
                                 time_t start, time_t end );
   
 private:
-  bool      CreateTimer       ( const SRecording &tvhTmr, PVR_TIMER &tmr );
+  bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ( void );
   std::string GetImageURL     ( const char *str );
@@ -422,10 +427,10 @@ private:
 
   CHTSPMessageQueue           m_queue;
 
-  SChannels                   m_channels;
-  htsp::Tags                  m_tags;
-  SRecordings                 m_recordings;
-  SSchedules                  m_schedules;
+  tvheadend::entity::Channels   m_channels;
+  tvheadend::entity::Tags       m_tags;
+  tvheadend::entity::Recordings m_recordings;
+  tvheadend::entity::Schedules  m_schedules;
 
   SHTSPEventList              m_events;
 
@@ -475,7 +480,7 @@ private:
   /*
    * Epg Handling
    */
-  void        TransferEvent   ( ADDON_HANDLE handle, const SEvent &event );
+  void        TransferEvent   ( ADDON_HANDLE handle, const tvheadend::entity::Event &event );
 
   /*
    * Message sending
@@ -498,7 +503,7 @@ private:
   void ParseRecordingDelete      ( htsmsg_t *m );
   void ParseEventAddOrUpdate     ( htsmsg_t *m, bool bAdd );
   void ParseEventDelete          ( htsmsg_t *m );
-  bool ParseEvent                ( htsmsg_t *m, bool bAdd, SEvent &evt );
+  bool ParseEvent                ( htsmsg_t *msg, bool bAdd, tvheadend::entity::Event &evt );
 
 public:
   /*
