@@ -30,7 +30,7 @@ extern "C"
 }
 
 #include "kodi/libXBMC_pvr.h"
-#include "HTSPTypes.h"
+#include "tvheadend/entity/AutoRecording.h"
 
 class CHTSPConnection;
 
@@ -60,6 +60,6 @@ public:
   bool ParseAutorecDelete(htsmsg_t *msg);
 
 private:
-  CHTSPConnection         &m_conn;
-  htsp::AutoRecordingsMap  m_autoRecordings;
+  CHTSPConnection                      &m_conn;
+  tvheadend::entity::AutoRecordingsMap  m_autoRecordings;
 };

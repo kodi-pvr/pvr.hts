@@ -24,6 +24,7 @@
 #include "Tvheadend.h"
 
 using namespace PLATFORM;
+using namespace tvheadend::entity;
 
 TimeRecordings::TimeRecordings(CHTSPConnection &conn) :
   m_conn(conn)
@@ -238,7 +239,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
 
   /* Locate/create entry */
-  htsp::TimeRecording &rec = m_timeRecordings[std::string(str)];
+  TimeRecording &rec = m_timeRecordings[std::string(str)];
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 

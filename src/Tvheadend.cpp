@@ -41,6 +41,7 @@ if ((x) != (y))\
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
+using namespace tvheadend::entity;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
   : m_settings(settings), m_vfs(m_conn),
@@ -138,22 +139,22 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
   std::vector<PVR_CHANNEL_GROUP> tags;
   {
     CLockObject lock(m_mutex);
-    htsp::Tags::const_iterator it;
-    for (it = m_tags.begin(); it != m_tags.end(); ++it)
+
+    for (const auto &entry : m_tags)
     {
       /* Does group contain channels of the requested type?             */
       /* Note: tvheadend groups can contain both radio and tv channels. */
       /*       Thus, one tvheadend group can 'map' to two Kodi groups.  */
-      if (!it->second.ContainsChannelType(bRadio))
+      if (!entry.second.ContainsChannelType(bRadio))
         continue;
 
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      strncpy(tag.strGroupName, it->second.GetName().c_str(),
+      strncpy(tag.strGroupName, entry.second.GetName().c_str(),
               sizeof(tag.strGroupName) - 1);
       tag.bIsRadio = bRadio;
-      tag.iPosition = it->second.GetIndex();
+      tag.iPosition = entry.second.GetIndex();
       tags.push_back(tag);
     }
   }
@@ -177,33 +178,34 @@ PVR_ERROR CTvheadend::GetTagMembers
   std::vector<PVR_CHANNEL_GROUP_MEMBER> gms;
   {
     CLockObject lock(m_mutex);
-    vector<uint32_t>::const_iterator it;
-    SChannels::const_iterator cit;
-    htsp::Tags::const_iterator tit = m_tags.begin();
-    while (tit != m_tags.end())
-    {
-      if (tit->second.GetName() == group.strGroupName)
-      {
-        for (it = tit->second.GetChannels().begin();
-             it != tit->second.GetChannels().end(); ++it)
-        {
-          if ((cit = m_channels.find(*it)) != m_channels.end())
-          {
-            if (group.bIsRadio != cit->second.radio)
-              continue;
 
-            PVR_CHANNEL_GROUP_MEMBER gm;
-            memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
-            strncpy(
-              gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
-            gm.iChannelUniqueId = cit->second.id;
-            gm.iChannelNumber   = cit->second.num;
-            gms.push_back(gm);
-          }
+    // Find the tag
+    const auto it = std::find_if(
+      m_tags.cbegin(),
+      m_tags.cend(),
+      [group](const TagMapEntry &tag)
+    {
+      return tag.second.GetName() == group.strGroupName;
+    });
+
+    if (it != m_tags.cend())
+    {
+      // Find all channels in this group that are of the correct type
+      for (const auto &channelId : it->second.GetChannels())
+      {
+        auto cit = m_channels.find(channelId);
+
+        if (cit != m_channels.cend() && cit->second.radio == group.bIsRadio)
+        {
+          PVR_CHANNEL_GROUP_MEMBER gm;
+          memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+          strncpy(
+            gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
+          gm.iChannelUniqueId = cit->second.id;
+          gm.iChannelNumber = cit->second.num;
+          gms.push_back(gm);
         }
-        break;
       }
-      ++tit;
     }
   }
 
@@ -238,24 +240,26 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
   std::vector<PVR_CHANNEL> channels;
   {
     CLockObject lock(m_mutex);
-    SChannels::const_iterator it;
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    
+    for (const auto &entry : m_channels)
     {
-      if (radio != it->second.radio)
+      const auto &channel = entry.second;
+
+      if (radio != channel.radio)
         continue;
 
       PVR_CHANNEL chn;
       memset(&chn, 0 , sizeof(PVR_CHANNEL));
 
-      chn.iUniqueId         = it->second.id;
-      chn.bIsRadio          = it->second.radio;
-      chn.iChannelNumber    = it->second.num;
-      chn.iSubChannelNumber = it->second.numMinor;
-      chn.iEncryptionSystem = it->second.caid;
+      chn.iUniqueId         = channel.id;
+      chn.bIsRadio          = channel.radio;
+      chn.iChannelNumber    = channel.num;
+      chn.iSubChannelNumber = channel.numMinor;
+      chn.iEncryptionSystem = channel.caid;
       chn.bIsHidden         = false;
-      strncpy(chn.strChannelName, it->second.name.c_str(),
+      strncpy(chn.strChannelName, channel.name.c_str(),
               sizeof(chn.strChannelName) - 1);
-      strncpy(chn.strIconPath, it->second.icon.c_str(),
+      strncpy(chn.strIconPath, channel.icon.c_str(),
               sizeof(chn.strIconPath) - 1);
       channels.push_back(chn);
     }
@@ -329,14 +333,16 @@ int CTvheadend::GetRecordingCount ( void )
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
-  
-  int ret = 0;
-  SRecordings::const_iterator rit;
+
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    if (rit->second.IsRecording())
-      ret++;
-  return ret;
+
+  return std::count_if(
+    m_recordings.cbegin(), 
+    m_recordings.cend(), 
+    [](const RecordingMapEntry &entry)
+  {
+    return entry.second.IsRecording();
+  });
 }
 
 PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
@@ -347,20 +353,22 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
   std::vector<PVR_RECORDING> recs;
   {
     CLockObject lock(m_mutex);
-    SRecordings::const_iterator rit;
-    SChannels::const_iterator cit;
+    Channels::const_iterator cit;
     char buf[128];
 
-    for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+    for (const auto &entry : m_recordings)
     {
-      if (!rit->second.IsRecording()) continue;
+      const auto &recording = entry.second;
+
+      if (!recording.IsRecording())
+        continue;
 
       /* Setup entry */
       PVR_RECORDING rec;
       memset(&rec, 0, sizeof(rec));
 
       /* Channel name and icon */
-      if ((cit = m_channels.find(rit->second.channel)) != m_channels.end())
+      if ((cit = m_channels.find(recording.channel)) != m_channels.end())
       {
         strncpy(rec.strChannelName, cit->second.name.c_str(),
                 sizeof(rec.strChannelName) - 1);
@@ -370,34 +378,34 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       }
 
       /* ID */
-      snprintf(buf, sizeof(buf), "%i", rit->second.id);
+      snprintf(buf, sizeof(buf), "%i", recording.id);
       strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
 
       /* Title */
-      strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle) - 1);
+      strncpy(rec.strTitle, recording.title.c_str(), sizeof(rec.strTitle) - 1);
 
       /* Description */
-      strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot) - 1);
+      strncpy(rec.strPlot, recording.description.c_str(), sizeof(rec.strPlot) - 1);
 
       /* Time/Duration */
-      rec.recordingTime = (time_t)rit->second.start;
-      rec.iDuration     = (time_t)(rit->second.stop - rit->second.start);
+      rec.recordingTime = (time_t)recording.start;
+      rec.iDuration =     (time_t)(recording.stop - recording.start);
 
       /* Priority */
-      rec.iPriority = rit->second.priority;
+      rec.iPriority = recording.priority;
 
       /* Retention */
-      rec.iLifetime = rit->second.retention;
+      rec.iLifetime = recording.retention;
 
       /* Directory */
-      if (rit->second.path != "")
+      if (recording.path != "")
       {
-        size_t idx = rit->second.path.rfind("/");
+        size_t idx = recording.path.rfind("/");
         if (idx == 0 || idx == string::npos)
           strncpy(rec.strDirectory, "/", sizeof(rec.strDirectory) - 1);
         else
         {
-          std::string d = rit->second.path.substr(0, idx);
+          std::string d = recording.path.substr(0, idx);
           if (d[0] != '/')
             d = "/" + d;
           strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory) - 1);
@@ -405,7 +413,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       }
 
       /* EPG event id */
-      rec.iEpgEventId = rit->second.eventId;
+      rec.iEpgEventId = recording.eventId;
 
       recs.push_back(rec);
     }
@@ -730,21 +738,25 @@ int CTvheadend::GetTimerCount ( void )
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
   
-  int ret = 0;
-  SRecordings::const_iterator rit;
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    if (rit->second.IsTimer())
-      ret++;
 
-  ret += m_timeRecordings.GetTimerecTimerCount();
+  // Normal timers
+  int timerCount = std::count_if(
+    m_recordings.cbegin(),
+    m_recordings.cend(),
+    [](const RecordingMapEntry &entry)
+  {
+    return entry.second.IsTimer();
+  });
 
-  ret += m_autoRecordings.GetAutorecTimerCount();
+  // Repeating timers
+  timerCount += m_timeRecordings.GetTimerecTimerCount();
+  timerCount += m_autoRecordings.GetAutorecTimerCount();
 
-  return ret;
+  return timerCount;
 }
 
-bool CTvheadend::CreateTimer ( const SRecording &tvhTmr, PVR_TIMER &tmr )
+bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
 {
   memset(&tmr, 0, sizeof(tmr));
 
@@ -800,16 +812,16 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
     /*
      * One-shot timers
      */
-
-    SRecordings::const_iterator rit;
-    for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+    for (const auto &entry : m_recordings)
     {
-      if (!rit->second.IsTimer())
+      const auto &recording = entry.second;
+
+      if (!recording.IsTimer())
         continue;
 
       /* Setup entry */
       PVR_TIMER tmr;
-      if (CreateTimer(rit->second, tmr))
+      if (CreateTimer(recording, tmr))
         timers.push_back(tmr);
     }
 
@@ -1071,7 +1083,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 
 /* Transfer schedule to XBMC */
 void CTvheadend::TransferEvent
-  ( ADDON_HANDLE handle, const SEvent &event )
+  ( ADDON_HANDLE handle, const Event &event )
 {
   /* Build */
   EPG_TAG epg;
@@ -1109,8 +1121,6 @@ void CTvheadend::TransferEvent
 PVR_ERROR CTvheadend::GetEpg
   ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
 {
-  SSchedules::const_iterator sit;
-  SEvents::const_iterator eit;
   htsmsg_field_t *f;
   int n = 0;
 
@@ -1123,30 +1133,19 @@ PVR_ERROR CTvheadend::GetEpg
     if (!m_asyncState.WaitForState(ASYNC_DONE))
       return PVR_ERROR_FAILED;
     
-    std::vector<SEvent> events;
+    // Find the relevant events
+    Segment segment;
     {
       CLockObject lock(m_mutex);
-      sit = m_schedules.find(chn.iUniqueId);
-      if (sit != m_schedules.end())
-      {
-        for (eit = sit->second.events.begin();
-            eit != sit->second.events.end(); ++eit)
-        {
-          if (eit->second.start    > end)   continue;
-          if (eit->second.stop     < start) continue;
+      auto sit = m_schedules.find(chn.iUniqueId);
 
-          events.push_back(eit->second);
-          ++n;
-        }
-      }
+      if (sit != m_schedules.cend())
+        segment = sit->second.GetSegment(start, end);
     }
 
-    std::vector<SEvent>::const_iterator it;
-    for (it = events.begin(); it != events.end(); ++it)
-    {
-      /* Callback. */
-      TransferEvent(handle, *it);
-    }
+    // Transfer
+    for (const auto &event : segment)
+      TransferEvent(handle, event);
 
   /* Synchronous transfer */
   }
@@ -1176,7 +1175,7 @@ PVR_ERROR CTvheadend::GetEpg
     }
     HTSMSG_FOREACH(f, l)
     {
-      SEvent event;
+      Event event;
       if (f->hmf_type == HMF_MAP)
       {
         if (ParseEvent(&f->hmf_msg, true, event))
@@ -1207,11 +1206,6 @@ void CTvheadend::Disconnected ( void )
 bool CTvheadend::Connected ( void )
 {
   htsmsg_t *msg;
-  htsp::Tags::iterator tit;
-  SChannels::iterator cit;
-  SRecordings::iterator rit;
-  SSchedules::iterator sit;
-  SEvents::iterator eit;
 
   /* Rebuild state */
   for (auto *dmx : m_dmx)
@@ -1219,23 +1213,18 @@ bool CTvheadend::Connected ( void )
     dmx->Connected();
   }
   m_vfs.Connected();
-
-  /* Flag all async fields in case they've been deleted */
-  for (cit = m_channels.begin(); cit != m_channels.end(); ++cit)
-    cit->second.del = true;
-  for (tit = m_tags.begin(); tit != m_tags.end(); ++tit)
-    tit->second.SetDirty(true);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    rit->second.del = true;
-  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
-  {
-    sit->second.del = true;
-
-    for (eit = sit->second.events.begin(); eit != sit->second.events.end(); ++eit)
-      eit->second.del = true;
-  }
   m_timeRecordings.Connected();
   m_autoRecordings.Connected();
+
+  /* Flag all async fields in case they've been deleted */
+  for (auto &entry : m_channels)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_tags)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_recordings)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_schedules)
+    entry.second.SetDirty(true);
 
   /* Request Async data */
   m_asyncState.SetState(ASYNC_NONE);
@@ -1427,8 +1416,8 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
-  SChannels::iterator   cit = m_channels.begin();
-  htsp::Tags::iterator  tit = m_tags.begin();
+  Channels::iterator cit = m_channels.begin();
+  Tags::iterator tit = m_tags.begin();
 
   /* Tags */
   while (tit != m_tags.end())
@@ -1443,7 +1432,7 @@ void CTvheadend::SyncChannelsCompleted ( void )
   /* Channels */
   while (cit != m_channels.end())
   {
-    if (cit->second.del)
+    if (cit->second.IsDirty())
       m_channels.erase(cit++);
     else
       ++cit;
@@ -1461,13 +1450,13 @@ void CTvheadend::SyncDvrCompleted ( void )
     return;
 
   bool update;
-  SRecordings::iterator rit = m_recordings.begin();
+  Recordings::iterator rit = m_recordings.begin();
 
   /* Recordings */
   update = false;
   while (rit != m_recordings.end())
   {
-    if (rit->second.del)
+    if (rit->second.IsDirty())
     {
       update = true;
       m_recordings.erase(rit++);
@@ -1498,8 +1487,8 @@ void CTvheadend::SyncEpgCompleted ( void )
     return;
   
   bool update;
-  SSchedules::iterator  sit = m_schedules.begin();
-  SEvents::iterator     eit;
+  Schedules::iterator  sit = m_schedules.begin();
+  Events::iterator     eit;
 
   /* Events */
   update = false;
@@ -1507,7 +1496,7 @@ void CTvheadend::SyncEpgCompleted ( void )
   {
     uint32_t channelId = sit->second.channel;
     
-    if (sit->second.del)
+    if (sit->second.IsDirty())
     {
       update = true;
       m_schedules.erase(sit++);
@@ -1517,7 +1506,7 @@ void CTvheadend::SyncEpgCompleted ( void )
       eit = sit->second.events.begin();
       while (eit != sit->second.events.end())
       {
-        if (eit->second.del)
+        if (eit->second.IsDirty())
         {
           update = true;
           sit->second.events.erase(eit++);
@@ -1549,11 +1538,11 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Locate object */
-  htsp::Tag &existingTag = m_tags[u32];
+  auto &existingTag = m_tags[u32];
   existingTag.SetDirty(false);
   
   /* Create new object */
-  htsp::Tag tag(u32);
+  Tag tag(u32);
 
   /* Index */
   if (!htsmsg_get_u32(msg, "tagIndex", &u32))
@@ -1626,9 +1615,9 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Locate channel object */
-  SChannel &channel = m_channels[u32];
+  Channel &channel = m_channels[u32];
   channel.id  = u32;
-  channel.del = false;
+  channel.SetDirty(false);
 
   /* Channel name */
   if ((str = htsmsg_get_str(msg, "channelName")) != NULL)
@@ -1766,9 +1755,9 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Get entry */
-  SRecording &rec = m_recordings[id];
+  Recording &rec = m_recordings[id];
   rec.id  = id;
-  rec.del = false;
+  rec.SetDirty(false);
   UPDATE(rec.channel, channel);
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
@@ -1935,7 +1924,7 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   TriggerRecordingUpdate();
 }
 
-bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
+bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
 {
   const char *str;
   uint32_t u32, id, channel;
@@ -2003,14 +1992,16 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
     evt.part    = u32;
 
   /* Add optional recording link */
-  for (SRecordings::const_iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  auto rit = std::find_if(
+    m_recordings.cbegin(), 
+    m_recordings.cend(), 
+    [evt](const RecordingMapEntry &entry)
   {
-    if (it->second.eventId == evt.id)
-    {
-      evt.recordingId = evt.id;
-      break;
-    }
-  }
+    return entry.second.eventId == evt.id;
+  });
+
+  if (rit != m_recordings.cend())
+    evt.recordingId = evt.id;
   
   return true;
 }
@@ -2018,18 +2009,18 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
 void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   bool update = false;
-  SEvent tmp;
+  Event tmp;
 
   /* Parse */
   if (!ParseEvent(msg, bAdd, tmp))
     return;
 
   /* Get event handle */
-  SSchedule &sched = m_schedules[tmp.channel];
-  SEvent    &evt   = sched.events[tmp.id];
+  Schedule &sched  = m_schedules[tmp.channel];
+  Event    &evt    = sched.events[tmp.id];
   sched.channel    = tmp.channel;
   evt.id           = tmp.id;
-  evt.del          = false;
+  evt.SetDirty(false);
   
   /* Store */
   UPDATE(evt.title,       tmp.title);
@@ -2075,17 +2066,19 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   tvhtrace("delete event %u", u32);
   
   /* Erase */
-  SSchedules::iterator sit;
-  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
+  for (auto &entry : m_schedules)
   {
+    Schedule &schedule = entry.second;
+    Events &events = schedule.events;
+
     // Find the event so we can get the channel number
-    SEvents::iterator eit = sit->second.events.find(u32);
-    
-    if (eit != sit->second.events.end())
+    auto eit = events.find(u32);
+
+    if (eit != events.end())
     {
-      tvhtrace("deleted event %d from channel %d", u32, sit->second.channel);
-      sit->second.events.erase(eit);
-      TriggerEpgUpdate(sit->second.channel);
+      tvhtrace("deleted event %d from channel %d", u32, schedule.channel);
+      events.erase(eit);
+      TriggerEpgUpdate(schedule.channel);
       return;
     }
   }
@@ -2123,7 +2116,6 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
 
 void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
 {
-  SChannels::const_iterator it;
   CLockObject lock(m_mutex);
   uint32_t fromNum, toNum;
 
@@ -2133,19 +2125,23 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
   if (fromNum + 1 == toNum || toNum == 1)
   {
     /* tuning up, or to channel 1 */
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    for (const auto &entry : m_channels)
     {
-      if (toNum + 1 == it->second.num)
-        TuneOnOldest(it->second.id);
+      const Channel &channel = entry.second;
+
+      if (toNum + 1 == channel.num)
+        TuneOnOldest(channel.id);
     }
   }
   else if (fromNum - 1 == toNum)
   {
     /* tuning down */
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    for (const auto &entry : m_channels)
     {
-      if (toNum - 1 == it->second.num)
-        TuneOnOldest(it->second.id);
+      const Channel &channel = entry.second;
+
+      if (toNum - 1 == channel.num)
+        TuneOnOldest(channel.id);
     }
   }
 }

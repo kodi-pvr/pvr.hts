@@ -30,7 +30,7 @@ extern "C"
 }
 
 #include "kodi/libXBMC_pvr.h"
-#include "HTSPTypes.h"
+#include "tvheadend/entity/TimeRecording.h"
 
 class CHTSPConnection;
 
@@ -60,6 +60,6 @@ public:
   bool ParseTimerecDelete(htsmsg_t *msg);
 
 private:
-  CHTSPConnection         &m_conn;
-  htsp::TimeRecordingsMap  m_timeRecordings;
+  CHTSPConnection                      &m_conn;
+  tvheadend::entity::TimeRecordingsMap  m_timeRecordings;
 };

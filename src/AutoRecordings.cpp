@@ -24,6 +24,7 @@
 #include "Tvheadend.h"
 
 using namespace PLATFORM;
+using namespace tvheadend::entity;
 
 AutoRecordings::AutoRecordings(CHTSPConnection &conn) :
   m_conn(conn)
@@ -273,7 +274,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
 
   /* Locate/create entry */
-  htsp::AutoRecording &rec = m_autoRecordings[std::string(str)];
+  AutoRecording &rec = m_autoRecordings[std::string(str)];
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 
