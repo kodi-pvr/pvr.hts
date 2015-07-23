@@ -187,11 +187,11 @@ public:
 
   inline int  GetProtocol      ( void ) const { return m_htspVersion; }
 
-  CStdString  GetWebURL        ( const char *fmt, ... );
+  std::string GetWebURL        ( const char *fmt, ... );
 
-  const char *GetServerName    ( void );
-  const char *GetServerVersion ( void );
-  const char *GetServerString  ( void );
+  std::string GetServerName    ( void );
+  std::string GetServerVersion ( void );
+  std::string GetServerString  ( void );
   
   bool        HasCapability(const std::string &capability) const;
 
@@ -205,7 +205,7 @@ private:
   void        Register         ( void );
   bool        ReadMessage      ( void );
   bool        SendHello        ( void );
-  bool        SendAuth         ( const CStdString &u, const CStdString &p );
+  bool        SendAuth         ( const std::string &u, const std::string &p );
 
   PLATFORM::CTcpSocket               *m_socket;
   PLATFORM::CMutex                    m_mutex;
@@ -213,10 +213,10 @@ private:
   PLATFORM::CCondition<volatile bool> m_regCond;
   bool                                m_ready;
   uint32_t                            m_seq;
-  CStdString                          m_serverName;
-  CStdString                          m_serverVersion;
+  std::string                         m_serverName;
+  std::string                         m_serverVersion;
   int                                 m_htspVersion;
-  CStdString                          m_webRoot;
+  std::string                         m_webRoot;
   void*                               m_challenge;
   int                                 m_challengeLen;
 
@@ -322,7 +322,7 @@ public:
 
 private:
   CHTSPConnection &m_conn;
-  CStdString      m_path;
+  std::string     m_path;
   uint32_t        m_fileId;
   int64_t         m_offset;
 
@@ -414,6 +414,7 @@ private:
                                    bool deleteScheduled, bool timerec );
 
   uint32_t GetNextUnnumberedChannelNumber ( void );
+  std::string GetImageURL     ( const char *str );
 
   PLATFORM::CMutex            m_mutex;
   const tvheadend::Settings   m_settings;
@@ -438,8 +439,6 @@ private:
 
   TimeRecordings              m_timeRecordings;
   AutoRecordings              m_autoRecordings;
-
-  CStdString  GetImageURL     ( const char *str );
 
   /*
    * Predictive tuning
@@ -516,15 +515,15 @@ public:
     PLATFORM::CLockObject lock(m_conn.Mutex());
     return m_conn.WaitForConnection();
   }
-  inline const char *GetServerName    ( void )
+  std::string GetServerName    ( void )
   {
     return m_conn.GetServerName();
   }
-  inline const char *GetServerVersion ( void )
+  std::string GetServerVersion ( void )
   {
     return m_conn.GetServerVersion();
   }
-  inline const char *GetServerString  ( void )
+  std::string GetServerString  ( void )
   {
     return m_conn.GetServerString();
   }

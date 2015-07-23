@@ -21,6 +21,7 @@
 
 #include "platform/threads/mutex.h"
 #include "platform/threads/atomics.h"
+#include "platform/util/StringUtils.h"
 #include "platform/util/timeutils.h"
 #include "platform/sockets/tcp.h"
 
@@ -107,23 +108,24 @@ CHTSPConnection::~CHTSPConnection()
  * Info
  */
 
-CStdString CHTSPConnection::GetWebURL ( const char *fmt, ... )
+std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 {
   va_list va;
-  CStdString auth, url;
   tvheadend::Settings settings = tvh->GetSettings();
 
-  auth = settings.strUsername;
-  if (auth != "" && settings.strPassword != "")
+  // Generate the authentication string (user:pass@)
+  std::string auth = settings.strUsername;
+  if (!(auth.empty() || settings.strPassword.empty()))
     auth += ":" + settings.strPassword;
-  if (auth != "")
+  if (!auth.empty())
     auth += "@";
-  url.Format("http://%s%s:%d", auth.c_str(), settings.strHostname.c_str(), settings.iPortHTTP);
+
+  std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(), settings.strHostname.c_str(), settings.iPortHTTP);
 
   CLockObject lock(m_mutex);
   va_start(va, fmt);
   url += m_webRoot;
-  url.AppendFormatV(fmt, va);
+  url += StringUtils::FormatV(fmt, va);
   va_end(va);
 
   return url;
@@ -138,31 +140,25 @@ bool CHTSPConnection::WaitForConnection ( void )
   return m_ready;
 }
 
-const char *CHTSPConnection::GetServerName ( void )
+std::string CHTSPConnection::GetServerName ( void )
 {
-  static CStdString str;
   CLockObject lock(m_mutex);
-  str = m_serverName;
-  return str.c_str();
+  return m_serverName;
 }
 
-const char *CHTSPConnection::GetServerVersion ( void )
+std::string CHTSPConnection::GetServerVersion ( void )
 {
-  static CStdString str;
   CLockObject lock(m_mutex);
-  str.Format("%s (HTSPv%d)", m_serverVersion.c_str(), m_htspVersion);
-  return str.c_str();
+  return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
-const char *CHTSPConnection::GetServerString ( void )
+std::string CHTSPConnection::GetServerString ( void )
 {
-  static CStdString str;
   tvheadend::Settings settings = tvh->GetSettings();
 
   CLockObject lock(m_mutex);
-  str.Format("%s:%d [%s]", settings.strHostname.c_str(), settings.iPortHTSP,
+  return StringUtils::Format("%s:%d [%s]", settings.strHostname.c_str(), settings.iPortHTSP,
              m_ready ? "connected" : "disconnected");
-  return str.c_str();
 }
 
 bool CHTSPConnection::HasCapability(const std::string &capability) const
@@ -431,7 +427,7 @@ bool CHTSPConnection::SendHello ( void )
 }
 
 bool CHTSPConnection::SendAuth
-  ( const CStdString &user, const CStdString &pass )
+  ( const std::string &user, const std::string &pass )
 {
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "username", user.c_str());
@@ -459,9 +455,8 @@ bool CHTSPConnection::SendAuth
  */
 void CHTSPConnection::Register ( void )
 {
-  CStdString user, pass;
-  user = tvh->GetSettings().strUsername;
-  pass = tvh->GetSettings().strPassword;
+  std::string user = tvh->GetSettings().strUsername;
+  std::string pass = tvh->GetSettings().strPassword;
 
   {
     CLockObject lock(m_mutex);
@@ -517,7 +512,7 @@ void* CHTSPConnection::Process ( void )
 
   while (!IsStopped())
   {
-    CStdString host = settings.strHostname;
+    std::string host = settings.strHostname;
     int port, timeout;
     port = settings.iPortHTSP;
     timeout = settings.iConnectTimeout;

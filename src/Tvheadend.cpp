@@ -102,7 +102,7 @@ error:
   return PVR_ERROR_SERVER_ERROR;
 }
 
-CStdString CTvheadend::GetImageURL ( const char *str )
+std::string CTvheadend::GetImageURL ( const char *str )
 {
   if (*str != '/')
   {
@@ -397,7 +397,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
           strncpy(rec.strDirectory, "/", sizeof(rec.strDirectory) - 1);
         else
         {
-          CStdString d = rit->second.path.substr(0, idx);
+          std::string d = rit->second.path.substr(0, idx);
           if (d[0] != '/')
             d = "/" + d;
           strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory) - 1);
@@ -1680,7 +1680,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Channel icon */
   if ((str = htsmsg_get_str(msg, "channelIcon")) != NULL)
   {
-    CStdString url = GetImageURL(str);
+    std::string url = GetImageURL(str);
     UPDATE(channel.icon, url);
   }
 
