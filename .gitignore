@@ -1,0 +1,5 @@
+# build artifacts
+build
+
+# clion project (auto-generated from CMakeLists.txt)
+.idea/
