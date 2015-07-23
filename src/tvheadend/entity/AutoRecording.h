@@ -66,5 +66,6 @@ namespace tvheadend
     };
 
     typedef std::map<std::string, AutoRecording> AutoRecordingsMap;
+    typedef std::pair<std::string, AutoRecording> AutoRecordingMapEntry;
   }
 }
