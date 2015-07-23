@@ -22,8 +22,10 @@
 #include "AutoRecordings.h"
 
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 using namespace PLATFORM;
+using namespace tvheadend;
 using namespace tvheadend::entity;
 
 AutoRecordings::AutoRecordings(CHTSPConnection &conn) :
@@ -42,22 +44,12 @@ void AutoRecordings::Connected()
     it->second.SetDirty(true);
 }
 
-bool AutoRecordings::SyncDvrCompleted()
+void AutoRecordings::SyncDvrCompleted()
 {
-  bool update(false);
-
-  auto it = m_autoRecordings.begin();
-  while (it != m_autoRecordings.end())
+  utilities::erase_if(m_autoRecordings, [](const AutoRecordingMapEntry &entry)
   {
-    if (it->second.IsDirty())
-    {
-      update = true;
-      m_autoRecordings.erase(it++);
-    }
-    else
-      ++it;
-  }
-  return update;
+    return entry.second.IsDirty();
+  });
 }
 
 int AutoRecordings::GetAutorecTimerCount() const

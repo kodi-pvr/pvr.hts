@@ -42,7 +42,7 @@ public:
 
   /* state updates */
   void Connected();
-  bool SyncDvrCompleted();
+  void SyncDvrCompleted();
 
   /* data access */
   int  GetAutorecTimerCount() const;

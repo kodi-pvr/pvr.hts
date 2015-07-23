@@ -23,6 +23,7 @@
 #include <ctime>
 #include <memory>
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 #include "platform/util/util.h"
 #include "platform/threads/atomics.h"
@@ -41,6 +42,7 @@ if ((x) != (y))\
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
+using namespace tvheadend;
 using namespace tvheadend::entity;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
@@ -1420,23 +1422,19 @@ void CTvheadend::SyncChannelsCompleted ( void )
   Tags::iterator tit = m_tags.begin();
 
   /* Tags */
-  while (tit != m_tags.end())
+  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
   {
-    if (tit->second.IsDirty())
-      m_tags.erase(tit++);
-    else
-      ++tit;
-  }
+    return entry.second.IsDirty();
+  });
+
   TriggerChannelGroupsUpdate();
 
   /* Channels */
-  while (cit != m_channels.end())
+  utilities::erase_if(m_channels, [](const ChannelMapEntry &entry)
   {
-    if (cit->second.IsDirty())
-      m_channels.erase(cit++);
-    else
-      ++cit;
-  }
+    return entry.second.IsDirty();
+  });
+
   TriggerChannelUpdate();
   
   /* Next */
@@ -1449,32 +1447,20 @@ void CTvheadend::SyncDvrCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_DVR)
     return;
 
-  bool update;
-  Recordings::iterator rit = m_recordings.begin();
-
   /* Recordings */
-  update = false;
-  while (rit != m_recordings.end())
+  utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
   {
-    if (rit->second.IsDirty())
-    {
-      update = true;
-      m_recordings.erase(rit++);
-    }
-    else
-      ++rit;
-  }
+    return entry.second.IsDirty();
+  });
 
   /* Time-based repeating timers */
-  update |= m_timeRecordings.SyncDvrCompleted();
+  m_timeRecordings.SyncDvrCompleted();
 
   /* EPG-query-based repeating timers */
-  update |= m_autoRecordings.SyncDvrCompleted();
+  m_autoRecordings.SyncDvrCompleted();
 
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
-  if (update)
-    tvhinfo("recordings updated");
 
   /* Next */
   m_asyncState.SetState(ASYNC_EPG);
@@ -1485,43 +1471,25 @@ void CTvheadend::SyncEpgCompleted ( void )
   /* Done */
   if (!m_settings.bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
     return;
-  
-  bool update;
-  Schedules::iterator  sit = m_schedules.begin();
-  Events::iterator     eit;
 
   /* Events */
-  update = false;
-  while (sit != m_schedules.end())
+  for (auto &entry : m_schedules)
   {
-    uint32_t channelId = sit->second.channel;
-    
-    if (sit->second.IsDirty())
+    utilities::erase_if(entry.second.events, [](const EventMapEntry &entry)
     {
-      update = true;
-      m_schedules.erase(sit++);
-    }
-    else
-    {
-      eit = sit->second.events.begin();
-      while (eit != sit->second.events.end())
-      {
-        if (eit->second.IsDirty())
-        {
-          update = true;
-          sit->second.events.erase(eit++);
-        }
-        else
-          ++eit;
-      }
-      ++sit;
-    }
-
-    TriggerEpgUpdate(channelId);
+      return entry.second.IsDirty();
+    });
   }
+  
+  /* Schedules */
+  utilities::erase_if(m_schedules, [](const ScheduleMapEntry &entry)
+  {
+    return entry.second.IsDirty();
+  });
 
-  if (update)
-    tvhinfo("epg updated");
+  /* Trigger updates */
+  for (const auto &entry : m_schedules)
+    TriggerEpgUpdate(entry.second.channel);
 }
 
 void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )

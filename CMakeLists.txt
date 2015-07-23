@@ -50,9 +50,13 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/Tag.cpp
                 src/tvheadend/entity/TimeRecording.h
                 src/tvheadend/entity/TimeRecording.cpp)
+
+set(HTS_SOURCES_TVHEADEND_UTILITIES
+				src/tvheadend/utilities/Utilities.h)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
+source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
 # Resource files
 set(HTS_RESOURCES 
@@ -68,6 +72,7 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 # Combine the file lists
 list(APPEND HTS_SOURCES
             ${HTS_SOURCES_TVHEADEND_ENTITY}
+            ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})
 
 add_subdirectory(lib/libhts)

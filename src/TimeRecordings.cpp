@@ -22,8 +22,10 @@
 #include "TimeRecordings.h"
 
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 using namespace PLATFORM;
+using namespace tvheadend;
 using namespace tvheadend::entity;
 
 TimeRecordings::TimeRecordings(CHTSPConnection &conn) :
@@ -42,22 +44,12 @@ void TimeRecordings::Connected()
     it->second.SetDirty(true);
 }
 
-bool TimeRecordings::SyncDvrCompleted()
+void TimeRecordings::SyncDvrCompleted()
 {
-  bool update(false);
-
-  auto it = m_timeRecordings.begin();
-  while (it != m_timeRecordings.end())
+  utilities::erase_if(m_timeRecordings, [](const TimeRecordingMapEntry &entry)
   {
-    if (it->second.IsDirty())
-    {
-      update = true;
-      m_timeRecordings.erase(it++);
-    }
-    else
-      ++it;
-  }
-  return update;
+    return entry.second.IsDirty();
+  });
 }
 
 int TimeRecordings::GetTimerecTimerCount() const

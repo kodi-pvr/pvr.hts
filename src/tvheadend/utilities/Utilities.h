@@ -21,33 +21,25 @@
  *
  */
 
-#include "RecordingBase.h"
-#include <map>
-
 namespace tvheadend
 {
-  namespace entity
+  namespace utilities
   {
-    class TimeRecording : public RecordingBase
+
+    /**
+     * std::remove_if() for maps. Borrowed from:
+     * http://stackoverflow.com/questions/800955/remove-if-equivalent-for-stdmap
+     */
+    template< typename ContainerT, typename PredicateT >
+    void erase_if(ContainerT& items, const PredicateT& predicate)
     {
-    public:
-      TimeRecording(const std::string &id = "");
-
-      bool operator==(const TimeRecording &right);
-      bool operator!=(const TimeRecording &right);
-
-      time_t GetStart() const;
-      void SetStart(int32_t start);
-
-      time_t GetStop() const;
-      void SetStop(int32_t stop);
-
-    private:
-      int32_t m_start; // Start time in minutes from midnight (up to 24*60).
-      int32_t m_stop;  // Stop time in minutes from midnight (up to 24*60).
+      for (auto it = items.begin(); it != items.end();)
+      {
+        if (predicate(*it))
+          it = items.erase(it);
+        else
+          ++it;
+      }
     };
-
-    typedef std::map<std::string, TimeRecording> TimeRecordingsMap;
-    typedef std::pair<std::string, TimeRecording> TimeRecordingMapEntry;
   }
 }
