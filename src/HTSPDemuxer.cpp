@@ -148,7 +148,7 @@ void CHTSPDemuxer::Trim ( void )
   /* reduce used buffer space to what is needed for DVDPlayer to resume
    * playback without buffering. This depends on the bitrate, so we don't set
    * this too small. */
-  while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
+  while (m_pktBuffer.Size() > 1 && m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
 
@@ -383,7 +383,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   const void  *bin;
   size_t      binlen;
   DemuxPacket *pkt;
-  char        _unused(type) = 0;
+  char        type = 0;
   int         iStreamId;
   
   /* Ignore packets while switching channels */
@@ -444,6 +444,10 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
 
   /* Store */
   m_pktBuffer.Push(pkt);
+
+  /* Trim older packets when inactive if the last packet was an I-frame */
+  if (type == 'I' && !m_active)
+    Trim();
 }
 
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )

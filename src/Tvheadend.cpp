@@ -2190,8 +2190,6 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
                  m_channels[dmx->GetChannelId()].num, dmx->GetSubscriptionId());
         dmx->Close();
       }
-      else
-        dmx->Trim();
     }
   }
   return pkt;
