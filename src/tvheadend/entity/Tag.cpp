@@ -26,8 +26,7 @@
 
 using namespace tvheadend::entity;
 
-Tag::Tag(uint32_t id /*= 0*/) :
-m_id(id),
+Tag::Tag() :
 m_index(0)
 {
 }
@@ -44,11 +43,6 @@ bool Tag::operator==(const Tag &right)
 bool Tag::operator!=(const Tag &right)
 {
   return !(*this == right);
-}
-
-uint32_t Tag::GetId() const
-{
-  return m_id;
 }
 
 uint32_t Tag::GetIndex() const

@@ -203,7 +203,7 @@ PVR_ERROR CTvheadend::GetTagMembers
           memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
           strncpy(
             gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
-          gm.iChannelUniqueId = cit->second.id;
+          gm.iChannelUniqueId = cit->second.GetId();
           gm.iChannelNumber = cit->second.num;
           gms.push_back(gm);
         }
@@ -253,7 +253,7 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
       PVR_CHANNEL chn;
       memset(&chn, 0 , sizeof(PVR_CHANNEL));
 
-      chn.iUniqueId         = channel.id;
+      chn.iUniqueId         = channel.GetId();
       chn.bIsRadio          = channel.radio;
       chn.iChannelNumber    = channel.num;
       chn.iSubChannelNumber = channel.numMinor;
@@ -380,7 +380,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       }
 
       /* ID */
-      snprintf(buf, sizeof(buf), "%i", recording.id);
+      snprintf(buf, sizeof(buf), "%i", recording.GetId());
       strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
 
       /* Title */
@@ -777,7 +777,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
 {
   memset(&tmr, 0, sizeof(tmr));
 
-  tmr.iClientIndex       = tvhTmr.id;
+  tmr.iClientIndex       = tvhTmr.GetId();
   tmr.iClientChannelUid  = (tvhTmr.channel > 0) ? tvhTmr.channel : -1;
   tmr.startTime          = static_cast<time_t>(tvhTmr.start);
   tmr.endTime            = static_cast<time_t>(tvhTmr.stop);
@@ -1042,7 +1042,7 @@ void CTvheadend::TransferEvent
   /* Build */
   EPG_TAG epg;
   memset(&epg, 0, sizeof(EPG_TAG));
-  epg.iUniqueBroadcastId  = event.id;
+  epg.iUniqueBroadcastId  = event.GetId();
   epg.strTitle            = event.title.c_str();
   epg.iChannelNumber      = event.channel;
   epg.startTime           = event.start;
@@ -1537,7 +1537,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Locate channel object */
   Channel &channel = m_channels[u32];
-  channel.id  = u32;
+  channel.SetId(u32);
   channel.SetDirty(false);
 
   /* Channel name */
@@ -1611,7 +1611,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Update Kodi */
   if (update) {
     tvhdebug("channel update id:%u, name:%s",
-              channel.id, channel.name.c_str());
+              channel.GetId(), channel.name.c_str());
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
@@ -1671,7 +1671,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Get entry */
   Recording &rec = m_recordings[id];
-  rec.id  = id;
+  rec.SetId(id);
   rec.SetDirty(false);
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
@@ -1816,7 +1816,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     std::string error = rec.error.empty() ? "none" : rec.error;
     
     tvhdebug("recording id:%d, state:%s, title:%s, desc:%s, error:%s",
-             rec.id, state, rec.title.c_str(), rec.description.c_str(),
+             rec.GetId(), state, rec.title.c_str(), rec.description.c_str(),
              error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
@@ -1882,7 +1882,7 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     return false;
   }
 
-  evt.id      = id;
+  evt.SetId(id);
   evt.channel = channel;
   evt.start   = (time_t)start;
   evt.stop    = (time_t)stop;
@@ -1921,11 +1921,11 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     m_recordings.cend(), 
     [evt](const RecordingMapEntry &entry)
   {
-    return entry.second.eventId == evt.id;
+    return entry.second.eventId == evt.GetId();
   });
 
   if (rit != m_recordings.cend())
-    evt.recordingId = evt.id;
+    evt.recordingId = evt.GetId();
   
   return true;
 }
@@ -1941,9 +1941,9 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Get event handle */
   Schedule &sched  = m_schedules[tmp.channel];
-  Event    &evt    = sched.events[tmp.id];
+  Event    &evt    = sched.events[tmp.GetId()];
   sched.channel    = tmp.channel;
-  evt.id           = tmp.id;
+  evt.SetId(tmp.GetId());
   evt.SetDirty(false);
   
   /* Store */
@@ -1969,7 +1969,7 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   if (update)
   {
     tvhtrace("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-             evt.id, evt.channel, (int)evt.start, (int)evt.stop,
+             evt.GetId(), evt.channel, (int)evt.start, (int)evt.stop,
              evt.title.c_str(), evt.desc.c_str());
 
     if (m_asyncState.GetState() > ASYNC_EPG)
@@ -2054,7 +2054,7 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
       const Channel &channel = entry.second;
 
       if (toNum + 1 == channel.num)
-        TuneOnOldest(channel.id);
+        TuneOnOldest(channel.GetId());
     }
   }
   else if (fromNum - 1 == toNum)
@@ -2065,7 +2065,7 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
       const Channel &channel = entry.second;
 
       if (toNum - 1 == channel.num)
-        TuneOnOldest(channel.id);
+        TuneOnOldest(channel.GetId());
     }
   }
 }

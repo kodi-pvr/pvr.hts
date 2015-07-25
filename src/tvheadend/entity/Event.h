@@ -41,7 +41,6 @@ namespace tvheadend
     {
     public:
       Event() :
-        id(0),
         next(0),
         channel(0),
         content(0),
@@ -57,7 +56,6 @@ namespace tvheadend
       {
       }
 
-      uint32_t    id;
       uint32_t    next;
       uint32_t    channel;
       uint32_t    content;

@@ -24,20 +24,19 @@
 using namespace tvheadend::entity;
 
 RecordingBase::RecordingBase(const std::string &id /*= ""*/) :
-    m_iId(GetNextIntId()),
-    m_id(id),
+    m_sid(id),
     m_enabled(0),
     m_daysOfWeek(0),
     m_retention(0),
     m_priority(0),
     m_channel(0)
 {
+  m_id = GetNextIntId();
 }
 
 bool RecordingBase::operator==(const RecordingBase &right)
 {
-  return m_iId         == right.m_iId         &&
-         m_id          == right.m_id          &&
+  return m_id          == right.m_id          &&
          m_enabled     == right.m_enabled     &&
          m_daysOfWeek  == right.m_daysOfWeek  &&
          m_retention   == right.m_retention   &&
@@ -55,19 +54,14 @@ bool RecordingBase::operator!=(const RecordingBase &right)
   return !(*this == right);
 }
 
-unsigned int RecordingBase::GetIntId() const
-{
-  return m_iId;
-}
-
 std::string RecordingBase::GetStringId() const
 {
-  return m_id;
+  return m_sid;
 }
 
 void RecordingBase::SetStringId(const std::string &id)
 {
-  m_id = id;
+  m_sid = id;
 }
 
 bool RecordingBase::IsEnabled() const

@@ -21,18 +21,20 @@
  *
  */
 
+#include <cstdint>
+
 namespace tvheadend
 {
   namespace entity
   {
 
     /**
-     * Abstract entity. An entity can be dirty or clean
+     * Abstract entity. An entity can be dirty or clean and has a numeric ID.
      */
     class Entity
     {
     public:
-      Entity() : m_dirty(false) {};
+      Entity() : m_dirty(false), m_id(0) {};
       virtual ~Entity() = default;
 
       /**
@@ -51,6 +53,26 @@ namespace tvheadend
       {
         m_dirty = dirty;
       }
+
+      /**
+       * @return the entity ID
+       */
+      uint32_t GetId() const
+      {
+        return m_id;
+      }
+
+      /**
+       * Sets the entity ID
+       * @param id
+       */
+      void SetId(uint32_t id)
+      {
+        m_id = id;
+      }
+
+    protected:
+      uint32_t m_id;
 
     private:
       bool m_dirty;

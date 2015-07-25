@@ -38,8 +38,6 @@ namespace tvheadend
       bool operator!=(const RecordingBase &right);
 
     public:
-      unsigned int GetIntId() const;
-
       std::string GetStringId() const;
       void SetStringId(const std::string &id);
 
@@ -76,9 +74,7 @@ namespace tvheadend
     private:
       static int GetNextIntId();
 
-      const unsigned int m_iId;
-
-      std::string m_id;         // ID (string!) of dvr[Time|Auto]recEntry.
+      std::string m_sid;        // ID (string!) of dvr[Time|Auto]recEntry.
       uint32_t m_enabled;       // If [time|auto]rec entry is enabled (activated).
       uint32_t m_daysOfWeek;    // Bitmask - Days of week (0x01 = Monday, 0x40 = Sunday, 0x7f = Whole Week, 0 = Not set).
       uint32_t m_retention;     // Retention time (in days).

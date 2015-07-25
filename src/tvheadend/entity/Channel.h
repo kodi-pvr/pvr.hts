@@ -42,7 +42,6 @@ namespace tvheadend
     {
     public:
       Channel() :
-        id(0),
         num(0),
         numMinor(0),
         radio(false),
@@ -55,7 +54,6 @@ namespace tvheadend
         return num < right.num;
       }
 
-      uint32_t         id;
       uint32_t         num;
       uint32_t         numMinor;
       bool             radio;

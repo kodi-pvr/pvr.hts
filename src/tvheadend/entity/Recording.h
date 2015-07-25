@@ -42,7 +42,6 @@ namespace tvheadend
     {
     public:
       Recording() :
-        id(0),
         channel(0),
         eventId(0),
         start(0),
@@ -68,7 +67,6 @@ namespace tvheadend
           state == PVR_TIMER_STATE_RECORDING;
       }
 
-      uint32_t         id;
       uint32_t         channel;
       uint32_t         eventId;
       int64_t          start;

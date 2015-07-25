@@ -65,7 +65,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     PVR_TIMER tmr;
     memset(&tmr, 0, sizeof(tmr));
 
-    tmr.iClientIndex       = tit->second.GetIntId();
+    tmr.iClientIndex       = tit->second.GetId();
     tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : -1;
     tmr.startTime          = tit->second.GetStart();
     tmr.endTime            = tit->second.GetStop();
@@ -128,7 +128,7 @@ const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
 {
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == intId)
+    if (tit->second.GetId() == intId)
       return tit->second.GetStringId();
   }
   tvherror("Autorec: Unable to obtain string id for int id %d", intId);
@@ -140,7 +140,7 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
     if (tit->second.GetStringId() == strId)
-      return tit->second.GetIntId();
+      return tit->second.GetId();
   }
   tvherror("Autorec: Unable to obtain int id for string id %s", strId.c_str());
   return 0;
@@ -269,7 +269,7 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER &timer)
   std::string strId;
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == timer.iClientIndex)
+    if (tit->second.GetId() == timer.iClientIndex)
     {
       strId = tit->second.GetStringId();
       break;

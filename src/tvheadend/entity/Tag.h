@@ -41,12 +41,10 @@ namespace tvheadend
     class Tag : public Entity
     {
     public:
-      Tag(uint32_t id = 0);
+      Tag();
 
       bool operator==(const Tag &right);
       bool operator!=(const Tag &right);
-
-      uint32_t GetId() const;
 
       uint32_t GetIndex() const;
       void SetIndex(uint32_t index);
@@ -62,7 +60,6 @@ namespace tvheadend
       bool ContainsChannelType(bool bRadio) const;
 
     private:
-      uint32_t              m_id;
       uint32_t              m_index;
       std::string           m_name;
       std::string           m_icon;
