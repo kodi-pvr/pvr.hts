@@ -277,6 +277,7 @@ private:
   STimeshiftStatus                        m_timeshiftStatus;
   SSubscription                           m_subscription;
   time_t                                  m_lastUse;
+  bool                                    m_active;
   
   void         Close0         ( void );
   void         Abort0         ( void );
@@ -450,6 +451,7 @@ private:
    */
   void PredictiveTune         ( uint32_t fromChannelId, uint32_t toChannelId );
   void TuneOnOldest           ( uint32_t channelId );
+  void SetActiveDemuxer       ( CHTSPDemuxer *demuxer);
 
   /*
    * Message processing

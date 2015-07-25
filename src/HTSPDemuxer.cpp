@@ -42,9 +42,10 @@ using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
-    m_seekTime(INVALID_SEEKTIME)
+    m_seekTime(INVALID_SEEKTIME),
+    m_lastUse(0),
+    m_active(false)
 {
-  m_lastUse = 0;
 }
 
 CHTSPDemuxer::~CHTSPDemuxer ( void )

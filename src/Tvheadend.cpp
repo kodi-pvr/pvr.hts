@@ -54,7 +54,8 @@ CTvheadend::CTvheadend(tvheadend::Settings settings)
   {
     m_dmx.push_back(new CHTSPDemuxer(m_conn));
   }
-  m_dmx_active = m_dmx[0];
+  
+  SetActiveDemuxer(m_dmx[0]);
 }
 
 CTvheadend::~CTvheadend()
@@ -2058,6 +2059,16 @@ uint32_t CTvheadend::GetNextUnnumberedChannelNumber()
   return number++;
 }
 
+void CTvheadend::SetActiveDemuxer(CHTSPDemuxer *demuxer)
+{
+  m_dmx_active = demuxer;
+  m_dmx_active->m_active = true;
+
+  for (auto *dmx : m_dmx)
+    if (dmx != demuxer)
+      dmx->m_active = false;
+}
+
 void CTvheadend::TuneOnOldest( uint32_t channelId )
 {
   CHTSPDemuxer* oldest = NULL;
@@ -2131,7 +2142,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       dmx->Weight(SUBSCRIPTION_WEIGHT_DEFAULT);
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
-      m_dmx_active = dmx;
+      SetActiveDemuxer(dmx);
       PredictiveTune(prevId, chn.iUniqueId);
       m_streamchange = true;
       return true;
@@ -2144,7 +2155,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
            m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
   prevId = m_dmx_active->GetChannelId();
   ret = oldest->Open(chn.iUniqueId);
-  m_dmx_active = oldest;
+  SetActiveDemuxer(oldest);
   if (ret && m_dmx.size() > 1)
     PredictiveTune(prevId, chn.iUniqueId);
   return ret;
