@@ -328,17 +328,20 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  return tvh->GetServerName();
+  static std::string serverName = tvh->GetServerName();
+  return serverName.c_str();
 }
 
 const char *GetBackendVersion(void)
 {
-  return tvh->GetServerVersion();
+  static std::string serverVersion = tvh->GetServerVersion();
+  return serverVersion.c_str();
 }
 
 const char *GetConnectionString(void)
 {
-  return tvh->GetServerString();
+  static std::string serverString = tvh->GetServerString();
+  return serverString.c_str();
 }
 
 const char *GetBackendHostname(void)

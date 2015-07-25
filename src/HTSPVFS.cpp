@@ -22,6 +22,7 @@
 #include "platform/threads/mutex.h"
 #include "platform/threads/atomics.h"
 #include "platform/util/timeutils.h"
+#include "platform/util/StringUtils.h"
 #include "platform/sockets/tcp.h"
 
 extern "C" {
@@ -108,7 +109,7 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
   Close();
 
   /* Cache details */
-  m_path.Format("dvr/%s", rec.strRecordingId);
+  m_path = StringUtils::Format("dvr/%s", rec.strRecordingId);
 
   /* Send open */
   if (!SendFileOpen())

@@ -1,3 +1,6 @@
+2.2.5
+- dropped CStdString usage
+
 2.2.4
 - added: Predictive tuning (thanks @martinwilli)
 - added: Include satpos in mux description (thanks @Glenn-1990)
