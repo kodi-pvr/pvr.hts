@@ -1,3 +1,6 @@
+2.1.16
+- fixed: Debian/Ubuntu package didn't properly replace the package name previously used
+
 2.1.15
 - fixed: recordings from older tvheadend versions weren't displayed
 
