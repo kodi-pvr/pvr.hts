@@ -12,6 +12,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: kodi-pvr-tvheadend-hts
 Replaces: kodi-pvr-tvheadend-hts
+Provides: kodi-pvr-hts, kodi-pvr-tvheadend-hts
 Description: TVHeadEnd PVR for Kodi
  TVHeadEnd PVR for Kodi
 
