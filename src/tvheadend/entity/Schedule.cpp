@@ -46,3 +46,8 @@ Segment Schedule::GetSegment(time_t startTime, time_t endTime) const
 
   return segment;
 }
+
+Events& Schedule::GetEvents()
+{
+  return events;
+}

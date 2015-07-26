@@ -1430,7 +1430,7 @@ void CTvheadend::SyncEpgCompleted ( void )
   /* Events */
   for (auto &entry : m_schedules)
   {
-    utilities::erase_if(entry.second.events, [](const EventMapEntry &entry)
+    utilities::erase_if(entry.second.GetEvents(), [](const EventMapEntry &entry)
     {
       return entry.second.IsDirty();
     });
@@ -1891,7 +1891,8 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Get event handle */
   Schedule &sched  = m_schedules[tmp.GetChannel()];
-  Event    &evt    = sched.events[tmp.GetId()];
+  Events   &events = sched.GetEvents();
+  Event    &evt    = events[tmp.GetId()];
   Event comparison = evt;
   sched.SetId(tmp.GetChannel());
   evt.SetId(tmp.GetId());
@@ -1928,7 +1929,7 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   for (auto &entry : m_schedules)
   {
     Schedule &schedule = entry.second;
-    Events &events = schedule.events;
+    Events &events = schedule.GetEvents();
 
     // Find the event so we can get the channel number
     auto eit = events.find(u32);

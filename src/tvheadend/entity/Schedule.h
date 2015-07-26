@@ -49,6 +49,12 @@ namespace tvheadend
        */
       Segment GetSegment(time_t startTime, time_t endTime) const;
 
+      /**
+       * @return read-write reference to the events in this schedule
+       */
+      Events& GetEvents();
+
+    private:
       Events events;
     };
   }
