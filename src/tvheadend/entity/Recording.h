@@ -52,36 +52,36 @@ namespace tvheadend
     {
     public:
       Recording() :
-        channel(0),
-        eventId(0),
-        start(0),
-        stop(0),
-        startExtra(0),
-        stopExtra(0),
-        state(PVR_TIMER_STATE_ERROR),
-        retention(99), // Kodi default - "99 days"
-        priority(50) // Kodi default - "normal"
+        m_channel(0),
+        m_eventId(0),
+        m_start(0),
+        m_stop(0),
+        m_startExtra(0),
+        m_stopExtra(0),
+        m_state(PVR_TIMER_STATE_ERROR),
+        m_retention(99), // Kodi default - "99 days"
+        m_priority(50) // Kodi default - "normal"
       {
       }
 
       bool operator==(const Recording &other) const
       {
         return m_id == other.m_id &&
-               channel == other.channel &&
-               eventId == other.eventId &&
-               start == other.start &&
-               stop == other.stop &&
-               startExtra == other.startExtra &&
-               stopExtra == other.stopExtra &&
-               title == other.title &&
-               path == other.path &&
-               description == other.description &&
-               timerecId == other.timerecId &&
-               autorecId == other.autorecId &&
-               state == other.state &&
-               error == other.error &&
-               retention == other.retention &&
-               priority == other.priority;
+               m_channel == other.m_channel &&
+               m_eventId == other.m_eventId &&
+               m_start == other.m_start &&
+               m_stop == other.m_stop &&
+               m_startExtra == other.m_startExtra &&
+               m_stopExtra == other.m_stopExtra &&
+               m_title == other.m_title &&
+               m_path == other.m_path &&
+               m_description == other.m_description &&
+               m_timerecId == other.m_timerecId &&
+               m_autorecId == other.m_autorecId &&
+               m_state == other.m_state &&
+               m_error == other.m_error &&
+               m_retention == other.m_retention &&
+               m_priority == other.m_priority;
       }
 
       bool operator!=(const Recording &other) const
@@ -91,15 +91,15 @@ namespace tvheadend
 
       bool IsRecording() const
       {
-        return state == PVR_TIMER_STATE_COMPLETED ||
-          state == PVR_TIMER_STATE_ABORTED ||
-          state == PVR_TIMER_STATE_RECORDING;
+        return m_state == PVR_TIMER_STATE_COMPLETED ||
+               m_state == PVR_TIMER_STATE_ABORTED ||
+               m_state == PVR_TIMER_STATE_RECORDING;
       }
 
       bool IsTimer() const
       {
-        return state == PVR_TIMER_STATE_SCHEDULED ||
-          state == PVR_TIMER_STATE_RECORDING;
+        return m_state == PVR_TIMER_STATE_SCHEDULED ||
+               m_state == PVR_TIMER_STATE_RECORDING;
       }
 
       /**
@@ -107,81 +107,81 @@ namespace tvheadend
        */
       unsigned int GetTimerType() const
       {
-        if (!timerecId.empty())
+        if (!m_timerecId.empty())
           return TIMER_ONCE_CREATED_BY_TIMEREC;
-        else if (!autorecId.empty())
+        else if (!m_autorecId.empty())
           return TIMER_ONCE_CREATED_BY_AUTOREC;
-        else if (eventId != 0)
+        else if (m_eventId != 0)
           return TIMER_ONCE_EPG;
         else
           return TIMER_ONCE_MANUAL;
       }
 
-      uint32_t GetChannel() const { return channel; }
-      void SetChannel(uint32_t channel) { this->channel = channel; }
+      uint32_t GetChannel() const { return m_channel; }
+      void SetChannel(uint32_t channel) { m_channel = channel; }
 
-      uint32_t GetEventId() const { return eventId; }
-      void SetEventId(uint32_t eventId) { this->eventId = eventId; }
-
-      // TODO: Change to time_t
-      int64_t GetStart() const { return start; }
-      void SetStart(int64_t start) { this->start = start; }
+      uint32_t GetEventId() const { return m_eventId; }
+      void SetEventId(uint32_t eventId) { m_eventId = eventId; }
 
       // TODO: Change to time_t
-      int64_t GetStop() const { return stop; }
-      void SetStop(int64_t stop) { this->stop = stop; }
+      int64_t GetStart() const { return m_start; }
+      void SetStart(int64_t start) { m_start = start; }
 
       // TODO: Change to time_t
-      int64_t GetStartExtra() const { return startExtra; }
-      void SetStartExtra(int64_t startExtra) { this->startExtra = startExtra; }
+      int64_t GetStop() const { return m_stop; }
+      void SetStop(int64_t stop) { m_stop = stop; }
 
       // TODO: Change to time_t
-      int64_t GetStopExtra() const { return stopExtra; }
-      void SetStopExtra(int64_t stopExtra) { this->stopExtra = stopExtra; }
+      int64_t GetStartExtra() const { return m_startExtra; }
+      void SetStartExtra(int64_t startExtra) { m_startExtra = startExtra; }
 
-      const std::string& GetTitle() const { return title; }
-      void SetTitle(const std::string &title) { this->title = title; }
+      // TODO: Change to time_t
+      int64_t GetStopExtra() const { return m_stopExtra; }
+      void SetStopExtra(int64_t stopExtra) { m_stopExtra = stopExtra; }
 
-      const std::string& GetPath() const { return path; }
-      void SetPath(const std::string &path) { this->path = path; }
+      const std::string& GetTitle() const { return m_title; }
+      void SetTitle(const std::string &title) { m_title = title; }
 
-      const std::string& GetDescription() const { return description; }
-      void SetDescription(const std::string &description) { this->description = description; }
+      const std::string& GetPath() const { return m_path; }
+      void SetPath(const std::string &path) { m_path = path; }
 
-      const std::string& GetTimerecId() const { return autorecId; }
-      void SetTimerecId(const std::string &autorecId) { this->autorecId = autorecId; }
+      const std::string& GetDescription() const { return m_description; }
+      void SetDescription(const std::string &description) { m_description = description; }
 
-      const std::string& GetAutorecId() const { return title; }
-      void SetAutorecId(const std::string &title) { this->title = title; }
+      const std::string& GetTimerecId() const { return m_autorecId; }
+      void SetTimerecId(const std::string &autorecId) { m_autorecId = autorecId; }
 
-      PVR_TIMER_STATE GetState() const { return state; }
-      void SetState(const PVR_TIMER_STATE &state) { this->state = state; }
+      const std::string& GetAutorecId() const { return m_title; }
+      void SetAutorecId(const std::string &title) { m_title = title; }
 
-      const std::string& GetError() const { return error; }
-      void SetError(const std::string &error) { this->error = error; }
+      PVR_TIMER_STATE GetState() const { return m_state; }
+      void SetState(const PVR_TIMER_STATE &state) { m_state = state; }
 
-      uint32_t GetRetention() const { return retention; }
-      void SetRetention(uint32_t retention) { this->retention = retention; }
+      const std::string& GetError() const { return m_error; }
+      void SetError(const std::string &error) { m_error = error; }
 
-      uint32_t GetPriority() const { return priority; }
-      void SetPriority(uint32_t priority) { this->priority = priority; }
+      uint32_t GetRetention() const { return m_retention; }
+      void SetRetention(uint32_t retention) { m_retention = retention; }
+
+      uint32_t GetPriority() const { return m_priority; }
+      void SetPriority(uint32_t priority) { m_priority = priority; }
 
     private:
-      uint32_t         channel;
-      uint32_t         eventId;
-      int64_t          start;
-      int64_t          stop;
-      int64_t          startExtra;
-      int64_t          stopExtra;
-      std::string      title;
-      std::string      path;
-      std::string      description;
-      std::string      timerecId;
-      std::string      autorecId;
-      PVR_TIMER_STATE  state;
-      std::string      error;
-      uint32_t         retention;
-      uint32_t         priority;
+      uint32_t         m_channel;
+      uint32_t         m_eventId;
+      int64_t          m_start;
+      int64_t          m_stop;
+      int64_t          m_startExtra;
+      int64_t          m_stopExtra;
+      std::string      m_title;
+      std::string      m_path;
+      std::string      m_description;
+      std::string      m_timerecId;
+      std::string      m_autorecId;
+      PVR_TIMER_STATE  m_state;
+      std::string      m_error;
+      uint32_t         m_retention;
+      uint32_t         m_priority;
     };
   }
 }

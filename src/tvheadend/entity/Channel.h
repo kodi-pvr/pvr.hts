@@ -42,27 +42,27 @@ namespace tvheadend
     {
     public:
       Channel() :
-        num(0),
-        numMinor(0),
-        radio(false),
-        caid(0)
+        m_num(0),
+        m_numMinor(0),
+        m_radio(false),
+        m_caid(0)
       {
       }
 
       bool operator<(const Channel &right) const
       {
-        return num < right.num;
+        return m_num < right.m_num;
       }
 
       bool operator==(const Channel &other) const
       {
         return m_id == other.m_id &&
-               num == other.num &&
-               numMinor == other.numMinor &&
-               radio == other.radio &&
-               caid == other.caid &&
-               name == other.name && 
-               icon == other.icon;
+               m_num == other.m_num &&
+               m_numMinor == other.m_numMinor &&
+               m_radio == other.m_radio &&
+               m_caid == other.m_caid &&
+               m_name == other.m_name &&
+               m_icon == other.m_icon;
       }
 
       bool operator!=(const Channel &other) const
@@ -70,31 +70,31 @@ namespace tvheadend
         return !(this == &other);
       }
 
-      uint32_t GetNum() const { return num; }
-      void SetNum(uint32_t num) { this->num = num; }
+      uint32_t GetNum() const { return m_num; }
+      void SetNum(uint32_t num) { m_num = num; }
 
-      uint32_t GetNumMinor() const { return numMinor; }
-      void SetNumMinor(uint32_t numMinor) { this->numMinor = numMinor; }
+      uint32_t GetNumMinor() const { return m_numMinor; }
+      void SetNumMinor(uint32_t numMinor) { m_numMinor = numMinor; }
 
-      bool IsRadio() const { return radio; }
-      void SetRadio(bool radio) { this->radio = radio; }
+      bool IsRadio() const { return m_radio; }
+      void SetRadio(bool radio) { m_radio = radio; }
 
-      uint32_t GetCaid() const { return caid; }
-      void SetCaid(uint32_t caid) { this->caid = caid; }
+      uint32_t GetCaid() const { return m_caid; }
+      void SetCaid(uint32_t caid) { m_caid = caid; }
 
-      const std::string& GetName() const { return name; }
-      void SetName(const std::string &name) { this->name = name; }
+      const std::string& GetName() const { return m_name; }
+      void SetName(const std::string &name) { m_name = name; }
 
-      const std::string& GetIcon() const { return icon; }
-      void SetIcon(const std::string &icon) { this->icon = icon; }
+      const std::string& GetIcon() const { return m_icon; }
+      void SetIcon(const std::string &icon) { m_icon = icon; }
 
     private:
-      uint32_t         num;
-      uint32_t         numMinor;
-      bool             radio;
-      uint32_t         caid;
-      std::string      name;
-      std::string      icon;
+      uint32_t         m_num;
+      uint32_t         m_numMinor;
+      bool             m_radio;
+      uint32_t         m_caid;
+      std::string      m_name;
+      std::string      m_icon;
     };
   }
 }

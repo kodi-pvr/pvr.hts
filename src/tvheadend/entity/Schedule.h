@@ -55,7 +55,7 @@ namespace tvheadend
       Events& GetEvents();
 
     private:
-      Events events;
+      Events m_events;
     };
   }
 }

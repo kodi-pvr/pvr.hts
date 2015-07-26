@@ -28,7 +28,7 @@ void Schedule::SetDirty(bool dirty)
   Entity::SetDirty(dirty);
 
   // Mark all events as dirty too
-  for (auto &entry : events)
+  for (auto &entry : m_events)
     entry.second.SetDirty(dirty);
 }
 
@@ -36,7 +36,7 @@ Segment Schedule::GetSegment(time_t startTime, time_t endTime) const
 {
   Segment segment;
 
-  for (const auto &entry : events)
+  for (const auto &entry : m_events)
   {
     const Event &event = entry.second;
 
@@ -49,5 +49,5 @@ Segment Schedule::GetSegment(time_t startTime, time_t endTime) const
 
 Events& Schedule::GetEvents()
 {
-  return events;
+  return m_events;
 }
