@@ -32,13 +32,6 @@ extern "C" {
 #include "libhts/htsmsg_binary.h"
 }
 
-#define UPDATE(x, y)\
-if ((x) != (y))\
-{\
-  (x) = (y);\
-  update = true;\
-}
-
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
