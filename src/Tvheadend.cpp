@@ -2279,7 +2279,17 @@ PVR_ERROR CTvheadend::DemuxCurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return m_dmx_active->CurrentSignal(sig);
 }
 
-time_t CTvheadend::DemuxGetTimeshiftTime() const
+int64_t CTvheadend::DemuxGetTimeshiftTime() const
 {
   return m_dmx_active->GetTimeshiftTime();
+}
+
+int64_t CTvheadend::DemuxGetTimeshiftBufferStart() const
+{
+  return m_dmx_active->GetTimeshiftBufferStart();
+}
+
+int64_t CTvheadend::DemuxGetTimeshiftBufferEnd() const
+{
+  return m_dmx_active->GetTimeshiftBufferEnd();
 }
