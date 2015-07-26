@@ -1438,7 +1438,7 @@ void CTvheadend::SyncEpgCompleted ( void )
   
   /* Trigger updates */
   for (const auto &entry : m_schedules)
-    TriggerEpgUpdate(entry.second.channel);
+    TriggerEpgUpdate(entry.second.GetId());
 }
 
 void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
@@ -1893,7 +1893,7 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   Schedule &sched  = m_schedules[tmp.GetChannel()];
   Event    &evt    = sched.events[tmp.GetId()];
   Event comparison = evt;
-  sched.channel    = tmp.GetChannel();
+  sched.SetId(tmp.GetChannel());
   evt.SetId(tmp.GetId());
   evt.SetDirty(false);
   
@@ -1935,9 +1935,9 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
 
     if (eit != events.end())
     {
-      tvhtrace("deleted event %d from channel %d", u32, schedule.channel);
+      tvhtrace("deleted event %d from channel %d", u32, schedule.GetId());
       events.erase(eit);
-      TriggerEpgUpdate(schedule.channel);
+      TriggerEpgUpdate(schedule.GetId());
       return;
     }
   }

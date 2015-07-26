@@ -35,13 +35,12 @@ namespace tvheadend
     typedef std::vector<Event> Segment;
 
     /**
-     * Represents a schedule. A schedule has a channel and a bunch of events.
+     * Represents a schedule. A schedule has a channel and a bunch of events. 
+     * The schedule ID matches the channel it belongs to.
      */
     class Schedule : public Entity
     {
     public:
-      Schedule() : channel(0) {}
-
       virtual void SetDirty(bool dirty);
 
       /**
@@ -50,7 +49,6 @@ namespace tvheadend
        */
       Segment GetSegment(time_t startTime, time_t endTime) const;
 
-      uint32_t channel;
       Events events;
     };
   }
