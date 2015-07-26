@@ -1809,8 +1809,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     if (m_asyncState.GetState() > ASYNC_DVR)
     {
       TriggerTimerUpdate();
-      if (rec.state == PVR_TIMER_STATE_RECORDING)
-        TriggerRecordingUpdate();
+      TriggerRecordingUpdate();
     }
   }
 }
