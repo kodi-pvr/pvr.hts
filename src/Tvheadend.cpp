@@ -43,7 +43,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
-  : m_settings(settings), m_vfs(m_conn),
+  : m_settings(settings), m_streamchange(false), m_vfs(m_conn),
     m_queue((size_t)-1), m_asyncState(settings.iResponseTimeout),
     m_timeRecordings(m_conn), m_autoRecordings(m_conn)
 {
@@ -2201,7 +2201,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
 DemuxPacket* CTvheadend::DemuxRead ( void )
 {
-  DemuxPacket *pkt;
+  DemuxPacket *pkt = NULL;
 
   if (m_streamchange)
   {
