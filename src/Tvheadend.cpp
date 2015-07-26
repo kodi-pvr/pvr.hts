@@ -1421,6 +1421,12 @@ void CTvheadend::SyncEpgCompleted ( void )
   if (!m_settings.bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
     return;
 
+  /* Schedules */
+  utilities::erase_if(m_schedules, [](const ScheduleMapEntry &entry)
+  {
+    return entry.second.IsDirty();
+  });
+
   /* Events */
   for (auto &entry : m_schedules)
   {
@@ -1430,12 +1436,6 @@ void CTvheadend::SyncEpgCompleted ( void )
     });
   }
   
-  /* Schedules */
-  utilities::erase_if(m_schedules, [](const ScheduleMapEntry &entry)
-  {
-    return entry.second.IsDirty();
-  });
-
   /* Trigger updates */
   for (const auto &entry : m_schedules)
     TriggerEpgUpdate(entry.second.channel);
