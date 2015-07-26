@@ -10,8 +10,9 @@ Package: kodi-pvr-hts
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Conflicts: kodi-pvr-tvheadend-hts
-Replaces: kodi-pvr-tvheadend-hts
+Replaces: kodi-pvr-tvheadend-hts (<< 2.2)
+Provides: kodi-pvr-hts, kodi-pvr-tvheadend-hts
+Breaks: kodi-pvr-tvheadend-hts (<< 2.2)
 Description: TVHeadEnd PVR for Kodi
  TVHeadEnd PVR for Kodi
 
@@ -21,4 +22,12 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: debugging symbols for TVHeadEnd PVR for Kodi
  debugging symbols for TVHeadEnd PVR for Kodi
+
+Package: kodi-pvr-tvheadend-hts
+Depends: kodi-pvr-hts, ${misc:Depends}
+Architecture: all
+Priority: extra
+Section: oldlibs
+Description: transitional dummy package
+  This is a transitional dummy package. It can safely be removed.
 
