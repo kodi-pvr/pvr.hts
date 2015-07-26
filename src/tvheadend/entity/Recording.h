@@ -45,6 +45,8 @@ namespace tvheadend
 
     /**
      * Represents a recording or a timer
+     * TODO: Create separate classes for recordings and timers since a 
+     * recording obviously can't have a "timer type"
      */
     class Recording : public Entity
     {
@@ -73,6 +75,21 @@ namespace tvheadend
       {
         return state == PVR_TIMER_STATE_SCHEDULED ||
           state == PVR_TIMER_STATE_RECORDING;
+      }
+
+      /**
+       * @return the type of timer
+       */
+      unsigned int GetTimerType() const
+      {
+        if (!timerecId.empty())
+          return TIMER_ONCE_CREATED_BY_TIMEREC;
+        else if (!autorecId.empty())
+          return TIMER_ONCE_CREATED_BY_AUTOREC;
+        else if (eventId != 0)
+          return TIMER_ONCE_EPG;
+        else
+          return TIMER_ONCE_MANUAL;
       }
 
       uint32_t         channel;

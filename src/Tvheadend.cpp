@@ -790,15 +790,9 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   strncpy(tmr.strSummary,
           tvhTmr.description.c_str(), sizeof(tmr.strSummary) - 1);
   tmr.state              = tvhTmr.state;
-  tmr.iTimerType         = !tvhTmr.timerecId.empty()
-                            ? TIMER_ONCE_CREATED_BY_TIMEREC
-                            : !tvhTmr.autorecId.empty()
-                              ? TIMER_ONCE_CREATED_BY_AUTOREC
-                              : tvhTmr.eventId
-                                ? TIMER_ONCE_EPG
-                                : TIMER_ONCE_MANUAL;
   tmr.iPriority          = tvhTmr.priority;
   tmr.iLifetime          = tvhTmr.retention;
+  tmr.iTimerType         = tvhTmr.GetTimerType();
   tmr.iMaxRecordings     = 0;                // not supported by tvh
   tmr.iRecordingGroup    = 0;                // not supported by tvh
   tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
