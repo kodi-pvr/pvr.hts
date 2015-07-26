@@ -26,6 +26,14 @@
 #include "kodi/xbmc_pvr_types.h"
 #include "Entity.h"
 
+// Timer types
+#define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
+#define TIMER_ONCE_EPG                (PVR_TIMER_TYPE_NONE + 2)
+#define TIMER_ONCE_CREATED_BY_TIMEREC (PVR_TIMER_TYPE_NONE + 3)
+#define TIMER_ONCE_CREATED_BY_AUTOREC (PVR_TIMER_TYPE_NONE + 4)
+#define TIMER_REPEATING_MANUAL        (PVR_TIMER_TYPE_NONE + 5)
+#define TIMER_REPEATING_EPG           (PVR_TIMER_TYPE_NONE + 6)
+
 namespace tvheadend
 {
   namespace entity
