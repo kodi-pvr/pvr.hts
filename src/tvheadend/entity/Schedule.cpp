@@ -40,7 +40,7 @@ Segment Schedule::GetSegment(time_t startTime, time_t endTime) const
   {
     const Event &event = entry.second;
 
-    if (event.start < endTime && event.stop > startTime)
+    if (event.GetStart() < endTime && event.GetStop() > startTime)
       segment.push_back(event);
   }
 

@@ -1043,30 +1043,30 @@ void CTvheadend::TransferEvent
   EPG_TAG epg;
   memset(&epg, 0, sizeof(EPG_TAG));
   epg.iUniqueBroadcastId  = event.GetId();
-  epg.strTitle            = event.title.c_str();
-  epg.iChannelNumber      = event.channel;
-  epg.startTime           = event.start;
-  epg.endTime             = event.stop;
-  epg.strPlotOutline      = event.summary.c_str();
-  epg.strPlot             = event.desc.c_str();
+  epg.strTitle            = event.GetTitle().c_str();
+  epg.iChannelNumber      = event.GetChannel();
+  epg.startTime           = event.GetStart();
+  epg.endTime             = event.GetStop();
+  epg.strPlotOutline      = event.GetSummary().c_str();
+  epg.strPlot             = event.GetDesc().c_str();
   epg.strOriginalTitle    = NULL; /* not supported by tvh */
   epg.strCast             = NULL; /* not supported by tvh */
   epg.strDirector         = NULL; /* not supported by tvh */
   epg.strWriter           = NULL; /* not supported by tvh */
   epg.iYear               = 0;    /* not supported by tvh */
   epg.strIMDBNumber       = NULL; /* not supported by tvh */
-  epg.strIconPath         = event.image.c_str();
-  epg.iGenreType          = event.content & 0xF0;
-  epg.iGenreSubType       = event.content & 0x0F;
+  epg.strIconPath         = event.GetImage().c_str();
+  epg.iGenreType          = event.GetContent() & 0xF0;
+  epg.iGenreSubType       = event.GetContent() & 0x0F;
   epg.strGenreDescription = NULL; /* not supported by tvh */
-  epg.firstAired          = event.aired;
-  epg.iParentalRating     = event.age;
-  epg.iStarRating         = event.stars;
+  epg.firstAired          = event.GetAired();
+  epg.iParentalRating     = event.GetAge();
+  epg.iStarRating         = event.GetStars();
   epg.bNotify             = false; /* not supported by tvh */
-  epg.iSeriesNumber       = event.season;
-  epg.iEpisodeNumber      = event.episode;
-  epg.iEpisodePartNumber  = event.part;
-  epg.strEpisodeName      = event.subtitle.c_str();
+  epg.iSeriesNumber       = event.GetSeason();
+  epg.iEpisodeNumber      = event.GetEpisode();
+  epg.iEpisodePartNumber  = event.GetPart();
+  epg.strEpisodeName      = event.GetSubtitle().c_str();
   epg.iFlags              = EPG_TAG_FLAG_UNDEFINED;
 
   /* Callback. */
@@ -1876,37 +1876,37 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   }
 
   evt.SetId(id);
-  evt.channel = channel;
-  evt.start   = (time_t)start;
-  evt.stop    = (time_t)stop;
+  evt.SetChannel(channel);
+  evt.SetStart((time_t)start);
+  evt.SetStop((time_t)stop);
 
   /* Add optional fields */
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
-    evt.title   = str;
+    evt.SetTitle(str);
   if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
-    evt.subtitle   = str;
+    evt.SetSubtitle(str);
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
-    evt.summary  = str;
+    evt.SetSummary(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
-    evt.desc     = str;
+    evt.SetDesc(str);
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
-    evt.image   = str;
+    evt.SetImage(str);
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
-    evt.next    = u32;
+    evt.SetNext(u32);
   if (!htsmsg_get_u32(msg, "contentType", &u32))
-    evt.content = u32;
+    evt.SetContent(u32);
   if (!htsmsg_get_u32(msg, "starRating", &u32))
-    evt.stars   = u32;
+    evt.SetStars(u32);
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
-    evt.age     = u32;
+    evt.SetAge(u32);
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
-    evt.aired   = (time_t)s64;
+    evt.SetAired((time_t)s64);
   if (!htsmsg_get_u32(msg, "seasonNumber", &u32))
-    evt.season  = u32;
+    evt.SetSeason(u32);
   if (!htsmsg_get_u32(msg, "episodeNumber", &u32))
-    evt.episode = u32;
+    evt.SetEpisode(u32);
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
-    evt.part    = u32;
+    evt.SetPart(u32);
 
   /* Add optional recording link */
   auto rit = std::find_if(
@@ -1918,7 +1918,7 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   });
 
   if (rit != m_recordings.cend())
-    evt.recordingId = evt.GetId();
+    evt.SetRecordingId(evt.GetId());
   
   return true;
 }
@@ -1933,40 +1933,25 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
 
   /* Get event handle */
-  Schedule &sched  = m_schedules[tmp.channel];
+  Schedule &sched  = m_schedules[tmp.GetChannel()];
   Event    &evt    = sched.events[tmp.GetId()];
-  sched.channel    = tmp.channel;
+  Event comparison = evt;
+  sched.channel    = tmp.GetChannel();
   evt.SetId(tmp.GetId());
   evt.SetDirty(false);
   
   /* Store */
-  UPDATE(evt.title,       tmp.title);
-  UPDATE(evt.subtitle,    tmp.subtitle);
-  UPDATE(evt.start,       tmp.start);
-  UPDATE(evt.stop,        tmp.stop);
-  UPDATE(evt.channel,     tmp.channel);
-  UPDATE(evt.summary,     tmp.summary);
-  UPDATE(evt.desc,        tmp.desc);
-  UPDATE(evt.image,       tmp.image);
-  UPDATE(evt.next,        tmp.next);
-  UPDATE(evt.content,     tmp.content);
-  UPDATE(evt.stars,       tmp.stars);
-  UPDATE(evt.age,         tmp.age);
-  UPDATE(evt.aired,       tmp.aired);
-  UPDATE(evt.season,      tmp.season);
-  UPDATE(evt.episode,     tmp.episode);
-  UPDATE(evt.part,        tmp.part);
-  UPDATE(evt.recordingId, tmp.recordingId);
+  evt = tmp;
 
   /* Update */
-  if (update)
+  if (evt != comparison)
   {
     tvhtrace("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-             evt.GetId(), evt.channel, (int)evt.start, (int)evt.stop,
-             evt.title.c_str(), evt.desc.c_str());
+             evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
+             evt.GetTitle().c_str(), evt.GetDesc().c_str());
 
     if (m_asyncState.GetState() > ASYNC_EPG)
-      TriggerEpgUpdate(tmp.channel);
+      TriggerEpgUpdate(tmp.GetChannel());
   }
 }
 

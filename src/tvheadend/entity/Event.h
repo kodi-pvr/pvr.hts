@@ -56,6 +56,86 @@ namespace tvheadend
       {
       }
 
+      bool operator==(const Event &other) const
+      {
+        return m_id == other.m_id &&
+               next == other.next &&
+               channel == other.channel &&
+               content == other.content &&
+               start == other.start &&
+               stop == other.stop &&
+               stars == other.stars &&
+               age == other.age &&
+               aired == other.aired &&
+               season == other.season &&
+               episode == other.episode &&
+               part == other.part &&
+               title == other.title &&
+               subtitle == other.subtitle &&
+               desc == other.desc &&
+               summary == other.summary &&
+               image == other.image &&
+               recordingId == other.recordingId;
+      }
+
+      bool operator!=(const Event &other) const
+      {
+        return !(this == &other);
+      }
+
+      uint32_t GetNext() const { return next; }
+      void SetNext(uint32_t next) { this->next = next; }
+
+      uint32_t GetChannel() const { return channel; }
+      void SetChannel(uint32_t channel) { this->channel = channel; }
+
+      uint32_t GetContent() const { return content; }
+      void SetContent(uint32_t content) { this->content = content; }
+
+      time_t GetStart() const { return start; }
+      void SetStart(time_t start) { this->start = start; }
+
+      time_t GetStop() const { return stop; }
+      void SetStop(time_t stop) { this->stop = stop; }
+
+      uint32_t GetStars() const { return stars; }
+      void SetStars(uint32_t stars) { this->stars = stars; }
+
+      uint32_t GetAge() const { return age; }
+      void SetAge(uint32_t age) { this->age = age; }
+
+      time_t GetAired() const { return aired; }
+      void SetAired(time_t aired) { this->aired = aired; }
+
+      uint32_t GetSeason() const { return season; }
+      void SetSeason(uint32_t season) { this->season = season; }
+
+      uint32_t GetEpisode() const { return episode; }
+      void SetEpisode(uint32_t episode) { this->episode = episode; }
+
+      uint32_t GetPart() const { return part; }
+      void SetPart(uint32_t part) { this->part = part; }
+
+      const std::string& GetTitle() const { return title; }
+      void SetTitle(const std::string &title) { this->title = title; }
+
+      const std::string& GetSubtitle() const { return subtitle; }
+      void SetSubtitle(const std::string &subtitle) { this->subtitle = subtitle; }
+
+      // TODO: Rename to GetDescription to match Recording
+      const std::string& GetDesc() const { return desc; }
+      void SetDesc(const std::string &desc) { this->desc = desc; }
+
+      const std::string& GetSummary() const { return summary; }
+      void SetSummary(const std::string &summary) { this->summary = summary; }
+
+      const std::string& GetImage() const { return image; }
+      void SetImage(const std::string &image) { this->image = image; }
+
+      uint32_t GetRecordingId() const { return recordingId; }
+      void SetRecordingId(uint32_t recordingId) { this->recordingId = recordingId; }
+
+    private:
       uint32_t    next;
       uint32_t    channel;
       uint32_t    content;
