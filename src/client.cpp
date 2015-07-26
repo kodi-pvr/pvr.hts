@@ -638,20 +638,25 @@ PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_unused(channel))
 void PauseStream(bool _unused(bPaused))
 {
 }
+
+static time_t ConvertMusecsToTime(int64_t musecs)
+{
+  // tvheadend reports microseconds for timeshifting values,
+  // Kodi expects it to be an absolute UNIX timestamp
+  return time(NULL) - static_cast<time_t>(static_cast<double>(musecs / 1000000));
+}
+
 time_t GetPlayingTime()
 {
-  // tvheadend reports the number of microseconds the live stream is shifted but 
-  // XBMC expects it to be an absolute UNIX timestamp
-  int seconds = (double) tvh->DemuxGetTimeshiftTime() / 1000000;
-  return (time_t) (time(NULL) - seconds);
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftTime());
 }
 time_t GetBufferTimeStart()
 {
-  return 0;
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferStart());
 }
 time_t GetBufferTimeEnd()
 {
-  return 0;
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferEnd());
 }
 
 /* Live stream (VFS interface - not relevant) */

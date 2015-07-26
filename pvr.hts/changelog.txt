@@ -1,5 +1,7 @@
 2.2.5
 - dropped CStdString usage
+- added: implementation of GetBufferTimeStart and GetBufferTimeEnd (timeshifting).
+- fixed: Coverity warnings introduced by predictive tuning feature.
 
 2.2.4
 - added: Predictive tuning (thanks @martinwilli)

@@ -238,9 +238,19 @@ public:
   bool   ProcessMessage ( const char *method, htsmsg_t *m );
   void   Connected      ( void );
   
-  inline time_t GetTimeshiftTime() const
+  inline int64_t GetTimeshiftTime() const
   {
-    return (time_t)m_timeshiftStatus.shift;
+    return m_timeshiftStatus.shift;
+  }
+  inline int64_t GetTimeshiftBufferStart() const
+  {
+    // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+    return m_timeshiftStatus.end;
+  }
+  inline int64_t GetTimeshiftBufferEnd() const
+  {
+    // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+    return m_timeshiftStatus.start;
   }
   inline uint32_t GetSubscriptionId() const
   {
@@ -556,7 +566,9 @@ public:
   void         DemuxSpeed          ( int speed );
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
-  time_t       DemuxGetTimeshiftTime() const;
+  int64_t      DemuxGetTimeshiftTime() const;
+  int64_t      DemuxGetTimeshiftBufferStart() const;
+  int64_t      DemuxGetTimeshiftBufferEnd() const;
 
   /*
    * VFS (pass-thru)

@@ -718,7 +718,7 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   tvhtrace("timeshiftStatus:");
   if (!htsmsg_get_u32(m, "full", &u32))
   {
-    tvhtrace("  full  : %d", m_timeshiftStatus.full);
+    tvhtrace("  full  : %d", u32);
     m_timeshiftStatus.full = (bool)u32;
   }
   else
@@ -727,7 +727,7 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   }
   if (!htsmsg_get_s64(m, "shift", &s64))
   {
-    tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
+    tvhtrace("  shift : %lld", s64);
     m_timeshiftStatus.shift = s64;
   }
   else
@@ -736,12 +736,12 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   }
   if (!htsmsg_get_s64(m, "start", &s64))
   {
-    tvhtrace("  start : %lld", m_timeshiftStatus.start);
+    tvhtrace("  start : %lld", s64);
     m_timeshiftStatus.start = s64;
   }
   if (!htsmsg_get_s64(m, "end", &s64))
   {
-    tvhtrace("  end   : %lld", m_timeshiftStatus.end);
+    tvhtrace("  end   : %lld", s64);
     m_timeshiftStatus.end = s64;
   }
 }
