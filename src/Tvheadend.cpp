@@ -197,14 +197,14 @@ PVR_ERROR CTvheadend::GetTagMembers
       {
         auto cit = m_channels.find(channelId);
 
-        if (cit != m_channels.cend() && cit->second.radio == group.bIsRadio)
+        if (cit != m_channels.cend() && cit->second.IsRadio() == group.bIsRadio)
         {
           PVR_CHANNEL_GROUP_MEMBER gm;
           memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
           strncpy(
             gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
           gm.iChannelUniqueId = cit->second.GetId();
-          gm.iChannelNumber = cit->second.num;
+          gm.iChannelNumber = cit->second.GetNum();
           gms.push_back(gm);
         }
       }
@@ -247,21 +247,21 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
     {
       const auto &channel = entry.second;
 
-      if (radio != channel.radio)
+      if (radio != channel.IsRadio())
         continue;
 
       PVR_CHANNEL chn;
       memset(&chn, 0 , sizeof(PVR_CHANNEL));
 
       chn.iUniqueId         = channel.GetId();
-      chn.bIsRadio          = channel.radio;
-      chn.iChannelNumber    = channel.num;
-      chn.iSubChannelNumber = channel.numMinor;
-      chn.iEncryptionSystem = channel.caid;
+      chn.bIsRadio          = channel.IsRadio();
+      chn.iChannelNumber    = channel.GetNum();
+      chn.iSubChannelNumber = channel.GetNumMinor();
+      chn.iEncryptionSystem = channel.GetCaid();
       chn.bIsHidden         = false;
-      strncpy(chn.strChannelName, channel.name.c_str(),
+      strncpy(chn.strChannelName, channel.GetName().c_str(),
               sizeof(chn.strChannelName) - 1);
-      strncpy(chn.strIconPath, channel.icon.c_str(),
+      strncpy(chn.strIconPath, channel.GetIcon().c_str(),
               sizeof(chn.strIconPath) - 1);
       channels.push_back(chn);
     }
@@ -372,10 +372,10 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Channel name and icon */
       if ((cit = m_channels.find(recording.channel)) != m_channels.end())
       {
-        strncpy(rec.strChannelName, cit->second.name.c_str(),
+        strncpy(rec.strChannelName, cit->second.GetName().c_str(),
                 sizeof(rec.strChannelName) - 1);
 
-        strncpy(rec.strIconPath, cit->second.icon.c_str(),
+        strncpy(rec.strIconPath, cit->second.GetIcon().c_str(),
                 sizeof(rec.strIconPath) - 1);
       }
 
@@ -1463,7 +1463,8 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   existingTag.SetDirty(false);
   
   /* Create new object */
-  Tag tag(u32);
+  Tag tag;
+  tag.SetId(u32);
 
   /* Index */
   if (!htsmsg_get_u32(msg, "tagIndex", &u32))
@@ -1523,7 +1524,6 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
 
 void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
-  bool update = false;
   uint32_t u32;
   const char *str;
   htsmsg_t *list;
@@ -1537,14 +1537,13 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Locate channel object */
   Channel &channel = m_channels[u32];
+  Channel comparison = channel;
   channel.SetId(u32);
   channel.SetDirty(false);
 
   /* Channel name */
   if ((str = htsmsg_get_str(msg, "channelName")) != NULL)
-  {
-    UPDATE(channel.name, str);
-  }
+    channel.SetName(str);
   else if (bAdd)
   {
     tvherror("malformed channelAdd: 'channelName' missing");
@@ -1556,30 +1555,23 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     if (!u32)
       u32 = GetNextUnnumberedChannelNumber();
-    UPDATE(channel.num, u32);
+    channel.SetNum(u32);
   }
   else if (bAdd)
   {
     tvherror("malformed channelAdd: 'channelNumber' missing");
     return;
   }
-  else if (!channel.num)
-  {
-    UPDATE(channel.num, GetNextUnnumberedChannelNumber());
-  }
+  else if (!channel.GetNum())
+    channel.SetNum(GetNextUnnumberedChannelNumber());
   
   /* ATSC subchannel number */
   if (!htsmsg_get_u32(msg, "channelNumberMinor", &u32))
-  {
-    UPDATE(channel.numMinor, u32);
-  }
+    channel.SetNumMinor(u32);
 
   /* Channel icon */
   if ((str = htsmsg_get_str(msg, "channelIcon")) != NULL)
-  {
-    std::string url = GetImageURL(str);
-    UPDATE(channel.icon, url);
-  }
+    channel.SetIcon(GetImageURL(str));
 
   /* Services */
   if ((list = htsmsg_get_list(msg, "services")) != NULL)
@@ -1603,15 +1595,16 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       if (caid == 0)
         htsmsg_get_u32(&f->hmf_msg, "caid", &caid);
     }
-    UPDATE(channel.radio, radio);
-    UPDATE(channel.caid,  caid);
+
+    channel.SetRadio(radio);
+    channel.SetCaid(caid);
   }
-  
 
   /* Update Kodi */
-  if (update) {
+  if (channel != comparison)
+  {
     tvhdebug("channel update id:%u, name:%s",
-              channel.GetId(), channel.name.c_str());
+              channel.GetId(), channel.GetName().c_str());
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
@@ -2033,7 +2026,7 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
   if (oldest)
   {
     tvhtrace("pretuning channel %u on subscription %u",
-             m_channels[channelId].num, oldest->GetSubscriptionId());
+             m_channels[channelId].GetNum(), oldest->GetSubscriptionId());
     oldest->Open(channelId, SUBSCRIPTION_WEIGHT_PRETUNING);
   }
 }
@@ -2043,8 +2036,8 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
   CLockObject lock(m_mutex);
   uint32_t fromNum, toNum;
 
-  fromNum = m_channels[fromChannelId].num;
-  toNum = m_channels[toChannelId].num;
+  fromNum = m_channels[fromChannelId].GetNum();
+  toNum = m_channels[toChannelId].GetNum();
 
   if (fromNum + 1 == toNum || toNum == 1)
   {
@@ -2053,7 +2046,7 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
     {
       const Channel &channel = entry.second;
 
-      if (toNum + 1 == channel.num)
+      if (toNum + 1 == channel.GetNum())
         TuneOnOldest(channel.GetId());
     }
   }
@@ -2064,7 +2057,7 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
     {
       const Channel &channel = entry.second;
 
-      if (toNum - 1 == channel.num)
+      if (toNum - 1 == channel.GetNum())
         TuneOnOldest(channel.GetId());
     }
   }
@@ -2106,7 +2099,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   }
 
   tvhtrace("tuning channel %u on subscription %u",
-           m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
+           m_channels[chn.iUniqueId].GetNum(), oldest->GetSubscriptionId());
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
@@ -2142,7 +2135,7 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
           dmx->GetLastUse() + m_settings.iPreTuneCloseDelay < time(NULL))
       {
         tvhtrace("untuning channel %u on subscription %u",
-                 m_channels[dmx->GetChannelId()].num, dmx->GetSubscriptionId());
+                 m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
         dmx->Close();
       }
       else

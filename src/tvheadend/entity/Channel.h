@@ -54,6 +54,41 @@ namespace tvheadend
         return num < right.num;
       }
 
+      bool operator==(const Channel &other) const
+      {
+        return m_id == other.m_id &&
+               num == other.num &&
+               numMinor == other.numMinor &&
+               radio == other.radio &&
+               caid == other.caid &&
+               name == other.name && 
+               icon == other.icon;
+      }
+
+      bool operator!=(const Channel &other) const
+      {
+        return !(this == &other);
+      }
+
+      uint32_t GetNum() const { return num; }
+      void SetNum(uint32_t num) { this->num = num; }
+
+      uint32_t GetNumMinor() const { return numMinor; }
+      void SetNumMinor(uint32_t numMinor) { this->numMinor = numMinor; }
+
+      bool IsRadio() const { return radio; }
+      void SetRadio(bool radio) { this->radio = radio; }
+
+      uint32_t GetCaid() const { return caid; }
+      void SetCaid(uint32_t caid) { this->caid = caid; }
+
+      const std::string& GetName() const { return name; }
+      void SetName(const std::string &name) { this->name = name; }
+
+      const std::string& GetIcon() const { return icon; }
+      void SetIcon(const std::string &icon) { this->icon = icon; }
+
+    private:
       uint32_t         num;
       uint32_t         numMinor;
       bool             radio;

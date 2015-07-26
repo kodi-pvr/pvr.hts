@@ -90,7 +90,7 @@ bool Tag::ContainsChannelType(bool bRadio) const
   {
     if ((cit = channels.find(*it)) != channels.end())
     {
-      if (bRadio == cit->second.radio)
+      if (bRadio == cit->second.IsRadio())
         return true;
     }
   }
