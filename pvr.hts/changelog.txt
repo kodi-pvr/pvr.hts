@@ -1,6 +1,9 @@
+2.1.17
+- fixed: provide a transitional package to fix upgrade path
+
 2.1.16
-fixed: Debian packaging: fix library install path
-fixed: Miscellaneous backend fixes
+- fixed: Debian packaging: fix library install path
+- fixed: Miscellaneous backend fixes
 
 2.1.15
 - fixed: recordings from older tvheadend versions weren't displayed
