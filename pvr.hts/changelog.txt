@@ -1,3 +1,6 @@
+2.1.17
+- fixed: provide a transitional package to fix upgrade path
+
 2.1.16
 - fixed: Debian packaging: fix library install path
 - fixed: Miscellaneous backend fixes
