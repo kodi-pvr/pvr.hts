@@ -633,8 +633,9 @@ void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
   const char *status;
   status = htsmsg_get_str(m, "status");
 
-  // not for preTuning subscriptions
-  if (m_subscription.weight != SUBSCRIPTION_WEIGHT_NORMAL)
+  // not for preTuning and postTuning subscriptions
+  if (m_subscription.weight == SUBSCRIPTION_WEIGHT_PRETUNING ||
+      m_subscription.weight == SUBSCRIPTION_WEIGHT_POSTTUNING)
     return;
 
   // this field is absent when everything is fine

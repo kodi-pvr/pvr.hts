@@ -2171,6 +2171,14 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   oldest = m_dmx[0];
 
+  if (m_dmx.size() == 1)
+  {
+    /* speedup things if we don't use predictive tuning */
+    ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_SERVERCONF);
+    m_dmx_active = oldest;
+    return ret;
+  }
+
   for (auto *dmx : m_dmx)
   {
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
