@@ -2192,7 +2192,8 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   tvhtrace("tuning channel %u on subscription %u",
            m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
   prevId = m_dmx_active->GetChannelId();
-  ret = oldest->Open(chn.iUniqueId);
+  m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+  ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
   if (ret && m_dmx.size() > 1)
     PredictiveTune(prevId, chn.iUniqueId);
