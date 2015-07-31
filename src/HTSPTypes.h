@@ -62,10 +62,13 @@ enum eHTSPEventType
   HTSP_EVENT_REC_UPDATE = 4,
 };
 
+/* streaming uses a weight of 100 by default on the tvh side */
+/* lowest configurable streaming weight in tvh is 50         */
+/* predictive tuning should be lower to avoid conflicts      */
 enum eSubscriptionWeight {
-  SUBSCRIPTION_WEIGHT_DEFAULT = 150,
-  SUBSCRIPTION_WEIGHT_PRETUNING = 50,
-  SUBSCRIPTION_WEIGHT_POSTTUNING = 40,
+  SUBSCRIPTION_WEIGHT_NORMAL     = 100,
+  SUBSCRIPTION_WEIGHT_PRETUNING  = 40,
+  SUBSCRIPTION_WEIGHT_POSTTUNING = 30,
 };
 
 namespace htsp
@@ -491,7 +494,7 @@ struct SSubscription
     channelId(0),
     speed (1000),
     active(false),
-    weight(SUBSCRIPTION_WEIGHT_DEFAULT)
+    weight(SUBSCRIPTION_WEIGHT_NORMAL)
   {
     static int previousId = 0;
     subscriptionId = ++previousId;

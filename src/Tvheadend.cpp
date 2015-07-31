@@ -2177,7 +2177,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
     {
       tvhtrace("retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].num, dmx->GetSubscriptionId());
-      dmx->Weight(SUBSCRIPTION_WEIGHT_DEFAULT);
+      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
       m_dmx_active = dmx;
