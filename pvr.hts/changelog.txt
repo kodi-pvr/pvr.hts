@@ -1,3 +1,6 @@
+2.2.6
+- Minimal support for PVR API 3.0.0 incl. Repeating EPG Timer AnyTime Bool Change
+
 2.2.5
 - dropped CStdString usage
 - added: Implementation of GetBufferTimeStart and GetBufferTimeEnd (timeshifting).
