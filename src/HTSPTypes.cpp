@@ -279,12 +279,8 @@ time_t RecordingBase::LocaltimeToUTC(int32_t lctime)
   tm_time->tm_hour  = lctime / 60;
   tm_time->tm_min   = lctime % 60;
   tm_time->tm_sec   = 0;
-  tm_time->tm_isdst = 0;
 
-  t = mktime(tm_time);
-
-  /* convert to UTC. */
-  return mktime(gmtime(&t));
+  return mktime(tm_time);
 }
 
 // static
