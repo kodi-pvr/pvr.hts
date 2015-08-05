@@ -205,13 +205,11 @@ public:
   bool operator==(const AutoRecording &right);
   bool operator!=(const AutoRecording &right);
 
-  void SetMinDuration(uint32_t minDuration);
-  void SetMaxDuration(uint32_t maxDuration);
-
   time_t GetStart() const;
   void SetStart(int32_t start);
 
   time_t GetStop() const;
+  void SetStop(int32_t stop);
 
   int64_t GetMarginStart() const;
   void SetMarginStart(int64_t startExtra);
@@ -226,9 +224,8 @@ public:
   void SetFulltext(uint32_t fulltext);
 
 private:
-  uint32_t m_minDuration; // Minimal duration in seconds (0 = Any).
-  uint32_t m_maxDuration; // Maximal duration in seconds (0 = Any).
-  int32_t  m_approxTime;  // Minutes from midnight (up to 24*60).
+  int32_t  m_start;       // Exact start time (minutes from midnight).
+  int32_t  m_startWindow; // Exact stop time (minutes from midnight).
   int64_t  m_startExtra;  // Extra start minutes (pre-time).
   int64_t  m_stopExtra;   // Extra stop minutes (post-time).
   uint32_t m_dupDetect;   // duplicate episode detect (record: 0 = all, 1 = different episode number,

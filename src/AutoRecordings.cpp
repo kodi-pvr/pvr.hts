@@ -172,22 +172,22 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   if (strcmp(timer.strDirectory, "/") != 0)
     htsmsg_add_str(m, "directory", timer.strDirectory);
 
-  /* Note: not sending any of the following for values will be interpreted by tvh as "any". */
+  /* Note: not sending any of the following three values will be interpreted by tvh as "any". */
   if (timer.iClientChannelUid >= 0)
     htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);
 
   if (timer.startTime > 0)
   {
-    /* approx start time in minutes from midnight. tvh will match value +- 15 mins. */
+    /* Exact start time (minutes from midnight). */
     struct tm *tm_start = localtime(&timer.startTime);
-    htsmsg_add_s32(m, "approxTime", tm_start->tm_hour * 60 + tm_start->tm_min);
+    htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
   }
 
-  if ((timer.endTime - timer.startTime) > 0)
+  if (timer.endTime > 0)
   {
-    /* min/max duration: endtime -+ 15 min */
-    htsmsg_add_u32(m, "minDuration", timer.endTime - timer.startTime - 15 * 60);
-    htsmsg_add_u32(m, "maxDuration", timer.endTime - timer.startTime + 15 * 60);
+    /* Exact stop time (minutes from midnight). */
+    struct tm *tm_stop = localtime(&timer.endTime);
+    htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
   }
 
   /* Send and Wait */
@@ -289,26 +289,6 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     return false;
   }
 
-  if (!htsmsg_get_u32(msg, "minDuration", &u32))
-  {
-    rec.SetMinDuration(u32);
-  }
-  else if (bAdd)
-  {
-    tvherror("malformed autorecEntryAdd: 'minDuration' missing");
-    return false;
-  }
-
-  if (!htsmsg_get_u32(msg, "maxDuration", &u32))
-  {
-    rec.SetMaxDuration(u32);
-  }
-  else if (bAdd)
-  {
-    tvherror("malformed autorecEntryAdd: 'maxDuration' missing");
-    return false;
-  }
-
   if (!htsmsg_get_u32(msg, "retention", &u32))
   {
     rec.SetRetention(u32);
@@ -339,13 +319,23 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     return false;
   }
 
-  if (!htsmsg_get_s32(msg, "approxTime", &s32))
+  if (!htsmsg_get_s32(msg, "start", &s32))
   {
     rec.SetStart(s32);
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'approxTime' missing");
+    tvherror("malformed autorecEntryAdd: 'start' missing");
+    return false;
+  }
+
+  if (!htsmsg_get_s32(msg, "startWindow", &s32))
+  {
+    rec.SetStop(s32);
+  }
+  else if (bAdd)
+  {
+    tvherror("malformed autorecEntryAdd: 'startWindow' missing");
     return false;
   }
 
