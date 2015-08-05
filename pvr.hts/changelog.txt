@@ -5,6 +5,7 @@
 - fixed: Autorec: Start and stop time handling.
 - fixed: LocaltimeToUTC conversion (timer settings clock display incorrect)
 - fixed: Several issues with predictive tuning.
+- added: Automatically fill in platform and library name
 
 2.2.4
 - added: Predictive tuning (thanks @martinwilli)
