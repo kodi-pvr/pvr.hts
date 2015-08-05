@@ -191,7 +191,8 @@ public:
   std::string GetServerName    ( void );
   std::string GetServerVersion ( void );
   std::string GetServerString  ( void );
-  
+  int32_t     GetServerTimezone( void );
+
   bool        HasCapability(const std::string &capability) const;
 
   inline bool IsConnected       ( void ) const { return m_ready; }
@@ -208,6 +209,7 @@ private:
   bool        ReadMessage      ( void );
   bool        SendHello        ( void );
   bool        SendAuth         ( const std::string &u, const std::string &p );
+  bool        SendGetSysTime   ( void );
 
   PLATFORM::CTcpSocket               *m_socket;
   PLATFORM::CMutex                    m_mutex;
@@ -221,6 +223,7 @@ private:
   std::string                         m_webRoot;
   void*                               m_challenge;
   int                                 m_challengeLen;
+  int32_t                             m_serverTimezone; // hours west of GMT.
 
   CHTSPResponseList                   m_messages;
   std::vector<std::string>            m_capabilities;
@@ -520,6 +523,10 @@ public:
   std::string GetServerString  ( void )
   {
     return m_conn.GetServerString();
+  }
+  int32_t GetServerTimezone    ( void )
+  {
+    return m_conn.GetServerTimezone();
   }
   inline int GetProtocol ( void ) const
   {
