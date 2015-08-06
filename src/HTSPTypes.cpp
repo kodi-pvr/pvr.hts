@@ -349,9 +349,8 @@ void TimeRecording::SetStop(int32_t stop)
 
 AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
   RecordingBase(id),
-  m_minDuration(0),
-  m_maxDuration(0),
-  m_approxTime(0),
+  m_start(0),
+  m_startWindow(0),
   m_startExtra(0),
   m_stopExtra(0),
   m_dupDetect(0),
@@ -362,9 +361,8 @@ AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
 bool AutoRecording::operator==(const AutoRecording &right)
 {
   return RecordingBase::operator==(right)     &&
-         m_minDuration == right.m_minDuration &&
-         m_maxDuration == right.m_maxDuration &&
-         m_approxTime  == right.m_approxTime  &&
+         m_start       == right.m_start       &&
+         m_startWindow == right.m_startWindow &&
          m_startExtra  == right.m_startExtra  &&
          m_stopExtra   == right.m_stopExtra   &&
          m_dupDetect   == right.m_dupDetect   &&
@@ -376,39 +374,30 @@ bool AutoRecording::operator!=(const AutoRecording &right)
   return !(*this == right);
 }
 
-void AutoRecording::SetMinDuration(uint32_t minDuration)
-{
-  m_minDuration = minDuration;
-}
-
-void AutoRecording::SetMaxDuration(uint32_t maxDuration)
-{
-  m_maxDuration = maxDuration;
-}
-
 time_t AutoRecording::GetStart() const
 {
-  if (m_approxTime == int32_t(-1)) // "any time"
+  if (m_start == int32_t(-1)) // "any time"
     return 0;
 
-  return LocaltimeToUTC(m_approxTime);
+  return LocaltimeToUTC(m_start);
 }
 
 void AutoRecording::SetStart(int32_t start)
 {
-  m_approxTime = start;
+  m_start = start;
 }
 
 time_t AutoRecording::GetStop() const
 {
-  if ((m_minDuration == 0) && (m_maxDuration == 0)) // no durations set => "any stop time"
+  if (m_startWindow == int32_t(-1)) // "any time"
     return 0;
-  else if (m_minDuration == 0)
-    return GetStart() + m_maxDuration;
-  else if (m_maxDuration == 0)
-    return GetStart() + m_minDuration;
-  else
-    return GetStart() + m_minDuration + ((m_maxDuration - m_minDuration) / 2);
+
+  return LocaltimeToUTC(m_startWindow);
+}
+
+void AutoRecording::SetStop(int32_t stop)
+{
+  m_startWindow = stop;
 }
 
 int64_t AutoRecording::GetMarginStart() const
