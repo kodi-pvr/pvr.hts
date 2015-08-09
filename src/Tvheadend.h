@@ -286,7 +286,7 @@ private:
   void         Close0         ( void );
   void         Abort0         ( void );
   bool         Open           ( uint32_t channelId,
-                                enum eSubscriptionWeight weight = SUBSCRIPTION_WEIGHT_DEFAULT );
+                                enum eSubscriptionWeight weight = SUBSCRIPTION_WEIGHT_NORMAL );
   void         Close          ( void );
   DemuxPacket *Read           ( void );
   void         Trim           ( void );

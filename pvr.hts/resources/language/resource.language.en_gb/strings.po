@@ -157,7 +157,7 @@ msgid "Predictive tuning"
 msgstr ""
 
 msgctxt "#30401"
-msgid "Number of tuners to use"
+msgid "Number of subscriptions to use"
 msgstr ""
 
 msgctxt "#30402"

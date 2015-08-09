@@ -2171,13 +2171,21 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   oldest = m_dmx[0];
 
+  if (m_dmx.size() == 1)
+  {
+    /* speedup things if we don't use predictive tuning */
+    ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_SERVERCONF);
+    m_dmx_active = oldest;
+    return ret;
+  }
+
   for (auto *dmx : m_dmx)
   {
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
     {
       tvhtrace("retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].num, dmx->GetSubscriptionId());
-      dmx->Weight(SUBSCRIPTION_WEIGHT_DEFAULT);
+      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
       m_dmx_active = dmx;
@@ -2192,7 +2200,8 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   tvhtrace("tuning channel %u on subscription %u",
            m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
   prevId = m_dmx_active->GetChannelId();
-  ret = oldest->Open(chn.iUniqueId);
+  m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+  ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
   if (ret && m_dmx.size() > 1)
     PredictiveTune(prevId, chn.iUniqueId);

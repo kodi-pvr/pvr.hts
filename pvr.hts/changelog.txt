@@ -4,6 +4,7 @@
 - fixed: Coverity warnings introduced by predictive tuning feature.
 - fixed: Autorec: Start and stop time handling.
 - fixed: LocaltimeToUTC conversion (timer settings clock display incorrect)
+- fixed: Several issues with predictive tuning.
 
 2.2.4
 - added: Predictive tuning (thanks @martinwilli)
