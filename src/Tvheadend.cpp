@@ -841,7 +841,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 
     /* Build message */
     htsmsg_t *m = htsmsg_create_map();
-    if (timer.iEpgUid > 0)
+    if (timer.iEpgUid > 0 && timer.iTimerType == TIMER_ONCE_EPG)
     {
       /* EPG-based timer */
       htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
