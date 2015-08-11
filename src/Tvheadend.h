@@ -197,6 +197,9 @@ public:
   bool        WaitForConnection ( void );
 
   inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
+
+  void        OnSleep ( void );
+  void        OnWake  ( void );
   
 private:
   void*       Process          ( void );
@@ -220,6 +223,8 @@ private:
 
   CHTSPResponseList                   m_messages;
   std::vector<std::string>            m_capabilities;
+
+  bool                                m_suspended;
 };
 
 /*
@@ -495,7 +500,7 @@ public:
   }
   inline bool HasCapability(const std::string &capability) const
   {
-      return m_conn.HasCapability(capability);
+    return m_conn.HasCapability(capability);
   }
   inline bool IsConnected ( void ) const
   {
@@ -504,6 +509,14 @@ public:
   inline void Disconnect ( void )
   {
     m_conn.Disconnect();
+  }
+  inline void OnSleep ( void )
+  {
+    m_conn.OnSleep();
+  }
+  inline void OnWake ( void )
+  {
+    m_conn.OnWake();
   }
 
   /*

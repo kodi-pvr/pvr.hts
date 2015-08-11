@@ -273,9 +273,10 @@ void ADDON_Announce
   /* XBMC/System */
   if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))
   {
-    /* Wake - close connection (it'll most likely need remaking) */
-    if (!strcmp("OnWake", message))
-      tvh->Disconnect();
+    if (!strcmp("OnSleep", message))
+      tvh->OnSleep();
+    else if (!strcmp("OnWake", message))
+      tvh->OnWake();
   }
 }
 
