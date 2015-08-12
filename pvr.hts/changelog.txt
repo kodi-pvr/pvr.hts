@@ -7,6 +7,7 @@
 - fixed: Several issues with predictive tuning.
 - added: build: Automatically fill in platform and library name.
 - fixed: Use epg data only for creation of epg-based timers.
+- improved: Do not try to reconnect to tvh while suspending or not fully awake again.
 
 2.2.4
 - added: Predictive tuning (thanks @martinwilli)
