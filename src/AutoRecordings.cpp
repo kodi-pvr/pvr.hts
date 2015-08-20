@@ -76,6 +76,21 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : -1;
     tmr.startTime          = tit->second.GetStart();
     tmr.endTime            = tit->second.GetStop();
+    if (tmr.startTime == 0)
+      tmr.bStartAnyTime = true;
+    if (tmr.endTime == 0)
+      tmr.bEndAnyTime = true;
+
+    if (!tmr.bStartAnyTime && tmr.bEndAnyTime)
+      tmr.endTime = tmr.startTime + 60 * 60; // Nominal 1 hour duration
+    if (tmr.bStartAnyTime && !tmr.bEndAnyTime)
+      tmr.startTime = tmr.endTime - 60 * 60; // Nominal 1 hour duration
+    if (tmr.bStartAnyTime && tmr.bEndAnyTime)
+    {
+      tmr.startTime = time(NULL); // now
+      tmr.endTime = tmr.startTime + 60 * 60; // Nominal 1 hour duration
+    }
+
     if (tit->second.GetName().empty()) // timers created on backend may not contain a name
       strncpy(tmr.strTitle,
               tit->second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
@@ -176,19 +191,23 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   if (timer.iClientChannelUid >= 0)
     htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);
 
-  if (timer.startTime > 0)
+  if (timer.startTime > 0 && !timer.bStartAnyTime)
   {
     /* Exact start time (minutes from midnight). */
     struct tm *tm_start = localtime(&timer.startTime);
     htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
   }
+  else
+    htsmsg_add_s32(m, "start", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
 
-  if (timer.endTime > 0)
+  if (timer.endTime > 0 && !timer.bEndAnyTime)
   {
     /* Exact stop time (minutes from midnight). */
     struct tm *tm_stop = localtime(&timer.endTime);
     htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
   }
+  else
+    htsmsg_add_s32(m, "startWindow", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
 
   /* Send and Wait */
   {
