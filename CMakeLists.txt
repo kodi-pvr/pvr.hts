@@ -60,6 +60,7 @@ if(WIN32)
   list(APPEND DEPLIBS ws2_32)
 endif()
 
+configure_file(pvr.hts/addon.xml.in ${CMAKE_CURRENT_SOURCE_DIR}/pvr.hts/addon.xml)
 build_addon(pvr.hts HTS DEPLIBS)
 
 include(CPack)
