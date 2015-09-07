@@ -90,16 +90,17 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
     tmr.iTimerType         = TIMER_REPEATING_MANUAL;
     tmr.iPriority          = tit->second.GetPriority();
     tmr.iLifetime          = tit->second.GetRetention();
-    tmr.iRecordingGroup    = 0;            // not supported by tvh
-    tmr.iPreventDuplicateEpisodes = 0;     // n/a for manual timers
-    tmr.firstDay           = 0;            // not supported by tvh
+    tmr.iMaxRecordings     = 0;                    // not supported by tvh
+    tmr.iRecordingGroup    = 0;                    // not supported by tvh
+    tmr.iPreventDuplicateEpisodes = 0;             // n/a for manual timers
+    tmr.firstDay           = 0;                    // not supported by tvh
     tmr.iWeekdays          = tit->second.GetDaysOfWeek();
-    tmr.iEpgUid            = -1;           // n/a for manual timers
-    tmr.iMarginStart       = 0;            // n/a for manual timers
-    tmr.iMarginEnd         = 0;            // n/a for manual timers
-    tmr.iGenreType         = 0;            // not supported by tvh?
-    tmr.iGenreSubType      = 0;            // not supported by tvh?
-    tmr.bFullTextEpgSearch = false;        // n/a for manual timers
+    tmr.iEpgUid            = PVR_TIMER_NO_EPG_UID; // n/a for manual timers
+    tmr.iMarginStart       = 0;                    // n/a for manual timers
+    tmr.iMarginEnd         = 0;                    // n/a for manual timers
+    tmr.iGenreType         = 0;                    // not supported by tvh?
+    tmr.iGenreSubType      = 0;                    // not supported by tvh?
+    tmr.bFullTextEpgSearch = false;                // n/a for manual timers
     tmr.iParentClientIndex = 0;
 
     timers.push_back(tmr);

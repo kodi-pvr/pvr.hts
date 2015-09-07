@@ -1,5 +1,8 @@
+2.2.7
+- Updated to PVR API v4.0.0
+
 2.2.6
-- Minimal support for PVR API 3.0.0 incl. Repeating EPG Timer AnyTime Bool Change
+- Minimal support for PVR API v3.0.0 incl. Repeating EPG Timer AnyTime Bool Change
 
 2.2.5
 - dropped CStdString usage
