@@ -396,7 +396,8 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       }
 
       /* EPG event id */
-      rec.iEpgEventId = rit->second.eventId;
+      /* workaround: causes high cpu usage */
+      //rec.iEpgEventId = rit->second.eventId;
 
       recs.push_back(rec);
     }
