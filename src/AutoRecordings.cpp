@@ -102,27 +102,28 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     strncpy(tmr.strDirectory,
             tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
     strncpy(tmr.strSummary,
-            "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
+            "", sizeof(tmr.strSummary) - 1);       // n/a for repeating timers
     tmr.state              = tit->second.IsEnabled()
                               ? PVR_TIMER_STATE_SCHEDULED
                               : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType         = TIMER_REPEATING_EPG;
     tmr.iPriority          = tit->second.GetPriority();
     tmr.iLifetime          = tit->second.GetRetention();
-    tmr.iRecordingGroup    = 0;            // not supported by tvh
+    tmr.iMaxRecordings     = 0;                    // not supported by tvh
+    tmr.iRecordingGroup    = 0;                    // not supported by tvh
 
     if (m_conn.GetProtocol() >= 20)
       tmr.iPreventDuplicateEpisodes = tit->second.GetDupDetect();
     else
-      tmr.iPreventDuplicateEpisodes = 0;   // not supported by tvh
+      tmr.iPreventDuplicateEpisodes = 0;           // not supported by tvh
 
-    tmr.firstDay           = 0;            // not supported by tvh
+    tmr.firstDay           = 0;                    // not supported by tvh
     tmr.iWeekdays          = tit->second.GetDaysOfWeek();
-    tmr.iEpgUid            = -1;           // n/a for repeating timers
+    tmr.iEpgUid            = PVR_TIMER_NO_EPG_UID; // n/a for repeating timers
     tmr.iMarginStart       = tit->second.GetMarginStart();
     tmr.iMarginEnd         = tit->second.GetMarginEnd();
-    tmr.iGenreType         = 0;            // not supported by tvh?
-    tmr.iGenreSubType      = 0;            // not supported by tvh?
+    tmr.iGenreType         = 0;                    // not supported by tvh?
+    tmr.iGenreSubType      = 0;                    // not supported by tvh?
     tmr.bFullTextEpgSearch = tit->second.GetFulltext();
     tmr.iParentClientIndex = 0;
 

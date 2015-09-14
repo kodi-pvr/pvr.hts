@@ -777,11 +777,12 @@ bool CTvheadend::CreateTimer ( const SRecording &tvhTmr, PVR_TIMER &tmr )
                                 : TIMER_ONCE_MANUAL;
   tmr.iPriority          = tvhTmr.priority;
   tmr.iLifetime          = tvhTmr.retention;
+  tmr.iMaxRecordings     = 0;                // not supported by tvh
   tmr.iRecordingGroup    = 0;                // not supported by tvh
   tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
   tmr.firstDay           = 0;                // not supported by tvh
   tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
-  tmr.iEpgUid            = (tvhTmr.eventId > 0) ? tvhTmr.eventId : -1;
+  tmr.iEpgUid            = tvhTmr.eventId;
   tmr.iMarginStart       = tvhTmr.startExtra;
   tmr.iMarginEnd         = tvhTmr.stopExtra;
   tmr.iGenreType         = 0;                // not supported by tvh?
@@ -848,7 +849,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 
     /* Build message */
     htsmsg_t *m = htsmsg_create_map();
-    if (timer.iEpgUid > 0 && timer.iTimerType == TIMER_ONCE_EPG)
+    if (timer.iEpgUid > PVR_TIMER_NO_EPG_UID && timer.iTimerType == TIMER_ONCE_EPG)
     {
       /* EPG-based timer */
       htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
@@ -913,71 +914,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   }
 }
 
-PVR_ERROR CTvheadend::DeleteRepeatingTimer
-  ( const PVR_TIMER &timer, bool deleteScheduled, bool timerec )
-{
-  if (deleteScheduled)
-  {
-    if (timerec)
-      return m_timeRecordings.SendTimerecDelete(timer);
-    else
-      return m_autoRecordings.SendAutorecDelete(timer);
-  }
-
-  /* Deleting repeating timer's scheduled timers is tvh standard behavior. */
-  /* Thus, clone the scheduled timers before deleting the repeating timer, */
-  /* add them after deleting the repeating timer (adding clones before     */
-  /* deleting the repeating timer will not work due to tvheadend internal  */
-  /* check for duplicates)                                                 */
-
-  /* obtain the children of the timer, if any. */
-  std::string id = timerec
-    ? m_timeRecordings.GetTimerStringIdFromIntId(timer.iClientIndex)
-    : m_autoRecordings.GetTimerStringIdFromIntId(timer.iClientIndex);
-
-  if (id.empty())
-  {
-    tvherror("unable to obtain string id from int id");
-    return PVR_ERROR_FAILED;
-  }
-
-  std::vector<PVR_TIMER> clones;
-  for (auto rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-  {
-    if (!rit->second.IsTimer())
-      continue;
-
-    if ((timerec && (rit->second.timerecId) == id) || (rit->second.autorecId == id))
-    {
-      PVR_TIMER tmr;
-      if (!CreateTimer(rit->second, tmr))
-      {
-        clones.clear();
-        return PVR_ERROR_FAILED;
-      }
-
-      /* adjust timer type. */
-      tmr.iTimerType = (rit->second.eventId > 0) ? TIMER_ONCE_EPG : TIMER_ONCE_MANUAL;
-
-      clones.push_back(tmr);
-    }
-  }
-
-  PVR_ERROR error = timerec
-    ? m_timeRecordings.SendTimerecDelete(timer)
-    : m_autoRecordings.SendAutorecDelete(timer);
-
-  if (error == PVR_ERROR_NO_ERROR)
-  {
-    for (auto it = clones.begin(); it != clones.end(); ++it)
-      AddTimer(*it); // TODO ksooo: error handling
-  }
-
-  return error;
-}
-
-PVR_ERROR CTvheadend::DeleteTimer
-  ( const PVR_TIMER &timer, bool _unused(force), bool deleteScheduled )
+PVR_ERROR CTvheadend::DeleteTimer ( const PVR_TIMER &timer, bool _unused(force) )
 {
   if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
       (timer.iTimerType == TIMER_ONCE_EPG))
@@ -988,12 +925,12 @@ PVR_ERROR CTvheadend::DeleteTimer
   else if (timer.iTimerType == TIMER_REPEATING_MANUAL)
   {
     /* time-based repeating timer */
-    return DeleteRepeatingTimer(timer, deleteScheduled, true);
+    return m_timeRecordings.SendTimerecDelete(timer);
   }
   else if (timer.iTimerType == TIMER_REPEATING_EPG)
   {
     /* EPG-query-based repeating timer */
-    return DeleteRepeatingTimer(timer, deleteScheduled, false);
+    return m_autoRecordings.SendAutorecDelete(timer);
   }
   else
   {

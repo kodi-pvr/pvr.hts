@@ -416,17 +416,14 @@ public:
   int       GetTimerCount     ( void );
   PVR_ERROR GetTimers         ( ADDON_HANDLE handle );
   PVR_ERROR AddTimer          ( const PVR_TIMER &tmr );
-  PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force,
-                                bool deleteScheduled );
+  PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force );
   PVR_ERROR UpdateTimer       ( const PVR_TIMER &tmr );
 
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   
 private:
-  bool      CreateTimer          ( const SRecording &tvhTmr, PVR_TIMER &tmr );
-  PVR_ERROR DeleteRepeatingTimer ( const PVR_TIMER &timer,
-                                   bool deleteScheduled, bool timerec );
+  bool      CreateTimer       ( const SRecording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ( void );
   std::string GetImageURL     ( const char *str );
