@@ -178,6 +178,8 @@ long long CHTSPVFS::Seek ( long long pos, int whence )
   CLockObject lock(m_conn.Mutex());
   if (m_fileId == 0)
     return -1;
+  m_buffer.reset();
+  m_bHasData = false;
   m_bSeekDone = false;
   return SendFileSeek(pos, whence);
 }
