@@ -67,6 +67,7 @@ void CCircBuffer::unalloc(void)
 void CCircBuffer::reset(void)
 {
   CLockObject lock(m_mutex);
+  memset(m_buffer, 0, m_alloc);
   m_pin   = 0;
   m_pout  = 0;
   m_count = 0;
