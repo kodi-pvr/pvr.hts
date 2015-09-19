@@ -20,21 +20,15 @@
  */
 
 #include "platform/threads/mutex.h"
-#include "platform/threads/atomics.h"
-#include "platform/util/timeutils.h"
 #include "platform/util/StringUtils.h"
-#include "platform/sockets/tcp.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"
-#include "libhts/sha1.h"
 }
 
 #include "Tvheadend.h"
-#include "client.h"
 
 using namespace std;
-using namespace ADDON;
 using namespace PLATFORM;
 
 /*
