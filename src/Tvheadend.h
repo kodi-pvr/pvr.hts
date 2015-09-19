@@ -589,7 +589,6 @@ public:
   }
   inline void         VfsClose            ( void )
   {
-    PLATFORM::CLockObject lock(m_conn.Mutex());
     m_vfs.Close();
   }
   inline int          VfsRead             ( unsigned char *buf, unsigned int len )

@@ -103,8 +103,6 @@ void CHTSPVFS::Connected ( void )
 
 bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
 {
-  CLockObject lock(m_conn.Mutex());
-
   /* Close existing */
   Close();
 
@@ -175,7 +173,6 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 
 long long CHTSPVFS::Seek ( long long pos, int whence )
 {
-  CLockObject lock(m_conn.Mutex());
   if (m_fileId == 0)
     return -1;
   m_bSeekDone = false;
@@ -184,7 +181,6 @@ long long CHTSPVFS::Seek ( long long pos, int whence )
 
 long long CHTSPVFS::Tell ( void )
 {
-  CLockObject lock(m_conn.Mutex());
   if (m_fileId == 0)
     return -1;
   return m_offset;
@@ -193,7 +189,6 @@ long long CHTSPVFS::Tell ( void )
 long long CHTSPVFS::Size ( void )
 {
   int64_t ret = -1;
-  CLockObject lock(m_conn.Mutex());
   htsmsg_t *m;
   
   /* Build */
@@ -203,7 +198,12 @@ long long CHTSPVFS::Size ( void )
   tvhtrace("vfs stat id=%d", m_fileId);
   
   /* Send */
-  if ((m = m_conn.SendAndWait("fileStat", m)) == NULL)
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("fileStat", m);
+  }
+
+  if (m == NULL)
     return -1;
 
   /* Get size. Note: 'size' field is optional. */
@@ -232,10 +232,15 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   tvhdebug("vfs open file=%s", m_path.c_str());
 
   /* Send */
-  if (force)
-    m = m_conn.SendAndWait0("fileOpen", m);
-  else
-    m = m_conn.SendAndWait("fileOpen", m);
+  {
+    CLockObject lock(m_conn.Mutex());
+
+    if (force)
+      m = m_conn.SendAndWait0("fileOpen", m);
+    else
+      m = m_conn.SendAndWait("fileOpen", m);
+  }
+
   if (m == NULL)
     return false;
 
@@ -263,7 +268,11 @@ void CHTSPVFS::SendFileClose ( void )
   tvhdebug("vfs close id=%d", m_fileId);
   
   /* Send */
-  m = m_conn.SendAndWait("fileClose", m);
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("fileClose", m);
+  }
+
   if (m)
     htsmsg_destroy(m);
 }
@@ -286,10 +295,15 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
            m_fileId, whence, (long long)pos);
 
   /* Send */
-  if (force)
-    m = m_conn.SendAndWait0("fileSeek", m);
-  else
-    m = m_conn.SendAndWait("fileSeek", m);
+  {
+    CLockObject lock(m_conn.Mutex());
+
+    if (force)
+      m = m_conn.SendAndWait0("fileSeek", m);
+    else
+      m = m_conn.SendAndWait("fileSeek", m);
+  }
+
   if (m == NULL)
     return false;
 
