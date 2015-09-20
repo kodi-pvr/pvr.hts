@@ -1045,6 +1045,7 @@ void CTvheadend::TransferEvent
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
   epg.strEpisodeName      = event.subtitle.c_str();
+  epg.iFlags              = EPG_TAG_FLAG_UNDEFINED;
 
   /* Callback. */
   PVR->TransferEpgEntry(handle, &epg);
