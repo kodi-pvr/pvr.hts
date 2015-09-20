@@ -1,3 +1,9 @@
+2.1.18
+- added: include satpos in mux description
+- improved: Do not try to reconnect to tvh while suspending or not fully awake again.
+- simplified recording playback handling, fixes random skipping to the beginning of recordings
+- fixed: recordings from channels that have been deleted since were not available in Kodi
+
 2.1.17
 - fixed: provide a transitional package to fix upgrade path
 
