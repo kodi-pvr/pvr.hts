@@ -569,7 +569,7 @@ void CloseRecordedStream(void)
 
 int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  return tvh->VfsRead(pBuffer, iBufferSize);
+  return static_cast<int>(tvh->VfsRead(pBuffer, iBufferSize));
 }
 
 long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
