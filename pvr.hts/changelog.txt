@@ -1,6 +1,7 @@
 2.2.8
 - Updated to PVR API v4.1.0
 - simplified recording playback handling, fixes random skipping to the beginning of recordings
+- fixed: recordings from channels that have been deleted since were not available in Kodi
 
 2.2.7
 - Updated to PVR API v4.0.0
