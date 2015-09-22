@@ -18,8 +18,6 @@ add_definitions(-DUSE_DEMUX)
 # Sources and headers
 set(HTS_SOURCES src/AsyncState.cpp
                 src/AsyncState.h
-                src/CircBuffer.cpp
-                src/CircBuffer.h
                 src/client.h
                 src/client.cpp
                 src/HTSPConnection.cpp

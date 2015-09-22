@@ -92,7 +92,7 @@ void *CHTSPRegister::Process ( void )
 CHTSPConnection::CHTSPConnection ()
   : m_socket(NULL), m_regThread(this), m_ready(false), m_seq(0),
     m_serverName(""), m_serverVersion(""), m_htspVersion(0),
-    m_webRoot(""), m_challenge(NULL), m_challengeLen(0)
+    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false)
 {
 }
 
@@ -171,6 +171,26 @@ bool CHTSPConnection::HasCapability(const std::string &capability) const
          != m_capabilities.end();
 }
 
+void CHTSPConnection::OnSleep ( void )
+{
+  CLockObject lock(m_mutex);
+
+  tvhtrace("going to sleep (OnSleep)");
+
+  /* close connection, prevent reconnect while suspending/suspended */
+  m_suspended = true;
+}
+
+void CHTSPConnection::OnWake ( void )
+{
+  CLockObject lock(m_mutex);
+
+  tvhtrace("waking up (OnWake)");
+
+  /* recreate connection */
+  m_suspended = false;
+}
+
 /*
  * Close the connection
  */
@@ -223,8 +243,6 @@ bool CHTSPConnection::ReadMessage ( void )
       return false;
     } 
     cnt += r;
-    if (cnt < len)
-      printf("partial read\n");
   }
 
   /* Deserialize */
@@ -299,7 +317,8 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
   {
     tvherror("failed to write (%s)",
               m_socket->GetError().c_str());
-    Disconnect();
+    if (!m_suspended)
+      Disconnect();
     return false;
   }
 
@@ -337,7 +356,8 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   {
     //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: No response received", method);
     tvherror("Command %s failed: No response received", method);
-    Disconnect();
+    if (!m_suspended)
+      Disconnect();
     return NULL;
   }
 
@@ -500,10 +520,9 @@ void CHTSPConnection::Register ( void )
     return;
   }
 
-  /* Rate limit retry */
 fail:
-  Sleep(5000);
-  Disconnect();
+  if (!m_suspended)
+    Disconnect();
 }
 
 /*
@@ -517,6 +536,8 @@ void* CHTSPConnection::Process ( void )
 
   while (!IsStopped())
   {
+    tvhdebug("new connection requested");
+
     CStdString host = settings.strHostname;
     int port, timeout;
     port = settings.iPortHTSP;
@@ -528,11 +549,6 @@ void* CHTSPConnection::Process ( void )
       if (m_socket)
         delete m_socket;
       tvh->Disconnected();
-      if (!log)
-        tvhdebug("connecting to %s:%d", host.c_str(), port);
-      else
-        tvhtrace("connecting to %s:%d", host.c_str(), port);
-      log = true;
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready  = false;
       m_seq    = 0;
@@ -540,6 +556,24 @@ void* CHTSPConnection::Process ( void )
         free(m_challenge);
         m_challenge = NULL;
       }
+    }
+
+    while (m_suspended)
+    {
+      tvhdebug("suspended. Waiting for wakeup...");
+
+      /* Wait for wakeup */
+      Sleep(1000);
+    }
+
+    if (!log)
+    {
+      tvhdebug("connecting to %s:%d", host.c_str(), port);
+      log = true;
+    }
+    else
+    {
+      tvhtrace("connecting to %s:%d", host.c_str(), port);
     }
 
     /* Connect */
@@ -569,6 +603,7 @@ void* CHTSPConnection::Process ( void )
     {
       if (!ReadMessage())
       {
+        tvhdebug("attempting reconnect");
         break;
       }
     }

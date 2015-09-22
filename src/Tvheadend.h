@@ -29,7 +29,6 @@
 #include "kodi/xbmc_codec_types.h"
 #include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"
-#include "CircBuffer.h"
 #include "Settings.h"
 #include "HTSPTypes.h"
 #include "AsyncState.h"
@@ -197,6 +196,9 @@ public:
   bool        WaitForConnection ( void );
 
   inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
+
+  void        OnSleep ( void );
+  void        OnWake  ( void );
   
 private:
   void*       Process          ( void );
@@ -220,6 +222,8 @@ private:
 
   CHTSPResponseList                   m_messages;
   std::vector<std::string>            m_capabilities;
+
+  bool                                m_suspended;
 };
 
 /*
@@ -287,7 +291,6 @@ private:
  * HTSP VFS - recordings
  */
 class CHTSPVFS 
-  : public PLATFORM::CThread
 {
   friend class CTvheadend;
 
@@ -303,33 +306,17 @@ private:
   uint32_t        m_fileId;
   int64_t         m_offset;
 
-  CCircBuffer                  m_buffer;
-  PLATFORM::CMutex             m_mutex;
-  bool                         m_bHasData;
-  bool                         m_bSeekDone;
-  PLATFORM::CCondition<bool>   m_condition;
-  PLATFORM::CCondition<bool>   m_seekCondition;
-  size_t                       m_currentReadLength;
-
   bool      Open   ( const PVR_RECORDING &rec );
   void      Close  ( void );
-  int       Read   ( unsigned char *buf, unsigned int len );
+  ssize_t   Read   ( unsigned char *buf, unsigned int len );
   long long Seek   ( long long pos, int whence );
   long long Tell   ( void );
   long long Size   ( void );
-  void      Reset  ( void );
-
-  void *Process();
 
   bool      SendFileOpen  ( bool force = false );
   void      SendFileClose ( void );
-  bool      SendFileRead  ( void );
+  ssize_t   SendFileRead  ( unsigned char *buf, unsigned int len );
   long long SendFileSeek  ( int64_t pos, int whence, bool force = false );
-  
-  static const int MAX_BUFFER_SIZE = 5242880; // 5 MB
-  static const int INITAL_READ_LENGTH = 131072; // 128 KB
-  static const int MAX_READ_LENGTH = 1048576; // 1 MB
-  
 };
 
 /*
@@ -495,7 +482,7 @@ public:
   }
   inline bool HasCapability(const std::string &capability) const
   {
-      return m_conn.HasCapability(capability);
+    return m_conn.HasCapability(capability);
   }
   inline bool IsConnected ( void ) const
   {
@@ -504,6 +491,14 @@ public:
   inline void Disconnect ( void )
   {
     m_conn.Disconnect();
+  }
+  inline void OnSleep ( void )
+  {
+    m_conn.OnSleep();
+  }
+  inline void OnWake ( void )
+  {
+    m_conn.OnWake();
   }
 
   /*
@@ -559,10 +554,9 @@ public:
   }
   inline void         VfsClose            ( void )
   {
-    PLATFORM::CLockObject lock(m_conn.Mutex());
     m_vfs.Close();
   }
-  inline int          VfsRead             ( unsigned char *buf, unsigned int len )
+  inline ssize_t       VfsRead             ( unsigned char *buf, unsigned int len )
   {
     return m_vfs.Read(buf, len);
   }

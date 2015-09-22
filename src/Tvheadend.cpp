@@ -1374,12 +1374,6 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (htsmsg_get_u32(msg, "channel", &channel) && bAdd)
-  {
-    tvherror("malformed dvrEntryAdd: 'channel' missing");
-    return;
-  }
-
   if (htsmsg_get_s64(msg, "start", &start) && bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'start' missing");
@@ -1402,9 +1396,14 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   SRecording &rec = m_recordings[id];
   rec.id  = id;
   rec.del = false;
-  UPDATE(rec.channel, channel);
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
+
+  /* Channel is optional, it may not exist anymore */
+  if (!htsmsg_get_u32(msg, "channel", &channel))
+  {
+    UPDATE(rec.channel, channel);
+  }
 
   if (!htsmsg_get_s64(msg, "startExtra", &startExtra))
   {

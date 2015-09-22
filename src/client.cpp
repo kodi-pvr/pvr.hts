@@ -273,9 +273,10 @@ void ADDON_Announce
   /* XBMC/System */
   if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))
   {
-    /* Wake - close connection (it'll most likely need remaking) */
-    if (!strcmp("OnWake", message))
-      tvh->Disconnect();
+    if (!strcmp("OnSleep", message))
+      tvh->OnSleep();
+    else if (!strcmp("OnWake", message))
+      tvh->OnWake();
   }
 }
 
@@ -545,7 +546,7 @@ void CloseRecordedStream(void)
 
 int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  return tvh->VfsRead(pBuffer, iBufferSize);
+  return static_cast<int>(tvh->VfsRead(pBuffer, iBufferSize));
 }
 
 long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
