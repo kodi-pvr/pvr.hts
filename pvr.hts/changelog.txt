@@ -3,7 +3,8 @@
 - simplified recording playback handling, fixes random skipping to the beginning of recordings
 - fixed: recordings from channels that have been deleted since were not available in Kodi
 - added: setting for start time window calculation (autorec)
-- simplified addon settings 
+- simplified addon settings
+- added: support for episode name (subtitle) for recordings
 
 2.2.7
 - Updated to PVR API v4.0.0
