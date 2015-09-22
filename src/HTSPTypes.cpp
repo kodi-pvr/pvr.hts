@@ -270,17 +270,23 @@ void RecordingBase::SetChannel(uint32_t channel)
 // static
 time_t RecordingBase::LocaltimeToUTC(int32_t lctime)
 {
-  /* Note: lctime contains minutes from midnight (up to 24*60) as local time. */
+  /* Note: lctime contains minutes from midnight server local time. */
 
-  /* complete lctime with current year, month, day, ... */
+  /* Obtain time_t for current day midnight GMT */
   time_t t = time(NULL);
-  struct tm *tm_time = localtime(&t);
+  struct tm *tm_time = gmtime(&t);
+  tm_time->tm_hour = 0;
+  tm_time->tm_min  = 0;
+  tm_time->tm_sec  = 0;
+  t = mktime(tm_time);
 
-  tm_time->tm_hour  = lctime / 60;
-  tm_time->tm_min   = lctime % 60;
-  tm_time->tm_sec   = 0;
+  /* Add server timezone (hours) to t to get a time_t for midnight server local time */
+  t += tvh->GetServerTimezone() * 60 * 60;
 
-  return mktime(tm_time);
+  /* Add minutes past midnight server local time */
+  t += lctime * 60;
+
+  return t;
 }
 
 // static

@@ -93,7 +93,8 @@ void *CHTSPRegister::Process ( void )
 CHTSPConnection::CHTSPConnection ()
   : m_socket(NULL), m_regThread(this), m_ready(false), m_seq(0),
     m_serverName(""), m_serverVersion(""), m_htspVersion(0),
-    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false)
+    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false),
+    m_serverTimezone(0)
 {
 }
 
@@ -159,6 +160,12 @@ std::string CHTSPConnection::GetServerString ( void )
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s:%d [%s]", settings.strHostname.c_str(), settings.iPortHTSP,
              m_ready ? "connected" : "disconnected");
+}
+
+int32_t CHTSPConnection::GetServerTimezone( void )
+{
+  CLockObject lock(m_mutex);
+  return m_serverTimezone;
 }
 
 bool CHTSPConnection::HasCapability(const std::string &capability) const
@@ -470,8 +477,32 @@ bool CHTSPConnection::SendAuth
   return (msg != NULL);
 }
 
+bool CHTSPConnection::SendGetSysTime ( void )
+{
+  /* Build message */
+  htsmsg_t *msg = htsmsg_create_map();
+
+  /* Send and Wait */
+  if (!(msg = SendAndWait0("getSysTime", msg)))
+    return false;
+
+  /* Process */
+  int32_t s32;
+  if (htsmsg_get_s32(msg, "timezone", &s32))
+  {
+    tvherror("malformed getSysTime response: 'timezone' missing");
+    htsmsg_destroy(msg);
+    return false;
+  }
+  else
+    m_serverTimezone = s32;
+
+  htsmsg_destroy(msg);
+  return true;
+}
+
 /**
- * Register the connection, hello+auth
+ * Register the connection, hello+auth+systime
  */
 void CHTSPConnection::Register ( void )
 {
@@ -502,6 +533,12 @@ void CHTSPConnection::Register ( void )
     tvhdebug("sending auth");
     
     if (!SendAuth(user, pass))
+      goto fail;
+
+    /* Send GetSysTime */
+    tvhdebug("sending getsystime");
+
+    if (!SendGetSysTime())
       goto fail;
 
     /* Rebuild state */
