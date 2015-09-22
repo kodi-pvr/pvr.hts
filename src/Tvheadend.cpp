@@ -376,6 +376,9 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Title */
       strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle) - 1);
 
+      /* Subtitle */
+      strncpy(rec.strEpisodeName, rit->second.subtitle.c_str(), sizeof(rec.strEpisodeName) - 1);
+
       /* Description */
       strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot) - 1);
 
@@ -1820,6 +1823,10 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
   {
     UPDATE(rec.title, str);
+  }
+  if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
+  {
+    UPDATE(rec.subtitle, str);
   }
   if ((str = htsmsg_get_str(msg, "path")) != NULL)
   {

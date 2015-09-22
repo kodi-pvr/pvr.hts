@@ -281,6 +281,7 @@ struct SRecording
   int64_t          startExtra;
   int64_t          stopExtra;
   std::string      title;
+  std::string      subtitle; /* episode name */
   std::string      path;
   std::string      description;
   std::string      timerecId;
