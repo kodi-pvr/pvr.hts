@@ -16,8 +16,9 @@
     <setting id="autorec_maxdiff" enable="eq(-1,1)"  type="slider" option="int" range="0,5,120" label="30054" default="15" />
     
     <setting label="30400" type="lsep"/>
-    <setting id="total_tuners" type="number" option="int" label="30401" default="1" />
-    <setting id="pretuner_closedelay" type="number" option="int" label="30402" default="10" />
+    <setting id="pretuner_enabled" type="bool" label="30403" default="false" />
+    <setting id="total_tuners" enable="eq(-1,true)" type="slider" option="int" range="2,1,10" label="30401"  default="2" />
+    <setting id="pretuner_closedelay" enable="eq(-2,true)" type="slider" option="int" range="5,5,60" label="30402" default="10" />
     
     <setting label="30100" type="lsep"/>
     <setting id="epg_async" type="bool" label="30101" default="false"/>

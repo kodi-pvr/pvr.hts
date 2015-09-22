@@ -187,5 +187,9 @@ msgid "Number of subscriptions to use"
 msgstr ""
 
 msgctxt "#30402"
-msgid "Unused subscription close delay"
+msgid "Unused subscription close delay (seconds)"
+msgstr ""
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
 msgstr ""
