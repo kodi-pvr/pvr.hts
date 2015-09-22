@@ -37,6 +37,8 @@ namespace tvheadend {
     bool        bAsyncEpg;
     int         iTotalTuners;
     int         iPreTuneCloseDelay;
+    bool        bAutorecApproxTime;
+    int         iAutorecMaxDiff;
   };
 
 }

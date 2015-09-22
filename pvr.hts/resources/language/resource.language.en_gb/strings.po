@@ -19,7 +19,7 @@ msgstr ""
 #settings labels
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr ""
 
 msgctxt "#30001"
@@ -43,17 +43,43 @@ msgid "Password"
 msgstr ""
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
+msgid "Connection timeout (seconds)"
 msgstr ""
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
+msgid "Response timeout (seconds)"
 msgstr ""
 
-#empty strings from id 30008 to 30099
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr ""
+
+#empty strings from id 30009 to 30049
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr ""
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr ""
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr ""
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr ""
+
+#empty strings from id 30055 to 30099
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr ""
 
 msgctxt "#30101"
@@ -161,5 +187,9 @@ msgid "Number of subscriptions to use"
 msgstr ""
 
 msgctxt "#30402"
-msgid "Unused subscription close delay"
+msgid "Unused subscription close delay (seconds)"
+msgstr ""
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
 msgstr ""

@@ -192,23 +192,50 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   if (timer.iClientChannelUid >= 0)
     htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);
 
-  if (timer.startTime > 0 && !timer.bStartAnyTime)
+  /* bAutorecApproxTime enabled:  => start time in kodi = approximate start time in tvh     */
+  /*                              => 'approximate'      = starting window / 2               */
+  /*                                                                                        */
+  /* bAutorecApproxTime disabled: => start time in kodi = begin of starting window in tvh   */
+  /*                              => end time in kodi   = end of starting window in tvh     */
+  if (tvh->GetSettings().bAutorecApproxTime)
   {
-    /* Exact start time (minutes from midnight). */
-    struct tm *tm_start = localtime(&timer.startTime);
-    htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
-  }
-  else
-    htsmsg_add_s32(m, "start", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
+    /* Not sending causes server to set start and startWindow to any time */
+    if (timer.startTime > 0 && !timer.bStartAnyTime)
+    {
+      struct tm *tm_start = localtime(&timer.startTime);
+      int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - tvh->GetSettings().iAutorecMaxDiff;
+      int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + tvh->GetSettings().iAutorecMaxDiff;
 
-  if (timer.endTime > 0 && !timer.bEndAnyTime)
-  {
-    /* Exact stop time (minutes from midnight). */
-    struct tm *tm_stop = localtime(&timer.endTime);
-    htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
+      /* Past midnight correction */
+      if (startWindowBegin < 0)
+        startWindowBegin += (24 * 60);
+      if (startWindowEnd > (24 * 60))
+        startWindowEnd -= (24 * 60);
+
+      htsmsg_add_s32(m, "start", startWindowBegin);
+      htsmsg_add_s32(m, "startWindow", startWindowEnd);
+    }
   }
   else
-    htsmsg_add_s32(m, "startWindow", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
+  {
+    if (timer.startTime > 0 && !timer.bStartAnyTime)
+    {
+      /* Exact start time (minutes from midnight). */
+      struct tm *tm_start = localtime(&timer.startTime);
+      htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
+    }
+    else
+      htsmsg_add_s32(m, "start", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
+
+    if (timer.endTime > 0 && !timer.bEndAnyTime)
+    {
+      /* Exact stop time (minutes from midnight). */
+      struct tm *tm_stop = localtime(&timer.endTime);
+      htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
+    }
+    else
+      htsmsg_add_s32(m, "startWindow", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
+  }
 
   /* Send and Wait */
   {
@@ -341,7 +368,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
 
   if (!htsmsg_get_s32(msg, "start", &s32))
   {
-    rec.SetStart(s32);
+    rec.SetStartWindowBegin(s32);
   }
   else if (bAdd)
   {
@@ -351,7 +378,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
 
   if (!htsmsg_get_s32(msg, "startWindow", &s32))
   {
-    rec.SetStop(s32);
+    rec.SetStartWindowEnd(s32);
   }
   else if (bAdd)
   {

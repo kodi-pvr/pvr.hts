@@ -211,10 +211,10 @@ public:
   bool operator!=(const AutoRecording &right);
 
   time_t GetStart() const;
-  void SetStart(int32_t start);
+  void SetStartWindowBegin(int32_t begin);
 
   time_t GetStop() const;
-  void SetStop(int32_t stop);
+  void SetStartWindowEnd(int32_t end);
 
   int64_t GetMarginStart() const;
   void SetMarginStart(int64_t startExtra);
@@ -229,8 +229,8 @@ public:
   void SetFulltext(uint32_t fulltext);
 
 private:
-  int32_t  m_start;       // Exact start time (minutes from midnight).
-  int32_t  m_startWindow; // Exact stop time (minutes from midnight).
+  int32_t  m_startWindowBegin; // Begin of the starting window (minutes from midnight).
+  int32_t  m_startWindowEnd;   // End of the starting window (minutes from midnight).
   int64_t  m_startExtra;  // Extra start minutes (pre-time).
   int64_t  m_stopExtra;   // Extra stop minutes (post-time).
   uint32_t m_dupDetect;   // duplicate episode detect (record: 0 = all, 1 = different episode number,

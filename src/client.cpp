@@ -55,8 +55,11 @@ string     g_strUsername         = "";
 string     g_strPassword         = "";
 bool       g_bTraceDebug         = false;
 bool       g_bAsyncEpg           = false;
+bool       g_bPreTunerEnabled    = false;
 int        g_iTotalTuners        = DEFAULT_TOTAL_TUNERS;
 int        g_iPreTunerCloseDelay = DEFAULT_PRETUNER_CLOSEDELAY;
+int        g_iAutorecApproxTime  = DEFAULT_APPROX_TIME;
+int        g_iAutorecMaxDiff     = DEFAULT_AUTOREC_MAXDIFF;
 
 /*
  * Global state
@@ -97,12 +100,17 @@ void ADDON_ReadSettings(void)
   UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_RESPONSE_TIMEOUT);
   UPDATE_INT(g_iTotalTuners,  "total_tuners",  DEFAULT_TOTAL_TUNERS);
   UPDATE_INT(g_iPreTunerCloseDelay, "pretuner_closedelay",  DEFAULT_PRETUNER_CLOSEDELAY);
+  UPDATE_INT(g_bPreTunerEnabled, "pretuner_enabled", false);
 
   /* Data Transfer */
   UPDATE_INT(g_bAsyncEpg,   "epg_async", false);
 
   /* Debug */
   UPDATE_INT(g_bTraceDebug, "trace_debug", false);
+
+  /* Auto recordings */
+  UPDATE_INT(g_iAutorecApproxTime, "autorec_approxtime", DEFAULT_APPROX_TIME);
+  UPDATE_INT(g_iAutorecMaxDiff, "autorec_maxdiff", DEFAULT_AUTOREC_MAXDIFF);
 
   /* TODO: Transcoding */
 
@@ -143,14 +151,24 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   settings.bTraceDebug = g_bTraceDebug;
   settings.bAsyncEpg = g_bAsyncEpg;
 
-  /* Timeouts are defined in seconds but we expect them to be in milliseconds. 
-     Furthermore, the value from the settings is actually the index of the 
-     selected value, which is zero-based, so we need to increment by one. */
-  settings.iConnectTimeout = (g_iConnectTimeout + 1) * 1000;
-  settings.iResponseTimeout = (g_iResponseTimeout + 1) * 1000;
+  /* Timeouts are defined in seconds but we expect them to be in milliseconds. */
+  settings.iConnectTimeout = (g_iConnectTimeout * 1000);
+  settings.iResponseTimeout = (g_iResponseTimeout * 1000);
 
-  settings.iTotalTuners = g_iTotalTuners;
-  settings.iPreTuneCloseDelay = g_iPreTunerCloseDelay;
+  if (g_bPreTunerEnabled)
+  {
+    settings.iTotalTuners = g_iTotalTuners;
+    settings.iPreTuneCloseDelay = g_iPreTunerCloseDelay;
+  }
+  else
+  {
+    /* When we don't want to use predictive tuning */
+    settings.iTotalTuners = 1;
+    settings.iPreTuneCloseDelay = 0;
+  }
+
+  settings.bAutorecApproxTime = (g_iAutorecApproxTime > 0);
+  settings.iAutorecMaxDiff = g_iAutorecMaxDiff;
 
   tvh = new CTvheadend(settings);
   tvh->Start();
@@ -260,6 +278,11 @@ ADDON_STATUS ADDON_SetSetting
   /* Predictive Tuning */
   UPDATE_INT("total_tuners", int, g_iTotalTuners);
   UPDATE_INT("pretuner_closedelay", int, g_iPreTunerCloseDelay);
+  UPDATE_INT("pretuner_enabled", bool, g_bPreTunerEnabled);
+
+  /* Auto Recordings */
+  UPDATE_INT("autorec_approxtime", int, g_iAutorecApproxTime);
+  UPDATE_INT("autorec_maxdiff", int, g_iAutorecMaxDiff);
 
   return ADDON_STATUS_OK;
 

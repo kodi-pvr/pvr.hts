@@ -345,8 +345,8 @@ void TimeRecording::SetStop(int32_t stop)
 
 AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
   RecordingBase(id),
-  m_start(0),
-  m_startWindow(0),
+  m_startWindowBegin(0),
+  m_startWindowEnd(0),
   m_startExtra(0),
   m_stopExtra(0),
   m_dupDetect(0),
@@ -356,13 +356,13 @@ AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
 
 bool AutoRecording::operator==(const AutoRecording &right)
 {
-  return RecordingBase::operator==(right)     &&
-         m_start       == right.m_start       &&
-         m_startWindow == right.m_startWindow &&
-         m_startExtra  == right.m_startExtra  &&
-         m_stopExtra   == right.m_stopExtra   &&
-         m_dupDetect   == right.m_dupDetect   &&
-         m_fulltext    == right.m_fulltext;
+  return RecordingBase::operator==(right)               &&
+         m_startWindowBegin == right.m_startWindowBegin &&
+         m_startWindowEnd   == right.m_startWindowEnd   &&
+         m_startExtra       == right.m_startExtra       &&
+         m_stopExtra        == right.m_stopExtra        &&
+         m_dupDetect        == right.m_dupDetect        &&
+         m_fulltext         == right.m_fulltext;
 }
 
 bool AutoRecording::operator!=(const AutoRecording &right)
@@ -372,28 +372,58 @@ bool AutoRecording::operator!=(const AutoRecording &right)
 
 time_t AutoRecording::GetStart() const
 {
-  if (m_start == int32_t(-1)) // "any time"
-    return 0;
+  if (tvh->GetSettings().bAutorecApproxTime)
+  {
+    /* Calculate the approximate start time from the starting window */
+    if ((m_startWindowBegin == int32_t(-1)) || (m_startWindowEnd == int32_t(-1))) // no starting window set => "any time"
+      return 0;
+    else if (m_startWindowEnd < m_startWindowBegin)
+    {
+      /* End of start window is a day in the future */
+      int32_t newEnd  = m_startWindowEnd + (24 * 60);
+      int32_t newStart = m_startWindowBegin + (newEnd - m_startWindowBegin) / 2;
 
-  return LocaltimeToUTC(m_start);
+      if (newStart > (24 * 60))
+        newStart -= (24 * 60);
+
+      return LocaltimeToUTC(newStart);
+    }
+    else
+      return LocaltimeToUTC(m_startWindowBegin + (m_startWindowEnd - m_startWindowBegin) / 2);
+  }
+  else
+  {
+    if (m_startWindowBegin == int32_t(-1)) // "any time"
+      return 0;
+
+    return LocaltimeToUTC(m_startWindowBegin);
+  }
 }
 
-void AutoRecording::SetStart(int32_t start)
+void AutoRecording::SetStartWindowBegin(int32_t begin)
 {
-  m_start = start;
+  m_startWindowBegin = begin;
 }
 
 time_t AutoRecording::GetStop() const
 {
-  if (m_startWindow == int32_t(-1)) // "any time"
+  if (tvh->GetSettings().bAutorecApproxTime)
+  {
+    /* Tvh doesn't have an approximate stop time => "any time" */
     return 0;
+  }
+  else
+  {
+    if (m_startWindowEnd == int32_t(-1)) // "any time"
+      return 0;
 
-  return LocaltimeToUTC(m_startWindow);
+    return LocaltimeToUTC(m_startWindowEnd);
+  }
 }
 
-void AutoRecording::SetStop(int32_t stop)
+void AutoRecording::SetStartWindowEnd(int32_t end)
 {
-  m_startWindow = stop;
+  m_startWindowEnd = end;
 }
 
 int64_t AutoRecording::GetMarginStart() const
