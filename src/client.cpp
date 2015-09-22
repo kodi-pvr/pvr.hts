@@ -57,6 +57,8 @@ bool       g_bTraceDebug         = false;
 bool       g_bAsyncEpg           = false;
 int        g_iTotalTuners        = DEFAULT_TOTAL_TUNERS;
 int        g_iPreTunerCloseDelay = DEFAULT_PRETUNER_CLOSEDELAY;
+int        g_iAutorecApproxTime  = DEFAULT_APPROX_TIME;
+int        g_iAutorecMaxDiff     = DEFAULT_AUTOREC_MAXDIFF;
 
 /*
  * Global state
@@ -103,6 +105,10 @@ void ADDON_ReadSettings(void)
 
   /* Debug */
   UPDATE_INT(g_bTraceDebug, "trace_debug", false);
+
+  /* Auto recordings */
+  UPDATE_INT(g_iAutorecApproxTime, "autorec_approxtime", DEFAULT_APPROX_TIME);
+  UPDATE_INT(g_iAutorecMaxDiff, "autorec_maxdiff", DEFAULT_AUTOREC_MAXDIFF);
 
   /* TODO: Transcoding */
 
@@ -151,6 +157,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
   settings.iTotalTuners = g_iTotalTuners;
   settings.iPreTuneCloseDelay = g_iPreTunerCloseDelay;
+
+  settings.bAutorecApproxTime = (g_iAutorecApproxTime > 0);
+  settings.iAutorecMaxDiff = g_iAutorecMaxDiff;
 
   tvh = new CTvheadend(settings);
   tvh->Start();
@@ -260,6 +269,10 @@ ADDON_STATUS ADDON_SetSetting
   /* Predictive Tuning */
   UPDATE_INT("total_tuners", int, g_iTotalTuners);
   UPDATE_INT("pretuner_closedelay", int, g_iPreTunerCloseDelay);
+
+  /* Auto Recordings */
+  UPDATE_INT("autorec_approxtime", int, g_iAutorecApproxTime);
+  UPDATE_INT("autorec_maxdiff", int, g_iAutorecMaxDiff);
 
   return ADDON_STATUS_OK;
 

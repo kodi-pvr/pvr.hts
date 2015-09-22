@@ -38,6 +38,10 @@ extern CHelper_libXBMC_codec*         CODEC;
 #define DEFAULT_TOTAL_TUNERS        1
 #define DEFAULT_PRETUNER_CLOSEDELAY 10
 
+/* Maximum difference between real and approximate start time for auto recordings (minutes) */
+#define DEFAULT_AUTOREC_MAXDIFF      15
+#define DEFAULT_APPROX_TIME          0
+
 /* timer type ids */
 #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
 #define TIMER_ONCE_EPG                (PVR_TIMER_TYPE_NONE + 2)

@@ -691,9 +691,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
         PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
         PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
-        PVR_TIMER_TYPE_SUPPORTS_END_TIME           |
         PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
-        PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME        |
         PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
         PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
         PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
@@ -704,6 +702,13 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
     {
       TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
       TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
+    }
+
+    if (!m_settings.bAutorecApproxTime)
+    {
+      /* We need the end time to represent the end of the tvh starting window */
+      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
+      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
     }
 
     timerTypes.push_back(
