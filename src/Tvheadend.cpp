@@ -655,7 +655,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
     deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
   }
 
-  static const unsigned int TIMER_ONCE_MANUAL_ATTRIBS
+  unsigned int TIMER_ONCE_MANUAL_ATTRIBS
     = PVR_TIMER_TYPE_IS_MANUAL           |
       PVR_TIMER_TYPE_SUPPORTS_CHANNELS   |
       PVR_TIMER_TYPE_SUPPORTS_START_TIME |
@@ -663,7 +663,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY   |
       PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
 
-  static const unsigned int TIMER_ONCE_EPG_ATTRIBS
+  unsigned int TIMER_ONCE_EPG_ATTRIBS
     = PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
       PVR_TIMER_TYPE_SUPPORTS_START_TIME        |
       PVR_TIMER_TYPE_SUPPORTS_END_TIME          |
@@ -671,6 +671,12 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN  |
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
       PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
+
+  if (m_conn.GetProtocol() >= 23)
+  {
+    TIMER_ONCE_MANUAL_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
+    TIMER_ONCE_EPG_ATTRIBS    |= PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
+  }
 
   /* Timer types definition. */
   static std::vector< std::unique_ptr<TimerType> > timerTypes;
@@ -845,7 +851,14 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
           "", sizeof(tmr.strDirectory) - 1);       // n/a for one-shot timers
   strncpy(tmr.strSummary,
           tvhTmr.GetDescription().c_str(), sizeof(tmr.strSummary) - 1);
-  tmr.state              = tvhTmr.GetState();
+
+  if (m_conn.GetProtocol() >= 23)
+    tmr.state            = !tvhTmr.IsEnabled()
+                            ? PVR_TIMER_STATE_DISABLED
+                            : tvhTmr.GetState();
+  else
+    tmr.state            = tvhTmr.GetState();
+
   tmr.iPriority          = tvhTmr.GetPriority();
   tmr.iLifetime          = tvhTmr.GetRetention();
   tmr.iTimerType         = tvhTmr.GetTimerType();
@@ -877,9 +890,7 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
   {
     CLockObject lock(m_mutex);
 
-    /*
-     * One-shot timers
-     */
+    /* One-shot timers */
     for (const auto &entry : m_recordings)
     {
       const auto &recording = entry.second;
@@ -943,6 +954,9 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
       htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
       htsmsg_add_str(m, "description",  timer.strSummary);
     }
+
+    if (m_conn.GetProtocol() >= 23)
+      htsmsg_add_u32(m, "enabled",  timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
     htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
@@ -1046,6 +1060,9 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     }
 
     htsmsg_add_str(m, "title",        timer.strTitle);
+
+    if (m_conn.GetProtocol() >= 23)
+      htsmsg_add_u32(m, "enabled",    timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
     int64_t start = timer.startTime;
     if (start == 0)
@@ -1704,7 +1721,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   const char *state, *str;
-  uint32_t id, channel, eventId, retention, priority;
+  uint32_t id, channel, eventId, retention, priority, enabled;
   int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
@@ -1811,6 +1828,8 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Add optional fields */
   if (!htsmsg_get_u32(msg, "eventId", &eventId))
     rec.SetEventId(eventId);
+  if (!htsmsg_get_u32(msg, "enabled", &enabled))
+    rec.SetEnabled(enabled);
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
     rec.SetTitle(str);
   if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
