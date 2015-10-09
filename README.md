@@ -1,3 +1,5 @@
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
+
 # Tvheadend HTSP PVR
 Tvheadend HTSP PVR client addon for [Kodi] (http://kodi.tv)
 
