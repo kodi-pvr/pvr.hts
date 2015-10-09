@@ -1592,8 +1592,9 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Update Kodi */
   if (channel != comparison)
   {
-    tvhdebug("channel update id:%u, name:%s",
-              channel.GetId(), channel.GetName().c_str());
+    tvhdebug("channel %s id:%u, name:%s",
+             (bAdd ? "added" : "updated"), channel.GetId(), channel.GetName().c_str());
+
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
