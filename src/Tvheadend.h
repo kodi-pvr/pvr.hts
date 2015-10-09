@@ -37,6 +37,9 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/status/Quality.h"
+#include "tvheadend/status/SourceInfo.h"
+#include "tvheadend/status/TimeshiftStatus.h"
 #include "TimeRecordings.h"
 #include "AutoRecordings.h"
 #include <map>
@@ -286,9 +289,9 @@ private:
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
-  SSourceInfo                             m_sourceInfo;
-  SQuality                                m_signalInfo;
-  STimeshiftStatus                        m_timeshiftStatus;
+  tvheadend::status::SourceInfo           m_sourceInfo;
+  tvheadend::status::Quality              m_signalInfo;
+  tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
   SSubscription                           m_subscription;
   time_t                                  m_lastUse;
   

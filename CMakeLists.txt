@@ -49,11 +49,18 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/TimeRecording.h
                 src/tvheadend/entity/TimeRecording.cpp)
 
+set(HTS_SOURCES_TVHEADEND_STATUS
+        src/tvheadend/status/Quality.h
+        src/tvheadend/status/QueueStatus.h
+        src/tvheadend/status/SourceInfo.h
+        src/tvheadend/status/TimeshiftStatus.h)
+
 set(HTS_SOURCES_TVHEADEND_UTILITIES
 				src/tvheadend/utilities/Utilities.h)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
+source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STATUS})
 source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
 # Resource files
