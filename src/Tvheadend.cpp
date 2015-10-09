@@ -380,7 +380,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       strncpy(rec.strTitle, recording.GetTitle().c_str(), sizeof(rec.strTitle) - 1);
 
       /* Subtitle */
-      strncpy(rec.strEpisodeName, rit->second.subtitle.c_str(), sizeof(rec.strEpisodeName) - 1);
+      strncpy(rec.strEpisodeName, recording.GetSubtitle().c_str(), sizeof(rec.strEpisodeName) - 1);
 
       /* Description */
       strncpy(rec.strPlot, recording.GetDescription().c_str(), sizeof(rec.strPlot) - 1);

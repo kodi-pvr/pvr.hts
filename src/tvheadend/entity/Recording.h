@@ -142,17 +142,20 @@ namespace tvheadend
       const std::string& GetTitle() const { return m_title; }
       void SetTitle(const std::string &title) { m_title = title; }
 
+      const std::string& GetSubtitle() const { return m_subtitle; }
+      void SetSubtitle(const std::string &subtitle) { m_subtitle = subtitle; }
+
       const std::string& GetPath() const { return m_path; }
       void SetPath(const std::string &path) { m_path = path; }
 
       const std::string& GetDescription() const { return m_description; }
       void SetDescription(const std::string &description) { m_description = description; }
 
-      const std::string& GetTimerecId() const { return m_autorecId; }
-      void SetTimerecId(const std::string &autorecId) { m_autorecId = autorecId; }
+      const std::string& GetTimerecId() const { return m_timerecId; }
+      void SetTimerecId(const std::string &autorecId) { m_timerecId = autorecId; }
 
-      const std::string& GetAutorecId() const { return m_title; }
-      void SetAutorecId(const std::string &title) { m_title = title; }
+      const std::string& GetAutorecId() const { return m_autorecId; }
+      void SetAutorecId(const std::string &title) { m_autorecId = title; }
 
       PVR_TIMER_STATE GetState() const { return m_state; }
       void SetState(const PVR_TIMER_STATE &state) { m_state = state; }
@@ -174,6 +177,7 @@ namespace tvheadend
       int64_t          m_startExtra;
       int64_t          m_stopExtra;
       std::string      m_title;
+      std::string      m_subtitle;
       std::string      m_path;
       std::string      m_description;
       std::string      m_timerecId;
