@@ -80,7 +80,7 @@ namespace tvheadend
 
       bool operator!=(const Event &other) const
       {
-        return !(this == &other);
+        return !(*this == other);
       }
 
       uint32_t GetNext() const { return m_next; }

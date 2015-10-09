@@ -67,7 +67,7 @@ namespace tvheadend
 
       bool operator!=(const Channel &other) const
       {
-        return !(this == &other);
+        return !(*this == other);
       }
 
       uint32_t GetNum() const { return m_num; }

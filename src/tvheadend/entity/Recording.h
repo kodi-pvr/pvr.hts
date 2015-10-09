@@ -86,7 +86,7 @@ namespace tvheadend
 
       bool operator!=(const Recording &other) const
       {
-        return !(this == &other);
+        return !(*this == other);
       }
 
       bool IsRecording() const
