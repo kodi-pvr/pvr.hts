@@ -22,8 +22,11 @@
 #include "TimeRecordings.h"
 
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 using namespace PLATFORM;
+using namespace tvheadend;
+using namespace tvheadend::entity;
 
 TimeRecordings::TimeRecordings(CHTSPConnection &conn) :
   m_conn(conn)
@@ -41,22 +44,12 @@ void TimeRecordings::Connected()
     it->second.SetDirty(true);
 }
 
-bool TimeRecordings::SyncDvrCompleted()
+void TimeRecordings::SyncDvrCompleted()
 {
-  bool update(false);
-
-  auto it = m_timeRecordings.begin();
-  while (it != m_timeRecordings.end())
+  utilities::erase_if(m_timeRecordings, [](const TimeRecordingMapEntry &entry)
   {
-    if (it->second.IsDirty())
-    {
-      update = true;
-      m_timeRecordings.erase(it++);
-    }
-    else
-      ++it;
-  }
-  return update;
+    return entry.second.IsDirty();
+  });
 }
 
 int TimeRecordings::GetTimerecTimerCount() const
@@ -72,7 +65,7 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
     PVR_TIMER tmr;
     memset(&tmr, 0, sizeof(tmr));
 
-    tmr.iClientIndex       = tit->second.GetIntId();
+    tmr.iClientIndex       = tit->second.GetId();
     tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : -1;
     tmr.startTime          = tit->second.GetStart();
     tmr.endTime            = tit->second.GetStop();
@@ -111,7 +104,7 @@ const std::string TimeRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
 {
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == intId)
+    if (tit->second.GetId() == intId)
       return tit->second.GetStringId();
   }
   tvherror("Timerec: Unable to obtain string id for int id %d", intId);
@@ -123,7 +116,7 @@ const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string &
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
     if (tit->second.GetStringId() == strId)
-      return tit->second.GetIntId();
+      return tit->second.GetId();
   }
   tvherror("Timerec: Unable to obtain int id for string id %s", strId.c_str());
   return 0;
@@ -196,7 +189,7 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
   std::string strId;
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == timer.iClientIndex)
+    if (tit->second.GetId() == timer.iClientIndex)
     {
       strId = tit->second.GetStringId();
       break;
@@ -239,7 +232,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
 
   /* Locate/create entry */
-  htsp::TimeRecording &rec = m_timeRecordings[std::string(str)];
+  TimeRecording &rec = m_timeRecordings[std::string(str)];
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 

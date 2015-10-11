@@ -22,8 +22,11 @@
 #include "AutoRecordings.h"
 
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 using namespace PLATFORM;
+using namespace tvheadend;
+using namespace tvheadend::entity;
 
 AutoRecordings::AutoRecordings(CHTSPConnection &conn) :
   m_conn(conn)
@@ -41,22 +44,12 @@ void AutoRecordings::Connected()
     it->second.SetDirty(true);
 }
 
-bool AutoRecordings::SyncDvrCompleted()
+void AutoRecordings::SyncDvrCompleted()
 {
-  bool update(false);
-
-  auto it = m_autoRecordings.begin();
-  while (it != m_autoRecordings.end())
+  utilities::erase_if(m_autoRecordings, [](const AutoRecordingMapEntry &entry)
   {
-    if (it->second.IsDirty())
-    {
-      update = true;
-      m_autoRecordings.erase(it++);
-    }
-    else
-      ++it;
-  }
-  return update;
+    return entry.second.IsDirty();
+  });
 }
 
 int AutoRecordings::GetAutorecTimerCount() const
@@ -72,7 +65,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     PVR_TIMER tmr;
     memset(&tmr, 0, sizeof(tmr));
 
-    tmr.iClientIndex       = tit->second.GetIntId();
+    tmr.iClientIndex       = tit->second.GetId();
     tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : -1;
     tmr.startTime          = tit->second.GetStart();
     tmr.endTime            = tit->second.GetStop();
@@ -135,7 +128,7 @@ const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
 {
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == intId)
+    if (tit->second.GetId() == intId)
       return tit->second.GetStringId();
   }
   tvherror("Autorec: Unable to obtain string id for int id %d", intId);
@@ -147,7 +140,7 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
     if (tit->second.GetStringId() == strId)
-      return tit->second.GetIntId();
+      return tit->second.GetId();
   }
   tvherror("Autorec: Unable to obtain int id for string id %s", strId.c_str());
   return 0;
@@ -276,7 +269,7 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER &timer)
   std::string strId;
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
-    if (tit->second.GetIntId() == timer.iClientIndex)
+    if (tit->second.GetId() == timer.iClientIndex)
     {
       strId = tit->second.GetStringId();
       break;
@@ -320,7 +313,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
 
   /* Locate/create entry */
-  htsp::AutoRecording &rec = m_autoRecordings[std::string(str)];
+  AutoRecording &rec = m_autoRecordings[std::string(str)];
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 

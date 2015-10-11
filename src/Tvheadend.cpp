@@ -23,6 +23,7 @@
 #include <ctime>
 #include <memory>
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Utilities.h"
 
 #include "platform/util/util.h"
 #include "platform/threads/atomics.h"
@@ -31,16 +32,11 @@ extern "C" {
 #include "libhts/htsmsg_binary.h"
 }
 
-#define UPDATE(x, y)\
-if ((x) != (y))\
-{\
-  (x) = (y);\
-  update = true;\
-}
-
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
+using namespace tvheadend;
+using namespace tvheadend::entity;
 
 CTvheadend::CTvheadend(tvheadend::Settings settings)
   : m_settings(settings), m_streamchange(false), m_vfs(m_conn),
@@ -138,22 +134,22 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
   std::vector<PVR_CHANNEL_GROUP> tags;
   {
     CLockObject lock(m_mutex);
-    htsp::Tags::const_iterator it;
-    for (it = m_tags.begin(); it != m_tags.end(); ++it)
+
+    for (const auto &entry : m_tags)
     {
       /* Does group contain channels of the requested type?             */
       /* Note: tvheadend groups can contain both radio and tv channels. */
       /*       Thus, one tvheadend group can 'map' to two Kodi groups.  */
-      if (!it->second.ContainsChannelType(bRadio))
+      if (!entry.second.ContainsChannelType(bRadio))
         continue;
 
       PVR_CHANNEL_GROUP tag;
       memset(&tag, 0, sizeof(tag));
 
-      strncpy(tag.strGroupName, it->second.GetName().c_str(),
+      strncpy(tag.strGroupName, entry.second.GetName().c_str(),
               sizeof(tag.strGroupName) - 1);
       tag.bIsRadio = bRadio;
-      tag.iPosition = it->second.GetIndex();
+      tag.iPosition = entry.second.GetIndex();
       tags.push_back(tag);
     }
   }
@@ -177,33 +173,34 @@ PVR_ERROR CTvheadend::GetTagMembers
   std::vector<PVR_CHANNEL_GROUP_MEMBER> gms;
   {
     CLockObject lock(m_mutex);
-    vector<uint32_t>::const_iterator it;
-    SChannels::const_iterator cit;
-    htsp::Tags::const_iterator tit = m_tags.begin();
-    while (tit != m_tags.end())
-    {
-      if (tit->second.GetName() == group.strGroupName)
-      {
-        for (it = tit->second.GetChannels().begin();
-             it != tit->second.GetChannels().end(); ++it)
-        {
-          if ((cit = m_channels.find(*it)) != m_channels.end())
-          {
-            if (group.bIsRadio != cit->second.radio)
-              continue;
 
-            PVR_CHANNEL_GROUP_MEMBER gm;
-            memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
-            strncpy(
-              gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
-            gm.iChannelUniqueId = cit->second.id;
-            gm.iChannelNumber   = cit->second.num;
-            gms.push_back(gm);
-          }
+    // Find the tag
+    const auto it = std::find_if(
+      m_tags.cbegin(),
+      m_tags.cend(),
+      [group](const TagMapEntry &tag)
+    {
+      return tag.second.GetName() == group.strGroupName;
+    });
+
+    if (it != m_tags.cend())
+    {
+      // Find all channels in this group that are of the correct type
+      for (const auto &channelId : it->second.GetChannels())
+      {
+        auto cit = m_channels.find(channelId);
+
+        if (cit != m_channels.cend() && cit->second.IsRadio() == group.bIsRadio)
+        {
+          PVR_CHANNEL_GROUP_MEMBER gm;
+          memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+          strncpy(
+            gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
+          gm.iChannelUniqueId = cit->second.GetId();
+          gm.iChannelNumber = cit->second.GetNum();
+          gms.push_back(gm);
         }
-        break;
       }
-      ++tit;
     }
   }
 
@@ -238,24 +235,26 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
   std::vector<PVR_CHANNEL> channels;
   {
     CLockObject lock(m_mutex);
-    SChannels::const_iterator it;
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    
+    for (const auto &entry : m_channels)
     {
-      if (radio != it->second.radio)
+      const auto &channel = entry.second;
+
+      if (radio != channel.IsRadio())
         continue;
 
       PVR_CHANNEL chn;
       memset(&chn, 0 , sizeof(PVR_CHANNEL));
 
-      chn.iUniqueId         = it->second.id;
-      chn.bIsRadio          = it->second.radio;
-      chn.iChannelNumber    = it->second.num;
-      chn.iSubChannelNumber = it->second.numMinor;
-      chn.iEncryptionSystem = it->second.caid;
+      chn.iUniqueId         = channel.GetId();
+      chn.bIsRadio          = channel.IsRadio();
+      chn.iChannelNumber    = channel.GetNum();
+      chn.iSubChannelNumber = channel.GetNumMinor();
+      chn.iEncryptionSystem = channel.GetCaid();
       chn.bIsHidden         = false;
-      strncpy(chn.strChannelName, it->second.name.c_str(),
+      strncpy(chn.strChannelName, channel.GetName().c_str(),
               sizeof(chn.strChannelName) - 1);
-      strncpy(chn.strIconPath, it->second.icon.c_str(),
+      strncpy(chn.strIconPath, channel.GetIcon().c_str(),
               sizeof(chn.strIconPath) - 1);
       channels.push_back(chn);
     }
@@ -329,14 +328,16 @@ int CTvheadend::GetRecordingCount ( void )
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
-  
-  int ret = 0;
-  SRecordings::const_iterator rit;
+
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    if (rit->second.IsRecording())
-      ret++;
-  return ret;
+
+  return std::count_if(
+    m_recordings.cbegin(), 
+    m_recordings.cend(), 
+    [](const RecordingMapEntry &entry)
+  {
+    return entry.second.IsRecording();
+  });
 }
 
 PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
@@ -347,60 +348,63 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
   std::vector<PVR_RECORDING> recs;
   {
     CLockObject lock(m_mutex);
-    SRecordings::const_iterator rit;
-    SChannels::const_iterator cit;
+    Channels::const_iterator cit;
     char buf[128];
 
-    for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+    for (const auto &entry : m_recordings)
     {
-      if (!rit->second.IsRecording()) continue;
+      const auto &recording = entry.second;
+
+      if (!recording.IsRecording())
+        continue;
 
       /* Setup entry */
       PVR_RECORDING rec;
       memset(&rec, 0, sizeof(rec));
 
       /* Channel name and icon */
-      if ((cit = m_channels.find(rit->second.channel)) != m_channels.end())
+      if ((cit = m_channels.find(recording.GetChannel())) != m_channels.end())
       {
-        strncpy(rec.strChannelName, cit->second.name.c_str(),
+        strncpy(rec.strChannelName, cit->second.GetName().c_str(),
                 sizeof(rec.strChannelName) - 1);
 
-        strncpy(rec.strIconPath, cit->second.icon.c_str(),
+        strncpy(rec.strIconPath, cit->second.GetIcon().c_str(),
                 sizeof(rec.strIconPath) - 1);
       }
 
       /* ID */
-      snprintf(buf, sizeof(buf), "%i", rit->second.id);
+      snprintf(buf, sizeof(buf), "%i", recording.GetId());
       strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
 
       /* Title */
-      strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle) - 1);
+      strncpy(rec.strTitle, recording.GetTitle().c_str(), sizeof(rec.strTitle) - 1);
 
       /* Subtitle */
-      strncpy(rec.strEpisodeName, rit->second.subtitle.c_str(), sizeof(rec.strEpisodeName) - 1);
+      strncpy(rec.strEpisodeName, recording.GetSubtitle().c_str(), sizeof(rec.strEpisodeName) - 1);
 
       /* Description */
-      strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot) - 1);
+      strncpy(rec.strPlot, recording.GetDescription().c_str(), sizeof(rec.strPlot) - 1);
 
       /* Time/Duration */
-      rec.recordingTime = (time_t)rit->second.start;
-      rec.iDuration     = (time_t)(rit->second.stop - rit->second.start);
+      rec.recordingTime = (time_t)recording.GetStart();
+      rec.iDuration =     (time_t)(recording.GetStop() - recording.GetStart());
 
       /* Priority */
-      rec.iPriority = rit->second.priority;
+      rec.iPriority = recording.GetPriority();
 
       /* Retention */
-      rec.iLifetime = rit->second.retention;
+      rec.iLifetime = recording.GetRetention();
 
       /* Directory */
-      if (rit->second.path != "")
+      // TODO: Move this logic to GetPath(), alternatively GetMangledPath()
+      if (recording.GetPath() != "")
       {
-        size_t idx = rit->second.path.rfind("/");
+        size_t idx = recording.GetPath().rfind("/");
         if (idx == 0 || idx == string::npos)
           strncpy(rec.strDirectory, "/", sizeof(rec.strDirectory) - 1);
         else
         {
-          std::string d = rit->second.path.substr(0, idx);
+          std::string d = recording.GetPath().substr(0, idx);
           if (d[0] != '/')
             d = "/" + d;
           strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory) - 1);
@@ -408,7 +412,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       }
 
       /* EPG event id */
-      rec.iEpgEventId = rit->second.eventId;
+      rec.iEpgEventId = recording.GetEventId();
 
       recs.push_back(rec);
     }
@@ -745,61 +749,59 @@ int CTvheadend::GetTimerCount ( void )
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
   
-  int ret = 0;
-  SRecordings::const_iterator rit;
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    if (rit->second.IsTimer())
-      ret++;
 
-  ret += m_timeRecordings.GetTimerecTimerCount();
+  // Normal timers
+  int timerCount = std::count_if(
+    m_recordings.cbegin(),
+    m_recordings.cend(),
+    [](const RecordingMapEntry &entry)
+  {
+    return entry.second.IsTimer();
+  });
 
-  ret += m_autoRecordings.GetAutorecTimerCount();
+  // Repeating timers
+  timerCount += m_timeRecordings.GetTimerecTimerCount();
+  timerCount += m_autoRecordings.GetAutorecTimerCount();
 
-  return ret;
+  return timerCount;
 }
 
-bool CTvheadend::CreateTimer ( const SRecording &tvhTmr, PVR_TIMER &tmr )
+bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
 {
   memset(&tmr, 0, sizeof(tmr));
 
-  tmr.iClientIndex       = tvhTmr.id;
-  tmr.iClientChannelUid  = (tvhTmr.channel > 0) ? tvhTmr.channel : -1;
-  tmr.startTime          = static_cast<time_t>(tvhTmr.start);
-  tmr.endTime            = static_cast<time_t>(tvhTmr.stop);
+  tmr.iClientIndex       = tvhTmr.GetId();
+  tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : -1;
+  tmr.startTime          = static_cast<time_t>(tvhTmr.GetStart());
+  tmr.endTime            = static_cast<time_t>(tvhTmr.GetStop());
   strncpy(tmr.strTitle,
-          tvhTmr.title.c_str(), sizeof(tmr.strTitle) - 1);
+          tvhTmr.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
   strncpy(tmr.strEpgSearchString,
           "", sizeof(tmr.strEpgSearchString) - 1); // n/a for one-shot timers
   strncpy(tmr.strDirectory,
           "", sizeof(tmr.strDirectory) - 1);       // n/a for one-shot timers
   strncpy(tmr.strSummary,
-          tvhTmr.description.c_str(), sizeof(tmr.strSummary) - 1);
-  tmr.state              = tvhTmr.state;
-  tmr.iTimerType         = !tvhTmr.timerecId.empty()
-                            ? TIMER_ONCE_CREATED_BY_TIMEREC
-                            : !tvhTmr.autorecId.empty()
-                              ? TIMER_ONCE_CREATED_BY_AUTOREC
-                              : tvhTmr.eventId
-                                ? TIMER_ONCE_EPG
-                                : TIMER_ONCE_MANUAL;
-  tmr.iPriority          = tvhTmr.priority;
-  tmr.iLifetime          = tvhTmr.retention;
+          tvhTmr.GetDescription().c_str(), sizeof(tmr.strSummary) - 1);
+  tmr.state              = tvhTmr.GetState();
+  tmr.iPriority          = tvhTmr.GetPriority();
+  tmr.iLifetime          = tvhTmr.GetRetention();
+  tmr.iTimerType         = tvhTmr.GetTimerType();
   tmr.iMaxRecordings     = 0;                // not supported by tvh
   tmr.iRecordingGroup    = 0;                // not supported by tvh
   tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
   tmr.firstDay           = 0;                // not supported by tvh
   tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
-  tmr.iEpgUid            = tvhTmr.eventId;
-  tmr.iMarginStart       = tvhTmr.startExtra;
-  tmr.iMarginEnd         = tvhTmr.stopExtra;
+  tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : -1;
+  tmr.iMarginStart       = tvhTmr.GetStartExtra();
+  tmr.iMarginEnd         = tvhTmr.GetStopExtra();
   tmr.iGenreType         = 0;                // not supported by tvh?
   tmr.iGenreSubType      = 0;                // not supported by tvh?
   tmr.bFullTextEpgSearch = false;            // n/a for one-shot timers
   tmr.iParentClientIndex = tmr.iTimerType == TIMER_ONCE_CREATED_BY_TIMEREC
-                            ? m_timeRecordings.GetTimerIntIdFromStringId(tvhTmr.timerecId)
+                            ? m_timeRecordings.GetTimerIntIdFromStringId(tvhTmr.GetTimerecId())
                             : tmr.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC
-                              ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.autorecId)
+                              ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.GetAutorecId())
                               : 0;
   return true;
 }
@@ -816,16 +818,16 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
     /*
      * One-shot timers
      */
-
-    SRecordings::const_iterator rit;
-    for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
+    for (const auto &entry : m_recordings)
     {
-      if (!rit->second.IsTimer())
+      const auto &recording = entry.second;
+
+      if (!recording.IsTimer())
         continue;
 
       /* Setup entry */
       PVR_TIMER tmr;
-      if (CreateTimer(rit->second, tmr))
+      if (CreateTimer(recording, tmr))
         timers.push_back(tmr);
     }
 
@@ -922,7 +924,8 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   }
 }
 
-PVR_ERROR CTvheadend::DeleteTimer ( const PVR_TIMER &timer, bool _unused(force) )
+PVR_ERROR CTvheadend::DeleteTimer
+  ( const PVR_TIMER &timer, bool _unused(force) )
 {
   if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
       (timer.iTimerType == TIMER_ONCE_EPG))
@@ -973,7 +976,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
         return PVR_ERROR_INVALID_PARAMETERS;
       }
 
-      if (it->second.channel != static_cast<uint32_t>(timer.iClientChannelUid))
+      if (it->second.GetChannel() != static_cast<uint32_t>(timer.iClientChannelUid))
       {
         tvherror("updating channels of one-shot timers not supported by HTSP v%d", m_conn.GetProtocol());
         return PVR_ERROR_NOT_IMPLEMENTED;
@@ -1023,36 +1026,36 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 
 /* Transfer schedule to XBMC */
 void CTvheadend::TransferEvent
-  ( ADDON_HANDLE handle, const SEvent &event )
+  ( ADDON_HANDLE handle, const Event &event )
 {
   /* Build */
   EPG_TAG epg;
   memset(&epg, 0, sizeof(EPG_TAG));
-  epg.iUniqueBroadcastId  = event.id;
-  epg.strTitle            = event.title.c_str();
-  epg.iChannelNumber      = event.channel;
-  epg.startTime           = event.start;
-  epg.endTime             = event.stop;
-  epg.strPlotOutline      = event.summary.c_str();
-  epg.strPlot             = event.desc.c_str();
+  epg.iUniqueBroadcastId  = event.GetId();
+  epg.strTitle            = event.GetTitle().c_str();
+  epg.iChannelNumber      = event.GetChannel();
+  epg.startTime           = event.GetStart();
+  epg.endTime             = event.GetStop();
+  epg.strPlotOutline      = event.GetSummary().c_str();
+  epg.strPlot             = event.GetDesc().c_str();
   epg.strOriginalTitle    = NULL; /* not supported by tvh */
   epg.strCast             = NULL; /* not supported by tvh */
   epg.strDirector         = NULL; /* not supported by tvh */
   epg.strWriter           = NULL; /* not supported by tvh */
   epg.iYear               = 0;    /* not supported by tvh */
   epg.strIMDBNumber       = NULL; /* not supported by tvh */
-  epg.strIconPath         = event.image.c_str();
-  epg.iGenreType          = event.content & 0xF0;
-  epg.iGenreSubType       = event.content & 0x0F;
+  epg.strIconPath         = event.GetImage().c_str();
+  epg.iGenreType          = event.GetContent() & 0xF0;
+  epg.iGenreSubType       = event.GetContent() & 0x0F;
   epg.strGenreDescription = NULL; /* not supported by tvh */
-  epg.firstAired          = event.aired;
-  epg.iParentalRating     = event.age;
-  epg.iStarRating         = event.stars;
+  epg.firstAired          = event.GetAired();
+  epg.iParentalRating     = event.GetAge();
+  epg.iStarRating         = event.GetStars();
   epg.bNotify             = false; /* not supported by tvh */
-  epg.iSeriesNumber       = event.season;
-  epg.iEpisodeNumber      = event.episode;
-  epg.iEpisodePartNumber  = event.part;
-  epg.strEpisodeName      = event.subtitle.c_str();
+  epg.iSeriesNumber       = event.GetSeason();
+  epg.iEpisodeNumber      = event.GetEpisode();
+  epg.iEpisodePartNumber  = event.GetPart();
+  epg.strEpisodeName      = event.GetSubtitle().c_str();
   epg.iFlags              = EPG_TAG_FLAG_UNDEFINED;
 
   /* Callback. */
@@ -1062,8 +1065,6 @@ void CTvheadend::TransferEvent
 PVR_ERROR CTvheadend::GetEpg
   ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
 {
-  SSchedules::const_iterator sit;
-  SEvents::const_iterator eit;
   htsmsg_field_t *f;
   int n = 0;
 
@@ -1076,30 +1077,19 @@ PVR_ERROR CTvheadend::GetEpg
     if (!m_asyncState.WaitForState(ASYNC_DONE))
       return PVR_ERROR_FAILED;
     
-    std::vector<SEvent> events;
+    // Find the relevant events
+    Segment segment;
     {
       CLockObject lock(m_mutex);
-      sit = m_schedules.find(chn.iUniqueId);
-      if (sit != m_schedules.end())
-      {
-        for (eit = sit->second.events.begin();
-            eit != sit->second.events.end(); ++eit)
-        {
-          if (eit->second.start    > end)   continue;
-          if (eit->second.stop     < start) continue;
+      auto sit = m_schedules.find(chn.iUniqueId);
 
-          events.push_back(eit->second);
-          ++n;
-        }
-      }
+      if (sit != m_schedules.cend())
+        segment = sit->second.GetSegment(start, end);
     }
 
-    std::vector<SEvent>::const_iterator it;
-    for (it = events.begin(); it != events.end(); ++it)
-    {
-      /* Callback. */
-      TransferEvent(handle, *it);
-    }
+    // Transfer
+    for (const auto &event : segment)
+      TransferEvent(handle, event);
 
   /* Synchronous transfer */
   }
@@ -1129,7 +1119,7 @@ PVR_ERROR CTvheadend::GetEpg
     }
     HTSMSG_FOREACH(f, l)
     {
-      SEvent event;
+      Event event;
       if (f->hmf_type == HMF_MAP)
       {
         if (ParseEvent(&f->hmf_msg, true, event))
@@ -1160,11 +1150,6 @@ void CTvheadend::Disconnected ( void )
 bool CTvheadend::Connected ( void )
 {
   htsmsg_t *msg;
-  htsp::Tags::iterator tit;
-  SChannels::iterator cit;
-  SRecordings::iterator rit;
-  SSchedules::iterator sit;
-  SEvents::iterator eit;
 
   /* Rebuild state */
   for (auto *dmx : m_dmx)
@@ -1172,23 +1157,18 @@ bool CTvheadend::Connected ( void )
     dmx->Connected();
   }
   m_vfs.Connected();
-
-  /* Flag all async fields in case they've been deleted */
-  for (cit = m_channels.begin(); cit != m_channels.end(); ++cit)
-    cit->second.del = true;
-  for (tit = m_tags.begin(); tit != m_tags.end(); ++tit)
-    tit->second.SetDirty(true);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
-    rit->second.del = true;
-  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
-  {
-    sit->second.del = true;
-
-    for (eit = sit->second.events.begin(); eit != sit->second.events.end(); ++eit)
-      eit->second.del = true;
-  }
   m_timeRecordings.Connected();
   m_autoRecordings.Connected();
+
+  /* Flag all async fields in case they've been deleted */
+  for (auto &entry : m_channels)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_tags)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_recordings)
+    entry.second.SetDirty(true);
+  for (auto &entry : m_schedules)
+    entry.second.SetDirty(true);
 
   /* Request Async data */
   m_asyncState.SetState(ASYNC_NONE);
@@ -1380,41 +1360,24 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
-  bool update;
-  SChannels::iterator   cit = m_channels.begin();
-  htsp::Tags::iterator  tit = m_tags.begin();
+  Channels::iterator cit = m_channels.begin();
+  Tags::iterator tit = m_tags.begin();
 
   /* Tags */
-  update = false;
-  while (tit != m_tags.end())
+  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
   {
-    if (tit->second.IsDirty())
-    {
-      update = true;
-      m_tags.erase(tit++);
-    }
-    else
-      ++tit;
-  }
+    return entry.second.IsDirty();
+  });
+
   TriggerChannelGroupsUpdate();
-  if (update)
-    tvhinfo("tags updated");
 
   /* Channels */
-  update = false;
-  while (cit != m_channels.end())
+  utilities::erase_if(m_channels, [](const ChannelMapEntry &entry)
   {
-    if (cit->second.del)
-    {
-      update = true;
-      m_channels.erase(cit++);
-    }
-    else
-      ++cit;
-  }
+    return entry.second.IsDirty();
+  });
+
   TriggerChannelUpdate();
-  if (update)
-    tvhinfo("channels updated");
   
   /* Next */
   m_asyncState.SetState(ASYNC_DVR);
@@ -1426,32 +1389,20 @@ void CTvheadend::SyncDvrCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_DVR)
     return;
 
-  bool update;
-  SRecordings::iterator rit = m_recordings.begin();
-
   /* Recordings */
-  update = false;
-  while (rit != m_recordings.end())
+  utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
   {
-    if (rit->second.del)
-    {
-      update = true;
-      m_recordings.erase(rit++);
-    }
-    else
-      ++rit;
-  }
+    return entry.second.IsDirty();
+  });
 
   /* Time-based repeating timers */
-  update |= m_timeRecordings.SyncDvrCompleted();
+  m_timeRecordings.SyncDvrCompleted();
 
   /* EPG-query-based repeating timers */
-  update |= m_autoRecordings.SyncDvrCompleted();
+  m_autoRecordings.SyncDvrCompleted();
 
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
-  if (update)
-    tvhinfo("recordings updated");
 
   /* Next */
   m_asyncState.SetState(ASYNC_EPG);
@@ -1462,43 +1413,25 @@ void CTvheadend::SyncEpgCompleted ( void )
   /* Done */
   if (!m_settings.bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
     return;
-  
-  bool update;
-  SSchedules::iterator  sit = m_schedules.begin();
-  SEvents::iterator     eit;
+
+  /* Schedules */
+  utilities::erase_if(m_schedules, [](const ScheduleMapEntry &entry)
+  {
+    return entry.second.IsDirty();
+  });
 
   /* Events */
-  update = false;
-  while (sit != m_schedules.end())
+  for (auto &entry : m_schedules)
   {
-    uint32_t channelId = sit->second.channel;
-    
-    if (sit->second.del)
+    utilities::erase_if(entry.second.GetEvents(), [](const EventMapEntry &entry)
     {
-      update = true;
-      m_schedules.erase(sit++);
-    }
-    else
-    {
-      eit = sit->second.events.begin();
-      while (eit != sit->second.events.end())
-      {
-        if (eit->second.del)
-        {
-          update = true;
-          sit->second.events.erase(eit++);
-        }
-        else
-          ++eit;
-      }
-      ++sit;
-    }
-
-    TriggerEpgUpdate(channelId);
+      return entry.second.IsDirty();
+    });
   }
-
-  if (update)
-    tvhinfo("epg updated");
+  
+  /* Trigger updates */
+  for (const auto &entry : m_schedules)
+    TriggerEpgUpdate(entry.second.GetId());
 }
 
 void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
@@ -1515,11 +1448,12 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Locate object */
-  htsp::Tag &existingTag = m_tags[u32];
+  auto &existingTag = m_tags[u32];
   existingTag.SetDirty(false);
   
   /* Create new object */
-  htsp::Tag tag(u32);
+  Tag tag;
+  tag.SetId(u32);
 
   /* Index */
   if (!htsmsg_get_u32(msg, "tagIndex", &u32))
@@ -1579,7 +1513,6 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
 
 void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
-  bool update = false;
   uint32_t u32;
   const char *str;
   htsmsg_t *list;
@@ -1592,15 +1525,14 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Locate channel object */
-  SChannel &channel = m_channels[u32];
-  channel.id  = u32;
-  channel.del = false;
+  Channel &channel = m_channels[u32];
+  Channel comparison = channel;
+  channel.SetId(u32);
+  channel.SetDirty(false);
 
   /* Channel name */
   if ((str = htsmsg_get_str(msg, "channelName")) != NULL)
-  {
-    UPDATE(channel.name, str);
-  }
+    channel.SetName(str);
   else if (bAdd)
   {
     tvherror("malformed channelAdd: 'channelName' missing");
@@ -1612,30 +1544,23 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     if (!u32)
       u32 = GetNextUnnumberedChannelNumber();
-    UPDATE(channel.num, u32);
+    channel.SetNum(u32);
   }
   else if (bAdd)
   {
     tvherror("malformed channelAdd: 'channelNumber' missing");
     return;
   }
-  else if (!channel.num)
-  {
-    UPDATE(channel.num, GetNextUnnumberedChannelNumber());
-  }
+  else if (!channel.GetNum())
+    channel.SetNum(GetNextUnnumberedChannelNumber());
   
   /* ATSC subchannel number */
   if (!htsmsg_get_u32(msg, "channelNumberMinor", &u32))
-  {
-    UPDATE(channel.numMinor, u32);
-  }
+    channel.SetNumMinor(u32);
 
   /* Channel icon */
   if ((str = htsmsg_get_str(msg, "channelIcon")) != NULL)
-  {
-    std::string url = GetImageURL(str);
-    UPDATE(channel.icon, url);
-  }
+    channel.SetIcon(GetImageURL(str));
 
   /* Services */
   if ((list = htsmsg_get_list(msg, "services")) != NULL)
@@ -1659,15 +1584,17 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       if (caid == 0)
         htsmsg_get_u32(&f->hmf_msg, "caid", &caid);
     }
-    UPDATE(channel.radio, radio);
-    UPDATE(channel.caid,  caid);
+
+    channel.SetRadio(radio);
+    channel.SetCaid(caid);
   }
-  
 
   /* Update Kodi */
-  if (update) {
-    tvhdebug("channel update id:%u, name:%s",
-              channel.id, channel.name.c_str());
+  if (channel != comparison)
+  {
+    tvhdebug("channel %s id:%u, name:%s",
+             (bAdd ? "added" : "updated"), channel.GetId(), channel.GetName().c_str());
+
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
@@ -1726,22 +1653,19 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   /* Get entry */
-  SRecording &rec = m_recordings[id];
-  rec.id  = id;
-  rec.del = false;
-  UPDATE(rec.start,   start);
-  UPDATE(rec.stop,    stop);
+  Recording &rec = m_recordings[id];
+  Recording comparison = rec;
+  rec.SetId(id);
+  rec.SetDirty(false);
+  rec.SetStart(start);
+  rec.SetStop(stop);
 
   /* Channel is optional, it may not exist anymore */
   if (!htsmsg_get_u32(msg, "channel", &channel))
-  {
-    UPDATE(rec.channel, channel);
-  }
+    rec.SetChannel(channel);
 
   if (!htsmsg_get_s64(msg, "startExtra", &startExtra))
-  {
-    UPDATE(rec.startExtra, startExtra);
-  }
+    rec.SetStartExtra(startExtra);
   else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'startExtra' missing");
@@ -1749,9 +1673,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   if (!htsmsg_get_s64(msg, "stopExtra", &stopExtra))
-  {
-    UPDATE(rec.stopExtra,  stopExtra);
-  }
+    rec.SetStopExtra(stopExtra);
   else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'stopExtra' missing");
@@ -1759,9 +1681,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
 
   if (!htsmsg_get_u32(msg, "retention", &retention))
-  {
-    UPDATE(rec.retention, retention);
-  }
+    rec.SetRetention(retention);
   else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'retention' missing");
@@ -1777,7 +1697,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       case DVR_PRIO_NORMAL:
       case DVR_PRIO_LOW:
       case DVR_PRIO_UNIMPORTANT:
-        UPDATE(rec.priority, priority);
+        rec.SetPriority(priority);
         break;
       default:
         tvherror("malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value %d", priority);
@@ -1794,92 +1714,60 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     /* Parse state */
     if      (strstr(state, "scheduled") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_SCHEDULED);
-    }
+      rec.SetState(PVR_TIMER_STATE_SCHEDULED);
     else if (strstr(state, "recording") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_RECORDING);
-    }
+      rec.SetState(PVR_TIMER_STATE_RECORDING);
     else if (strstr(state, "completed") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_COMPLETED);
-    }
+      rec.SetState(PVR_TIMER_STATE_COMPLETED);
     else if (strstr(state, "missed") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-    }
-    else if (strstr(state, "invalid")   != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-    }
+      rec.SetState(PVR_TIMER_STATE_ERROR);
+    else if (strstr(state, "invalid") != NULL)
+      rec.SetStart(PVR_TIMER_STATE_ERROR);
   }
 
   /* Add optional fields */
   if (!htsmsg_get_u32(msg, "eventId", &eventId))
-  {
-    UPDATE(rec.eventId, eventId);
-  }
+    rec.SetEventId(eventId);
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
-  {
-    UPDATE(rec.title, str);
-  }
+    rec.SetTitle(str);
   if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
-  {
-    UPDATE(rec.subtitle, str);
-  }
+    rec.SetSubtitle(str);
   if ((str = htsmsg_get_str(msg, "path")) != NULL)
-  {
-    UPDATE(rec.path, str);
-  }
+    rec.SetPath(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
-  {
-    UPDATE(rec.description, str);
-  }
+    rec.SetDescription(str);
+  // TODO: What?
   else if ((str = htsmsg_get_str(msg, "summary")) != NULL)
-  {
-    UPDATE(rec.description, str);
-  }
+    rec.SetDescription(str);
   if ((str = htsmsg_get_str(msg, "timerecId")) != NULL)
-  {
-    UPDATE(rec.timerecId, str);
-  }
+    rec.SetTimerecId(str);
   if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
-  {
-    UPDATE(rec.autorecId, str);
-  }
+    rec.SetAutorecId(str);
 
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)
   {
     if (!strcmp(str, "300"))
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ABORTED);
-    }
+      rec.SetState(PVR_TIMER_STATE_ABORTED);
     else if (strstr(str, "missing") != NULL)
-    {
-      UPDATE(rec.state, PVR_TIMER_STATE_ERROR);
-    }
+      rec.SetState(PVR_TIMER_STATE_ERROR);
     else
-    {
-      UPDATE(rec.error, str);
-    }
+      rec.SetError(str);
   }
   
   /* Update */
-  if (update)
+  if (rec != comparison)
   {
-    std::string error = rec.error.empty() ? "none" : rec.error;
+    std::string error = rec.GetError().empty() ? "none" : rec.GetError();
     
     tvhdebug("recording id:%d, state:%s, title:%s, desc:%s, error:%s",
-             rec.id, state, rec.title.c_str(), rec.description.c_str(),
+             rec.GetId(), state, rec.GetTitle().c_str(), rec.GetDescription().c_str(),
              error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
     {
       TriggerTimerUpdate();
-      if (rec.state == PVR_TIMER_STATE_RECORDING)
-        TriggerRecordingUpdate();
+      TriggerRecordingUpdate();
     }
   }
 }
@@ -1904,7 +1792,7 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   TriggerRecordingUpdate();
 }
 
-bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
+bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
 {
   const char *str;
   uint32_t u32, id, channel;
@@ -1938,48 +1826,50 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
     return false;
   }
 
-  evt.id      = id;
-  evt.channel = channel;
-  evt.start   = (time_t)start;
-  evt.stop    = (time_t)stop;
+  evt.SetId(id);
+  evt.SetChannel(channel);
+  evt.SetStart((time_t)start);
+  evt.SetStop((time_t)stop);
 
   /* Add optional fields */
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
-    evt.title   = str;
+    evt.SetTitle(str);
   if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
-    evt.subtitle   = str;
+    evt.SetSubtitle(str);
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
-    evt.summary  = str;
+    evt.SetSummary(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
-    evt.desc     = str;
+    evt.SetDesc(str);
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
-    evt.image   = str;
+    evt.SetImage(str);
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
-    evt.next    = u32;
+    evt.SetNext(u32);
   if (!htsmsg_get_u32(msg, "contentType", &u32))
-    evt.content = u32;
+    evt.SetContent(u32);
   if (!htsmsg_get_u32(msg, "starRating", &u32))
-    evt.stars   = u32;
+    evt.SetStars(u32);
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
-    evt.age     = u32;
+    evt.SetAge(u32);
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
-    evt.aired   = (time_t)s64;
+    evt.SetAired((time_t)s64);
   if (!htsmsg_get_u32(msg, "seasonNumber", &u32))
-    evt.season  = u32;
+    evt.SetSeason(u32);
   if (!htsmsg_get_u32(msg, "episodeNumber", &u32))
-    evt.episode = u32;
+    evt.SetEpisode(u32);
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
-    evt.part    = u32;
+    evt.SetPart(u32);
 
   /* Add optional recording link */
-  for (SRecordings::const_iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  auto rit = std::find_if(
+    m_recordings.cbegin(), 
+    m_recordings.cend(), 
+    [evt](const RecordingMapEntry &entry)
   {
-    if (it->second.eventId == evt.id)
-    {
-      evt.recordingId = evt.id;
-      break;
-    }
-  }
+    return entry.second.GetEventId() == evt.GetId();
+  });
+
+  if (rit != m_recordings.cend())
+    evt.SetRecordingId(evt.GetId());
   
   return true;
 }
@@ -1987,47 +1877,33 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, SEvent &evt )
 void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   bool update = false;
-  SEvent tmp;
+  Event tmp;
 
   /* Parse */
   if (!ParseEvent(msg, bAdd, tmp))
     return;
 
   /* Get event handle */
-  SSchedule &sched = m_schedules[tmp.channel];
-  SEvent    &evt   = sched.events[tmp.id];
-  sched.channel    = tmp.channel;
-  evt.id           = tmp.id;
-  evt.del          = false;
+  Schedule &sched  = m_schedules[tmp.GetChannel()];
+  Events   &events = sched.GetEvents();
+  Event    &evt    = events[tmp.GetId()];
+  Event comparison = evt;
+  sched.SetId(tmp.GetChannel());
+  evt.SetId(tmp.GetId());
+  evt.SetDirty(false);
   
   /* Store */
-  UPDATE(evt.title,       tmp.title);
-  UPDATE(evt.subtitle,    tmp.subtitle);
-  UPDATE(evt.start,       tmp.start);
-  UPDATE(evt.stop,        tmp.stop);
-  UPDATE(evt.channel,     tmp.channel);
-  UPDATE(evt.summary,     tmp.summary);
-  UPDATE(evt.desc,        tmp.desc);
-  UPDATE(evt.image,       tmp.image);
-  UPDATE(evt.next,        tmp.next);
-  UPDATE(evt.content,     tmp.content);
-  UPDATE(evt.stars,       tmp.stars);
-  UPDATE(evt.age,         tmp.age);
-  UPDATE(evt.aired,       tmp.aired);
-  UPDATE(evt.season,      tmp.season);
-  UPDATE(evt.episode,     tmp.episode);
-  UPDATE(evt.part,        tmp.part);
-  UPDATE(evt.recordingId, tmp.recordingId);
+  evt = tmp;
 
   /* Update */
-  if (update)
+  if (evt != comparison)
   {
     tvhtrace("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-             evt.id, evt.channel, (int)evt.start, (int)evt.stop,
-             evt.title.c_str(), evt.desc.c_str());
+             evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
+             evt.GetTitle().c_str(), evt.GetDesc().c_str());
 
     if (m_asyncState.GetState() > ASYNC_EPG)
-      TriggerEpgUpdate(tmp.channel);
+      TriggerEpgUpdate(tmp.GetChannel());
   }
 }
 
@@ -2044,17 +1920,19 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   tvhtrace("delete event %u", u32);
   
   /* Erase */
-  SSchedules::iterator sit;
-  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
+  for (auto &entry : m_schedules)
   {
+    Schedule &schedule = entry.second;
+    Events &events = schedule.GetEvents();
+
     // Find the event so we can get the channel number
-    SEvents::iterator eit = sit->second.events.find(u32);
-    
-    if (eit != sit->second.events.end())
+    auto eit = events.find(u32);
+
+    if (eit != events.end())
     {
-      tvhtrace("deleted event %d from channel %d", u32, sit->second.channel);
-      sit->second.events.erase(eit);
-      TriggerEpgUpdate(sit->second.channel);
+      tvhtrace("deleted event %d from channel %d", u32, schedule.GetId());
+      events.erase(eit);
+      TriggerEpgUpdate(schedule.GetId());
       return;
     }
   }
@@ -2085,36 +1963,39 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
   if (oldest)
   {
     tvhtrace("pretuning channel %u on subscription %u",
-             m_channels[channelId].num, oldest->GetSubscriptionId());
+             m_channels[channelId].GetNum(), oldest->GetSubscriptionId());
     oldest->Open(channelId, SUBSCRIPTION_WEIGHT_PRETUNING);
   }
 }
 
 void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
 {
-  SChannels::const_iterator it;
   CLockObject lock(m_mutex);
   uint32_t fromNum, toNum;
 
-  fromNum = m_channels[fromChannelId].num;
-  toNum = m_channels[toChannelId].num;
+  fromNum = m_channels[fromChannelId].GetNum();
+  toNum = m_channels[toChannelId].GetNum();
 
   if (fromNum + 1 == toNum || toNum == 1)
   {
     /* tuning up, or to channel 1 */
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    for (const auto &entry : m_channels)
     {
-      if (toNum + 1 == it->second.num)
-        TuneOnOldest(it->second.id);
+      const Channel &channel = entry.second;
+
+      if (toNum + 1 == channel.GetNum())
+        TuneOnOldest(channel.GetId());
     }
   }
   else if (fromNum - 1 == toNum)
   {
     /* tuning down */
-    for (it = m_channels.begin(); it != m_channels.end(); ++it)
+    for (const auto &entry : m_channels)
     {
-      if (toNum - 1 == it->second.num)
-        TuneOnOldest(it->second.id);
+      const Channel &channel = entry.second;
+
+      if (toNum - 1 == channel.GetNum())
+        TuneOnOldest(channel.GetId());
     }
   }
 }
@@ -2140,7 +2021,8 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
     {
       tvhtrace("retuning channel %u on subscription %u",
-               m_channels[chn.iUniqueId].num, dmx->GetSubscriptionId());
+               m_channels[chn.iUniqueId].GetNum(), dmx->GetSubscriptionId());
+
       dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
@@ -2154,7 +2036,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   }
 
   tvhtrace("tuning channel %u on subscription %u",
-           m_channels[chn.iUniqueId].num, oldest->GetSubscriptionId());
+           m_channels[chn.iUniqueId].GetNum(), oldest->GetSubscriptionId());
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
@@ -2190,7 +2072,7 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
           dmx->GetLastUse() + m_settings.iPreTuneCloseDelay < time(NULL))
       {
         tvhtrace("untuning channel %u on subscription %u",
-                 m_channels[dmx->GetChannelId()].num, dmx->GetSubscriptionId());
+                 m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
         dmx->Close();
       }
       else

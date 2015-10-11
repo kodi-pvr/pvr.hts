@@ -23,7 +23,6 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/HTSPConnection.cpp
                 src/HTSPDemuxer.cpp
                 src/HTSPTypes.h
-                src/HTSPTypes.cpp
                 src/HTSPVFS.cpp
                 src/Settings.h
                 src/Tvheadend.cpp
@@ -33,8 +32,36 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/AutoRecordings.cpp
                 src/AutoRecordings.h
                 src/xbmc_codec_descriptor.hpp)
+
+set(HTS_SOURCES_TVHEADEND_ENTITY
+                src/tvheadend/entity/AutoRecording.h
+                src/tvheadend/entity/AutoRecording.cpp
+                src/tvheadend/entity/Channel.h
+                src/tvheadend/entity/Entity.h
+                src/tvheadend/entity/Event.h
+                src/tvheadend/entity/Recording.h
+                src/tvheadend/entity/RecordingBase.h
+                src/tvheadend/entity/RecordingBase.cpp
+                src/tvheadend/entity/Schedule.h
+                src/tvheadend/entity/Schedule.cpp
+                src/tvheadend/entity/Tag.h
+                src/tvheadend/entity/Tag.cpp
+                src/tvheadend/entity/TimeRecording.h
+                src/tvheadend/entity/TimeRecording.cpp)
+
+set(HTS_SOURCES_TVHEADEND_STATUS
+        src/tvheadend/status/Quality.h
+        src/tvheadend/status/QueueStatus.h
+        src/tvheadend/status/SourceInfo.h
+        src/tvheadend/status/TimeshiftStatus.h)
+
+set(HTS_SOURCES_TVHEADEND_UTILITIES
+				src/tvheadend/utilities/Utilities.h)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
+source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
+source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STATUS})
+source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
 # Resource files
 set(HTS_RESOURCES 
@@ -49,6 +76,8 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 
 # Combine the file lists
 list(APPEND HTS_SOURCES
+            ${HTS_SOURCES_TVHEADEND_ENTITY}
+            ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})
 
 add_subdirectory(lib/libhts)
