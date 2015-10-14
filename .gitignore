@@ -1,5 +1,6 @@
 # build artifacts
 build
+pvr.hts/addon.xml
 
 # clion project (auto-generated from CMakeLists.txt)
 .idea/
