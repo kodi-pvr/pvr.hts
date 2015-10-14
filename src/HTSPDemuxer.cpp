@@ -20,7 +20,7 @@
  */
 
 #include "Tvheadend.h"
-#include "client.h"
+#include "tvheadend/Settings.h"
 
 #include "platform/threads/mutex.h"
 #include "platform/threads/atomics.h"
@@ -39,6 +39,7 @@ extern "C" {
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
+using namespace tvheadend;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
@@ -183,7 +184,7 @@ bool CHTSPDemuxer::Seek
   htsmsg_destroy(m);
 
   /* Wait for time */
-  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, tvh->GetSettings().iResponseTimeout))
+  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().iResponseTimeout))
   {
     tvherror("failed to get subscriptionSeek response");
     return false;

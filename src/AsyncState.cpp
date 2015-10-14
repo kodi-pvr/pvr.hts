@@ -20,7 +20,6 @@
  */
 
 #include "AsyncState.h"
-#include "client.h"
 
 struct Param {
   eAsyncState state;

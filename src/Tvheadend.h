@@ -80,7 +80,7 @@ extern "C" {
 #define tvhdebug(...) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
 #define tvhinfo(...)  tvhlog(ADDON::LOG_INFO,  ##__VA_ARGS__)
 #define tvherror(...) tvhlog(ADDON::LOG_ERROR, ##__VA_ARGS__)
-#define tvhtrace(...) if (tvh->GetSettings().bTraceDebug) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
+#define tvhtrace(...) if (tvheadend::Settings::GetInstance().bTraceDebug) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
 static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 {
   char buf[16384];
@@ -367,7 +367,7 @@ class CTvheadend
   : public PLATFORM::CThread
 {
 public:
-  CTvheadend(tvheadend::Settings settings);
+  CTvheadend();
   ~CTvheadend();
 
   void Start ( void );
@@ -375,11 +375,6 @@ public:
   void Disconnected   ( void );
   bool Connected      ( void );
   bool ProcessMessage ( const char *method, htsmsg_t *msg );
-
-  inline const tvheadend::Settings& GetSettings () const
-  {
-    return m_settings;
-  };
 
   const tvheadend::entity::Channels& GetChannels () const
   {
@@ -419,7 +414,6 @@ private:
   std::string GetImageURL     ( const char *str );
 
   PLATFORM::CMutex            m_mutex;
-  const tvheadend::Settings   m_settings;
 
   CHTSPConnection             m_conn;
 

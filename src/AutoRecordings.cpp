@@ -22,6 +22,7 @@
 #include "AutoRecordings.h"
 
 #include "Tvheadend.h"
+#include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Utilities.h"
 
 using namespace PLATFORM;
@@ -190,14 +191,16 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   /*                                                                                        */
   /* bAutorecApproxTime disabled: => start time in kodi = begin of starting window in tvh   */
   /*                              => end time in kodi   = end of starting window in tvh     */
-  if (tvh->GetSettings().bAutorecApproxTime)
+  const Settings &settings = Settings::GetInstance();
+
+  if (settings.bAutorecApproxTime)
   {
     /* Not sending causes server to set start and startWindow to any time */
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
       struct tm *tm_start = localtime(&timer.startTime);
-      int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - tvh->GetSettings().iAutorecMaxDiff;
-      int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + tvh->GetSettings().iAutorecMaxDiff;
+      int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - settings.iAutorecMaxDiff;
+      int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + settings.iAutorecMaxDiff;
 
       /* Past midnight correction */
       if (startWindowBegin < 0)

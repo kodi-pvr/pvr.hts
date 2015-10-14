@@ -1,5 +1,6 @@
 2.2.9
 - refactored the code by factoring out lots of things into separate files
+- refactored the Settings class into a singleton to avoid having to include client.h everywhere
 
 2.2.8
 - Updated to PVR API v4.1.0
