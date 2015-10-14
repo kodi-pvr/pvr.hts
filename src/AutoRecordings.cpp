@@ -125,17 +125,6 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
   }
 }
 
-const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) const
-{
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
-  {
-    if (tit->second.GetId() == intId)
-      return tit->second.GetStringId();
-  }
-  tvherror("Autorec: Unable to obtain string id for int id %d", intId);
-  return std::string();
-}
-
 const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &strId) const
 {
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)

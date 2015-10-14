@@ -20,18 +20,6 @@
  */
 
 #include "Tvheadend.h"
-#include "tvheadend/Settings.h"
-
-#include "platform/threads/mutex.h"
-#include "platform/threads/atomics.h"
-#include "platform/util/timeutils.h"
-#include "platform/sockets/tcp.h"
-
-extern "C" {
-#include "libhts/htsmsg_binary.h"
-#include "libhts/sha1.h"
-}
-
 #include "xbmc_codec_descriptor.hpp"
 
 #define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)
@@ -48,7 +36,7 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   m_lastUse = 0;
 }
 
-CHTSPDemuxer::~CHTSPDemuxer ( void )
+CHTSPDemuxer::~CHTSPDemuxer ()
 {
 }
 
@@ -173,7 +161,7 @@ bool CHTSPDemuxer::Seek
   /* Build message */
   m = htsmsg_create_map();  
   htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
-  htsmsg_add_s64(m, "time",           (int64_t)time * 1000LL);
+  htsmsg_add_s64(m, "time",           (int64_t)time * 1000);
   htsmsg_add_u32(m, "absolute",       1);
 
   /* Send and Wait */

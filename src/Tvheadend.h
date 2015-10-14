@@ -84,7 +84,7 @@ extern "C" {
 static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 {
   char buf[16384];
-  size_t c = sprintf(buf, "pvr.hts - ");
+  int c = sprintf(buf, "pvr.hts - ");
   va_list va;
   va_start(va, fmt);
   vsnprintf(buf + c, sizeof(buf) - c, fmt, va);
@@ -111,7 +111,7 @@ typedef PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
 class CHTSPResponse
 {
 public:
-  CHTSPResponse(void);
+  CHTSPResponse();
   ~CHTSPResponse();
   htsmsg_t *Get ( PLATFORM::CMutex &mutex, uint32_t timeout );
   void      Set ( htsmsg_t *m );
@@ -167,7 +167,7 @@ class CHTSPRegister
 
 public:
   CHTSPRegister ( CHTSPConnection *conn );
-  ~CHTSPRegister ( void );
+  ~CHTSPRegister ();
  
 private:
   CHTSPConnection *m_conn;
@@ -307,7 +307,6 @@ private:
   bool         Seek           ( int time, bool backwards, double *startpts );
   void         Speed          ( int speed );
   void         Weight         ( enum eSubscriptionWeight weight );
-  int          CurrentId      ( void );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
 
@@ -410,7 +409,7 @@ public:
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
-  uint32_t GetNextUnnumberedChannelNumber ( void );
+  uint32_t GetNextUnnumberedChannelNumber ();
   std::string GetImageURL     ( const char *str );
 
   PLATFORM::CMutex            m_mutex;
@@ -534,10 +533,6 @@ public:
   inline bool IsConnected ( void ) const
   {
     return m_conn.IsConnected();
-  }
-  inline void Disconnect ( void )
-  {
-    m_conn.Disconnect();
   }
   inline void OnSleep ( void )
   {

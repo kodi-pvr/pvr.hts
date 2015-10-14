@@ -111,7 +111,7 @@ struct SSubscription
     active(false),
     weight(SUBSCRIPTION_WEIGHT_NORMAL)
   {
-    static int previousId = 0;
+    static uint32_t previousId = 0;
     subscriptionId = ++previousId;
   }
 };

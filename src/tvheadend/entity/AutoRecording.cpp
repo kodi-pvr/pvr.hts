@@ -59,8 +59,8 @@ time_t AutoRecording::GetStart() const
   if (Settings::GetInstance().bAutorecApproxTime)
   {
     /* Calculate the approximate start time from the starting window */
-    if ((m_startWindowBegin == int32_t(-1)) ||
-        (m_startWindowEnd == int32_t(-1))) // no starting window set => "any time"
+    if ((m_startWindowBegin == -1) ||
+        (m_startWindowEnd == -1)) // no starting window set => "any time"
       return 0;
     else if (m_startWindowEnd < m_startWindowBegin)
     {
@@ -78,7 +78,7 @@ time_t AutoRecording::GetStart() const
   }
   else
   {
-    if (m_startWindowBegin == int32_t(-1)) // "any time"
+    if (m_startWindowBegin == -1) // "any time"
       return 0;
 
     return LocaltimeToUTC(m_startWindowBegin);
@@ -99,7 +99,7 @@ time_t AutoRecording::GetStop() const
   }
   else
   {
-    if (m_startWindowEnd == int32_t(-1)) // "any time"
+    if (m_startWindowEnd == -1) // "any time"
       return 0;
 
     return LocaltimeToUTC(m_startWindowEnd);

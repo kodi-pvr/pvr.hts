@@ -47,7 +47,6 @@ public:
   /* data access */
   int  GetAutorecTimerCount() const;
   void GetAutorecTimers(std::vector<PVR_TIMER> &timers);
-  const std::string GetTimerStringIdFromIntId(unsigned int intId) const;
   const unsigned int GetTimerIntIdFromStringId(const std::string &strId) const;
 
   /* client to server messages */

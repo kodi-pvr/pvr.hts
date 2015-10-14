@@ -445,6 +445,7 @@ htsmsg_get_map_multi(htsmsg_t *msg, ...)
 
   while(msg != NULL && (n = va_arg(ap, char *)) != NULL)
     msg = htsmsg_get_map(msg, n);
+  va_end(ap);
   return msg;
 }
 

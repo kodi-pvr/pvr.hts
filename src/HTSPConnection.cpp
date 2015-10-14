@@ -20,9 +20,7 @@
  */
 
 #include "platform/threads/mutex.h"
-#include "platform/threads/atomics.h"
 #include "platform/util/StringUtils.h"
-#include "platform/util/timeutils.h"
 #include "platform/sockets/tcp.h"
 
 extern "C" {
@@ -31,7 +29,6 @@ extern "C" {
 }
 
 #include "Tvheadend.h"
-#include "tvheadend/Settings.h"
 
 using namespace std;
 using namespace ADDON;
@@ -288,7 +285,7 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
   int     e;
   void   *buf;
   size_t  len;
-  ssize_t c = -1;
+  ssize_t c;
   uint32_t seq;
 
   if (!htsmsg_get_u32(msg, "seq", &seq))
