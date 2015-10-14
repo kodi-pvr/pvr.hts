@@ -24,7 +24,6 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/HTSPDemuxer.cpp
                 src/HTSPTypes.h
                 src/HTSPVFS.cpp
-                src/Settings.h
                 src/Tvheadend.cpp
                 src/Tvheadend.h
                 src/TimeRecordings.cpp
@@ -32,6 +31,9 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/AutoRecordings.cpp
                 src/AutoRecordings.h
                 src/xbmc_codec_descriptor.hpp)
+
+set(HTS_SOURCES_TVHEADEND
+                src/tvheadend/Settings.h)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/AutoRecording.h
@@ -59,6 +61,7 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
 				src/tvheadend/utilities/Utilities.h)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
+source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
 source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STATUS})
 source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
@@ -76,6 +79,7 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 
 # Combine the file lists
 list(APPEND HTS_SOURCES
+            ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
             ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})

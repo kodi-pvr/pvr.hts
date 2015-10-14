@@ -29,7 +29,7 @@
 #include "kodi/xbmc_codec_types.h"
 #include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"
-#include "Settings.h"
+#include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
 #include "AsyncState.h"
 #include "tvheadend/entity/Tag.h"

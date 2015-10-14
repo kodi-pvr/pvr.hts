@@ -25,7 +25,7 @@
 #include "platform/threads/mutex.h"
 #include "platform/threads/atomics.h"
 #include "platform/util/util.h"
-#include "Settings.h"
+#include "tvheadend/Settings.h"
 #include "Tvheadend.h"
 
 using namespace std;
