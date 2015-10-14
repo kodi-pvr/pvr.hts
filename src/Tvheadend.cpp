@@ -38,12 +38,12 @@ using namespace PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 
-CTvheadend::CTvheadend(tvheadend::Settings settings)
-  : m_settings(settings), m_streamchange(false), m_vfs(m_conn),
-    m_queue((size_t)-1), m_asyncState(settings.iResponseTimeout),
+CTvheadend::CTvheadend()
+  : m_streamchange(false), m_vfs(m_conn),
+    m_queue((size_t)-1), m_asyncState(Settings::GetInstance().iResponseTimeout),
     m_timeRecordings(m_conn), m_autoRecordings(m_conn)
 {
-  for (int i = 0; i < 1 || i < m_settings.iTotalTuners; i++)
+  for (int i = 0; i < 1 || i < Settings::GetInstance().iTotalTuners; i++)
   {
     m_dmx.push_back(new CHTSPDemuxer(m_conn));
   }
@@ -286,7 +286,7 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
 
   /* Send and wait a bit longer than usual */
   if ((m = m_conn.SendAndWait(method, m,
-            std::max(30000, m_settings.iResponseTimeout))) == NULL)
+            std::max(30000, Settings::GetInstance().iResponseTimeout))) == NULL)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
@@ -711,7 +711,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
     }
 
-    if (!m_settings.bAutorecApproxTime)
+    if (!Settings::GetInstance().bAutorecApproxTime)
     {
       /* We need the end time to represent the end of the tvh starting window */
       TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
@@ -1072,7 +1072,7 @@ PVR_ERROR CTvheadend::GetEpg
            (long long)start, (long long)end);
 
   /* Async transfer */
-  if (m_settings.bAsyncEpg)
+  if (Settings::GetInstance().bAsyncEpg)
   {
     if (!m_asyncState.WaitForState(ASYNC_DONE))
       return PVR_ERROR_FAILED;
@@ -1174,7 +1174,7 @@ bool CTvheadend::Connected ( void )
   m_asyncState.SetState(ASYNC_NONE);
   
   msg = htsmsg_create_map();
-  htsmsg_add_u32(msg, "epg", m_settings.bAsyncEpg);
+  htsmsg_add_u32(msg, "epg", Settings::GetInstance().bAsyncEpg);
   //htsmsg_add_u32(msg, "epgMaxTime", 0);
   //htsmsg_add_s64(msg, "lastUpdate", 0);
   if ((msg = m_conn.SendAndWait0("enableAsyncMetadata", msg)) == NULL)
@@ -1411,7 +1411,7 @@ void CTvheadend::SyncDvrCompleted ( void )
 void CTvheadend::SyncEpgCompleted ( void )
 {
   /* Done */
-  if (!m_settings.bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
+  if (!Settings::GetInstance().bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
     return;
 
   /* Schedules */
@@ -2068,8 +2068,8 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
       pkt = dmx->Read();
     else
     {
-      if (dmx->GetChannelId() && m_settings.iPreTuneCloseDelay &&
-          dmx->GetLastUse() + m_settings.iPreTuneCloseDelay < time(NULL))
+      if (dmx->GetChannelId() && Settings::GetInstance().iPreTuneCloseDelay &&
+          dmx->GetLastUse() + Settings::GetInstance().iPreTuneCloseDelay < time(NULL))
       {
         tvhtrace("untuning channel %u on subscription %u",
                  m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());

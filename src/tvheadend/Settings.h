@@ -25,7 +25,21 @@
 
 namespace tvheadend {
 
-  struct Settings {
+  /**
+   * Represents the current addon settings
+   */
+  class Settings {
+  public:
+
+    /**
+     * Singleton getter for the instance
+     */
+    static Settings& GetInstance()
+    {
+      static Settings settings;
+      return settings;
+    }
+
     std::string strHostname;
     int         iPortHTSP;
     int         iPortHTTP;
@@ -39,6 +53,11 @@ namespace tvheadend {
     int         iPreTuneCloseDelay;
     bool        bAutorecApproxTime;
     int         iAutorecMaxDiff;
+
+  private:
+    Settings() { }
+    Settings(Settings const &) = delete;
+    void operator=(Settings const &) = delete;
   };
 
 }

@@ -31,11 +31,12 @@ extern "C" {
 }
 
 #include "Tvheadend.h"
-#include "client.h"
+#include "tvheadend/Settings.h"
 
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
+using namespace tvheadend;
 
 /*
  * HTSP Response objct
@@ -111,7 +112,7 @@ CHTSPConnection::~CHTSPConnection()
 std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 {
   va_list va;
-  tvheadend::Settings settings = tvh->GetSettings();
+  const Settings &settings = Settings::GetInstance();
 
   // Generate the authentication string (user:pass@)
   std::string auth = settings.strUsername;
@@ -135,7 +136,7 @@ bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {
     tvhtrace("waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, tvh->GetSettings().iConnectTimeout);
+    m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().iConnectTimeout);
   }
   return m_ready;
 }
@@ -154,7 +155,7 @@ std::string CHTSPConnection::GetServerVersion ( void )
 
 std::string CHTSPConnection::GetServerString ( void )
 {
-  tvheadend::Settings settings = tvh->GetSettings();
+  const Settings &settings = Settings::GetInstance();
 
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s:%d [%s]", settings.strHostname.c_str(), settings.iPortHTSP,
@@ -230,7 +231,7 @@ bool CHTSPConnection::ReadMessage ( void )
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, tvh->GetSettings().iResponseTimeout);
+    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().iResponseTimeout);
     if (r < 0)
     {
       tvherror("failed to read packet (%s)",
@@ -327,7 +328,7 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = tvh->GetSettings().iResponseTimeout;
+    iResponseTimeout = Settings::GetInstance().iResponseTimeout;
   
   uint32_t seq;
 
@@ -388,7 +389,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
 htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = tvh->GetSettings().iResponseTimeout;
+    iResponseTimeout = Settings::GetInstance().iResponseTimeout;
   
   if (!WaitForConnection())
     return NULL;
@@ -475,8 +476,8 @@ bool CHTSPConnection::SendAuth
  */
 void CHTSPConnection::Register ( void )
 {
-  std::string user = tvh->GetSettings().strUsername;
-  std::string pass = tvh->GetSettings().strPassword;
+  std::string user = Settings::GetInstance().strUsername;
+  std::string pass = Settings::GetInstance().strPassword;
 
   {
     CLockObject lock(m_mutex);
@@ -527,7 +528,7 @@ void* CHTSPConnection::Process ( void )
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
-  tvheadend::Settings settings = tvh->GetSettings();
+  const Settings &settings = Settings::GetInstance();
 
   while (!IsStopped())
   {

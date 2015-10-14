@@ -25,8 +25,8 @@
 #include "platform/threads/mutex.h"
 #include "platform/threads/atomics.h"
 #include "platform/util/util.h"
-#include "Settings.h"
 #include "Tvheadend.h"
+#include "tvheadend/Settings.h"
 
 using namespace std;
 using namespace ADDON;
@@ -142,7 +142,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   ADDON_ReadSettings();
   
   /* Create a settings object that can be used without locks */
-  tvheadend::Settings settings;
+  tvheadend::Settings &settings = tvheadend::Settings::GetInstance();
   settings.strHostname = g_strHostname;
   settings.iPortHTSP = g_iPortHTSP;
   settings.iPortHTTP = g_iPortHTTP;
@@ -170,7 +170,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   settings.bAutorecApproxTime = (g_iAutorecApproxTime > 0);
   settings.iAutorecMaxDiff = g_iAutorecMaxDiff;
 
-  tvh = new CTvheadend(settings);
+  tvh = new CTvheadend();
   tvh->Start();
 
   /* Wait for connection */
