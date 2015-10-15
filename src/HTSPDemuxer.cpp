@@ -172,7 +172,7 @@ bool CHTSPDemuxer::Seek
   htsmsg_destroy(m);
 
   /* Wait for time */
-  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().iResponseTimeout))
+  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
   {
     tvherror("failed to get subscriptionSeek response");
     return false;

@@ -112,13 +112,13 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
   const Settings &settings = Settings::GetInstance();
 
   // Generate the authentication string (user:pass@)
-  std::string auth = settings.strUsername;
-  if (!(auth.empty() || settings.strPassword.empty()))
-    auth += ":" + settings.strPassword;
+  std::string auth = settings.GetUsername();
+  if (!(auth.empty() || settings.GetPassword().empty()))
+    auth += ":" + settings.GetPassword();
   if (!auth.empty())
     auth += "@";
 
-  std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(), settings.strHostname.c_str(), settings.iPortHTTP);
+  std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
 
   CLockObject lock(m_mutex);
   va_start(va, fmt);
@@ -133,7 +133,7 @@ bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {
     tvhtrace("waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().iConnectTimeout);
+    m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().GetConnectTimeout());
   }
   return m_ready;
 }
@@ -155,7 +155,7 @@ std::string CHTSPConnection::GetServerString ( void )
   const Settings &settings = Settings::GetInstance();
 
   CLockObject lock(m_mutex);
-  return StringUtils::Format("%s:%d [%s]", settings.strHostname.c_str(), settings.iPortHTSP,
+  return StringUtils::Format("%s:%d [%s]", settings.GetHostname().c_str(), settings.GetPortHTSP(),
              m_ready ? "connected" : "disconnected");
 }
 
@@ -228,7 +228,7 @@ bool CHTSPConnection::ReadMessage ( void )
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().iResponseTimeout);
+    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
       tvherror("failed to read packet (%s)",
@@ -325,7 +325,7 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().iResponseTimeout;
+    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
   
   uint32_t seq;
 
@@ -386,7 +386,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
 htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().iResponseTimeout;
+    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
   
   if (!WaitForConnection())
     return NULL;
@@ -473,8 +473,8 @@ bool CHTSPConnection::SendAuth
  */
 void CHTSPConnection::Register ( void )
 {
-  std::string user = Settings::GetInstance().strUsername;
-  std::string pass = Settings::GetInstance().strPassword;
+  std::string user = Settings::GetInstance().GetUsername();
+  std::string pass = Settings::GetInstance().GetPassword();
 
   {
     CLockObject lock(m_mutex);
@@ -531,10 +531,10 @@ void* CHTSPConnection::Process ( void )
   {
     tvhdebug("new connection requested");
 
-    std::string host = settings.strHostname;
+    std::string host = settings.GetHostname();
     int port, timeout;
-    port = settings.iPortHTSP;
-    timeout = settings.iConnectTimeout;
+    port = settings.GetPortHTSP();
+    timeout = settings.GetConnectTimeout();
 
     /* Create socket (ensure mutex protection) */
     {

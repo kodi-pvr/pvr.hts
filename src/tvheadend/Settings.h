@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include "kodi/xbmc_addon_types.h"
+
 namespace tvheadend {
 
   /**
@@ -30,6 +32,21 @@ namespace tvheadend {
    */
   class Settings {
   public:
+
+    // Default values.
+    static const std::string DEFAULT_HOST;
+    static const int         DEFAULT_HTTP_PORT;
+    static const int         DEFAULT_HTSP_PORT;
+    static const std::string DEFAULT_USERNAME;
+    static const std::string DEFAULT_PASSWORD;
+    static const int         DEFAULT_CONNECT_TIMEOUT;  // millisecs
+    static const int         DEFAULT_RESPONSE_TIMEOUT; // millisecs
+    static const bool        DEFAULT_TRACE_DEBUG;
+    static const bool        DEFAULT_ASYNC_EPG;
+    static const int         DEFAULT_TOTAL_TUNERS;
+    static const int         DEFAULT_PRETUNER_CLOSEDELAY; // secs
+    static const int         DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
+    static const int         DEFAULT_APPROX_TIME;     // mins
 
     /**
      * Singleton getter for the instance
@@ -40,24 +57,95 @@ namespace tvheadend {
       return settings;
     }
 
-    std::string strHostname;
-    int         iPortHTSP;
-    int         iPortHTTP;
-    std::string strUsername;
-    std::string strPassword;
-    int         iConnectTimeout;
-    int         iResponseTimeout;
-    bool        bTraceDebug;
-    bool        bAsyncEpg;
-    int         iTotalTuners;
-    int         iPreTuneCloseDelay;
-    bool        bAutorecApproxTime;
-    int         iAutorecMaxDiff;
+    /**
+     * Read all settings defined in settings.xml
+     */
+    void ReadSettings();
+
+    /**
+     * Set a value according to key definition in settings.xml
+     */
+    ADDON_STATUS SetSetting(const std::string &key, const void *value);
+
+    /**
+     * Getters for the settings values
+     */
+    std::string GetHostname() const { return m_strHostname; }
+    const char *GetConstCharHostname() const { return m_strHostname.c_str(); }
+    int         GetPortHTSP() const { return m_iPortHTSP; }
+    int         GetPortHTTP() const { return m_iPortHTTP; }
+    std::string GetUsername() const { return m_strUsername; }
+    std::string GetPassword() const { return m_strPassword; }
+    int         GetConnectTimeout() const { return m_iConnectTimeout; }
+    int         GetResponseTimeout() const { return m_iResponseTimeout; }
+    bool        GetTraceDebug() const { return m_bTraceDebug; }
+    bool        GetAsyncEpg() const { return m_bAsyncEpg; }
+    int         GetTotalTuners() const { return m_iTotalTuners; }
+    int         GetPreTunerCloseDelay() const { return m_iPreTunerCloseDelay; }
+    bool        GetAutorecApproxTime() const { return m_bAutorecApproxTime; }
+    int         GetAutorecMaxDiff() const { return m_iPreTunerCloseDelay; }
 
   private:
-    Settings() { }
+    Settings()
+    : m_strHostname(DEFAULT_HOST),
+      m_iPortHTSP(DEFAULT_HTTP_PORT),
+      m_iPortHTTP(DEFAULT_HTSP_PORT),
+      m_strUsername(DEFAULT_USERNAME),
+      m_strPassword(DEFAULT_PASSWORD),
+      m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
+      m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
+      m_bTraceDebug(DEFAULT_TRACE_DEBUG),
+      m_bAsyncEpg(DEFAULT_ASYNC_EPG),
+      m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
+      m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
+      m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
+      m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF) {}
+
     Settings(Settings const &) = delete;
     void operator=(Settings const &) = delete;
+
+    /**
+     * Setters
+     */
+    void SetHostname(const std::string& value) { m_strHostname = value; }
+    void SetPortHTSP(int value) { m_iPortHTSP = value; }
+    void SetPortHTTP(int value) { m_iPortHTTP = value; }
+    void SetUsername(const std::string& value) { m_strUsername = value; }
+    void SetPassword(const std::string& value) { m_strPassword = value; }
+    void SetConnectTimeout(int value) { m_iConnectTimeout = value; }
+    void SetResponseTimeout(int value) { m_iResponseTimeout = value; }
+    void SetTraceDebug(bool value) { m_bTraceDebug = value; }
+    void SetAsyncEpg(bool value) { m_bAsyncEpg = value; }
+    void SetTotalTuners(int value) { m_iTotalTuners = value; }
+    void SetPreTunerCloseDelay(int value) { m_iPreTunerCloseDelay = value; }
+    void SetAutorecApproxTime(bool value) { m_bAutorecApproxTime = value; }
+    void SetAutorecMaxDiff(int value) { m_iAutorecMaxDiff = value; }
+
+    /**
+     * Read/Set values according to definition in settings.xml
+     */
+    static std::string ReadStringSetting(const std::string &key, const std::string &def);
+    static int         ReadIntSetting(const std::string &key, int def);
+    static bool        ReadBoolSetting(const std::string &key, bool def);
+
+    // @return ADDON_STATUS_OK if value has not changed, ADDON_STATUS_NEED_RESTART otherwise
+    static ADDON_STATUS SetStringSetting(const std::string &oldValue, const void *newValue);
+    static ADDON_STATUS SetIntSetting(int oldValue, const void *newValue);
+    static ADDON_STATUS SetBoolSetting(int oldValue, const void *newValue);
+
+    std::string m_strHostname;
+    int         m_iPortHTSP;
+    int         m_iPortHTTP;
+    std::string m_strUsername;
+    std::string m_strPassword;
+    int         m_iConnectTimeout;
+    int         m_iResponseTimeout;
+    bool        m_bTraceDebug;
+    bool        m_bAsyncEpg;
+    int         m_iTotalTuners;
+    int         m_iPreTunerCloseDelay;
+    bool        m_bAutorecApproxTime;
+    int         m_iAutorecMaxDiff;
   };
 
 }
