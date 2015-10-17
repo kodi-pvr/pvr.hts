@@ -1585,6 +1585,11 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     tvhdebug("channel %s id:%u, name:%s",
              (bAdd ? "added" : "updated"), channel.GetId(), channel.GetName().c_str());
 
+    if (bAdd)
+      m_channelTuningPredictor.AddChannel(channel);
+    else
+      m_channelTuningPredictor.UpdateChannel(comparison, channel);
+
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
@@ -1604,6 +1609,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   
   /* Erase */
   m_channels.erase(u32);
+  m_channelTuningPredictor.RemoveChannel(u32);
   TriggerChannelUpdate();
 }
 
@@ -1959,33 +1965,13 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
 void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
 {
   CLockObject lock(m_mutex);
-  uint32_t fromNum, toNum;
 
-  fromNum = m_channels[fromChannelId].GetNum();
-  toNum = m_channels[toChannelId].GetNum();
+  /* Consult the predictive tuning helper for which channel
+   * should be predictably tuned next */
+  uint32_t predictedChannelId = m_channelTuningPredictor.PredictNextChannelId(fromChannelId, toChannelId);
 
-  if (fromNum + 1 == toNum || toNum == 1)
-  {
-    /* tuning up, or to channel 1 */
-    for (const auto &entry : m_channels)
-    {
-      const Channel &channel = entry.second;
-
-      if (toNum + 1 == channel.GetNum())
-        TuneOnOldest(channel.GetId());
-    }
-  }
-  else if (fromNum - 1 == toNum)
-  {
-    /* tuning down */
-    for (const auto &entry : m_channels)
-    {
-      const Channel &channel = entry.second;
-
-      if (toNum - 1 == channel.GetNum())
-        TuneOnOldest(channel.GetId());
-    }
-  }
+  if (predictedChannelId != predictivetune::CHANNEL_ID_NONE)
+    TuneOnOldest(predictedChannelId);
 }
 
 bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )

@@ -34,7 +34,9 @@ set(HTS_SOURCES src/AsyncState.cpp
 
 set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/Settings.cpp
-                src/tvheadend/Settings.h)
+                src/tvheadend/Settings.h
+                src/tvheadend/ChannelTuningPredictor.h
+                src/tvheadend/ChannelTuningPredictor.cpp)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/AutoRecording.h
