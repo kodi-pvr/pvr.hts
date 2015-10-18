@@ -15,6 +15,9 @@
     <setting id="autorec_approxtime" type="enum" label="30051" lvalues="30052|30053" default="0"/>
     <setting id="autorec_maxdiff" enable="eq(-1,1)"  type="slider" option="int" range="0,5,120" label="30054" default="15" />
     
+    <setting label="30500" type="lsep"/>
+    <setting id="streaming_profile" type="text" label="30501" default="" />
+
     <setting label="30400" type="lsep"/>
     <setting id="pretuner_enabled" type="bool" label="30403" default="false" />
     <setting id="total_tuners" enable="eq(-1,true)" type="slider" option="int" range="2,1,10" label="30401"  default="2" />

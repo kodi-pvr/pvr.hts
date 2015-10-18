@@ -225,3 +225,19 @@ msgstr ""
 msgctxt "#30456"
 msgid "Subscription error"
 msgstr ""
+
+#empty strings from id 30456 to 30499
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr ""
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr ""
+
+#. Check streaming profile validity during startup
+#: src/client.cpp
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr ""

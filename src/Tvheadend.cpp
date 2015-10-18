@@ -153,6 +153,18 @@ void CTvheadend::QueryAvailableProfiles()
   htsmsg_destroy(m);
 }
 
+bool CTvheadend::HasStreamingProfile(const std::string &streamingProfile) const
+{
+  return std::find_if(
+      m_profiles.cbegin(),
+      m_profiles.cend(),
+      [&streamingProfile](const Profile &profile)
+      {
+        return profile.GetName() == streamingProfile;
+      }
+  ) != m_profiles.cend();
+}
+
 /* **************************************************************************
  * Tags
  * *************************************************************************/
@@ -1392,6 +1404,19 @@ void CTvheadend::SyncCompleted ( void )
   SyncDvrCompleted();
   SyncEpgCompleted();
   m_asyncState.SetState(ASYNC_DONE);
+
+  /* Query the server for available streaming profiles */
+  QueryAvailableProfiles();
+
+  /* Show a notification if the profile is not available */
+  std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
+
+  if (!streamingProfile.empty() && !HasStreamingProfile(streamingProfile))
+  {
+    XBMC->QueueNotification(
+        QUEUE_ERROR,
+        XBMC->GetLocalizedString(30502), streamingProfile.c_str());
+  }
 }
 
 void CTvheadend::SyncChannelsCompleted ( void )

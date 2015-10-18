@@ -403,17 +403,23 @@ public:
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
 
-  /**
-   * Queries the server for available streaming profiles and populates
-   * m_profiles
-   */
-  void QueryAvailableProfiles();
-  
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ();
   std::string GetImageURL     ( const char *str );
+
+  /**
+   * Queries the server for available streaming profiles and populates
+   * m_profiles
+   */
+  void QueryAvailableProfiles();
+
+  /**
+   * @param streamingProfile the streaming profile to check for
+   * @return whether the server supports the specified streaming profile
+   */
+  bool HasStreamingProfile(const std::string &streamingProfile) const;
 
   /**
    * The streaming profiles available on the server
