@@ -1997,10 +1997,14 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       tvhtrace("retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].GetNum(), dmx->GetSubscriptionId());
 
-      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
+      /* Lower the priority on the current subscrption */
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
+
+      /* Promote the lingering subscription to the active one */
+      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active = dmx;
+
       PredictiveTune(prevId, chn.iUniqueId);
       m_streamchange = true;
       return true;
