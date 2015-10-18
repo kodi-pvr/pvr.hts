@@ -106,6 +106,53 @@ std::string CTvheadend::GetImageURL ( const char *str )
   }
 }
 
+void CTvheadend::QueryAvailableProfiles()
+{
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+
+  /* Send */
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("getProfiles", m);
+  }
+
+  /* Validate */
+  if (m == nullptr)
+    return;
+
+  htsmsg_t *l;
+  htsmsg_field_t *f;
+
+  if ((l = htsmsg_get_list(m, "profiles")) == NULL)
+  {
+    tvherror("malformed getProfiles: 'profiles' missing");
+    htsmsg_destroy(m);
+    return;
+  }
+
+  /* Process */
+  HTSMSG_FOREACH(f, l)
+  {
+    const char *str;
+    Profile profile;
+
+    if ((str = htsmsg_get_str(&f->hmf_msg, "uuid")) != NULL)
+      profile.SetUuid(str);
+    if ((str = htsmsg_get_str(&f->hmf_msg, "name")) != NULL)
+      profile.SetName(str);
+    if ((str = htsmsg_get_str(&f->hmf_msg, "comment")) != NULL)
+      profile.SetComment(str);
+
+    tvhdebug("profile name: %s, comment: %s added",
+             profile.GetName().c_str(), profile.GetComment().c_str());
+
+    m_profiles.push_back(profile);
+  }
+
+  htsmsg_destroy(m);
+}
+
 /* **************************************************************************
  * Tags
  * *************************************************************************/

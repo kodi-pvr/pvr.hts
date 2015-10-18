@@ -33,6 +33,7 @@
 #include "HTSPTypes.h"
 #include "AsyncState.h"
 #include "tvheadend/ChannelTuningPredictor.h"
+#include "tvheadend/Profile.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/entity/Channel.h"
 #include "tvheadend/entity/Recording.h"
@@ -401,12 +402,23 @@ public:
 
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
+
+  /**
+   * Queries the server for available streaming profiles and populates
+   * m_profiles
+   */
+  void QueryAvailableProfiles();
   
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ();
   std::string GetImageURL     ( const char *str );
+
+  /**
+   * The streaming profiles available on the server
+   */
+  tvheadend::Profiles         m_profiles;
 
   PLATFORM::CMutex            m_mutex;
 
