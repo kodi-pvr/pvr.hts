@@ -1990,6 +1990,8 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
     return ret;
   }
 
+  /* If we have a lingering subscription for the target channel
+   * we reuse that subscription */
   for (auto *dmx : m_dmx)
   {
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
@@ -2013,10 +2015,14 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       oldest = dmx;
   }
 
+  /* If we don't have an existing subscription for the channel we create one
+   * on the oldest demuxer */
   tvhtrace("tuning channel %u on subscription %u",
            m_channels[chn.iUniqueId].GetNum(), oldest->GetSubscriptionId());
+
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
   if (ret)
@@ -2046,6 +2052,7 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
       pkt = dmx->Read();
     else
     {
+      /* Close "expired" subscriptions */
       if (dmx->GetChannelId() && Settings::GetInstance().GetPreTunerCloseDelay() &&
           dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(NULL))
       {
