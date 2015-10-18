@@ -284,6 +284,12 @@ public:
     return 0;
   }
 
+  /**
+   * Tells each demuxer to use the specified profile for new subscriptions
+   * @param profile the profile to use
+   */
+  void SetStreamingProfile(const std::string &profile);
+
 private:
   PLATFORM::CMutex                        m_mutex;
   CHTSPConnection                        &m_conn;
@@ -420,6 +426,12 @@ private:
    * @return whether the server supports the specified streaming profile
    */
   bool HasStreamingProfile(const std::string &streamingProfile) const;
+
+  /**
+   * @return the streaming profile to use for new subscriptions, or an
+   *         empty string if no particular profile should be used
+   */
+  std::string GetStreamingProfile() const;
 
   /**
    * The streaming profiles available on the server

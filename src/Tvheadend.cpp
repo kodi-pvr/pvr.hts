@@ -165,6 +165,16 @@ bool CTvheadend::HasStreamingProfile(const std::string &streamingProfile) const
   ) != m_profiles.cend();
 }
 
+std::string CTvheadend::GetStreamingProfile() const
+{
+  std::string streamingProfile;
+
+  if (HasStreamingProfile(Settings::GetInstance().GetStreamingProfile()))
+    streamingProfile = Settings::GetInstance().GetStreamingProfile();
+
+  return streamingProfile;
+}
+
 /* **************************************************************************
  * Tags
  * *************************************************************************/
@@ -1416,6 +1426,12 @@ void CTvheadend::SyncCompleted ( void )
     XBMC->QueueNotification(
         QUEUE_ERROR,
         XBMC->GetLocalizedString(30502), streamingProfile.c_str());
+  }
+  else
+  {
+    /* Tell each demuxer to use this profile from now on */
+    for (auto *dmx : m_dmx)
+      dmx->SetStreamingProfile(streamingProfile);
   }
 }
 
