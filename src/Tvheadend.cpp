@@ -25,13 +25,6 @@
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 
-#include "platform/util/util.h"
-#include "platform/threads/atomics.h"
-
-extern "C" {
-#include "libhts/htsmsg_binary.h"
-}
-
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
@@ -387,7 +380,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 
       /* Time/Duration */
       rec.recordingTime = (time_t)recording.GetStart();
-      rec.iDuration =     (time_t)(recording.GetStop() - recording.GetStart());
+      rec.iDuration =     recording.GetStop() - recording.GetStart();
 
       /* Priority */
       rec.iPriority = recording.GetPriority();
@@ -1360,9 +1353,6 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
-  Channels::iterator cit = m_channels.begin();
-  Tags::iterator tit = m_tags.begin();
-
   /* Tags */
   utilities::erase_if(m_tags, [](const TagMapEntry &entry)
   {
@@ -1619,7 +1609,6 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
-  bool update = false;
   const char *state, *str;
   uint32_t id, channel, eventId, retention, priority;
   int64_t start, stop, startExtra, stopExtra;
@@ -1876,7 +1865,6 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
 
 void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
-  bool update = false;
   Event tmp;
 
   /* Parse */

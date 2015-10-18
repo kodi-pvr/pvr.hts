@@ -22,8 +22,6 @@
 #include "client.h"
 #include "kodi/xbmc_pvr_dll.h"
 #include "kodi/libKODI_guilib.h"
-#include "platform/threads/mutex.h"
-#include "platform/threads/atomics.h"
 #include "platform/util/util.h"
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"

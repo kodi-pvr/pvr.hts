@@ -171,7 +171,7 @@ time_t RecordingBase::LocaltimeToUTC(int32_t lctime)
 }
 
 // static
-int RecordingBase::GetNextIntId()
+unsigned int RecordingBase::GetNextIntId()
 {
   static unsigned int intId = 0;
   return ++intId;

@@ -40,7 +40,6 @@ public:
     m_strName(name) {}
   virtual ~CodecDescriptor(void) {}
 
-  const std::string& Name(void) const  { return m_strName; }
   xbmc_codec_t Codec(void) const { return m_codec; }
 
   static CodecDescriptor GetCodecByName(const char* strCodecName)

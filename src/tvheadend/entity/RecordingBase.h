@@ -72,7 +72,7 @@ namespace tvheadend
       static time_t LocaltimeToUTC(int32_t lctime);
 
     private:
-      static int GetNextIntId();
+      static unsigned int GetNextIntId();
 
       std::string m_sid;        // ID (string!) of dvr[Time|Auto]recEntry.
       uint32_t m_enabled;       // If [time|auto]rec entry is enabled (activated).

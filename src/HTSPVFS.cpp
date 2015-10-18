@@ -39,7 +39,7 @@ CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
 {
 }
 
-CHTSPVFS::~CHTSPVFS ( void )
+CHTSPVFS::~CHTSPVFS ()
 {
 }
 
@@ -97,7 +97,7 @@ ssize_t CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
     return -1;
 
   /* Read */
-  int read = SendFileRead(buf, len);
+  ssize_t read = SendFileRead(buf, len);
 
   /* Update */
   if (read > 0)
