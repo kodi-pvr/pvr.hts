@@ -2019,7 +2019,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
-  if (ret && m_dmx.size() > 1)
+  if (ret)
     PredictiveTune(prevId, chn.iUniqueId);
   return ret;
 }
