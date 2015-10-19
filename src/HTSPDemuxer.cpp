@@ -31,7 +31,8 @@ using namespace tvheadend;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
-    m_seekTime(INVALID_SEEKTIME)
+    m_seekTime(INVALID_SEEKTIME),
+    m_subscription(conn)
 {
   m_lastUse = 0;
 }
@@ -43,11 +44,15 @@ CHTSPDemuxer::~CHTSPDemuxer ()
 void CHTSPDemuxer::Connected ( void )
 {
   /* Re-subscribe */
-  if (m_subscription.active)
+  if (m_subscription.IsActive())
   {
     tvhdebug("demux re-starting stream");
-    SendSubscribe(true);
-    SendSpeed(true);
+    m_subscription.SendSubscribe(true);
+    m_subscription.SendSpeed(true);
+
+    /* Reset status */
+    m_signalInfo.Clear();
+    m_sourceInfo.Clear();
   }
 }
 
@@ -58,8 +63,8 @@ void CHTSPDemuxer::Connected ( void )
 void CHTSPDemuxer::Close0 ( void )
 {
   /* Send unsubscribe */
-  if (m_subscription.active)
-    SendUnsubscribe();
+  if (m_subscription.IsActive())
+    m_subscription.SendUnsubscribe();
 
   /* Clear */
   Flush();
@@ -81,22 +86,21 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
 
   /* Close current stream */
   Close0();
-  
-  /* Create new subscription */
-  m_subscription = SSubscription();
-  m_subscription.channelId = channelId;
-  m_subscription.weight = weight;
 
-  /* Open */
-  SendSubscribe();
+  /* Open new subscription */
+  m_subscription.SendSubscribe(channelId, weight);
   
+  /* Reset status */
+  m_signalInfo.Clear();
+  m_sourceInfo.Clear();
+
   /* Send unsubscribe if subscribing failed */
-  if (!m_subscription.active)
-    SendUnsubscribe();
+  if (!m_subscription.IsActive())
+    m_subscription.SendUnsubscribe();
   else
     m_lastUse = time(NULL);
   
-  return m_subscription.active;
+  return m_subscription.IsActive();
 }
 
 void CHTSPDemuxer::Close ( void )
@@ -150,26 +154,11 @@ void CHTSPDemuxer::Abort ( void )
 bool CHTSPDemuxer::Seek 
   ( int time, bool _unused(backwards), double *startpts )
 {
-  htsmsg_t *m;
-
-  CLockObject lock(m_conn.Mutex());
-  if (!m_subscription.active)
+  if (!m_subscription.IsActive())
     return false;
 
-  tvhdebug("demux seek %d", time);
-
-  /* Build message */
-  m = htsmsg_create_map();  
-  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
-  htsmsg_add_s64(m, "time",           (int64_t)time * 1000);
-  htsmsg_add_u32(m, "absolute",       1);
-
-  /* Send and Wait */
-  m = m_conn.SendAndWait("subscriptionSeek", m);
-  if (!m)
+  if (!m_subscription.SendSeek(time))
     return false;
-  
-  htsmsg_destroy(m);
 
   /* Wait for time */
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
@@ -191,18 +180,16 @@ bool CHTSPDemuxer::Seek
 void CHTSPDemuxer::Speed ( int speed )
 {
   CLockObject lock(m_conn.Mutex());
-  if (!m_subscription.active)
+  if (!m_subscription.IsActive())
     return;
-  m_subscription.speed = speed;
-  SendSpeed();
+  m_subscription.SendSpeed(speed);
 }
 
 void CHTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
 {
-  if (!m_subscription.active || m_subscription.weight == weight)
+  if (!m_subscription.IsActive() || m_subscription.GetWeight() == static_cast<uint32_t>(weight))
     return;
-  m_subscription.weight = weight;
-  SendWeight();
+  m_subscription.SendWeight(static_cast<uint32_t>(weight));
 }
 
 PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
@@ -238,99 +225,6 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 }
 
 /* **************************************************************************
- * Send Messages
- * *************************************************************************/
-
-void CHTSPDemuxer::SendSubscribe ( bool force )
-{
-  htsmsg_t *m;
-
-  /* Reset status */
-  m_signalInfo.Clear();
-  m_sourceInfo.Clear();
-
-  /* Build message */
-  m = htsmsg_create_map();
-  htsmsg_add_s32(m, "channelId",       m_subscription.channelId);
-  htsmsg_add_u32(m, "subscriptionId",  m_subscription.subscriptionId);
-  htsmsg_add_u32(m, "weight",          m_subscription.weight);
-  htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
-  htsmsg_add_u32(m, "normts",          1);
-  htsmsg_add_u32(m, "queueDepth",      2000000);
-
-  /* Send and Wait for response */
-  tvhdebug("demux subscribe to %d", m_subscription.channelId);
-  if (force)
-    m = m_conn.SendAndWait0("subscribe", m);
-  else
-    m = m_conn.SendAndWait("subscribe", m);
-  if (m == NULL)
-    return;
-
-  htsmsg_destroy(m);
-
-  m_subscription.active = true;
-  tvhdebug("demux successfully subscribed to %d", m_subscription.channelId);
-}
-
-void CHTSPDemuxer::SendUnsubscribe ( void )
-{
-  htsmsg_t *m;
-
-  /* Build message */
-  m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
-
-  /* Mark subscription as inactive immediately in case this command fails */
-  m_subscription.active = false;
-  
-  /* Send and Wait */
-  tvhdebug("demux unsubscribe from %d", m_subscription.channelId);
-  if ((m = m_conn.SendAndWait("unsubscribe", m)) == NULL)
-    return;
-
-  htsmsg_destroy(m);
-  tvhdebug("demux successfully unsubscribed %d", m_subscription.channelId);
-}
-
-void CHTSPDemuxer::SendSpeed ( bool force )
-{
-  htsmsg_t *m;
-  int speed = m_subscription.speed / 10; // XBMC uses values an order of magnitude larger than tvheadend
-
-  /* Build message */
-  m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
-  htsmsg_add_s32(m, "speed",          speed);
-  tvhdebug("demux send speed %d", speed);
-
-  /* Send and Wait */
-  if (force)
-    m = m_conn.SendAndWait0("subscriptionSpeed", m);
-  else
-    m = m_conn.SendAndWait("subscriptionSpeed", m);
-  if (m)
-    htsmsg_destroy(m);
-}
-
-void CHTSPDemuxer::SendWeight ( void )
-{
-  CLockObject lock(m_conn.Mutex());
-  htsmsg_t *m;
-
-  /* Build message */
-  m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
-  htsmsg_add_s32(m, "weight",         m_subscription.weight);
-  tvhdebug("demux send weight %u", m_subscription.weight);
-
-  /* Send and Wait */
-  m = m_conn.SendAndWait("subscriptionChangeWeight", m);
-  if (m)
-    htsmsg_destroy(m);
-}
-
-/* **************************************************************************
  * Parse incoming data
  * *************************************************************************/
 
@@ -342,7 +236,7 @@ bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
   if (!strcmp("muxpkt", method))
     ParseMuxPacket(m);
   else if (!strcmp("subscriptionStatus", method))
-    ParseSubscriptionStatus(m);
+    m_subscription.ParseSubscriptionStatus(m);
   else if (!strcmp("queueStatus", method))
     ParseQueueStatus(m);
   else if (!strcmp("signalStatus", method))
@@ -375,7 +269,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   int         iStreamId;
   
   /* Ignore packets while switching channels */
-  if (!m_subscription.active)
+  if (!m_subscription.IsActive())
   {
     tvhdebug("Ignored mux packet due to channel switch");
     return;
@@ -615,24 +509,6 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   uint32_t u32;
   if (!htsmsg_get_u32(m, "speed", &u32))
     tvhtrace("recv speed %d", u32);
-}
-
-void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
-{
-  const char *status;
-  status = htsmsg_get_str(m, "status");
-
-  // not for preTuning and postTuning subscriptions
-  if (m_subscription.weight == SUBSCRIPTION_WEIGHT_PRETUNING ||
-      m_subscription.weight == SUBSCRIPTION_WEIGHT_POSTTUNING)
-    return;
-
-  // this field is absent when everything is fine
-  if (status != NULL)
-  {
-    tvhinfo("Bad subscription status: %s", status);
-    XBMC->QueueNotification(QUEUE_INFO, status);
-  }
 }
 
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
