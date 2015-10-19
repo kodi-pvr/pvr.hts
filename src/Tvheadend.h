@@ -80,7 +80,7 @@ extern "C" {
 #define tvhdebug(...) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
 #define tvhinfo(...)  tvhlog(ADDON::LOG_INFO,  ##__VA_ARGS__)
 #define tvherror(...) tvhlog(ADDON::LOG_ERROR, ##__VA_ARGS__)
-#define tvhtrace(...) if (tvheadend::Settings::GetInstance().bTraceDebug) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
+#define tvhtrace(...) if (tvheadend::Settings::GetInstance().GetTraceDebug()) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
 static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 {
   char buf[16384];

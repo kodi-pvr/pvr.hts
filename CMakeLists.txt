@@ -33,6 +33,7 @@ set(HTS_SOURCES src/AsyncState.cpp
                 src/xbmc_codec_descriptor.hpp)
 
 set(HTS_SOURCES_TVHEADEND
+                src/tvheadend/Settings.cpp
                 src/tvheadend/Settings.h)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY

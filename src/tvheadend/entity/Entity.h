@@ -34,7 +34,7 @@ namespace tvheadend
     class Entity
     {
     public:
-      Entity() : m_dirty(false), m_id(0) {};
+      Entity() : m_id(0), m_dirty(false) {};
       virtual ~Entity() = default;
 
       /**

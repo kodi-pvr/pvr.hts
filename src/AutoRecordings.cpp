@@ -182,14 +182,14 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   /*                              => end time in kodi   = end of starting window in tvh     */
   const Settings &settings = Settings::GetInstance();
 
-  if (settings.bAutorecApproxTime)
+  if (settings.GetAutorecApproxTime())
   {
     /* Not sending causes server to set start and startWindow to any time */
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
       struct tm *tm_start = localtime(&timer.startTime);
-      int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - settings.iAutorecMaxDiff;
-      int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + settings.iAutorecMaxDiff;
+      int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - settings.GetAutorecMaxDiff();
+      int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + settings.GetAutorecMaxDiff();
 
       /* Past midnight correction */
       if (startWindowBegin < 0)
