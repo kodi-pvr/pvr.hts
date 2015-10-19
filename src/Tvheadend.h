@@ -41,6 +41,7 @@
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
+#include "tvheadend/Subscription.h"
 #include "TimeRecordings.h"
 #include "AutoRecordings.h"
 #include <map>
@@ -267,17 +268,17 @@ public:
   }
   inline uint32_t GetSubscriptionId() const
   {
-    return m_subscription.subscriptionId;
+    return m_subscription.GetId();
   }
   inline uint32_t GetChannelId() const
   {
-    if (m_subscription.active)
-      return m_subscription.channelId;
+    if (m_subscription.IsActive())
+      return m_subscription.GetChannelId();
     return 0;
   }
   inline time_t GetLastUse() const
   {
-    if (m_subscription.active)
+    if (m_subscription.IsActive())
       return m_lastUse;
     return 0;
   }
@@ -293,13 +294,13 @@ private:
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
-  SSubscription                           m_subscription;
+  tvheadend::Subscription                 m_subscription;
   time_t                                  m_lastUse;
   
   void         Close0         ( void );
   void         Abort0         ( void );
   bool         Open           ( uint32_t channelId,
-                                enum eSubscriptionWeight weight = SUBSCRIPTION_WEIGHT_NORMAL );
+                                tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL );
   void         Close          ( void );
   DemuxPacket *Read           ( void );
   void         Trim           ( void );
@@ -307,14 +308,9 @@ private:
   void         Abort          ( void );
   bool         Seek           ( int time, bool backwards, double *startpts );
   void         Speed          ( int speed );
-  void         Weight         ( enum eSubscriptionWeight weight );
+  void         Weight         ( tvheadend::eSubscriptionWeight weight );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
-
-  void SendSubscribe   ( bool force = false );
-  void SendUnsubscribe ( void );
-  void SendSpeed       ( bool force = false );
-  void SendWeight      ( void );
   
   void ParseMuxPacket           ( htsmsg_t *m );
   void ParseSourceInfo          ( htsmsg_t *m );
@@ -322,7 +318,6 @@ private:
   void ParseSubscriptionStop    ( htsmsg_t *m );
   void ParseSubscriptionSkip    ( htsmsg_t *m );
   void ParseSubscriptionSpeed   ( htsmsg_t *m );
-  void ParseSubscriptionStatus  ( htsmsg_t *m );
   void ParseQueueStatus         ( htsmsg_t *m );
   void ParseSignalStatus        ( htsmsg_t *m );
   void ParseTimeshiftStatus     ( htsmsg_t *m );

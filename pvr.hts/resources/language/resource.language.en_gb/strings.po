@@ -193,3 +193,35 @@ msgstr ""
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
 msgstr ""
+
+#empty strings from id 30404 to 30449
+
+#. Subscription states representation
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr ""
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr ""
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr ""
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr ""
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr ""
+
+msgctxt "#30455"
+msgid "No access"
+msgstr ""
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr ""

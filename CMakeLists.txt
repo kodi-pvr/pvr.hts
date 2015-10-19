@@ -36,7 +36,9 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/Settings.cpp
                 src/tvheadend/Settings.h
                 src/tvheadend/ChannelTuningPredictor.h
-                src/tvheadend/ChannelTuningPredictor.cpp)
+                src/tvheadend/ChannelTuningPredictor.cpp
+                src/tvheadend/Subscription.cpp
+                src/tvheadend/Subscription.h)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/AutoRecording.h
