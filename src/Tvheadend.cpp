@@ -1585,6 +1585,11 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     tvhdebug("channel %s id:%u, name:%s",
              (bAdd ? "added" : "updated"), channel.GetId(), channel.GetName().c_str());
 
+    if (bAdd)
+      m_channelTuningPredictor.AddChannel(channel);
+    else
+      m_channelTuningPredictor.UpdateChannel(comparison, channel);
+
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
@@ -1604,6 +1609,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   
   /* Erase */
   m_channels.erase(u32);
+  m_channelTuningPredictor.RemoveChannel(u32);
   TriggerChannelUpdate();
 }
 
@@ -1959,33 +1965,13 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
 void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
 {
   CLockObject lock(m_mutex);
-  uint32_t fromNum, toNum;
 
-  fromNum = m_channels[fromChannelId].GetNum();
-  toNum = m_channels[toChannelId].GetNum();
+  /* Consult the predictive tuning helper for which channel
+   * should be predictably tuned next */
+  uint32_t predictedChannelId = m_channelTuningPredictor.PredictNextChannelId(fromChannelId, toChannelId);
 
-  if (fromNum + 1 == toNum || toNum == 1)
-  {
-    /* tuning up, or to channel 1 */
-    for (const auto &entry : m_channels)
-    {
-      const Channel &channel = entry.second;
-
-      if (toNum + 1 == channel.GetNum())
-        TuneOnOldest(channel.GetId());
-    }
-  }
-  else if (fromNum - 1 == toNum)
-  {
-    /* tuning down */
-    for (const auto &entry : m_channels)
-    {
-      const Channel &channel = entry.second;
-
-      if (toNum - 1 == channel.GetNum())
-        TuneOnOldest(channel.GetId());
-    }
-  }
+  if (predictedChannelId != predictivetune::CHANNEL_ID_NONE)
+    TuneOnOldest(predictedChannelId);
 }
 
 bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
@@ -2004,6 +1990,8 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
     return ret;
   }
 
+  /* If we have a lingering subscription for the target channel
+   * we reuse that subscription */
   for (auto *dmx : m_dmx)
   {
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
@@ -2011,10 +1999,14 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       tvhtrace("retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].GetNum(), dmx->GetSubscriptionId());
 
-      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
+      /* Lower the priority on the current subscrption */
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
+
+      /* Promote the lingering subscription to the active one */
+      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active = dmx;
+
       PredictiveTune(prevId, chn.iUniqueId);
       m_streamchange = true;
       return true;
@@ -2023,13 +2015,17 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       oldest = dmx;
   }
 
+  /* If we don't have an existing subscription for the channel we create one
+   * on the oldest demuxer */
   tvhtrace("tuning channel %u on subscription %u",
            m_channels[chn.iUniqueId].GetNum(), oldest->GetSubscriptionId());
+
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
-  if (ret && m_dmx.size() > 1)
+  if (ret)
     PredictiveTune(prevId, chn.iUniqueId);
   return ret;
 }
@@ -2056,6 +2052,7 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
       pkt = dmx->Read();
     else
     {
+      /* Close "expired" subscriptions */
       if (dmx->GetChannelId() && Settings::GetInstance().GetPreTunerCloseDelay() &&
           dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(NULL))
       {

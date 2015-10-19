@@ -32,6 +32,7 @@
 #include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
 #include "AsyncState.h"
+#include "tvheadend/ChannelTuningPredictor.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/entity/Channel.h"
 #include "tvheadend/entity/Recording.h"
@@ -427,6 +428,8 @@ private:
   tvheadend::entity::Tags       m_tags;
   tvheadend::entity::Recordings m_recordings;
   tvheadend::entity::Schedules  m_schedules;
+
+  tvheadend::ChannelTuningPredictor m_channelTuningPredictor;
 
   SHTSPEventList              m_events;
 
