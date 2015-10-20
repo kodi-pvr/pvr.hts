@@ -1717,7 +1717,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     else if (strstr(state, "missed") != NULL)
       rec.SetState(PVR_TIMER_STATE_ERROR);
     else if (strstr(state, "invalid") != NULL)
-      rec.SetStart(PVR_TIMER_STATE_ERROR);
+      rec.SetState(PVR_TIMER_STATE_ERROR);
   }
 
   /* Add optional fields */
