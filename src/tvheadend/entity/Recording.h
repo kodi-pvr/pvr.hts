@@ -93,13 +93,15 @@ namespace tvheadend
       {
         return m_state == PVR_TIMER_STATE_COMPLETED ||
                m_state == PVR_TIMER_STATE_ABORTED ||
-               m_state == PVR_TIMER_STATE_RECORDING;
+               m_state == PVR_TIMER_STATE_RECORDING ||
+               m_state == PVR_TIMER_STATE_CONFLICT_NOK;
       }
 
       bool IsTimer() const
       {
         return m_state == PVR_TIMER_STATE_SCHEDULED ||
-               m_state == PVR_TIMER_STATE_RECORDING;
+               m_state == PVR_TIMER_STATE_RECORDING ||
+               m_state == PVR_TIMER_STATE_CONFLICT_NOK;
       }
 
       /**

@@ -1750,6 +1750,19 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       rec.SetError(str);
   }
   
+  /* A running recording will have an active subscription assigned to it */
+  if (rec.GetState() == PVR_TIMER_STATE_RECORDING)
+  {
+    /* Parse subscription error */
+    /* This field is absent when everything is fine or when htsp version < 20 */
+    if ((str = htsmsg_get_str(msg, "subscriptionError")) != NULL)
+    {
+      /* No free adapter, AKA subscription conflict */
+      if (!strcmp("noFreeAdapter", str))
+        rec.SetState(PVR_TIMER_STATE_CONFLICT_NOK);
+    }
+  }
+
   /* Update */
   if (rec != comparison)
   {
