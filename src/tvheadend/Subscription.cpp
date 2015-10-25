@@ -20,10 +20,12 @@
  */
 
 #include "Subscription.h"
+#include "utilities/Logger.h"
 #include "../Tvheadend.h"
 
 using namespace PLATFORM;
 using namespace tvheadend;
+using namespace tvheadend::utilities;
 
 Subscription::Subscription(CHTSPConnection &conn) :
   m_id(0),
@@ -137,7 +139,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   if (!GetProfile().empty())
     htsmsg_add_str(m, "profile", GetProfile().c_str());
 
-  tvhdebug("demux subscribe to %d",    GetChannelId());
+  Logger::Log(LogLevel::DEBUG, "demux subscribe to %d",    GetChannelId());
 
   /* Send and Wait for response */
   if (restart)
@@ -150,7 +152,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   htsmsg_destroy(m);
 
   SetState(SUBSCRIPTION_STARTING);
-  tvhdebug("demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(), GetId());
+  Logger::Log(LogLevel::DEBUG, "demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(), GetId());
 }
 
 void Subscription::SendUnsubscribe(void)
@@ -158,7 +160,7 @@ void Subscription::SendUnsubscribe(void)
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId",   GetId());
-  tvhdebug("demux unsubscribe from %d", GetChannelId());
+  Logger::Log(LogLevel::DEBUG, "demux unsubscribe from %d", GetChannelId());
 
   /* Mark subscription as inactive immediately in case this command fails */
   SetState(SUBSCRIPTION_STOPPED);
@@ -168,7 +170,7 @@ void Subscription::SendUnsubscribe(void)
     return;
 
   htsmsg_destroy(m);
-  tvhdebug("demux successfully unsubscribed from channel id %d, subscription id %d", GetChannelId(), GetId());
+  Logger::Log(LogLevel::DEBUG, "demux successfully unsubscribed from channel id %d, subscription id %d", GetChannelId(), GetId());
 }
 
 bool Subscription::SendSeek(int time)
@@ -178,7 +180,7 @@ bool Subscription::SendSeek(int time)
   htsmsg_add_u32(m, "subscriptionId", GetId());
   htsmsg_add_s64(m, "time",           static_cast<int64_t>(time * 1000LL));
   htsmsg_add_u32(m, "absolute",       1);
-  tvhdebug("demux send seek %d",      time);
+  Logger::Log(LogLevel::DEBUG, "demux send seek %d",      time);
 
   /* Send and Wait */
   {
@@ -204,7 +206,7 @@ void Subscription::SendSpeed(int32_t speed, bool restart)
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
   htsmsg_add_s32(m, "speed",          GetSpeed() / 10); // Kodi uses values an order of magnitude larger than tvheadend
-  tvhdebug("demux send speed %d",     GetSpeed() / 10);
+  Logger::Log(LogLevel::DEBUG, "demux send speed %d",     GetSpeed() / 10);
 
   if (restart)
     m = m_conn.SendAndWait0("subscriptionSpeed", m);
@@ -223,7 +225,7 @@ void Subscription::SendWeight(uint32_t weight)
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
   htsmsg_add_s32(m, "weight",         GetWeight());
-  tvhdebug("demux send weight %u",    GetWeight());
+  Logger::Log(LogLevel::DEBUG, "demux send weight %u",    GetWeight());
 
   /* Send and Wait */
   {
@@ -247,7 +249,7 @@ void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
   const char *status = htsmsg_get_str(m, "status");
 
   if (status != NULL)
-    tvhinfo("Bad subscription status: %s", status);
+    Logger::Log(LogLevel::INFO, "Bad subscription status: %s", status);
 
   /* 'subscriptionErrors' was added in htsp v20, use 'status' for older backends */
   if (m_conn.GetProtocol() >= 20)

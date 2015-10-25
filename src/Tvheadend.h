@@ -78,24 +78,6 @@ extern "C" {
 #define INVALID_SEEKTIME           (-1)
 
 /*
- * Log wrappers
- */
-#define tvhdebug(...) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
-#define tvhinfo(...)  tvhlog(ADDON::LOG_INFO,  ##__VA_ARGS__)
-#define tvherror(...) tvhlog(ADDON::LOG_ERROR, ##__VA_ARGS__)
-#define tvhtrace(...) if (tvheadend::Settings::GetInstance().GetTraceDebug()) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
-static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
-{
-  char buf[16384];
-  int c = sprintf(buf, "pvr.hts - ");
-  va_list va;
-  va_start(va, fmt);
-  vsnprintf(buf + c, sizeof(buf) - c, fmt, va);
-  va_end(va);
-  XBMC->Log(lvl, "%s", buf);
-}
-
-/*
  * Forward decleration of classes
  */
 class CHTSPConnection;

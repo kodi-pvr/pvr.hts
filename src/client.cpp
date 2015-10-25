@@ -25,11 +25,13 @@
 #include "platform/util/util.h"
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"
+#include "tvheadend/utilities/Logger.h"
 
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 using namespace tvheadend;
+using namespace tvheadend::utilities;
 
 /* **************************************************************************
  * Global variables
@@ -81,7 +83,32 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
-  tvhinfo("starting PVR client");
+  /* Configure the logger */
+  Logger::SetImplementation([](LogLevel level, const char *message)
+  {
+    /* Convert the log level */
+    addon_log_t addonLevel;
+
+    switch (level)
+    {
+      case LogLevel::ERROR:
+        addonLevel = addon_log_t::LOG_ERROR;
+        break;
+      case LogLevel::INFO:
+        addonLevel = addon_log_t::LOG_INFO;
+        break;
+      default:
+        addonLevel = addon_log_t::LOG_DEBUG;
+    }
+
+    /* Don't log trace messages unless told so */
+    if (level == LogLevel::TRACE && !Settings::GetInstance().GetTraceDebug())
+      return;
+
+    XBMC->Log(addonLevel, message);
+  });
+
+  Logger::Log(LogLevel::INFO, "starting PVR client");
 
   ADDON_ReadSettings();
 
@@ -166,7 +193,7 @@ void ADDON_Announce
   (const char *flag, const char *sender, const char *message, 
    const void *_unused(data))
 {
-  tvhdebug("Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
+  Logger::Log(LogLevel::DEBUG, "Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
 
   /* XBMC/System */
   if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))

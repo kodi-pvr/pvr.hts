@@ -19,11 +19,12 @@
  *
  */
 
-#include "../Tvheadend.h"
-
+#include "utilities/Logger.h"
+#include "../client.h"
 #include "Settings.h"
 
-namespace tvheadend {
+using namespace tvheadend;
+using namespace tvheadend::utilities;
 
 const std::string Settings::DEFAULT_HOST                = "127.0.0.1";
 const int         Settings::DEFAULT_HTTP_PORT           = 9981;
@@ -148,7 +149,7 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetIntSetting(GetDvrDupdetect(), value);
   else
   {
-    tvherror("Settings::SetSetting - unknown setting '%s'", key.c_str());
+    Logger::Log(LogLevel::ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
     return ADDON_STATUS_UNKNOWN;
   }
 }
@@ -245,5 +246,3 @@ int Settings::GetDvrLifetime(bool asEnum) const
     }
   }
 }
-
-} // namespace tvheadend
