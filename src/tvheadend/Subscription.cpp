@@ -101,6 +101,18 @@ void Subscription::SetState(eSubsriptionState state)
   m_state = state;
 }
 
+std::string Subscription::GetProfile() const
+{
+  CLockObject lock(m_mutex);
+  return m_profile;
+}
+
+void Subscription::SetProfile(const std::string &profile)
+{
+  CLockObject lock(m_mutex);
+  m_profile = profile;
+}
+
 void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool restart)
 {
   /* We don't want to change anything when restarting a subscription */
@@ -120,6 +132,11 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   htsmsg_add_u32(m, "timeshiftPeriod", static_cast<uint32_t>(~0));
   htsmsg_add_u32(m, "normts",          1);
   htsmsg_add_u32(m, "queueDepth",      PACKET_QUEUE_DEPTH);
+
+  /* Use the specified profile if it has been set */
+  if (!GetProfile().empty())
+    htsmsg_add_str(m, "profile", GetProfile().c_str());
+
   tvhdebug("demux subscribe to %d",    GetChannelId());
 
   /* Send and Wait for response */

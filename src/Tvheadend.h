@@ -33,6 +33,7 @@
 #include "HTSPTypes.h"
 #include "AsyncState.h"
 #include "tvheadend/ChannelTuningPredictor.h"
+#include "tvheadend/Profile.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/entity/Channel.h"
 #include "tvheadend/entity/Recording.h"
@@ -283,6 +284,12 @@ public:
     return 0;
   }
 
+  /**
+   * Tells each demuxer to use the specified profile for new subscriptions
+   * @param profile the profile to use
+   */
+  void SetStreamingProfile(const std::string &profile);
+
 private:
   PLATFORM::CMutex                        m_mutex;
   CHTSPConnection                        &m_conn;
@@ -401,12 +408,35 @@ public:
 
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
-  
+
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ();
   std::string GetImageURL     ( const char *str );
+
+  /**
+   * Queries the server for available streaming profiles and populates
+   * m_profiles
+   */
+  void QueryAvailableProfiles();
+
+  /**
+   * @param streamingProfile the streaming profile to check for
+   * @return whether the server supports the specified streaming profile
+   */
+  bool HasStreamingProfile(const std::string &streamingProfile) const;
+
+  /**
+   * @return the streaming profile to use for new subscriptions, or an
+   *         empty string if no particular profile should be used
+   */
+  std::string GetStreamingProfile() const;
+
+  /**
+   * The streaming profiles available on the server
+   */
+  tvheadend::Profiles         m_profiles;
 
   PLATFORM::CMutex            m_mutex;
 

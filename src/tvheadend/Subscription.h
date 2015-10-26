@@ -21,6 +21,7 @@
  *
  */
 
+#include <string>
 #include "platform/threads/mutex.h"
 
 extern "C"
@@ -71,6 +72,7 @@ namespace tvheadend
     uint32_t          GetWeight() const;
     int32_t           GetSpeed() const;
     eSubsriptionState GetState() const;
+    std::string       GetProfile() const;
 
     /**
      * Subscribe to a channel on the backend
@@ -78,7 +80,9 @@ namespace tvheadend
      * @param weight the desired subscription weight
      * @param restart restart the current subscription (i.e. after lost connection), other parameters will be ignored
      */
-    void SendSubscribe(uint32_t channelId = 0, uint32_t weight = SUBSCRIPTION_WEIGHT_NORMAL, bool restart = false);
+    void SendSubscribe(uint32_t channelId = 0,
+                       uint32_t weight = SUBSCRIPTION_WEIGHT_NORMAL,
+                       bool restart = false);
 
     /**
      * Unsubscribe from a channel on the backend
@@ -111,6 +115,12 @@ namespace tvheadend
      */
     void ParseSubscriptionStatus(htsmsg_t *m);
 
+    /**
+     * Use the specified profile for all new subscriptions
+     * @param profile the profile
+     */
+    void SetProfile(const std::string &profile);
+
   private:
 
     void SetId(uint32_t id);
@@ -134,6 +144,7 @@ namespace tvheadend
     uint32_t          m_weight;
     int32_t           m_speed;
     eSubsriptionState m_state;
+    std::string       m_profile;
     CHTSPConnection   &m_conn;
 
     mutable PLATFORM::CMutex  m_mutex;

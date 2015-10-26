@@ -38,6 +38,7 @@ const int         Settings::DEFAULT_TOTAL_TUNERS        = 1;  // total tuners > 
 const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
 const int         Settings::DEFAULT_AUTOREC_MAXDIFF     = 15; // mins. Maximum difference between real and approximate start time for auto recordings
 const int         Settings::DEFAULT_APPROX_TIME         = 0;  // mins
+const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
 
 void Settings::ReadSettings()
 {
@@ -66,6 +67,9 @@ void Settings::ReadSettings()
   /* Auto recordings */
   SetAutorecApproxTime(ReadIntSetting("autorec_approxtime", DEFAULT_APPROX_TIME));
   SetAutorecMaxDiff(ReadIntSetting("autorec_maxdiff", DEFAULT_AUTOREC_MAXDIFF));
+
+  /* Streaming */
+  SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
 }
 
 ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
@@ -108,6 +112,9 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetIntSetting(GetAutorecApproxTime(), value);
   else if (key == "autorec_maxdiff")
     return SetIntSetting(GetAutorecMaxDiff(), value);
+  /* Streaming */
+  else if (key == "streaming_profile")
+    return SetStringSetting(GetStreamingProfile(), value);
   else
   {
     tvherror("Settings::SetSetting - unknown setting '%s'", key.c_str());

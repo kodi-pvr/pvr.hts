@@ -224,6 +224,11 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
+void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
+{
+  m_subscription.SetProfile(profile);
+}
+
 /* **************************************************************************
  * Parse incoming data
  * *************************************************************************/
