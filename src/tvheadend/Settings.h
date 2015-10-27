@@ -102,7 +102,7 @@ namespace tvheadend {
       m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
       m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
       m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
-      m_strStreamingProfile{DEFAULT_STREAMING_PROFILE} {}
+      m_strStreamingProfile(DEFAULT_STREAMING_PROFILE) {}
 
     Settings(Settings const &) = delete;
     void operator=(Settings const &) = delete;
