@@ -241,3 +241,43 @@ msgstr ""
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr ""
+
+#empty strings from id 30503 to 30549
+
+#. Streaming conflict management
+
+msgctxt "#30550"
+msgid "TV conflict"
+msgstr ""
+
+msgctxt "#30551"
+msgid "All adapters are in use."
+msgstr ""
+
+msgctxt "#30552"
+msgid "To keep watching TV, you can interrupt the lowest priority service."
+msgstr ""
+
+msgctxt "#30553"
+msgid "To watch TV, you can interrupt the lowest priority service."
+msgstr ""
+
+msgctxt "#30554"
+msgid "This can be an active recording or an other TV client."
+msgstr ""
+
+msgctxt "#30555"
+msgid "Do nothing"
+msgstr ""
+
+msgctxt "#30556"
+msgid "Interrupt service"
+msgstr ""
+
+msgctxt "#30557"
+msgid "Interrupting service... %i%%"
+msgstr ""
+
+msgctxt "#30558"
+msgid "Streaming conflict management"
+msgstr ""

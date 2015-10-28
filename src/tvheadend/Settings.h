@@ -48,6 +48,7 @@ namespace tvheadend {
     static const int         DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
     static const int         DEFAULT_APPROX_TIME;     // mins
     static const std::string DEFAULT_STREAMING_PROFILE;
+    static const bool        DEFAULT_STREAMING_CONFLICT;
 
     /**
      * Singleton getter for the instance
@@ -86,6 +87,7 @@ namespace tvheadend {
     bool        GetAutorecApproxTime() const { return m_bAutorecApproxTime; }
     int         GetAutorecMaxDiff() const { return m_iPreTunerCloseDelay; }
     std::string GetStreamingProfile() const { return m_strStreamingProfile; }
+    bool        GetStreamingConflict() const { return m_bStreamingConflict; }
 
   private:
     Settings()
@@ -124,6 +126,7 @@ namespace tvheadend {
     void SetAutorecApproxTime(bool value) { m_bAutorecApproxTime = value; }
     void SetAutorecMaxDiff(int value) { m_iAutorecMaxDiff = value; }
     void SetStreamingProfile(const std::string &value) { m_strStreamingProfile = value; }
+    void SetStreamingConflict(bool value) { m_bStreamingConflict = value; }
 
     /**
      * Read/Set values according to definition in settings.xml
@@ -151,6 +154,7 @@ namespace tvheadend {
     bool        m_bAutorecApproxTime;
     int         m_iAutorecMaxDiff;
     std::string m_strStreamingProfile;
+    bool        m_bStreamingConflict;
   };
 
 }

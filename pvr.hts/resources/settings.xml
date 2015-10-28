@@ -17,6 +17,7 @@
     
     <setting label="30500" type="lsep"/>
     <setting id="streaming_profile" type="text" label="30501" default="" />
+    <setting id="streaming_conflict" type="bool" label="30558" default="false"/>
 
     <setting label="30400" type="lsep"/>
     <setting id="pretuner_enabled" type="bool" label="30403" default="false" />

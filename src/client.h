@@ -25,10 +25,12 @@
 #include "kodi/libXBMC_addon.h"
 #include "kodi/libXBMC_pvr.h"
 #include "kodi/libXBMC_codec.h"
+#include "kodi/libKODI_guilib.h"
 
 extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;
 extern CHelper_libXBMC_codec*         CODEC;
+extern CHelper_libKODI_guilib*        GUI;
 
 /* timer type ids */
 #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)

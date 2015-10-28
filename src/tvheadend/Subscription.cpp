@@ -31,6 +31,8 @@ Subscription::Subscription(CHTSPConnection &conn) :
   m_weight(SUBSCRIPTION_WEIGHT_NORMAL),
   m_id(0),
   m_state(SUBSCRIPTION_STOPPED),
+  m_prevState(SUBSCRIPTION_STOPPED),
+  m_startTime(time(NULL)),
   m_conn(conn)
 {
 }
@@ -95,9 +97,19 @@ eSubsriptionState Subscription::GetState() const
   return m_state;
 }
 
+eSubsriptionState Subscription::GetPrevState() const
+{
+  CLockObject lock(m_mutex);
+  return m_prevState;
+}
+
 void Subscription::SetState(eSubsriptionState state)
 {
   CLockObject lock(m_mutex);
+  if (state == m_state)
+    return;
+
+  m_prevState = m_state;
   m_state = state;
 }
 
@@ -113,6 +125,18 @@ void Subscription::SetProfile(const std::string &profile)
   m_profile = profile;
 }
 
+time_t Subscription::GetStartTime() const
+{
+  CLockObject lock(m_mutex);
+  return m_startTime;
+}
+
+void Subscription::SetStartTime(time_t time)
+{
+  CLockObject lock(m_mutex);
+  m_startTime = time;
+}
+
 void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool restart)
 {
   /* We don't want to change anything when restarting a subscription */
@@ -122,6 +146,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
     SetWeight(weight);
     SetId(GetNextId());
     SetSpeed(1000); //set back to normal
+    SetStartTime(time(NULL)); // now
   }
 
   /* Build message */
@@ -150,6 +175,10 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   htsmsg_destroy(m);
 
   SetState(SUBSCRIPTION_STARTING);
+
+  /* As this might be a pre- posttuning subscription */
+  UpdateStateFromWeight();
+
   tvhdebug("demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(), GetId());
 }
 
@@ -232,17 +261,31 @@ void Subscription::SendWeight(uint32_t weight)
   }
   if (m)
     htsmsg_destroy(m);
+
+  /* As this might be a pre- posttuning subscription now */
+  UpdateStateFromWeight();
+}
+
+void Subscription::UpdateStateFromWeight()
+{
+  if (GetWeight() == static_cast<uint32_t>(SUBSCRIPTION_WEIGHT_PRETUNING) ||
+      GetWeight() == static_cast<uint32_t>(SUBSCRIPTION_WEIGHT_POSTTUNING))
+  {
+    SetState(SUBSCRIPTION_PREPOSTTUNING);
+  }
+  else if (GetState() == SUBSCRIPTION_PREPOSTTUNING)
+  {
+    /* Switched from pre- posttuning to active, initiate a virtual start */
+    SetState(SUBSCRIPTION_STARTING);
+    SetStartTime(time(NULL));
+  }
 }
 
 void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
 {
   /* Not for preTuning and postTuning subscriptions */
-  if (GetWeight() == static_cast<uint32_t>(SUBSCRIPTION_WEIGHT_PRETUNING) ||
-      GetWeight() == static_cast<uint32_t>(SUBSCRIPTION_WEIGHT_POSTTUNING))
-  {
-    SetState(SUBSCRIPTION_PREPOSTTUNING);
+  if (GetState() == SUBSCRIPTION_PREPOSTTUNING)
     return;
-  }
 
   const char *status = htsmsg_get_str(m, "status");
 
@@ -264,7 +307,13 @@ void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
       else if (!strcmp("userLimit", error))
         SetState(SUBSCRIPTION_USERLIMIT);
       else if (!strcmp("noFreeAdapter", error))
-        SetState(SUBSCRIPTION_NOFREEADAPTER);
+      {
+        /* If streaming conflict management enabled */
+        if (Settings::GetInstance().GetStreamingConflict())
+          HandleConflict(); // no free adapter, AKA conflict
+        else
+          SetState(SUBSCRIPTION_NOFREEADAPTER);
+      }
       else if (!strcmp("tuningFailed", error))
         SetState(SUBSCRIPTION_TUNINGFAILED);
       else if (!strcmp("userAccess", error))
@@ -309,6 +358,87 @@ void Subscription::ShowStateNotification(void)
     XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30455));
   else if (GetState() == SUBSCRIPTION_UNKNOWN)
     XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30456));
+}
+
+void Subscription::HandleConflict(void)
+{
+  if (GetState() != SUBSCRIPTION_NOFREEADAPTER_HANDLING)
+    SetState(SUBSCRIPTION_NOFREEADAPTER);
+
+  /*
+   * Conflict case 1: (GetPrevState() == SUBSCRIPTION_RUNNING)
+   * Subscription was running before, but the adapter got stolen by an other subscription
+   * Ask user if he wants to continue watching by interrupting an other subscription (weight based)
+   *
+   * Conflict case 2: (GetPrevState() == SUBSCRIPTION_STARTING)
+   * No free adapter found to start this channel from the beginning on
+   * Ask user if he wants to start watching by interrupting an other subscription (weight based)
+   * 'DIALOG_NOSTART_DELAY' is to prevent the dialog from popping up when zapping
+   */
+
+  if (GetPrevState() == SUBSCRIPTION_RUNNING ||
+     (GetPrevState() == SUBSCRIPTION_STARTING && GetStartTime() + DIALOG_NOSTART_DELAY < time(NULL)))
+  {
+    std::thread(&Subscription::ShowConflictDialog, this).detach();
+  }
+}
+
+void Subscription::ShowConflictDialog(void)
+{
+  tvhinfo("demux conflict dialog: open, state: %i, previous state: %i, weight: %i ,subscription id: %i", GetState(), GetPrevState(), GetWeight(), GetId());
+
+  if (GetWeight() >= SUBSCRIPTION_WEIGHT_MAX)
+    return;
+
+  /* Save the initial subscription id */
+  uint32_t initialId = GetId();
+
+  /* Make a copy before changing the state */
+  eSubsriptionState prevState = GetPrevState();
+
+  /* Mark this conflict as handling */
+  SetState(SUBSCRIPTION_NOFREEADAPTER_HANDLING);
+
+  /*
+   * Dialog Heading: TV conflict
+   * All adapters are in use.
+   * To keep watching TV, you can interrupt the lowest priority service.
+   * This can be an active recording or an other TV client.
+   *
+   * Interrupt service <--> Do nothing
+   */
+
+  bool bDialogInterrrupt = GUI->Dialog_YesNo_ShowAndGetInput(
+      XBMC->GetLocalizedString(30550), XBMC->GetLocalizedString(30551),
+      XBMC->GetLocalizedString(prevState == SUBSCRIPTION_STARTING ? 30553 : 30552),
+      XBMC->GetLocalizedString(30554), XBMC->GetLocalizedString(30555), XBMC->GetLocalizedString(30556));
+
+  if (bDialogInterrrupt)
+  {
+    while (GetWeight() < SUBSCRIPTION_WEIGHT_MAX)
+    {
+      /* Channel changed or conflict solved */
+      if (GetId() != initialId || GetState() != SUBSCRIPTION_NOFREEADAPTER_HANDLING)
+        break;
+
+      /* Gradually increase weight between min and max */
+      if (GetWeight() < SUBSCRIPTION_WEIGHT_MIN)
+        SendWeight(SUBSCRIPTION_WEIGHT_MIN);
+      else if (GetWeight() + SUBSCRIPTION_WEIGHT_STEPSIZE > SUBSCRIPTION_WEIGHT_MAX)
+        SendWeight(SUBSCRIPTION_WEIGHT_MAX);
+      else
+        SendWeight(GetWeight() + SUBSCRIPTION_WEIGHT_STEPSIZE);
+
+      XBMC->QueueNotification(ADDON::QUEUE_INFO, XBMC->GetLocalizedString(30557),
+          (GetWeight()-SUBSCRIPTION_WEIGHT_MIN)/((SUBSCRIPTION_WEIGHT_MAX-SUBSCRIPTION_WEIGHT_MIN)/100)); // Interrupting service... %i%
+
+      sleep(1);
+    }
+  }
+
+  /* Handling done and still not running, set state back to original */
+  if (GetState() == SUBSCRIPTION_NOFREEADAPTER_HANDLING)
+    SetState(SUBSCRIPTION_NOFREEADAPTER);
 }
 
 uint32_t Subscription::GetNextId()

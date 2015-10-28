@@ -21,7 +21,6 @@
 
 #include "client.h"
 #include "kodi/xbmc_pvr_dll.h"
-#include "kodi/libKODI_guilib.h"
 #include "platform/util/util.h"
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"
@@ -45,11 +44,12 @@ bool         m_bAlertHtspVersionMismatch = true;
  * Globals
  */
 CMutex g_mutex;
-CHelper_libXBMC_addon *XBMC      = NULL;
-CHelper_libXBMC_pvr   *PVR       = NULL;
-CHelper_libXBMC_codec *CODEC     = NULL;
-PVR_MENUHOOK          *menuHook  = NULL;
-CTvheadend            *tvh       = NULL;
+CHelper_libXBMC_addon  *XBMC      = NULL;
+CHelper_libXBMC_pvr    *PVR       = NULL;
+CHelper_libXBMC_codec  *CODEC     = NULL;
+CHelper_libKODI_guilib *GUI       = NULL;
+PVR_MENUHOOK           *menuHook  = NULL;
+CTvheadend             *tvh       = NULL;
 
 /* **************************************************************************
  * ADDON setup
@@ -71,13 +71,15 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   XBMC  = new CHelper_libXBMC_addon;
   CODEC = new CHelper_libXBMC_codec;
   PVR   = new CHelper_libXBMC_pvr;
+  GUI   = new CHelper_libKODI_guilib;
   
-  if (!XBMC->RegisterMe(hdl) ||
+  if (!XBMC->RegisterMe(hdl) || !GUI->RegisterMe(hdl) ||
       !CODEC->RegisterMe(hdl) || !PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
     SAFE_DELETE(XBMC);
+    SAFE_DELETE(GUI);
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
@@ -107,6 +109,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
     SAFE_DELETE(XBMC);
+    SAFE_DELETE(GUI);
 
     return ADDON_STATUS_LOST_CONNECTION;
   }
@@ -133,6 +136,7 @@ void ADDON_Destroy()
   SAFE_DELETE(PVR);
   SAFE_DELETE(CODEC);
   SAFE_DELETE(XBMC);
+  SAFE_DELETE(GUI);
   SAFE_DELETE(menuHook);
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }

@@ -23,6 +23,7 @@
 
 #include <string>
 #include "platform/threads/mutex.h"
+#include <thread>
 
 extern "C"
 {
@@ -44,12 +45,17 @@ namespace tvheadend
     SUBSCRIPTION_WEIGHT_SERVERCONF = 0,
   };
 
+  /* Used when gradually increasing the subscription weight to solve a conflict */
+  static const int SUBSCRIPTION_WEIGHT_MIN      = 50;
+  static const int SUBSCRIPTION_WEIGHT_MAX      = 650;
+  static const int SUBSCRIPTION_WEIGHT_STEPSIZE = 50;
+
   enum eSubsriptionState
   {
     SUBSCRIPTION_STOPPED                        = 0,  /* subscription is stopped or not started yet */
     SUBSCRIPTION_STARTING                       = 1,  /* subscription is starting */
     SUBSCRIPTION_RUNNING                        = 2,  /* subscription is running normal */
-    SUBSCRIPTION_NOFREEADAPTER                  = 3,  /* subscription has no free adapter to use */
+    SUBSCRIPTION_NOFREEADAPTER                  = 3,  /* subscription has no free adapter to use, AKA subscription conflict */
     SUBSCRIPTION_SCRAMBLED                      = 4,  /* subscription is not running because the channel is scrambled */
     SUBSCRIPTION_NOSIGNAL                       = 5,  /* subscription is not running because of a weak/no input signal */
     SUBSCRIPTION_TUNINGFAILED                   = 6,  /* subscription could not be started because of a tuning error */
@@ -57,9 +63,11 @@ namespace tvheadend
     SUBSCRIPTION_NOACCESS                       = 8,  /* we have no rights to watch this channel */
     SUBSCRIPTION_UNKNOWN                        = 9,  /* subscription state is unknown, also used for pretuning and posttuning subscriptions */
     SUBSCRIPTION_PREPOSTTUNING                  = 10, /* used for pre and posttuning subscriptions (we do not care what the actual state is) */
+    SUBSCRIPTION_NOFREEADAPTER_HANDLING         = 11, /* our subscription is in conflict and we are handling it right now */
   };
 
-  static const int PACKET_QUEUE_DEPTH = 2000000;
+  static const int PACKET_QUEUE_DEPTH   = 2000000;
+  static const int DIALOG_NOSTART_DELAY = 5;
 
   class Subscription
   {
@@ -129,10 +137,31 @@ namespace tvheadend
     void SetSpeed(int32_t speed);
     void SetState(eSubsriptionState state);
 
+    eSubsriptionState GetPrevState() const;
+
+    time_t GetStartTime() const;
+    void SetStartTime(time_t time);
+
+    /**
+     * Will set the state to active or pre- posttuning, depending on the weight
+     */
+    void UpdateStateFromWeight();
+
     /**
      * Show a notification to the user depending on the subscription state
      */
     void ShowStateNotification();
+
+    /**
+     * Handle the subscription conflict (when we have no free adapter)
+     */
+    void HandleConflict();
+
+    /**
+     * Show a dialog to the user on a subscription conflict
+     * Ask him to increase the subscription weight as this might solve the conflict
+     */
+    void ShowConflictDialog();
 
     /**
      * Get the next unique subscription Id
@@ -144,7 +173,9 @@ namespace tvheadend
     uint32_t          m_weight;
     int32_t           m_speed;
     eSubsriptionState m_state;
+    eSubsriptionState m_prevState;
     std::string       m_profile;
+    time_t            m_startTime;
     CHTSPConnection   &m_conn;
 
     mutable PLATFORM::CMutex  m_mutex;
