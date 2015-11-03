@@ -1060,6 +1060,22 @@ PVR_ERROR CTvheadend::DeleteTimer
     /* EPG-query-based repeating timer */
     return m_autoRecordings.SendAutorecDelete(timer);
   }
+  else if ((timer.iTimerType == TIMER_ONCE_CREATED_BY_TIMEREC) ||
+           (timer.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC))
+  {
+    /* Read-only timer created by autorec or timerec */
+    const auto &it = m_recordings.find(timer.iClientIndex);
+    if (it != m_recordings.end() && it->second.IsRecording())
+    {
+      /* This is actually a request to cancel an active recording. */
+      return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
+    }
+    else
+    {
+      tvherror("timer is read-only");
+      return PVR_ERROR_INVALID_PARAMETERS;
+    }
+  }
   else
   {
     /* unknown timer */
