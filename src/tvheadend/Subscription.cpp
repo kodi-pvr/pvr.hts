@@ -26,10 +26,10 @@ using namespace PLATFORM;
 using namespace tvheadend;
 
 Subscription::Subscription(CHTSPConnection &conn) :
-  m_channelId(0),
-  m_speed(1000),
-  m_weight(SUBSCRIPTION_WEIGHT_NORMAL),
   m_id(0),
+  m_channelId(0),
+  m_weight(SUBSCRIPTION_WEIGHT_NORMAL),
+  m_speed(1000),
   m_state(SUBSCRIPTION_STOPPED),
   m_conn(conn)
 {
