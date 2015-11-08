@@ -68,8 +68,6 @@ uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint3
   auto toIt = GetIterator(tuningTo);
 
   /* Determine the respective channel numbers as well as the first channel */
-  uint32_t fromNum = fromIt->second;
-  uint32_t toNum = toIt->second;
   uint32_t firstNum = m_channels.cbegin()->second;
 
   /* Create an iterator for the predicted channel. If prediction succeeds,
