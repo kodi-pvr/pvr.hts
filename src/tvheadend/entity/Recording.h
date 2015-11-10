@@ -52,6 +52,7 @@ namespace tvheadend
     {
     public:
       Recording() :
+        m_enabled(0),
         m_channel(0),
         m_eventId(0),
         m_start(0),
@@ -67,6 +68,7 @@ namespace tvheadend
       bool operator==(const Recording &other) const
       {
         return m_id == other.m_id &&
+               m_enabled == other.m_enabled &&
                m_channel == other.m_channel &&
                m_eventId == other.m_eventId &&
                m_start == other.m_start &&
@@ -118,6 +120,9 @@ namespace tvheadend
         else
           return TIMER_ONCE_MANUAL;
       }
+
+      bool IsEnabled() const { return m_enabled > 0; }
+      void SetEnabled(uint32_t enabled) { m_enabled = enabled; }
 
       uint32_t GetChannel() const { return m_channel; }
       void SetChannel(uint32_t channel) { m_channel = channel; }
@@ -172,6 +177,7 @@ namespace tvheadend
       void SetPriority(uint32_t priority) { m_priority = priority; }
 
     private:
+      uint32_t         m_enabled;
       uint32_t         m_channel;
       uint32_t         m_eventId;
       int64_t          m_start;

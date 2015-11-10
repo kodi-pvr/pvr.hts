@@ -2,6 +2,7 @@
 - refactored the code by factoring out lots of things into separate files
 - refactored the Settings class into a singleton to avoid having to include client.h everywhere
 - added: support for specifying which streaming profile to use
+- added: support for enabling/disabling oneshot timers (HTSP v23 and above)
 
 2.2.8
 - Updated to PVR API v4.1.0
