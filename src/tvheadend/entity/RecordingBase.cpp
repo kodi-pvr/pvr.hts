@@ -28,6 +28,7 @@ RecordingBase::RecordingBase(const std::string &id /*= ""*/) :
     m_enabled(0),
     m_daysOfWeek(0),
     m_retention(0),
+    m_removal(-1), // max value to stay compatible with older backends
     m_priority(0),
     m_channel(0)
 {
@@ -40,6 +41,7 @@ bool RecordingBase::operator==(const RecordingBase &right)
          m_enabled     == right.m_enabled     &&
          m_daysOfWeek  == right.m_daysOfWeek  &&
          m_retention   == right.m_retention   &&
+         m_removal     == right.m_removal     &&
          m_priority    == right.m_priority    &&
          m_title       == right.m_title       &&
          m_name        == right.m_name        &&
@@ -84,14 +86,20 @@ void RecordingBase::SetDaysOfWeek(uint32_t daysOfWeek)
   m_daysOfWeek = daysOfWeek;
 }
 
-uint32_t RecordingBase::GetRetention() const
+// Lifetime = the smallest value
+uint32_t RecordingBase::GetLifetime() const
 {
-  return m_retention;
+  return std::min(m_removal, m_retention);
 }
 
 void RecordingBase::SetRetention(uint32_t retention)
 {
   m_retention = retention;
+}
+
+void RecordingBase::SetRemoval(uint32_t removal)
+{
+  m_removal = removal;
 }
 
 uint32_t RecordingBase::GetPriority() const

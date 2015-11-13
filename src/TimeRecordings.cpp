@@ -82,7 +82,7 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
                               : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType         = TIMER_REPEATING_MANUAL;
     tmr.iPriority          = tit->second.GetPriority();
-    tmr.iLifetime          = tit->second.GetRetention();
+    tmr.iLifetime          = tit->second.GetLifetime();
     tmr.iMaxRecordings     = 0;                    // not supported by tvh
     tmr.iRecordingGroup    = 0;                    // not supported by tvh
     tmr.iPreventDuplicateEpisodes = 0;             // n/a for manual timers
@@ -128,7 +128,11 @@ PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
   struct tm *tm_stop = localtime(&timer.endTime);
   htsmsg_add_u32(m, "stop",       tm_stop->tm_hour  * 60 + tm_stop->tm_min);  // end time in minutes from midnight
   htsmsg_add_u32(m, "channelId",  timer.iClientChannelUid);
-  htsmsg_add_u32(m, "retention",  timer.iLifetime);
+  htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
+
+  if (m_conn.GetProtocol() >= 24)
+    htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
   htsmsg_add_u32(m, "priority",   timer.iPriority);
   htsmsg_add_u32(m, "enabled",    timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
@@ -254,6 +258,16 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   else if (bAdd)
   {
     tvherror("malformed timerecEntryAdd: 'retention' missing");
+    return false;
+  }
+
+  if (!htsmsg_get_u32(msg, "removal", &u32))
+  {
+    rec.SetRemoval(u32);
+  }
+  else if (bAdd && (m_conn.GetProtocol() >= 24))
+  {
+    tvherror("malformed timerecEntryAdd: 'removal' missing");
     return false;
   }
 
