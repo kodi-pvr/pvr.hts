@@ -102,7 +102,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
                               : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType         = TIMER_REPEATING_EPG;
     tmr.iPriority          = tit->second.GetPriority();
-    tmr.iLifetime          = tit->second.GetRetention();
+    tmr.iLifetime          = tit->second.GetLifetime();
     tmr.iMaxRecordings     = 0;                    // not supported by tvh
     tmr.iRecordingGroup    = 0;                    // not supported by tvh
 
@@ -156,7 +156,11 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
 
   htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
   htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
-  htsmsg_add_u32(m, "retention",  timer.iLifetime);
+  htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
+
+  if (m_conn.GetProtocol() >= 24)
+    htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
 
   if (m_conn.GetProtocol() >= 20)
@@ -328,6 +332,16 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   else if (bAdd)
   {
     tvherror("malformed autorecEntryAdd: 'retention' missing");
+    return false;
+  }
+
+  if (!htsmsg_get_u32(msg, "removal", &u32))
+  {
+    rec.SetRemoval(u32);
+  }
+  else if (bAdd && (m_conn.GetProtocol() >= 24))
+  {
+    tvherror("malformed autorecEntryAdd: 'removal' missing");
     return false;
   }
 

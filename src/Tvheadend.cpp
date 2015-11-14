@@ -454,8 +454,8 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Priority */
       rec.iPriority = recording.GetPriority();
 
-      /* Retention */
-      rec.iLifetime = recording.GetRetention();
+      /* Lifetime (based on retention and removal) */
+      rec.iLifetime = recording.GetLifetime();
 
       /* Directory */
       // TODO: Move this logic to GetPath(), alternatively GetMangledPath()
@@ -860,7 +860,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
     tmr.state            = tvhTmr.GetState();
 
   tmr.iPriority          = tvhTmr.GetPriority();
-  tmr.iLifetime          = tvhTmr.GetRetention();
+  tmr.iLifetime          = tvhTmr.GetLifetime();
   tmr.iTimerType         = tvhTmr.GetTimerType();
   tmr.iMaxRecordings     = 0;                // not supported by tvh
   tmr.iRecordingGroup    = 0;                // not supported by tvh
@@ -960,7 +960,11 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 
     htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
-    htsmsg_add_u32(m, "retention",  timer.iLifetime);
+    htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
+
+    if (m_conn.GetProtocol() >= 24)
+      htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+
     htsmsg_add_u32(m, "priority",   timer.iPriority);
 
     /* Send and Wait */
@@ -1076,7 +1080,11 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_str(m, "description",  timer.strSummary);
     htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
     htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
-    htsmsg_add_u32(m, "retention",    timer.iLifetime);
+    htsmsg_add_u32(m, "retention",    timer.iLifetime); // remove from tvh database
+
+    if (m_conn.GetProtocol() >= 24)
+      htsmsg_add_u32(m, "removal",    timer.iLifetime); // remove from disk
+
     htsmsg_add_u32(m, "priority",     timer.iPriority);
 
     return SendDvrUpdate(m);
@@ -1721,7 +1729,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   const char *state, *str;
-  uint32_t id, channel, eventId, retention, priority, enabled;
+  uint32_t id, channel, eventId, retention, removal, priority, enabled;
   int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
@@ -1785,6 +1793,14 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   else if (bAdd)
   {
     tvherror("malformed dvrEntryAdd: 'retention' missing");
+    return;
+  }
+
+  if (!htsmsg_get_u32(msg, "removal", &removal))
+    rec.SetRemoval(removal);
+  else if (bAdd && (m_conn.GetProtocol() >= 24))
+  {
+    tvherror("malformed dvrEntryAdd: 'removal' missing");
     return;
   }
 

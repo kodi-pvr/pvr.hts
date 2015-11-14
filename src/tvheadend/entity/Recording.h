@@ -61,7 +61,8 @@ namespace tvheadend
         m_stopExtra(0),
         m_state(PVR_TIMER_STATE_ERROR),
         m_retention(99), // Kodi default - "99 days"
-        m_priority(50) // Kodi default - "normal"
+        m_removal(-1),   // max value to stay compatible with older backends
+        m_priority(50)   // Kodi default - "normal"
       {
       }
 
@@ -83,6 +84,7 @@ namespace tvheadend
                m_state == other.m_state &&
                m_error == other.m_error &&
                m_retention == other.m_retention &&
+               m_removal == other.m_removal &&
                m_priority == other.m_priority;
       }
 
@@ -170,8 +172,10 @@ namespace tvheadend
       const std::string& GetError() const { return m_error; }
       void SetError(const std::string &error) { m_error = error; }
 
-      uint32_t GetRetention() const { return m_retention; }
+      // Lifetime = the smallest value
+      uint32_t GetLifetime() const { return std::min(m_removal, m_retention); }
       void SetRetention(uint32_t retention) { m_retention = retention; }
+      void SetRemoval(uint32_t removal) { m_removal = removal; }
 
       uint32_t GetPriority() const { return m_priority; }
       void SetPriority(uint32_t priority) { m_priority = priority; }
@@ -193,6 +197,7 @@ namespace tvheadend
       PVR_TIMER_STATE  m_state;
       std::string      m_error;
       uint32_t         m_retention;
+      uint32_t         m_removal;
       uint32_t         m_priority;
     };
   }

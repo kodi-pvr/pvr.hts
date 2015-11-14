@@ -47,8 +47,9 @@ namespace tvheadend
       int GetDaysOfWeek() const;
       void SetDaysOfWeek(uint32_t daysOfWeek);
 
-      uint32_t GetRetention() const;
+      uint32_t GetLifetime() const;
       void SetRetention(uint32_t retention);
+      void SetRemoval(uint32_t removal);
 
       uint32_t GetPriority() const;
       void SetPriority(uint32_t priority);
@@ -77,7 +78,8 @@ namespace tvheadend
       std::string m_sid;        // ID (string!) of dvr[Time|Auto]recEntry.
       uint32_t m_enabled;       // If [time|auto]rec entry is enabled (activated).
       uint32_t m_daysOfWeek;    // Bitmask - Days of week (0x01 = Monday, 0x40 = Sunday, 0x7f = Whole Week, 0 = Not set).
-      uint32_t m_retention;     // Retention time (in days).
+      uint32_t m_retention;     // Lifetime time of database entry (in days).
+      uint32_t m_removal;       // Lifetime time of actual file on disk (in days).
       uint32_t m_priority;      // Priority (0 = Important, 1 = High, 2 = Normal, 3 = Low, 4 = Unimportant).
       std::string m_title;      // Title (pattern) for the recording files.
       std::string m_name;       // Name.
