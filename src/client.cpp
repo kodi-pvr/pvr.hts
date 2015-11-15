@@ -120,8 +120,8 @@ ADDON_STATUS ADDON_GetStatus()
   CLockObject lock(g_mutex);
 
   // Check that we're still connected
-  if (m_CurStatus == ADDON_STATUS_OK && !tvh->IsConnected())
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+  if (m_CurStatus == ADDON_STATUS_OK && !tvh->IsSuspended() && !tvh->IsConnected())
+    return ADDON_STATUS_LOST_CONNECTION;
 
   return m_CurStatus;
 }

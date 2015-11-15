@@ -208,6 +208,8 @@ public:
   inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
 
+  inline bool IsSuspended       ( void ) const { return m_suspended; }
+
   inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
 
   void        OnSleep ( void );
@@ -561,6 +563,10 @@ public:
   inline bool IsConnected ( void ) const
   {
     return m_conn.IsConnected();
+  }
+  inline bool IsSuspended ( void ) const
+  {
+    return m_conn.IsSuspended();
   }
   inline void OnSleep ( void )
   {
