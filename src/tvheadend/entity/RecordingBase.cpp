@@ -19,6 +19,8 @@
  *
  */
 
+#include <algorithm>
+
 #include "RecordingBase.h"
 
 using namespace tvheadend::entity;
