@@ -178,18 +178,15 @@ public:
   htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
-  inline int  GetProtocol      ( void ) const { return m_htspVersion; }
+  int  GetProtocol             ( void ) const;
 
-  std::string GetWebURL        ( const char *fmt, ... );
+  std::string GetWebURL        ( const char *fmt, ... ) const;
 
-  std::string GetServerName    ( void );
-  std::string GetServerVersion ( void );
-  std::string GetServerString  ( void );
+  std::string GetServerName    ( void ) const;
+  std::string GetServerVersion ( void ) const;
+  std::string GetServerString  ( void ) const;
   
   bool        HasCapability(const std::string &capability) const;
-
-  inline bool IsConnected       ( void ) const { return m_ready; }
-  bool        WaitForConnection ( void );
 
   inline P8PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
 
@@ -203,8 +200,11 @@ private:
   bool        SendHello        ( void );
   bool        SendAuth         ( const std::string &u, const std::string &p );
 
-  P8PLATFORM::CTcpSocket               *m_socket;
-  P8PLATFORM::CMutex                    m_mutex;
+  void        SetState         ( PVR_CONNECTION_STATE state );
+  bool        WaitForConnection( void );
+
+  P8PLATFORM::CTcpSocket              *m_socket;
+  mutable P8PLATFORM::CMutex          m_mutex;
   CHTSPRegister                       m_regThread;
   P8PLATFORM::CCondition<volatile bool> m_regCond;
   bool                                m_ready;
@@ -220,6 +220,7 @@ private:
   std::vector<std::string>            m_capabilities;
 
   bool                                m_suspended;
+  PVR_CONNECTION_STATE                m_state;
 };
 
 /*
@@ -494,20 +495,15 @@ public:
   /*
    * Connection (pass-thru)
    */
-  bool WaitForConnection ( void )
-  {
-    P8PLATFORM::CLockObject lock(m_conn.Mutex());
-    return m_conn.WaitForConnection();
-  }
-  std::string GetServerName    ( void )
+  std::string GetServerName    ( void ) const
   {
     return m_conn.GetServerName();
   }
-  std::string GetServerVersion ( void )
+  std::string GetServerVersion ( void ) const
   {
     return m_conn.GetServerVersion();
   }
-  std::string GetServerString  ( void )
+  std::string GetServerString  ( void ) const
   {
     return m_conn.GetServerString();
   }
@@ -518,10 +514,6 @@ public:
   inline bool HasCapability(const std::string &capability) const
   {
     return m_conn.HasCapability(capability);
-  }
-  inline bool IsConnected ( void ) const
-  {
-    return m_conn.IsConnected();
   }
   inline void OnSleep ( void )
   {

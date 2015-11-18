@@ -93,7 +93,8 @@ void *CHTSPRegister::Process ( void )
 CHTSPConnection::CHTSPConnection ()
   : m_socket(NULL), m_regThread(this), m_ready(false), m_seq(0),
     m_serverName(""), m_serverVersion(""), m_htspVersion(0),
-    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false)
+    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false),
+    m_state(PVR_CONNECTION_STATE_UNKNOWN)
 {
 }
 
@@ -108,7 +109,7 @@ CHTSPConnection::~CHTSPConnection()
  * Info
  */
 
-std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
+std::string CHTSPConnection::GetWebURL ( const char *fmt, ... ) const
 {
   va_list va;
   const Settings &settings = Settings::GetInstance();
@@ -133,32 +134,38 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 
 bool CHTSPConnection::WaitForConnection ( void )
 {
-  if (!m_ready) {
+  if (!m_ready)
+  {
     Logger::Log(LogLevel::LEVEL_TRACE, "waiting for registration...");
     m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().GetConnectTimeout());
   }
   return m_ready;
 }
 
-std::string CHTSPConnection::GetServerName ( void )
+int  CHTSPConnection::GetProtocol ( void ) const
+{
+  CLockObject lock(m_mutex);
+  return m_htspVersion;
+}
+
+std::string CHTSPConnection::GetServerName ( void ) const
 {
   CLockObject lock(m_mutex);
   return m_serverName;
 }
 
-std::string CHTSPConnection::GetServerVersion ( void )
+std::string CHTSPConnection::GetServerVersion ( void ) const
 {
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
-std::string CHTSPConnection::GetServerString ( void )
+std::string CHTSPConnection::GetServerString ( void ) const
 {
   const Settings &settings = Settings::GetInstance();
 
   CLockObject lock(m_mutex);
-  return StringUtils::Format("%s:%d [%s]", settings.GetHostname().c_str(), settings.GetPortHTSP(),
-             m_ready ? "connected" : "disconnected");
+  return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
 }
 
 bool CHTSPConnection::HasCapability(const std::string &capability) const
@@ -185,6 +192,32 @@ void CHTSPConnection::OnWake ( void )
 
   /* recreate connection */
   m_suspended = false;
+}
+
+void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
+{
+  PVR_CONNECTION_STATE prevState(PVR_CONNECTION_STATE_UNKNOWN);
+  PVR_CONNECTION_STATE newState(PVR_CONNECTION_STATE_UNKNOWN);
+
+  {
+    CLockObject lock(m_mutex);
+
+    /* No notification if no state change or while suspended. */
+    if (m_state != state && !m_suspended)
+    {
+      prevState = m_state;
+      newState  = state;
+      m_state   = newState;
+
+      Logger::Log(LogLevel::LEVEL_DEBUG, "connection state change (%d -> %d)", prevState, newState);
+    }
+  }
+
+  if (prevState != newState)
+  {
+    /* Notify connection state change (callback!) */
+    PVR->ConnectionStateChange(GetServerString().c_str(), newState, NULL);
+  }
 }
 
 /*
@@ -350,7 +383,6 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   m_messages.erase(seq);
   if (!msg)
   {
-    //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: No response received", method);
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
@@ -362,7 +394,6 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   if (!htsmsg_get_u32(msg, "noaccess", &noaccess) && noaccess)
   {
     // access denied
-    //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: Access denied", method);
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: Access denied", method);
     htsmsg_destroy(msg);
     return NULL;
@@ -372,7 +403,6 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
     const char* strError;
     if((strError = htsmsg_get_str(msg, "error")) != NULL)
     {
-      //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: %s", method, strError);
       Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: %s", method, strError);
       htsmsg_destroy(msg);
       return NULL;
@@ -483,8 +513,10 @@ void CHTSPConnection::Register ( void )
 
     /* Send Greeting */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending hello");
-    if (!SendHello()) {
+    if (!SendHello())
+    {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to send hello");
+      SetState(PVR_CONNECTION_STATE_SERVER_MISMATCH);
       goto fail;
     }
 
@@ -492,17 +524,18 @@ void CHTSPConnection::Register ( void )
     if (m_htspVersion < HTSP_MIN_SERVER_VERSION)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
-      Disconnect();
-      m_ready = false;
-      m_regCond.Broadcast();
-      return;
+      SetState(PVR_CONNECTION_STATE_VERSION_MISMATCH);
+      goto fail;
     }
 
     /* Send Auth */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending auth");
     
     if (!SendAuth(user, pass))
+    {
+      SetState(PVR_CONNECTION_STATE_ACCESS_DENIED);
       goto fail;
+    }
 
     /* Rebuild state */
     Logger::Log(LogLevel::LEVEL_DEBUG, "rebuilding state");
@@ -510,6 +543,7 @@ void CHTSPConnection::Register ( void )
       goto fail;
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "registered");
+    SetState(PVR_CONNECTION_STATE_CONNECTED);
     m_ready = true;
     m_regCond.Broadcast();
     return;
@@ -577,13 +611,14 @@ void* CHTSPConnection::Process ( void )
     {
       /* Unable to connect */
       Logger::Log(LogLevel::LEVEL_ERROR, "unable to connect to %s:%d", host.c_str(), port);
-      
+      SetState(PVR_CONNECTION_STATE_SERVER_UNREACHABLE);
+
       // Retry a few times with a short interval, after that with the default timeout
       if (++retryAttempt <= FAST_RECONNECT_ATTEMPTS)
         Sleep(FAST_RECONNECT_INTERVAL);
       else
         Sleep(timeout);
-      
+
       continue;
     }
     Logger::Log(LogLevel::LEVEL_DEBUG, "connected");

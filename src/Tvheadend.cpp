@@ -658,26 +658,24 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* PVR_Timer.iLifetime values and presentation.*/
-  static std::vector< std::pair<int, std::string> > lifetimeValues;
-  if (lifetimeValues.size() == 0)
-  {
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30365)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 5)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30367)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30369)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 6)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30371)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 3)));
-    if (m_conn.GetProtocol() >= 25)
-      lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
-  }
+  std::vector< std::pair<int, std::string> > lifetimeValues;
+
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30365)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 5)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30367)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30369)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 6)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30371)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 3)));
+  if (m_conn.GetProtocol() >= 25)
+    lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
 
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS
     = PVR_TIMER_TYPE_IS_MANUAL           |
@@ -703,134 +701,132 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* Timer types definition. */
-  static std::vector< std::unique_ptr<TimerType> > timerTypes;
-  if (timerTypes.size() == 0)
+  std::vector< std::unique_ptr<TimerType> > timerTypes;
+
+  timerTypes.push_back(
+    /* One-shot manual (time and channel based) */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_MANUAL,
+      /* Attributes. */
+      TIMER_ONCE_MANUAL_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* One-shot epg based */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_EPG,
+      /* Attributes. */
+      TIMER_ONCE_EPG_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Read-only one-shot for timers generated by timerec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_CREATED_BY_TIMEREC,
+      /* Attributes. */
+      TIMER_ONCE_MANUAL_ATTRIBS  |
+      PVR_TIMER_TYPE_IS_READONLY |
+      PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      /* Description. */
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Read-only one-shot for timers generated by autorec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_CREATED_BY_AUTOREC,
+      /* Attributes. */
+      TIMER_ONCE_EPG_ATTRIBS     |
+      PVR_TIMER_TYPE_IS_READONLY |
+      PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      /* Description. */
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Repeating manual (time and channel based) - timerec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_REPEATING_MANUAL,
+      /* Attributes. */
+      PVR_TIMER_TYPE_IS_MANUAL                  |
+      PVR_TIMER_TYPE_IS_REPEATING               |
+      PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE    |
+      PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
+      PVR_TIMER_TYPE_SUPPORTS_START_TIME        |
+      PVR_TIMER_TYPE_SUPPORTS_END_TIME          |
+      PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS          |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME          |
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  unsigned int TIMER_REPEATING_EPG_ATTRIBS
+    = PVR_TIMER_TYPE_IS_REPEATING                |
+      PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
+      PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
+      PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
+      PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
+      PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
+      PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
+      PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
+
+  if (m_conn.GetProtocol() >= 20)
   {
-    timerTypes.push_back(
-      /* One-shot manual (time and channel based) */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_MANUAL,
-        /* Attributes. */
-        TIMER_ONCE_MANUAL_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* One-shot epg based */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_EPG,
-        /* Attributes. */
-        TIMER_ONCE_EPG_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Read-only one-shot for timers generated by timerec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_CREATED_BY_TIMEREC,
-        /* Attributes. */
-        TIMER_ONCE_MANUAL_ATTRIBS  |
-        PVR_TIMER_TYPE_IS_READONLY |
-        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
-        /* Description. */
-        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Read-only one-shot for timers generated by autorec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_CREATED_BY_AUTOREC,
-        /* Attributes. */
-        TIMER_ONCE_EPG_ATTRIBS     |
-        PVR_TIMER_TYPE_IS_READONLY |
-        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
-        /* Description. */
-        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Repeating manual (time and channel based) - timerec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_REPEATING_MANUAL,
-        /* Attributes. */
-        PVR_TIMER_TYPE_IS_MANUAL                  |
-        PVR_TIMER_TYPE_IS_REPEATING               |
-        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE    |
-        PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
-        PVR_TIMER_TYPE_SUPPORTS_START_TIME        |
-        PVR_TIMER_TYPE_SUPPORTS_END_TIME          |
-        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS          |
-        PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
-        PVR_TIMER_TYPE_SUPPORTS_LIFETIME          |
-        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    unsigned int TIMER_REPEATING_EPG_ATTRIBS
-      = PVR_TIMER_TYPE_IS_REPEATING                |
-        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
-        PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
-        PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
-        PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
-        PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
-        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
-        PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
-        PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
-        PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
-        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
-
-    if (m_conn.GetProtocol() >= 20)
-    {
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
-    }
-
-    if (!Settings::GetInstance().GetAutorecApproxTime())
-    {
-      /* We need the end time to represent the end of the tvh starting window */
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
-    }
-
-    timerTypes.push_back(
-      /* Repeating epg based - autorec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_REPEATING_EPG,
-        /* Attributes. */
-        TIMER_REPEATING_EPG_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues,
-        /* Values definitions for prevent duplicate episodes. */
-        deDupValues)));
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
   }
+
+  if (!Settings::GetInstance().GetAutorecApproxTime())
+  {
+    /* We need the end time to represent the end of the tvh starting window */
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
+  }
+
+  timerTypes.push_back(
+    /* Repeating epg based - autorec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_REPEATING_EPG,
+      /* Attributes. */
+      TIMER_REPEATING_EPG_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues,
+      /* Values definitions for prevent duplicate episodes. */
+      deDupValues)));
 
   /* Copy data to target array. */
   int i = 0;
