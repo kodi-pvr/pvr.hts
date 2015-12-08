@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Postavke povezivanja"
 
 msgctxt "#30001"
@@ -41,20 +41,44 @@ msgid "Password"
 msgstr "Lozinka"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Istek povezivanja u sekundama"
+msgid "Connection timeout (seconds)"
+msgstr "Istek povezivanja (sekunde)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Vrijeme odaziva u sekundama"
+msgid "Response timeout (seconds)"
+msgstr "Vrijeme odaziva (sekunde)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Napredne postavke"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatska snimanja"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Izračun početnog vremena"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Točno (početno vrijeme + završno vrijeme)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Prilagođeno (početno vrijeme +/- vrijednost)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Najveća vrijednost početnog vremena (minute)"
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr "Prijenos podataka"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Neusklađen EPG prijenos"
+msgstr "Neusklađeni EPG prijenos"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -63,3 +87,111 @@ msgstr "Otklanjanje grešaka"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Praćenje (opširnije)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP inačica se ne podudara (podržana: v%d, potrebna: v%d). Nadogradite tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Jednom (Zakazano ponavljajućim rasporedom)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Značajan (Najviši)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Visok"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normalan"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Nizak"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Beznačajan (Najniži)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Snimi sve epizode"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Snimi ako se broj epizode razlikuje"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Snimi ako se naslov epizode razlikuje"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Snimi ako se opis razlikuje"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Snimi najviše jednom tjedno"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Snimi najviše jednom dnevno"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Predvidljivo podešavanje"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Broj pretplata za korištenje"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Odgoda zatvaranja neiskorištenih pretplata (sekunde)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Koristi predvidljivo podešavanje za ubrzavanje prebacivanja programa"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nema slobodnih dostupnih uređaja"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kôdirani programi"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Nema signala"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Podešavanje neuspjelo"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Ograničenje korisnika dostignuto"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Nema pristupa"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Greška pretplate"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Streamanje"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Streaming profil za korištenje"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streaming profil %s nije dostupan"

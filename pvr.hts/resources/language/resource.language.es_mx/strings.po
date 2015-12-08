@@ -35,3 +35,19 @@ msgstr "Contraseña"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Debugging"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Alto"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Bajo"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Grabar todos los episodios"

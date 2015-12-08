@@ -32,6 +32,14 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "የመግቢያ ቃል"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "መመለሻ ጊዜ በ ሰከንዶች"
+msgctxt "#30352"
+msgid "High"
+msgstr "ከፍተኛ "
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "መደበኛ "
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "ዝቅተኛ "

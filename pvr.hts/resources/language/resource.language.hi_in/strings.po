@@ -23,3 +23,15 @@ msgstr "उपयोगकर्ता नाम"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "डिबगिंग"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "उच्च"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "सामान्य"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "लो"

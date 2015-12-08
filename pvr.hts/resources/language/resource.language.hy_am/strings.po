@@ -19,3 +19,15 @@ msgstr ""
 msgctxt "#30005"
 msgid "Password"
 msgstr "Գաղտնաբառ"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Բարձր"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Նորմալ"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Ցածր"

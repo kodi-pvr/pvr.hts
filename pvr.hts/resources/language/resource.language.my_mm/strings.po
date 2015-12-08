@@ -23,3 +23,15 @@ msgstr "အသုံးပြုသူအမည်"
 msgctxt "#30005"
 msgid "Password"
 msgstr "စကားဝှက်"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "အမြင့်စား"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "ပုံမှန်"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "အနိမ့်စား"

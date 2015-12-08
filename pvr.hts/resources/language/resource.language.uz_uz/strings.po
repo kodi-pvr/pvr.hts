@@ -23,3 +23,11 @@ msgstr "Foydalanuvchi nomi"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Maxfiy so'z"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Yuqori"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Past"

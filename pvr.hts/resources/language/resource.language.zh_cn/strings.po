@@ -16,10 +16,6 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "连接设置"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend 主机名或 IP 地址"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "密码"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
+msgid "Connection timeout (seconds)"
 msgstr "连接超时（秒）"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "响应超时（秒）"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "数据传输"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "调试"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "跟踪（细节）"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP 版本不匹配（支持：v%d，需要：v%d）。请升级 tvheadend。"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "高"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "正常"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "低"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "录制所有分集"

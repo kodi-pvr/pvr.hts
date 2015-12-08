@@ -27,3 +27,15 @@ msgstr "Pasahitza"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Arazketa"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Handia"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Arrunta"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Baxua"

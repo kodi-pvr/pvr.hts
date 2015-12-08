@@ -35,3 +35,15 @@ msgstr "මුරපදය"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "නිදොස්කරමින් "
+
+msgctxt "#30352"
+msgid "High"
+msgstr "ඉහළ"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "සාමාන්‍ය "
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "අඩු"

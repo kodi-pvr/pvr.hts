@@ -16,10 +16,6 @@ msgstr ""
 "Language: te_IN\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "కనెక్షన్ సెట్టింగులు"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend హోస్ట్ పేరు లేదా IP చిరునామా"
@@ -39,18 +35,6 @@ msgstr "వాడుకరి పేరు"
 msgctxt "#30005"
 msgid "Password"
 msgstr "సంకేతపదం"
-
-msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "సెకన్లలో కనెక్షన్  టైమ్అవుట్"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "సెకన్లలో స్పందన  టైమ్అవుట్"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "డేటా బదిలీ"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"

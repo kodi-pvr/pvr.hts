@@ -36,10 +36,22 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "密碼"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "回應超時（秒）"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "除錯"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "高溫"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "一般"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "低溫"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "記錄所有插曲"

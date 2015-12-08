@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Setări conexiune"
 
 msgctxt "#30001"
@@ -40,12 +40,20 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Parolă"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Așteptare răspuns în secunde"
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Expirare timp conexiune (secunde)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Setări avansate"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Înregistrări automate"
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr "Transfer de date"
 
 msgctxt "#30101"
@@ -59,3 +67,87 @@ msgstr "Depanare"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Urmărire (detaliată)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Nepotrivire versiune HTSP (compatibilă: v%d, necesară: v%d). Actualizați tvheadend."
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importantă (Cea mai mare)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Mare"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Mică"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Importantă (Cea mai mică)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Înregistrează toate episoadele"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Înregistrează dacă numărul episodului diferă"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Înregistrează dacă numele episodului diferă"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Înregistrează dacă descrierea diferă"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Înregistrează maxim o dată pe săptămână"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Înregistrează maxim o dată pe zi"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nu este disponibil niciun adaptor liber"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Fără semnal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Prindere eșuată"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Limită de utilizatori atinsă"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Fără acces"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Eroare abonament"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Difuzare în flux"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Profil de folosit pentru difuzarea în flux"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profilul pentru difuzarea în flux %s nu este disponibil"

@@ -16,10 +16,6 @@ msgstr ""
 "Language: sl_SI\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Nastavitve povezave"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Ime gostitelja ali IP strežnika Tvheadend"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Geslo"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Časovni pretek povezave v sekundah"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Časovni pretek odgovora v sekundah"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Prenos podatkov"
+msgid "Connection timeout (seconds)"
+msgstr "Prekinitev povezave (sekunde)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Razhroščevanje"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Sledi (podrobno)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Neujemanje različice HTSP (podprta: v%d, obvezna: v%d). Posodobite tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Visoka"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Običajno"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Nizka"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Posnemi vse epizode"

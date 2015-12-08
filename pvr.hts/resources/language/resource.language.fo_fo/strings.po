@@ -23,3 +23,15 @@ msgstr "Brúkaranavn"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Loyniorð"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Høgt"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Vanligt"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Lágt"

@@ -17,12 +17,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Paramètres de connexion"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Nom d'hôte ou adresse IP de Tvheadend"
+msgstr "Nom d'hôte ou adresse IP Tvheadend"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -34,27 +34,51 @@ msgstr "Port HTSP"
 
 msgctxt "#30004"
 msgid "Username"
-msgstr "Utilisateur"
+msgstr "Nom d'utilisateur"
 
 msgctxt "#30005"
 msgid "Password"
 msgstr "Mot de passe"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Timeout de connexion en secondes"
+msgid "Connection timeout (seconds)"
+msgstr "Temporisation de connexion (secondes)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Temporisation de réponse en secondes"
+msgid "Response timeout (seconds)"
+msgstr "Temporisation de réponse (sec.)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Paramètres avancés"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Enregistrements auto."
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Calcul de la fenêtre du temps de début"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Stricte (temps de début + temps de fin)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Approximative (temps de début +/- marge)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Marge max. de temps de début (min.)"
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr "Transfert de données"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Transfert EPG asynchronisé"
+msgstr "Transfert asynchrone du guide des programmes"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -62,8 +86,112 @@ msgstr "Débogage"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Trace (détaillé)"
+msgstr "Trace (détaillée)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "Version HTSP différente (supportée : v%d, requise : v%d). Veuillez mettre à jour tvheadend."
+msgstr "Version HTSP différente (reconnue : v%d, requise : v%d). Merci de mettre à jour tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Unique (prévue par programmation répétée)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Important (le plus élevé)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Haute"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Basse"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Important (le moins élevé)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Enregistrer tous les épisodes"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Enregistrer si le nombre d'épisodes est différent"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Enregistrer si le nom de l'épisode est différent"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Enregistrer si la description est différente"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Enregistrer max. une fois pas semaine"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Enregistrer max. une fois pas jour"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Syntonisation prédictive"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Nombre de souscriptions à utiliser"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Délai avant péremption de la souscription inutilisée (sec.)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Utiliser la syntonisation prédictive pour accélérer les changements de chaînes"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Aucun adaptateur libre"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Chaîne cryptée"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Aucun signal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Échec de la syntonisation"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Limite utilisateur atteinte"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Aucun accès"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Erreur à la souscription"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Diffusion par flux"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Profil de diffusion par flux"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Le profil %s de diffusion par flux n'est pas disponible."

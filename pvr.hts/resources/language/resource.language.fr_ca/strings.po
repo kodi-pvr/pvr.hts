@@ -16,10 +16,6 @@ msgstr ""
 "Language: fr_CA\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Paramètres de connexion"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nom d'hôte ou adresse IP de Tvheadend "
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Mot de passe"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Délai d'attente de connexion en secondes"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Délai d'attente de réponse en secondes"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Transfert de données"
+msgid "Connection timeout (seconds)"
+msgstr "Temporisation de connexion (secondes)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Débogage"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Trace (détaillée)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Mauvaise version HTSP (prise en charge : v%d, exigée : v%d). Veuillez mettre tvheadend à jour."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Haute"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normale"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Basse"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Enregistrer tous les épisodes"

@@ -16,9 +16,13 @@ msgstr ""
 "Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Forbindelsesindstillinger"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend værtsnavn eller IP-adresse"
+msgstr "Tvheadend-værtsnavn eller IP-adresse"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -36,10 +40,158 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Adgangskode"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Forbindelsestidsudløb (sekunder)"
+
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Tidsfrist for svar i sekunder"
+msgid "Response timeout (seconds)"
+msgstr "Svartidsudløb (sekunder)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Avancerede indstillinger"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatiske optagelser"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Starttidspunkt for vinduesberegning"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Streng (starttidspunkt + sluttidspunkt)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Afslappet (starttidspunkt +/- margen)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maksimal starttidspunktmargen (minutter)"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Dataoverførsel"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Asynkron EPG-overførsel"
 
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Foretag fejlretning"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Sporing (detaljeret)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP-versionen passer ikke (understøttet: v%d, krævet v%d). Opdater venligst tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "One Time (planlagt af gentagelsestimer)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Vigtig (højest)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Høj"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Lav"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Ikke vigtig (lavest)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Optag alle episoder"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Optag hvis episodenummer er et andet"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Optag hvis episodenavn er et andet"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Optag hvis beskrivelse er et andet"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Optag maks. en gang per uge"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Optag maks. en gang per dag"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Forudsigelsesindstilling"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Antallet af abonnementer at bruge"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Forsinkelse for ubrugt abonnementslukning (sekunder)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Brug forudsigelsesindstilling for at høje hastighed ved kanalskift"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Ingen ledig adapter tilgængelig"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kodet kanal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Intet signal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Indstilling mislykkedes"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Brugerbegrænsning nået"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Ingen adgang"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Abonnementsfejl"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Streaming"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Streamingprofil at bruge"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streamingprofilen %s er ikke tilgængelig"

@@ -23,3 +23,15 @@ msgstr "Uzulonomo"
 msgctxt "#30005"
 msgid "Password"
 msgstr "pasvorto"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Nobla"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Malnobla"

@@ -36,10 +36,30 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contrasenya"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Temps d'espera de la resposta en segons"
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Transferència asíncrona de EPG"
 
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Depurant"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Traça (detallada)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "desajust de la versió HTSP (suportat: v%d, es requereix: v%d). Si us plau, actualitzi tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Màx."
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Mín."

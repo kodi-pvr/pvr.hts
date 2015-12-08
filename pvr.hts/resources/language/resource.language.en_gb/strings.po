@@ -196,8 +196,6 @@ msgstr ""
 
 #empty strings from id 30404 to 30449
 
-#. Subscription states representation
-
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr ""
@@ -226,7 +224,7 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr ""
 
-#empty strings from id 30456 to 30499
+#empty strings from id 30457 to 30499
 
 msgctxt "#30500"
 msgid "Streaming"

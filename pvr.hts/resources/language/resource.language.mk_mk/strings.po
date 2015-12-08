@@ -16,10 +16,6 @@ msgstr ""
 "Language: mk_MK\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Подесувања на конекција"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend хост или IP адреса"
@@ -40,18 +36,6 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Лозинка"
 
-msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Прекин на поврзувањето во секунди"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Тајмаут на реакција во секунди"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Пренос на податоци"
-
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Асинхрон EPG трансфер"
@@ -63,3 +47,19 @@ msgstr "Барање грешки"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Следи (детално)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "висок"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Нормално"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "низок"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Сними ги сите епизоди"

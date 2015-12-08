@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "연결 설정"
 
 msgctxt "#30001"
@@ -41,15 +41,23 @@ msgid "Password"
 msgstr "비밀번호"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "연결 타임아웃 (초)"
+msgid "Connection timeout (seconds)"
+msgstr "연결 시간 제한 (초)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "응답시간 제한 (초)"
+msgid "Response timeout (seconds)"
+msgstr "응답 제한시간 (초)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "고급 설정"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "자동 녹화"
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr "데이터 전송"
 
 msgctxt "#30101"
@@ -63,3 +71,35 @@ msgstr "디버깅"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "추적 (상세)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "높음"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "보통"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "낮음"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "모든 에피소드 녹화"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "암호화 채널"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "신호 없음"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "권한 없음"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "스트리밍"

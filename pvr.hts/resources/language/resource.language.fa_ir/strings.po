@@ -16,6 +16,14 @@ msgstr ""
 "Language: fa_IR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "پورت HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "پورت HTSP"
+
 msgctxt "#30004"
 msgid "Username"
 msgstr "نام کاربری"
@@ -27,3 +35,15 @@ msgstr "رمز عبور"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "دیباگ"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "زیاد"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "نرمال"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "کم"

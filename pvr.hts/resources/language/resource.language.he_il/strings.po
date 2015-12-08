@@ -16,10 +16,6 @@ msgstr ""
 "Language: he_IL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "הגדרות חיבור"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "שם מארח או כתובת IP"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "סיסמה"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "זמן מירבי לניסיון חיבור בשניות"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "זמן המתנה מירבי לתגובה בשניות"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "העברת נתונים"
+msgid "Connection timeout (seconds)"
+msgstr "זמן מירבי לניסיון חיבור (שנ')"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "ניפוי שגיאות"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "מעקב תקשורת (מפורט)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). יש לעדכן את שרת Tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "גבוה"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "רגיל"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "נמוך"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "הקלטת כל הפרקים"

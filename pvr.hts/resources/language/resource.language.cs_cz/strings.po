@@ -16,10 +16,6 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Nastavení připojení"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Název počítače, nebo adresa IP Tvheadend"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Heslo"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Limit pro ukončení spojení v sekundách"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Časový limit odpovědi v sekundách"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Přenos dat"
+msgid "Connection timeout (seconds)"
+msgstr "Časový limit spojení (v sekundách)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Ladění"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Trace (detailní)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Chybná HTSP verze  (podporováno: v%d, vyžadováno: v%d). Updajtujte prosím tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Vysoká"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normální"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Nízká"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Nahrát všechny epizody"

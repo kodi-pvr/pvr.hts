@@ -36,10 +36,18 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Salasõna"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Vastuse aegumine sekundites"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Silumine"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Kõrge"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normaalne"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Madal"

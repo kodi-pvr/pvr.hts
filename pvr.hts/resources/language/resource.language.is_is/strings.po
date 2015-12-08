@@ -16,10 +16,6 @@ msgstr ""
 "Language: is_IS\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Stillingar tengingar"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nafn eða IP tala Tvheadend"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Lykilorð"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Tengitími rennur út eftir sekúndur"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Tímatakmörk svartíma í sekúndum"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Gagnaflutningur"
+msgid "Connection timeout (seconds)"
+msgstr "Tengitími rennur út (sekúndur)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Kembing"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Trace (nákvæmt)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP útgáfa ósamhæfð  (samhæfð: v%d, þarfnast: v%d). Uppfærðu tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Hæst"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Venjulegt"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Lægst"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Taka upp allar þáttaraðir"

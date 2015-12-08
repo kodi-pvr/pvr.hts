@@ -35,3 +35,15 @@ msgstr "كلمة المرور"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "التصحيح"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "العظمى"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "عادي"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "الصغرى"

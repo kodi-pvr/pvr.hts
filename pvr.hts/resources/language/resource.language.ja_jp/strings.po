@@ -36,10 +36,22 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "パスワード"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "レスポンスのタイムアウト (秒)"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "デバッグ"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "高"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "中"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "低"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "すべての回を録画する"

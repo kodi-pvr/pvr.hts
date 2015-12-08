@@ -16,6 +16,18 @@ msgstr ""
 "Language: mt_MT\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==0 || ( n%100>1 && n%100<11) ? 1 : (n%100>10 && n%100<20 ) ? 2 : 3);\n"
 
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Hostname u indirizz IP tat- TVheadend"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "port tal- HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "port tal- HTSP"
+
 msgctxt "#30004"
 msgid "Username"
 msgstr "Username"
@@ -23,3 +35,35 @@ msgstr "Username"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Sigriet"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Transferiment asinkroniku tal- EPG"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Debugging"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Traċċi (dettaljat)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Il-Verżjoni tal-HTSP ma taqbilx (jiflaħ għal: v%d, hemm bżonn: v%d). Jekk jogħġbok aġġorna t-tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Filmati/Atturi"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normali"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Filmati/Generi"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Irrekordja l-episodji kollha"

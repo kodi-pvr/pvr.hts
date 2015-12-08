@@ -36,10 +36,18 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Mật khẩu"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Số giây tự ngắt chờ"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Tìm sửa lỗi"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Cao"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Bình thường"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Thấp"

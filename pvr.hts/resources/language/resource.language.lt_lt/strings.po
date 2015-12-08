@@ -17,20 +17,20 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Prisijungimo nustatymai"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend host pavadinimas arba IP adresas"
+msgstr "Tvheadend serverio vardas arba IP adresas"
 
 msgctxt "#30002"
 msgid "HTTP port"
-msgstr "HTTP portas"
+msgstr "HTTP prievadas"
 
 msgctxt "#30003"
 msgid "HTSP port"
-msgstr "HTSP portas"
+msgstr "HTSP prievadas"
 
 msgctxt "#30004"
 msgid "Username"
@@ -41,15 +41,39 @@ msgid "Password"
 msgstr "Slaptažodis"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Prisijungimo laukimo laikas sekundėmis"
+msgid "Connection timeout (seconds)"
+msgstr "Prisijungimo laukimo laikas (sekundėmis)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Atsakymo laikas sek."
+msgid "Response timeout (seconds)"
+msgstr "Atsakymo laukimo laikas (sekundėmis)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Išplėstiniai nustatymai"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatinis įrašymas"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Pradžios laiko lango apskaičiavimas"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Tikslus (pradžios laikas + pabaigos laikas)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Laisvas (pradžios laikas +/- paklaida)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maksimali pradžios laiko paklaida (minutėmis)"
 
 msgctxt "#30100"
-msgid "Data Transfer"
+msgid "Data transfer"
 msgstr "Duomenų perkėlimas"
 
 msgctxt "#30101"
@@ -63,3 +87,111 @@ msgstr "Derinimas"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Sekti (išsamiai)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTPS versija neatitinka (palaikoma: v%d, reikalinga: v%d). Atnaujinkite tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Vieną kartą (suplanuota pasikartojančio laikmačio)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Svarbus (aukščiausias)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Aukštas"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normalus"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Žemas"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nesvarbus (žemiausias)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Įrašyti visus epizodus"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Įrašyti, jei skiriasi epizodo numeris"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Įrašyti, jei skiriasi epizodo pavadinimas"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Įrašyti, jei skiriasi aprašymas"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Įrašyti daugiausiai vieną kartą per savaitę"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Įrašyti daugiausiai vieną kartą per dieną"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Nuspėjamas derinimas"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Naudojamų prenumeratų skaičius"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Nenaudojamos prenumeratos uždarymo uždelsimas (sekundėmis)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "naudoti nuspėjamą derinimą, kad pagreitinti kanalų perjungimą"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nėra prieinamo laisvo adapterio"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Koduoti kanalai"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Nėra signalo"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Derinimas nepavyko"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Pasiektas vartotojo limitas"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Nėra prieigos"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Prenumeratos klaida"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Transliuojama"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Transliacijos profilis, kurį naudoti"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Transliacijos profilis %s neprieinamas"

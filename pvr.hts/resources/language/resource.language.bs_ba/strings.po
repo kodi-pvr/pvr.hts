@@ -27,3 +27,15 @@ msgstr "Lozinka"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Traženje grešaka"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "visok"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normalno"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "nizak"

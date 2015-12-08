@@ -36,10 +36,38 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Salasana"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Vastauksen aikakatkaisu sekunneissa"
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Yhteyden aikakatkaisu (sekunneissa)"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Epäsynkrooninen EPG-siirto"
 
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Debugging"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Jäljitä (yksityiskohtainen)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP versio yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Ylin"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normaali"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Alin"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Tallenna kaikki jaksot"

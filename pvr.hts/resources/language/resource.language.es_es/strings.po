@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Ajustes de Conexión"
 
 msgctxt "#30001"
@@ -41,16 +41,36 @@ msgid "Password"
 msgstr "Contraseña"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Tiempo de espera de conexión en segundos"
+msgid "Connection timeout (seconds)"
+msgstr "Tiempo de espera para conexión (segundos)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Tiempo de espera de respuesta en segundos"
+msgid "Response timeout (seconds)"
+msgstr "Tiempo de espera de respuesta (en segundos)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ajustes avanzados"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Grabaciones automáticas"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Estricto (tiempo inicial + tiempo final)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relajado (tiempo inicial +/- márgen)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Márgen máximo de tiempo inicial (en minutos)"
 
 msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Transferencia de Datos"
+msgid "Data transfer"
+msgstr "Transferencia de datos"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +83,71 @@ msgstr "Depuración"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Traza (detallada)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "La versión de HTSP no coincide (soportada: v%d, requerida v%d). Por favor, actualice tvheadend."
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (más alto)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Baja"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "No importante (más bajo)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Grabar todos los episodios"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Grabar si el número de episodio es diferente"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Grabar si el nombre del episodio es diferente"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Grabar si la descipción es diferente"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Número de suscripciones a usar"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sin señal"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sin acceso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Error de suscripción"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Streaming"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Perfil de streaming a usar"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "El perfil de streaming %s no está disponible"

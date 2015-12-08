@@ -39,3 +39,15 @@ msgstr "அடையாளச் சொல்"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "வழுநீக்கு"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "அதிகம்"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "வழக்கமான"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "குறைவு"

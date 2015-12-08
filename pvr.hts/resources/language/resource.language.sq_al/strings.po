@@ -36,10 +36,18 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Fjalkalim"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Timeout i përgjigjjes në eskonda"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Debugging"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Lartë"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Poshtë"

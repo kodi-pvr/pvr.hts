@@ -16,10 +16,6 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Настройки подключения"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Имя пользователя или IP-адрес Tvheadend"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Пароль"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Ожидание подключения (сек.)"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Ожидание ответа (сек.)"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Передача данных"
+msgid "Connection timeout (seconds)"
+msgstr "Таймаут подключения (секунд)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Отладка"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Трассировка (подробнее)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Не соответствие версий HTSP (поддерживаемая: v%d, требуемая: v%d). Пожалуйста, обновите tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Высокое"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Нормальное"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Низкое"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Запись всех эпизодов"

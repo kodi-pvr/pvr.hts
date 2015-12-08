@@ -16,10 +16,6 @@ msgstr ""
 "Language: sv_SE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Anslutningsinställningar"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend värdnamn eller IP-adress"
@@ -41,16 +37,8 @@ msgid "Password"
 msgstr "Lösenord"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Anslutningstimeout i sekunder"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Responstimeout i sekunder"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Dataöverföring"
+msgid "Connection timeout (seconds)"
+msgstr "Anslutningsavbrott (sekunder)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +51,23 @@ msgstr "Debuggning"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Trace (detaljerad)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP-versioner överensstämmer inte (stöds: v%d, krävs: v%d). Vänligen uppdatera tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Hög"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Låg"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Spela in alla episoder"

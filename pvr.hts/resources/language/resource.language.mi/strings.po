@@ -27,3 +27,15 @@ msgstr "Kupuhipa"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Patuiro"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Teitei"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Pūnoa"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Hakahaka"

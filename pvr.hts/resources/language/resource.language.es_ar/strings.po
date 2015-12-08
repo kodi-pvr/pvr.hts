@@ -16,10 +16,6 @@ msgstr ""
 "Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Ajuste de conexión"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend nombre o dirección IP"
@@ -40,18 +36,6 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contraseña"
 
-msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Tiempo de espera máxima de conexión en segundos"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Tiempo de espera de respuesta en segundos"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Transferencia de datos"
-
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Transferencia de EPG asíncrona"
@@ -63,3 +47,19 @@ msgstr "Depuración"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Traza (detallada)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Baja"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Grabar todos los episodios"

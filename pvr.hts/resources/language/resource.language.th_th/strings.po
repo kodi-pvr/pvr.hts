@@ -27,3 +27,19 @@ msgstr "รหัสผ่าน"
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "แก้จุดบกพร่อง"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "สูง"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "ปกติ"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "ต่ำ"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "บันทึกทุกตอน"

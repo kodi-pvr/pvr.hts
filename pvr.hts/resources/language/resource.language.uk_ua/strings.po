@@ -36,10 +36,22 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Пароль"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Затримка відклику в секундах"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Налагодження"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Макс."
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Нормальне"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Мін."
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Записати усі серії"

@@ -16,6 +16,22 @@ msgstr ""
 "Language: sr_RS@latin\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Podešavanja povezivanja"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend hostname ili IP adresa"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP port"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP port"
+
 msgctxt "#30004"
 msgid "Username"
 msgstr "Korisničko ime"
@@ -24,6 +40,158 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Lozinka"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Istek vremena za povezivanje (sekunde)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Istek vremena za odziv (sekunde)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Napredna podešavanja"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatska snimanja"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Započni proračun vremenskog prozora"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strog (vreme početka + vreme kraja)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Ležeran (vreme početka +/- margina)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maksimalna margina vremena početka (minuti)"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Prenos podataka"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Asinhroni EPG prenos"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Traženje grešaka"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Prati (detaljno)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Nepoklapanje HTSP verzije (podržane: v%d, potrebne: v%d). Molimo, ažurirajte tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Jednom (Zakazano od strane ponavljajućeg tajmera)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Važno (Najviše)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Jak"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normalno"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Slab"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nevažno (Najniže)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Snimi sve epizode"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Snimi ako je broj epizode različit"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Snimi ako je ime epizode različito"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Snimi ako je opis različit"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Snimi maksimalno jednom nedeljno"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Snimi maksimalno jednom dnevno"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Prediktivni prijem"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Broj pretplata za korišćenje"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Odlaganje zatvaranja nekorišćenih pretplata (sekunde)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Koristi prediktivan prijem za ubrzanje promene kanala"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nijedan slobodan adapter nije dostupan"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kodiran kanal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Nema signala"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Prijem nije uspeo"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Dostignut limit korisnika"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Nema pristupa"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Greška pretplate"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Strimovanje"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Profil strimovanja za korišćenje"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profil strimovanja %s nije dostupan"

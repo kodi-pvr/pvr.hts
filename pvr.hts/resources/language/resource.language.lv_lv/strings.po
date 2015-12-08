@@ -16,10 +16,6 @@ msgstr ""
 "Language: lv_LV\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
-msgctxt "#30000"
-msgid "Connection Settings"
-msgstr "Savienojuma iestatījumi"
-
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend saimniekvārds vai IP adrese"
@@ -40,18 +36,6 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Parole"
 
-msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Savienojuma noilgums pēc dažām sekundēm"
-
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Atbildes noilgums sekundēs"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Datu pārsūtīšana"
-
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asinhronā EPG pārsūtīšana"
@@ -63,3 +47,19 @@ msgstr "Atkļūdošana"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Pieraksts (detalizēts)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Augsts"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normāls"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Zems"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Ierakstīt visas sērijas"

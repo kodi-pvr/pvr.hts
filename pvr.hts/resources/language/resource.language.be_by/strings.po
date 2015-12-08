@@ -36,10 +36,22 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Password"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Response timeout in seconds"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Debugging"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Высокая"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Нізкая"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Запісваць усе эпізоды"

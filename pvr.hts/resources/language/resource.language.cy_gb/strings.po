@@ -36,10 +36,22 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Cyfrinair"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Ymateb amser allan mewn eiliadau"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Dadfygio"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Uchel"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Isel"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Recordio pob pennod"

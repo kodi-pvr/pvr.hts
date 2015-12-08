@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Ajustes de Conexão"
 
 msgctxt "#30001"
@@ -41,16 +41,12 @@ msgid "Password"
 msgstr "Senha"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Tempo limite para conexão em segundos"
+msgid "Connection timeout (seconds)"
+msgstr "Tempo limite para conexão (segundos)"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Tempo limite para resposta em segundos"
-
-msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Transferência de Dados"
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ajustes Avançados"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -67,3 +63,35 @@ msgstr "Trace (detalhado)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade de versão HTSP (suportado: v%d, requerido: v%d). Por favor atualize o tvheadend."
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Máxima"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Mínima"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Gravar todos os episódios"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sem sinal"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sem acesso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Erro de subscrição"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Streaming"

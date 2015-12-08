@@ -36,10 +36,18 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Wagwoord"
 
-msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Antwoord tydverstreke in sekondes"
-
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Ontfouting"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Hoog"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normaal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Laag"

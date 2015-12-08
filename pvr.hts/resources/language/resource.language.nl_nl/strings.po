@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#30000"
-msgid "Connection Settings"
+msgid "Connection settings"
 msgstr "Verbindingsinstellingen"
 
 msgctxt "#30001"
@@ -41,16 +41,40 @@ msgid "Password"
 msgstr "Wachtwoord"
 
 msgctxt "#30006"
-msgid "Connection timeout in seconds"
-msgstr "Verbindingswachttijd in seconden"
+msgid "Connection timeout (seconds)"
+msgstr "Connectie time-out (seconden)"
 
 msgctxt "#30007"
-msgid "Response timeout in seconds"
-msgstr "Antwoord timeout in seconden"
+msgid "Response timeout (seconds)"
+msgstr "Antwoord timeout (seconden)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Geavanceerde Instellingen"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatische opnamen"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Start tijd scherm calculatie"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strikt (starttijd + eindtijd)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Ontspannen (starttijd +/- marge)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maximale starttijd marge (minuten)"
 
 msgctxt "#30100"
-msgid "Data Transfer"
-msgstr "Gegevensoverdracht"
+msgid "Data transfer"
+msgstr "Data overdracht"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -63,3 +87,111 @@ msgstr "Foutregistratie"
 msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Loggen (in detail)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP versie mismatch (ondersteund: v%d, vereist: v%d). Update A.U.B. de tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Eén tijd (geschematiseerd door herhalingstimer)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Belangrijk (Hoogste)"
+
+msgctxt "#30352"
+msgid "High"
+msgstr "Hoog"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Normaal"
+
+msgctxt "#30354"
+msgid "Low"
+msgstr "Laag"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Onbelangrijk (Laagste)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Alle afleveringen opnemen"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Opnemen als aflevering nummer afwijkt"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Opnemen als afleveringsnaam afwijkt"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Opnemen als omschrijving afwijkt"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Maximaal één keer per week opnemen"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Maximaal één keer per dag opnemen"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Voorspellende tuning"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Nummer van inschrijvingen te gebruiken"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Ongebruikte inschrijving Sluit vertraging (seconden)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Gebruik voorspellende tuning om kanaalwissels te versnellen"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Geen vrije adapter beschikbaar"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Gecodeerde kanalen"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Geen signaal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Tuning mislukt"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Gebruikerslimiet bereikt"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Geen toegang"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Inschrijvingsfout"
+
+msgctxt "#30500"
+msgid "Streaming"
+msgstr "Streaming"
+
+msgctxt "#30501"
+msgid "Streaming profile to use"
+msgstr "Steamiing profiel te gebruiken"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streaming profiel %s is niet beschikbaar"
