@@ -34,6 +34,7 @@ const int         Settings::DEFAULT_CONNECT_TIMEOUT     = 10000; // millisecs
 const int         Settings::DEFAULT_RESPONSE_TIMEOUT    = 5000;  // millisecs
 const bool        Settings::DEFAULT_TRACE_DEBUG         = false;
 const bool        Settings::DEFAULT_ASYNC_EPG           = false;
+const bool        Settings::DEFAULT_PRETUNER_ENABLED    = false;
 const int         Settings::DEFAULT_TOTAL_TUNERS        = 1;  // total tuners > 1 => predictive tuning active
 const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
 const int         Settings::DEFAULT_AUTOREC_MAXDIFF     = 15; // mins. Maximum difference between real and approximate start time for auto recordings
@@ -60,9 +61,9 @@ void Settings::ReadSettings()
   SetAsyncEpg(ReadBoolSetting("epg_async", DEFAULT_ASYNC_EPG));
 
   /* Predictive Tuning */
-  bool bPretunerEnabled = ReadBoolSetting("pretuner_enabled", false);
-  SetTotalTuners(bPretunerEnabled ? ReadIntSetting("total_tuners", DEFAULT_TOTAL_TUNERS) : 1);
-  SetPreTunerCloseDelay(bPretunerEnabled ? ReadIntSetting("pretuner_closedelay", DEFAULT_PRETUNER_CLOSEDELAY) : 0);
+  m_bPretunerEnabled = ReadBoolSetting("pretuner_enabled", DEFAULT_PRETUNER_ENABLED);
+  SetTotalTuners(m_bPretunerEnabled ? ReadIntSetting("total_tuners", DEFAULT_TOTAL_TUNERS) : 1);
+  SetPreTunerCloseDelay(m_bPretunerEnabled ? ReadIntSetting("pretuner_closedelay", DEFAULT_PRETUNER_CLOSEDELAY) : 0);
 
   /* Auto recordings */
   SetAutorecApproxTime(ReadIntSetting("autorec_approxtime", DEFAULT_APPROX_TIME));
@@ -86,9 +87,19 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
   else if (key == "pass")
     return SetStringSetting(GetPassword(), value);
   else if (key == "connect_timeout")
-    return SetIntSetting(GetConnectTimeout(), value);
+  {
+    if (GetConnectTimeout() == (*(reinterpret_cast<const int *>(value)) * 1000))
+      return ADDON_STATUS_OK;
+    else
+      return ADDON_STATUS_NEED_RESTART;
+  }
   else if (key == "response_timeout")
-    return SetIntSetting(GetResponseTimeout(), value);
+  {
+    if (GetResponseTimeout() == (*(reinterpret_cast<const int *>(value)) * 1000))
+      return ADDON_STATUS_OK;
+    else
+     return ADDON_STATUS_NEED_RESTART;
+  }
   /* Debug */
   else if (key == "trace_debug")
     return SetBoolSetting(GetTraceDebug(), value);
@@ -97,16 +108,21 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetBoolSetting(GetAsyncEpg(), value);
   /* Predictive Tuning */
   else if (key == "pretuner_enabled")
+    return SetBoolSetting(m_bPretunerEnabled, value);
+  else if (key == "total_tuners")
   {
-    if (GetTotalTuners() > 1 && *(reinterpret_cast<const bool*>(value)))
+    if (!m_bPretunerEnabled)
       return ADDON_STATUS_OK;
     else
-      return ADDON_STATUS_NEED_RESTART;
+      return SetIntSetting(GetTotalTuners(), value);
   }
-  else if (key == "total_tuners")
-    return SetIntSetting(GetTotalTuners(), value);
   else if (key == "pretuner_closedelay")
-    return SetIntSetting(GetPreTunerCloseDelay(), value);
+  {
+    if (!m_bPretunerEnabled)
+      return ADDON_STATUS_OK;
+    else
+      return SetIntSetting(GetPreTunerCloseDelay(), value);
+  }
   /* Auto recordings */
   else if (key == "autorec_approxtime")
     return SetIntSetting(GetAutorecApproxTime(), value);
