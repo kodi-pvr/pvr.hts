@@ -43,10 +43,11 @@ namespace tvheadend {
     static const int         DEFAULT_RESPONSE_TIMEOUT; // millisecs
     static const bool        DEFAULT_TRACE_DEBUG;
     static const bool        DEFAULT_ASYNC_EPG;
+    static const bool        DEFAULT_PRETUNER_ENABLED;
     static const int         DEFAULT_TOTAL_TUNERS;
     static const int         DEFAULT_PRETUNER_CLOSEDELAY; // secs
     static const int         DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
-    static const int         DEFAULT_APPROX_TIME;     // mins
+    static const int         DEFAULT_APPROX_TIME;     // 0..1 (0 = use a fixed start time, 1 = use an approximate start time for auto recordings)
     static const std::string DEFAULT_STREAMING_PROFILE;
 
     /**
@@ -84,7 +85,7 @@ namespace tvheadend {
     int         GetTotalTuners() const { return m_iTotalTuners; }
     int         GetPreTunerCloseDelay() const { return m_iPreTunerCloseDelay; }
     bool        GetAutorecApproxTime() const { return m_bAutorecApproxTime; }
-    int         GetAutorecMaxDiff() const { return m_iPreTunerCloseDelay; }
+    int         GetAutorecMaxDiff() const { return m_iAutorecMaxDiff; }
     std::string GetStreamingProfile() const { return m_strStreamingProfile; }
 
   private:
@@ -98,6 +99,7 @@ namespace tvheadend {
       m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
       m_bTraceDebug(DEFAULT_TRACE_DEBUG),
       m_bAsyncEpg(DEFAULT_ASYNC_EPG),
+      m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
       m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
       m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
       m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
@@ -146,6 +148,7 @@ namespace tvheadend {
     int         m_iResponseTimeout;
     bool        m_bTraceDebug;
     bool        m_bAsyncEpg;
+    bool        m_bPretunerEnabled;
     int         m_iTotalTuners;
     int         m_iPreTunerCloseDelay;
     bool        m_bAutorecApproxTime;
