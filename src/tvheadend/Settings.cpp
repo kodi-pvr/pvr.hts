@@ -37,7 +37,7 @@ const bool        Settings::DEFAULT_ASYNC_EPG           = false;
 const int         Settings::DEFAULT_TOTAL_TUNERS        = 1;  // total tuners > 1 => predictive tuning active
 const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
 const int         Settings::DEFAULT_AUTOREC_MAXDIFF     = 15; // mins. Maximum difference between real and approximate start time for auto recordings
-const int         Settings::DEFAULT_APPROX_TIME         = 0;  // mins
+const int         Settings::DEFAULT_APPROX_TIME         = 0;  // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
 
 void Settings::ReadSettings()

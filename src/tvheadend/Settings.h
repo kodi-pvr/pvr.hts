@@ -46,7 +46,7 @@ namespace tvheadend {
     static const int         DEFAULT_TOTAL_TUNERS;
     static const int         DEFAULT_PRETUNER_CLOSEDELAY; // secs
     static const int         DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
-    static const int         DEFAULT_APPROX_TIME;     // mins
+    static const int         DEFAULT_APPROX_TIME;     // 0..1 (0 = use a fixed start time, 1 = use an approximate start time for auto recordings)
     static const std::string DEFAULT_STREAMING_PROFILE;
 
     /**
@@ -84,7 +84,7 @@ namespace tvheadend {
     int         GetTotalTuners() const { return m_iTotalTuners; }
     int         GetPreTunerCloseDelay() const { return m_iPreTunerCloseDelay; }
     bool        GetAutorecApproxTime() const { return m_bAutorecApproxTime; }
-    int         GetAutorecMaxDiff() const { return m_iPreTunerCloseDelay; }
+    int         GetAutorecMaxDiff() const { return m_iAutorecMaxDiff; }
     std::string GetStreamingProfile() const { return m_strStreamingProfile; }
 
   private:
