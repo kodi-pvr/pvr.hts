@@ -1,12 +1,14 @@
 2.2.10
 - updated language files from Transifex
+- fixed: approximate start time setting 
+- fixed: invalid addon restart when closing the settings dialog
 
 2.2.9
 - refactored the code by factoring out lots of things into separate files
 - refactored the Settings class into a singleton to avoid having to include client.h everywhere
 - added: support for specifying which streaming profile to use
 - added: support for enabling/disabling oneshot timers (HTSP v23 and above)
-- added: support for timer removal (HTSP v24 and above)
+- added: timer lifetime will now remove the actual file instead of database entry only (HTSP v24 and above)
 
 2.2.8
 - Updated to PVR API v4.1.0
