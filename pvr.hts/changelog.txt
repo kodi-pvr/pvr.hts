@@ -2,6 +2,9 @@
 - updated language files from Transifex
 - fixed: approximate start time setting 
 - fixed: invalid addon restart when closing the settings dialog
+- improved: limit the amount of timer lifetime values
+- improved: separate timer and streaming settings
+- added: default setting for timer lifetime, priority and duplicate detection
 
 2.2.9
 - refactored the code by factoring out lots of things into separate files
