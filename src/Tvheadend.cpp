@@ -597,27 +597,21 @@ struct TimerType : PVR_TIMER_TYPE
             const std::string &description,
             const std::vector< std::pair<int, std::string> > &priorityValues
               = std::vector< std::pair<int, std::string> >(),
-            int priorityDefault
-              = DVR_PRIO_NORMAL,
             const std::vector< std::pair<int, std::string> > &lifetimeValues
               = std::vector< std::pair<int, std::string> >(),
-            int lifetimeDefault
-              = DVR_RET_SPACE,
             const std::vector< std::pair<int, std::string> > &dupEpisodesValues
-              = std::vector< std::pair<int, std::string> >(),
-            int dupEpisodesDefault
-              = DVR_AUTOREC_RECORD_ALL)
+              = std::vector< std::pair<int, std::string> >())
   {
     memset(this, 0, sizeof(PVR_TIMER_TYPE));
 
     iId                              = id;
     iAttributes                      = attributes;
     iPrioritiesSize                  = priorityValues.size();
-    iPrioritiesDefault               = priorityDefault;
+    iPrioritiesDefault               = Settings::GetInstance().GetDvrPriority();
     iPreventDuplicateEpisodesSize    = dupEpisodesValues.size();
-    iPreventDuplicateEpisodesDefault = dupEpisodesDefault;
+    iPreventDuplicateEpisodesDefault = Settings::GetInstance().GetDvrDupdetect();
     iLifetimesSize                   = lifetimeValues.size();
-    iLifetimesDefault                = lifetimeDefault;
+    iLifetimesDefault                = Settings::GetInstance().GetDvrLifetime();
 
     strncpy(strDescription, description.c_str(), sizeof(strDescription) - 1);
 
@@ -731,8 +725,6 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues)));
 
@@ -747,8 +739,6 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues)));
 
@@ -765,8 +755,6 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues)));
 
@@ -783,8 +771,6 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues)));
 
@@ -808,8 +794,6 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues)));
 
@@ -850,15 +834,10 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
-
         /* Values definitions for lifetime. */
         lifetimeValues,
-        DVR_RET_SPACE,
-
         /* Values definitions for prevent duplicate episodes. */
-        deDupValues,
-        DVR_AUTOREC_RECORD_ALL)));
+        deDupValues)));
   }
 
   /* Copy data to target array. */
