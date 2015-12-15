@@ -22,6 +22,9 @@
 #include <algorithm>
 #include <ctime>
 #include <memory>
+
+#include "platform/util/StringUtils.h"
+
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 
@@ -594,21 +597,21 @@ struct TimerType : PVR_TIMER_TYPE
             const std::string &description,
             const std::vector< std::pair<int, std::string> > &priorityValues
               = std::vector< std::pair<int, std::string> >(),
-            int priorityDefault
-              = DVR_PRIO_NORMAL,
-            const std::vector< std::pair<int, std::string> > &dupEpisodesValues
+            const std::vector< std::pair<int, std::string> > &lifetimeValues
               = std::vector< std::pair<int, std::string> >(),
-            int dupEpisodesDefault
-              = DVR_AUTOREC_RECORD_ALL)
+            const std::vector< std::pair<int, std::string> > &dupEpisodesValues
+              = std::vector< std::pair<int, std::string> >())
   {
     memset(this, 0, sizeof(PVR_TIMER_TYPE));
 
     iId                              = id;
     iAttributes                      = attributes;
     iPrioritiesSize                  = priorityValues.size();
-    iPrioritiesDefault               = priorityDefault;
+    iPrioritiesDefault               = Settings::GetInstance().GetDvrPriority();
     iPreventDuplicateEpisodesSize    = dupEpisodesValues.size();
-    iPreventDuplicateEpisodesDefault = dupEpisodesDefault;
+    iPreventDuplicateEpisodesDefault = Settings::GetInstance().GetDvrDupdetect();
+    iLifetimesSize                   = lifetimeValues.size();
+    iLifetimesDefault                = Settings::GetInstance().GetDvrLifetime();
 
     strncpy(strDescription, description.c_str(), sizeof(strDescription) - 1);
 
@@ -624,6 +627,13 @@ struct TimerType : PVR_TIMER_TYPE
     {
       preventDuplicateEpisodes[i].iValue = it->first;
       strncpy(preventDuplicateEpisodes[i].strDescription, it->second.c_str(), sizeof(preventDuplicateEpisodes[i].strDescription) - 1);
+    }
+
+    i = 0;
+    for (auto it = lifetimeValues.begin(); it != lifetimeValues.end(); ++it, ++i)
+    {
+      lifetimes[i].iValue = it->first;
+      strncpy(lifetimes[i].strDescription, it->second.c_str(), sizeof(lifetimes[i].strDescription) - 1);
     }
   }
 };
@@ -653,6 +663,28 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
     deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
     deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
     deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+  }
+
+  /* PVR_Timer.iLifetime values and presentation.*/
+  static std::vector< std::pair<int, std::string> > lifetimeValues;
+  if (lifetimeValues.size() == 0)
+  {
+    lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30365)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 3)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 5)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30367)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 2)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 3)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30369)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 2)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 3)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 6)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30371)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 2)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 3)));
+    if (m_conn.GetProtocol() >= 25)
+      lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
+    lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
   }
 
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS
@@ -693,7 +725,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL)));
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
 
     timerTypes.push_back(
       /* One-shot epg based */
@@ -706,7 +739,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL)));
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
 
     timerTypes.push_back(
       /* Read-only one-shot for timers generated by timerec */
@@ -721,7 +755,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL)));
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
 
     timerTypes.push_back(
       /* Read-only one-shot for timers generated by autorec */
@@ -736,7 +771,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL)));
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
 
     timerTypes.push_back(
       /* Repeating manual (time and channel based) - timerec */
@@ -758,7 +794,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL)));
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
 
     unsigned int TIMER_REPEATING_EPG_ATTRIBS
       = PVR_TIMER_TYPE_IS_REPEATING                |
@@ -797,10 +834,10 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         "",
         /* Values definitions for priorities. */
         priorityValues,
-        DVR_PRIO_NORMAL,
+        /* Values definitions for lifetime. */
+        lifetimeValues,
         /* Values definitions for prevent duplicate episodes. */
-        deDupValues,
-        DVR_AUTOREC_RECORD_ALL)));
+        deDupValues)));
   }
 
   /* Copy data to target array. */

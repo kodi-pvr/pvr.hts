@@ -40,6 +40,9 @@ const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
 const int         Settings::DEFAULT_AUTOREC_MAXDIFF     = 15; // mins. Maximum difference between real and approximate start time for auto recordings
 const int         Settings::DEFAULT_APPROX_TIME         = 0;  // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
+const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
+const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
+const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
 
 void Settings::ReadSettings()
 {
@@ -71,6 +74,11 @@ void Settings::ReadSettings()
 
   /* Streaming */
   SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
+
+  /* Default dvr settings */
+  SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
+  SetDvrLifetime(ReadIntSetting("dvr_lifetime", DEFAULT_DVR_LIFETIME));
+  SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUBDETECT));
 }
 
 ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
@@ -131,6 +139,13 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
   /* Streaming */
   else if (key == "streaming_profile")
     return SetStringSetting(GetStreamingProfile(), value);
+  /* Default dvr settings */
+  else if (key == "dvr_priority")
+    return SetIntSetting(GetDvrPriority(), value);
+  else if (key == "dvr_lifetime")
+    return SetIntSetting(GetDvrLifetime(true), value);
+  else if (key == "dvr_dubdetect")
+    return SetIntSetting(GetDvrDupdetect(), value);
   else
   {
     tvherror("Settings::SetSetting - unknown setting '%s'", key.c_str());
@@ -187,6 +202,48 @@ ADDON_STATUS Settings::SetBoolSetting(int oldValue, const void *newValue)
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;
+}
+
+int Settings::GetDvrLifetime(bool asEnum) const
+{
+  if (asEnum)
+    return m_iDvrLifetime;
+  else
+  {
+    switch (m_iDvrLifetime)
+    {
+      case 0:
+        return DVR_RET_1DAY;
+      case 1:
+        return DVR_RET_3DAY;
+      case 2:
+        return DVR_RET_5DAY;
+      case 3:
+        return DVR_RET_1WEEK;
+      case 4:
+        return DVR_RET_2WEEK;
+      case 5:
+        return DVR_RET_3WEEK;
+      case 6:
+        return DVR_RET_1MONTH;
+      case 7:
+        return DVR_RET_2MONTH;
+      case 8:
+        return DVR_RET_3MONTH;
+      case 9:
+        return DVR_RET_6MONTH;
+      case 10:
+        return DVR_RET_1YEAR;
+      case 11:
+        return DVR_RET_2YEARS;
+      case 12:
+        return DVR_RET_3YEARS;
+      case 13:
+        return DVR_RET_SPACE;
+      default:
+        return DVR_RET_FOREVER;
+    }
+  }
 }
 
 } // namespace tvheadend

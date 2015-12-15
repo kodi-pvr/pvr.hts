@@ -54,7 +54,15 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr ""
 
-#empty strings from id 30009 to 30049
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr ""
+
+#empty strings from id 300011 to 30049
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -76,7 +84,23 @@ msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr ""
 
-#empty strings from id 30055 to 30099
+msgctxt "#30055"
+msgid "Default priority"
+msgstr ""
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr ""
+
+#empty strings from id 30059 to 30099
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -176,7 +200,69 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr ""
 
-#empty strings from id 30362 to 30399
+#empty strings from id 30362 to 30364
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30365"
+msgid "1 day"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30366"
+msgid "%d days"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30367"
+msgid "1 week"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30369"
+msgid "1 month"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30370"
+msgid "%d months"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30371"
+msgid "1 year"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30372"
+msgid "%d years"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30374"
+msgid "Forever"
+msgstr ""
+
+#empty strings from id 30375 to 30399
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -227,11 +313,11 @@ msgstr ""
 #empty strings from id 30457 to 30499
 
 msgctxt "#30500"
-msgid "Streaming"
+msgid "Streaming profile"
 msgstr ""
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
+msgid "Profile to use (empty = default)"
 msgstr ""
 
 #. Check streaming profile validity during startup
