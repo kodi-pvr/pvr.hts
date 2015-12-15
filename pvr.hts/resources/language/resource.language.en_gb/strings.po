@@ -54,7 +54,15 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr ""
 
-#empty strings from id 30009 to 30049
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr ""
+
+#empty strings from id 300011 to 30049
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -305,11 +313,11 @@ msgstr ""
 #empty strings from id 30457 to 30499
 
 msgctxt "#30500"
-msgid "Streaming"
+msgid "Streaming profile"
 msgstr ""
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
+msgid "Profile to use (empty = default)"
 msgstr ""
 
 #. Check streaming profile validity during startup
