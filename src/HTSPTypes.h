@@ -54,6 +54,31 @@ typedef enum {
   DVR_AUTOREC_RECORD_ONCE_PER_DAY = 5
 } dvr_autorec_dedup_t;
 
+/*
+ * Defines for both the retention and removal of a dvr entry
+ * retention = lifetime of the database entry
+ * removal   = lifetime of the actual recording on disk
+ */
+typedef enum {
+  DVR_RET_DVRCONFIG = 0,            // the server will use it's own default value
+  DVR_RET_1DAY      = 1,            // the server will delete the db entry or recording after 1 day
+  DVR_RET_3DAY      = 3,            // ...
+  DVR_RET_5DAY      = 5,
+  DVR_RET_1WEEK     = 7,
+  DVR_RET_2WEEK     = 14,
+  DVR_RET_3WEEK     = 21,
+  DVR_RET_1MONTH    = 31,
+  DVR_RET_2MONTH    = 62,
+  DVR_RET_3MONTH    = 92,
+  DVR_RET_6MONTH    = 183,
+  DVR_RET_1YEAR     = 366,
+  DVR_RET_2YEARS    = 731,
+  DVR_RET_3YEARS    = 1096,
+  DVR_RET_ONREMOVE  = INT32_MAX-1,  // the server will delete the db entry when the actual recording gets deleted (retention only)
+  DVR_RET_SPACE     = INT32_MAX-1,  // the server may delete this recording if space for a new recording is needed (removal only)
+  DVR_RET_FOREVER   = INT32_MAX     // the server should never delete this recording or database entry, only the user can do this
+} dvr_retention_t;
+
 enum eHTSPEventType
 {
   HTSP_EVENT_NONE = 0,
