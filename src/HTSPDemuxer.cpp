@@ -165,13 +165,18 @@ bool CHTSPDemuxer::Seek
   
   htsmsg_destroy(m);
 
+  m_seeking = true;
+
   /* Wait for time */
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, tvh->GetSettings().iResponseTimeout))
   {
     tvherror("failed to get subscriptionSeek response");
+    m_seeking = false;
+    Flush(); /* try to resync */
     return false;
   }
   
+  m_seeking = false;
   if (m_seekTime == INVALID_SEEKTIME)
     return false;
 
@@ -585,6 +590,7 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   } else {
     m_seekTime = s64;
   }
+  Flush(); /* flush old packets (with wrong pts) */
   m_seekCond.Broadcast();
 }
 
