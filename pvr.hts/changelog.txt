@@ -5,6 +5,7 @@
 - improved: limit the amount of timer lifetime values
 - improved: separate timer and streaming settings
 - added: default setting for timer lifetime, priority and duplicate detection
+- fixed: restart subscription after a connection restore
 
 2.2.9
 - refactored the code by factoring out lots of things into separate files
