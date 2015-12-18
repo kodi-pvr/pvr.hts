@@ -1115,8 +1115,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "start",        start);
     htsmsg_add_s64(m, "stop",         timer.endTime);
     htsmsg_add_str(m, "description",  timer.strSummary);
-    htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
-    htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
+    htsmsg_add_s64(m, "startExtra",   timer.iMarginStart > 0 ? timer.iMarginStart : 1); // 0 not supported by tvheadend
+    htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd   > 0 ? timer.iMarginEnd   : 1); // 0 not supported by tvheadend
     htsmsg_add_u32(m, "retention",    timer.iLifetime); // remove from tvh database
 
     if (m_conn.GetProtocol() >= 24)
