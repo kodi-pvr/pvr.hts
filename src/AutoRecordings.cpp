@@ -154,8 +154,8 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   if (m_conn.GetProtocol() >= 20)
     htsmsg_add_u32(m, "fulltext",   timer.bFullTextEpgSearch ? 1 : 0);
 
-  htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
-  htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
+  htsmsg_add_s64(m, "startExtra", timer.iMarginStart > 0 ? timer.iMarginStart : 1); // 0 not supported by tvheadend
+  htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd   > 0 ? timer.iMarginEnd   : 1); // 0 not supported by tvheadend
   htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
   if (m_conn.GetProtocol() >= 24)
