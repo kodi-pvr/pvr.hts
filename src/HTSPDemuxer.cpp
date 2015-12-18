@@ -47,8 +47,8 @@ void CHTSPDemuxer::Connected ( void )
   if (m_subscription.IsActive())
   {
     tvhdebug("demux re-starting stream");
-    m_subscription.SendSubscribe(true);
-    m_subscription.SendSpeed(true);
+    m_subscription.SendSubscribe(0, 0, true);
+    m_subscription.SendSpeed(0, true);
 
     /* Reset status */
     m_signalInfo.Clear();
