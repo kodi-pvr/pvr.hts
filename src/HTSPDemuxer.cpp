@@ -168,6 +168,7 @@ bool CHTSPDemuxer::Seek
   m_seeking = true;
 
   /* Wait for time */
+  m_seekTime = 0;
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, tvh->GetSettings().iResponseTimeout))
   {
     tvherror("failed to get subscriptionSeek response");
@@ -181,7 +182,7 @@ bool CHTSPDemuxer::Seek
     return false;
 
   /* Store */
-  *startpts = TVH_TO_DVD_TIME(m_seekTime);
+  *startpts = TVH_TO_DVD_TIME(m_seekTime - 1);
   tvhtrace("demux seek startpts = %lf", *startpts);
 
   return true;
@@ -588,7 +589,7 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   if (htsmsg_get_s64(m, "time", &s64)) {
     m_seekTime = INVALID_SEEKTIME;
   } else {
-    m_seekTime = s64;
+    m_seekTime = s64 < 0 ? 1 : s64 + 1; /* it must not be zero! */
   }
   Flush(); /* flush old packets (with wrong pts) */
   m_seekCond.Broadcast();
