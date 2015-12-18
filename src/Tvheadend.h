@@ -280,6 +280,7 @@ private:
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
+  bool                                    m_seeking;
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
