@@ -281,6 +281,7 @@ private:
   int64_t                                 m_seekTime;
   P8PLATFORM::CCondition<volatile int64_t>  m_seekCond;
   bool                                    m_seeking;
+  bool                                    m_speedChange;
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
