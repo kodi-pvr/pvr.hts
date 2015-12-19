@@ -34,7 +34,8 @@ using namespace tvheadend::utilities;
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
-    m_subscription(conn)
+    m_subscription(conn),
+    m_seeking(false), m_speedChange(false)
 {
   m_lastUse = 0;
 }
@@ -78,6 +79,8 @@ void CHTSPDemuxer::Abort0 ( void )
   CLockObject lock(m_mutex);
   m_streams.Clear();
   m_streamStat.clear();
+  m_seeking = false;
+  m_speedChange = false;
 }
 
 
@@ -159,10 +162,11 @@ bool CHTSPDemuxer::Seek
   if (!m_subscription.IsActive())
     return false;
 
-  if (!m_subscription.SendSeek(time))
-    return false;
-
   m_seeking = true;
+  if (!m_subscription.SendSeek(time)) {
+    m_seeking = false;
+    return false;
+  }
 
   /* Wait for time */
   m_seekTime = 0;
