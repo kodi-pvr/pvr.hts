@@ -42,7 +42,8 @@ using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
-    m_seekTime(INVALID_SEEKTIME)
+    m_seekTime(INVALID_SEEKTIME),
+    m_seeking(false), m_speedChange(false)
 {
 }
 
@@ -81,6 +82,8 @@ void CHTSPDemuxer::Abort0 ( void )
   CLockObject lock(m_mutex);
   m_streams.Clear();
   m_streamStat.clear();
+  m_seeking = false;
+  m_speedChange = false;
 }
 
 
@@ -151,6 +154,7 @@ bool CHTSPDemuxer::Seek
     return false;
 
   tvhdebug("demux seek %d", time);
+  m_seeking = true;
 
   /* Build message */
   m = htsmsg_create_map();  
@@ -160,12 +164,12 @@ bool CHTSPDemuxer::Seek
 
   /* Send and Wait */
   m = m_conn.SendAndWait("subscriptionSeek", m);
-  if (!m)
+  if (!m) {
+    m_seeking = false;
     return false;
+  }
   
   htsmsg_destroy(m);
-
-  m_seeking = true;
 
   /* Wait for time */
   m_seekTime = 0;
