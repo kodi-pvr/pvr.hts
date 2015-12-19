@@ -193,6 +193,10 @@ void CHTSPDemuxer::Speed ( int speed )
   CLockObject lock(m_conn.Mutex());
   if (!m_subscription.active)
     return;
+  if (speed != m_subscription.speed && (speed < 0 || speed >= 4000)) {
+    m_speedChange = true;
+    Flush();
+  }
   m_subscription.speed = speed;
   SendSpeed();
 }
@@ -356,7 +360,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   size_t      binlen;
   DemuxPacket *pkt;
   char        _unused(type) = 0;
-  int         iStreamId;
+  int         iStreamId, ignore;
   
   /* Ignore packets while switching channels */
   if (!m_subscription.active)
@@ -411,11 +415,17 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   if (!type)
     type = '_';
 
-  tvhtrace("demux pkt idx %d:%d type %c pts %lf len %lld",
-           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen);
+  ignore = m_seeking || m_speedChange;
+
+  tvhtrace("demux pkt idx %d:%d type %c pts %lf len %lld%s",
+           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen,
+           ignore ? " IGNORE" : "");
 
   /* Store */
-  m_pktBuffer.Push(pkt);
+  if (!ignore)
+    m_pktBuffer.Push(pkt);
+  else
+    PVR->FreeDemuxPacket(pkt);
 }
 
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
@@ -600,6 +610,11 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   uint32_t u32;
   if (!htsmsg_get_u32(m, "speed", &u32))
     tvhtrace("recv speed %d", u32);
+  m_subscription.speed = u32;
+  if (m_speedChange) {
+    Flush();
+    m_speedChange = false;
+  }
 }
 
 void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
