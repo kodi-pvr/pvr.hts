@@ -529,6 +529,7 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
     m_seekTime = s64 < 0 ? 1 : s64 + 1; /* it must not be zero! */
   }
   Flush(); /* flush old packets (with wrong pts) */
+  m_seeking = false;
   m_seekCond.Broadcast();
 }
 
