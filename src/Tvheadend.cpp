@@ -1152,6 +1152,27 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     /* EPG-query-based repeating timers */
     return m_autoRecordings.SendAutorecUpdate(timer);
   }
+  else if ((timer.iTimerType == TIMER_ONCE_CREATED_BY_TIMEREC) ||
+           (timer.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC))
+  {
+    if (m_conn.GetProtocol() >= 23)
+    {
+      /* Read-only timer created by autorec or timerec */
+      const auto &it = m_recordings.find(timer.iClientIndex);
+      if (it != m_recordings.end() &&
+          (it->second.IsEnabled() == (timer.state == PVR_TIMER_STATE_DISABLED)))
+      {
+        /* This is actually a request to enable/disable a timer. */
+        htsmsg_t *m = htsmsg_create_map();
+        htsmsg_add_u32(m, "id",      timer.iClientIndex);
+        htsmsg_add_u32(m, "enabled", timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+        return SendDvrUpdate(m);
+      }
+    }
+
+    tvherror("timer is read-only");
+    return PVR_ERROR_INVALID_PARAMETERS;
+  }
   else
   {
     /* unknown timer */
