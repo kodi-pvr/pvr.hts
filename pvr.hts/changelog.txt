@@ -7,6 +7,7 @@
 - added: default setting for timer lifetime, priority and duplicate detection
 - fixed: restart subscription after a connection restore
 - fixed: allow to abort active recordings also for timers created by timerec and autorec
+- fixed: enable/disable of timers created by timerec and autorec (HTSP v23 and above)
 
 2.2.9
 - refactored the code by factoring out lots of things into separate files
