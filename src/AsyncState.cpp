@@ -26,7 +26,7 @@ struct Param {
   AsyncState *self;
 };
 
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 
 AsyncState::AsyncState(int timeout)
 {

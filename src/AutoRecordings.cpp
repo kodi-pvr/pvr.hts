@@ -25,7 +25,7 @@
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Utilities.h"
 
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 
