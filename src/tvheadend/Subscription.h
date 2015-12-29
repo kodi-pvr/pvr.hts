@@ -22,7 +22,7 @@
  */
 
 #include <string>
-#include "platform/threads/mutex.h"
+#include "p8-platform/threads/mutex.h"
 
 extern "C"
 {
@@ -146,6 +146,6 @@ namespace tvheadend
     std::string       m_profile;
     CHTSPConnection   &m_conn;
 
-    mutable PLATFORM::CMutex  m_mutex;
+    mutable P8PLATFORM::CMutex  m_mutex;
   };
 }

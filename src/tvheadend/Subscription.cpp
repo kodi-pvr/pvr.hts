@@ -22,7 +22,7 @@
 #include "Subscription.h"
 #include "../Tvheadend.h"
 
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 
 Subscription::Subscription(CHTSPConnection &conn) :

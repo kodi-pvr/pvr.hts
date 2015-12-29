@@ -22,7 +22,7 @@
 #ifndef ASYNCSTATE_H
 #define	ASYNCSTATE_H
 
-#include "platform/threads/mutex.h"
+#include "p8-platform/threads/mutex.h"
 
 /**
  * Represents the possible states
@@ -53,7 +53,7 @@ public:
    */
   inline eAsyncState GetState()
   {
-    PLATFORM::CLockObject lock(m_mutex);
+    P8PLATFORM::CLockObject lock(m_mutex);
     return m_state;
   }
 
@@ -76,8 +76,8 @@ private:
   static bool PredicateCallback ( void *param );
   
   eAsyncState m_state;
-  PLATFORM::CMutex m_mutex;
-  PLATFORM::CCondition<bool> m_condition;
+  P8PLATFORM::CMutex m_mutex;
+  P8PLATFORM::CCondition<bool> m_condition;
   int m_timeout;
 
 };

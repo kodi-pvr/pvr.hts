@@ -19,8 +19,8 @@
  *
  */
 
-#include "platform/threads/mutex.h"
-#include "platform/util/StringUtils.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/StringUtils.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"
@@ -29,7 +29,7 @@ extern "C" {
 #include "Tvheadend.h"
 
 using namespace std;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 
 /*
 * VFS handler

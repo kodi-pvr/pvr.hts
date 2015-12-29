@@ -22,10 +22,10 @@
  */
 
 #include "client.h"
-#include "platform/sockets/tcp.h"
-#include "platform/threads/threads.h"
-#include "platform/threads/mutex.h"
-#include "platform/util/buffer.h"
+#include "p8-platform/sockets/tcp.h"
+#include "p8-platform/threads/threads.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/buffer.h"
 #include "kodi/xbmc_codec_types.h"
 #include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"
@@ -106,7 +106,7 @@ class CHTSPMessage;
 
 /* Typedefs */
 typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
-typedef PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
+typedef P8PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
 
 /*
  * HTSP Response handler
@@ -116,10 +116,10 @@ class CHTSPResponse
 public:
   CHTSPResponse();
   ~CHTSPResponse();
-  htsmsg_t *Get ( PLATFORM::CMutex &mutex, uint32_t timeout );
+  htsmsg_t *Get ( P8PLATFORM::CMutex &mutex, uint32_t timeout );
   void      Set ( htsmsg_t *m );
 private:
-  PLATFORM::CCondition<volatile bool> m_cond;
+  P8PLATFORM::CCondition<volatile bool> m_cond;
   bool                                m_flag;
   htsmsg_t                           *m_msg;
 };
@@ -164,7 +164,7 @@ public:
  * HTSP Connection registration thread
  */
 class CHTSPRegister
-  : public PLATFORM::CThread
+  : public P8PLATFORM::CThread
 {
   friend class CHTSPConnection;
 
@@ -181,7 +181,7 @@ private:
  * HTSP Connection
  */
 class CHTSPConnection
-  : public PLATFORM::CThread
+  : public P8PLATFORM::CThread
 {
   friend class CHTSPRegister;
 
@@ -208,7 +208,7 @@ public:
   inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
 
-  inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
+  inline P8PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
 
   void        OnSleep ( void );
   void        OnWake  ( void );
@@ -220,10 +220,10 @@ private:
   bool        SendHello        ( void );
   bool        SendAuth         ( const std::string &u, const std::string &p );
 
-  PLATFORM::CTcpSocket               *m_socket;
-  PLATFORM::CMutex                    m_mutex;
+  P8PLATFORM::CTcpSocket               *m_socket;
+  P8PLATFORM::CMutex                    m_mutex;
   CHTSPRegister                       m_regThread;
-  PLATFORM::CCondition<volatile bool> m_regCond;
+  P8PLATFORM::CCondition<volatile bool> m_regCond;
   bool                                m_ready;
   uint32_t                            m_seq;
   std::string                         m_serverName;
@@ -291,13 +291,13 @@ public:
   void SetStreamingProfile(const std::string &profile);
 
 private:
-  PLATFORM::CMutex                        m_mutex;
+  P8PLATFORM::CMutex                        m_mutex;
   CHTSPConnection                        &m_conn;
-  PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
+  P8PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
   ADDON::XbmcStreamProperties             m_streams;
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
-  PLATFORM::CCondition<volatile int64_t>  m_seekCond;
+  P8PLATFORM::CCondition<volatile int64_t>  m_seekCond;
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
@@ -366,7 +366,7 @@ private:
  * Root object for Tvheadend connection
  */
 class CTvheadend
-  : public PLATFORM::CThread
+  : public P8PLATFORM::CThread
 {
 public:
   CTvheadend();
@@ -438,7 +438,7 @@ private:
    */
   tvheadend::Profiles         m_profiles;
 
-  PLATFORM::CMutex            m_mutex;
+  P8PLATFORM::CMutex            m_mutex;
 
   CHTSPConnection             m_conn;
 
@@ -535,7 +535,7 @@ public:
    */
   bool WaitForConnection ( void )
   {
-    PLATFORM::CLockObject lock(m_conn.Mutex());
+    P8PLATFORM::CLockObject lock(m_conn.Mutex());
     return m_conn.WaitForConnection();
   }
   std::string GetServerName    ( void )
