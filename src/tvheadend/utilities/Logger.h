@@ -98,6 +98,15 @@ namespace tvheadend
         m_implementation = implementation;
       }
 
+      /**
+       * Sets the prefix to use in log messages
+       * @param prefix
+       */
+      void SetPrefix(const std::string &prefix)
+      {
+        m_prefix = prefix;
+      }
+
     private:
       static const unsigned int MESSAGE_BUFFER_SIZE = 16384;
 
