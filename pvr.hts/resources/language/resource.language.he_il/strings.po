@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "זמן מירבי לניסיון חיבור (שנ')"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "הגדרות תזמון"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "העברת מדריך שידורים אסינכרונית"
@@ -71,3 +75,7 @@ msgstr "נמוך"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "הקלטת כל הפרקים"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "עד שנפח האחסון נדרש"

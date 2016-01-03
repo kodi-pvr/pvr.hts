@@ -16,6 +16,10 @@ msgstr ""
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Ustawienia połączenia"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nazwa lub adres serwera"
@@ -40,6 +44,46 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Limit czasu połączenia (sekundy)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Limit czasu odpowiedzi (sekundy)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ustawienia zaawansowane"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Ustawienia strumieniowania"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Ustawienia zadania"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Nagrywanie automatyczne"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Wyliczanie okna czasu rozpoczęcia"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Ścisłe (czas początku + czas końca)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Luźny (czas początku +/- zapasowy czas)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Nagrywaj przed zaplanowanym czasem początku (minuty)"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transfer danych"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asynchroniczny transfer danych przewodnika"
@@ -50,7 +94,7 @@ msgstr "Diagnostyka"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Rejestracja (szczegółowa)"
+msgstr "Śledzenie (szczegółowe)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
@@ -59,6 +103,10 @@ msgstr "Nieprawidłowa wersja HTSP (obsługiwana: v%d, wymagana: v%d). Proszę z
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
 msgstr "Jednorazowo (zaplanowane przez zadanie cykliczne)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Ważna (Najwyższa)"
 
 msgctxt "#30352"
 msgid "High"
@@ -72,6 +120,86 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Niska"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nieważna (Najniższa)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Nagrywaj wszystkie odcinki"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Nagrywaj jeśli numer odcinka się różni"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Nagrywaj jeśli nazwa odcinka się różni"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Nagrywaj jeśli opis się różni"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Nagrywaj maksymalnie raz na tydzień"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Nagrywaj maksymalnie raz na dzień"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Do zakończenia programu"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Wstępne dostrajanie"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Liczba subskrypcji w użyciu"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Opóźnienie zamykania nieużywanych subskrypcji (sekundy)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Używaj wstępnego dostrajania w celu przyśpieszenia przełączania kanałów"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Brak wolnych adapterów"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kanał zakodowany"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Brak sygnału"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Nieudane dostrajanie"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Przekroczony limit użytkowników"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Brak dostępu"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Błąd subskrypcji"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Profil strumieniowania"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profil strumieniowania %s niedostępny"

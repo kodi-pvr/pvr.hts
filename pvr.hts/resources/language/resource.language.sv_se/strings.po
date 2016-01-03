@@ -16,6 +16,10 @@ msgstr ""
 "Language: sv_SE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Anslutningsinställningar"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend värdnamn eller IP-adress"
@@ -40,6 +44,42 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Anslutningsavbrott (sekunder)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Responstimeout (sekunder)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Avancerade inställningar"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Inställningar för tidtagning"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Autoinspelningar"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Starta beräkning av tidsfönster"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strikt (starttid + sluttid)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Avslappnad (starttid +/- marginal)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maximal marginal för starttid (minuter)"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Dataöverföring"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asynkron EPG-överföring"
@@ -56,6 +96,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versioner överensstämmer inte (stöds: v%d, krävs: v%d). Vänligen uppdatera tvheadend."
 
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Viktigt (Högsta)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Hög"
@@ -68,6 +112,46 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Låg"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Oviktigt (Lägsta)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Spela in alla episoder"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Spela in om avsnittsnumret skiljer sig"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Spela in om avsnittsnamnet skiljer sig"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Spela in om beskrivning skiljer sig"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Spela in max en gång per vecka"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Spela in max en gång per dag"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Tills utrymme krävs"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kodad kanal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Ingen signal"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Ingen tillgång"

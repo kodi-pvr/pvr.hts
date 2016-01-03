@@ -40,6 +40,26 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tengitími rennur út (sekúndur)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Tímatakmörk svartíma (sekúndur)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ítarlegar stillingar"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Stillingar tímaklukku"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Sjálfvirkar upptökur"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Gagnaflutningur"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Ósamstilltur flutningur stafrænna dagskrárvísa"
@@ -71,3 +91,15 @@ msgstr "Lægst"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Taka upp allar þáttaraðir"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Þangað til vantar pláss"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Ekkert merki"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Enginn aðgangur"

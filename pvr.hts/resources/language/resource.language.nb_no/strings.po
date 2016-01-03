@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tidsavbrudd for tilkobling (sekunder)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Instillinger for tidsur"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asynkron EPG-overføring"
@@ -71,3 +75,7 @@ msgstr "Lav"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Ta opp alle episoder"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Frem til plass trengs"

@@ -16,6 +16,10 @@ msgstr ""
 "Language: pt_PT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Configurações da ligação"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nome do servidor Tvheadend ou endereço IP"
@@ -39,6 +43,18 @@ msgstr "Palavra-passe"
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tempo limite de conexão (em segundos)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Configurações avançadas"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Definições do temporizador"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferência de dados"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -71,3 +87,39 @@ msgstr "Baixa"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episódios"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 dia"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dias"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d semanas"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mês"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d meses"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 ano"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d anos"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Até ser necessário espaço"

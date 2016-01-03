@@ -16,6 +16,10 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Nastavení připojení"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Název počítače, nebo adresa IP Tvheadend"
@@ -40,6 +44,26 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Časový limit spojení (v sekundách)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Časový limit odpovědi (v sekundách)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Pokročilé nastavení"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Nastavení časovače"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatické nahrávky"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Přenos dat"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asynchronní přenos EPG"
@@ -56,6 +80,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Chybná HTSP verze  (podporováno: v%d, vyžadováno: v%d). Updajtujte prosím tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Jednorázový (Plánováno opakujícím se časovačem)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Důležité (nejvyšší)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Vysoká"
@@ -68,6 +100,62 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Nízká"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nedůležité (nejnižší)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Nahrát všechny epizody"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Nahrát pokud se liší číslo epizody"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Nahrát pokud se liší název epizody"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Nahrát pokud se liší popis"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Nahrát max. jednou týdně"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Nahrát max. jednou denně"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Dokud není potřeba místo na HDD"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Žádný volný dostupný adaptér"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kódovaný kanál"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Žádný signál"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Ladění selhalo"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Dosažen limit uživatelů"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Žádný přístup"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streamovací profil %s není dostupný"

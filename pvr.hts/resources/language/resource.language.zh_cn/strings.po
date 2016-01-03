@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "连接超时（秒）"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "定时器设定"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "异步电子节目单传输"
@@ -71,3 +75,7 @@ msgstr "低"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "录制所有分集"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "直到需要空间"

@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contrasenya"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Paràmetres del temporitzador"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Transferència asíncrona de EPG"
@@ -63,3 +67,7 @@ msgstr "Normal"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Mín."
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Fins que necessiti espai"

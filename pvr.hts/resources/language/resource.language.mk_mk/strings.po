@@ -63,3 +63,7 @@ msgstr "низок"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Сними ги сите епизоди"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Се додека не е потребен простор"

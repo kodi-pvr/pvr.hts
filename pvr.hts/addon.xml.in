@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.2.10"
+  version="2.2.11"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -38,7 +38,7 @@
     <summary lang="gl_ES">Interface do Kodi para Tvheadend</summary>
     <summary lang="he_IL">לקוח טלוויזיה חיה עבור Tvheadend</summary>
     <summary lang="hr_HR">Kodi sučelje za Tvheadend</summary>
-    <summary lang="hu_HU">Kodi TVHeadend előtér-kiszolgáló</summary>
+    <summary lang="hu_HU">Kodi előtét a TVHeadend-hez</summary>
     <summary lang="id_ID">Frontend Kodi untuk Tvheadend</summary>
     <summary lang="is_IS">Kodi framendi fyrir Tvheadend</summary>
     <summary lang="it_IT">Frontend di Kodi per Tvheadend</summary>
@@ -89,11 +89,11 @@
     <description lang="et_EE">Tvheadend esi. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend; tukee reaaliaikaisen television ja nauhoituksien streamausta, EPGtä ja nauhoituksien ajastusta.</description>
     <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
-    <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu du direct télévision et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
+    <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
     <description lang="hr_HR">Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje.</description>
-    <description lang="hu_HU">TVHeadend előtér-kiszolgáló. Élő adások és felvételek sugárzásának támogatása EPG-vel és időzítéssel</description>
+    <description lang="hu_HU">TVHeadend előtét. Élő adások és felvételek támogatása EPG-vel és időzítéssel</description>
     <description lang="id_ID">Frontend Tvheadend; mendukung menangkap siaran TV Live &amp; Rekaman, EPG, Timer</description>
     <description lang="is_IS">Tvheadend framendi; styður streymingu á beinum sjónvarpi og upptökum, rafrænum sjónvarpsvísum (EGP), tímatökur</description>
     <description lang="it_IT">Frontend di Tvheadend; supporta lo streaming di Live TV &amp; Registrazione, EPG, Timers</description>

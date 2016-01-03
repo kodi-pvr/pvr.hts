@@ -24,6 +24,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "รหัสผ่าน"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "การตั้งค่าตัวจับเวลา"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "แก้จุดบกพร่อง"

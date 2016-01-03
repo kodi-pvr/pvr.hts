@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "அடையாளச் சொல்"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "நேர அமைப்புகள்"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "வழுநீக்கு"

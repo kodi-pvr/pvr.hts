@@ -63,3 +63,7 @@ msgstr "Zems"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Ierakstīt visas sērijas"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Līdz nepieciešama vieta"

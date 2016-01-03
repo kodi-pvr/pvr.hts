@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Пароль"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Налаштування таймера"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Налагодження"

@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Sigriet"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Settings tal-arloġġ"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Transferiment asinkroniku tal- EPG"

@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Napredna podešavanja"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Podešavanja tajmera"
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Automatska snimanja"
@@ -140,6 +144,10 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi maksimalno jednom dnevno"
 
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Dok prostor nije potreban"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Prediktivni prijem"
@@ -183,14 +191,6 @@ msgstr "Nema pristupa"
 msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Greška pretplate"
-
-msgctxt "#30500"
-msgid "Streaming"
-msgstr "Strimovanje"
-
-msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Profil strimovanja za korišćenje"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

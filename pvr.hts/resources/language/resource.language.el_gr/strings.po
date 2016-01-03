@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Χρονικό όριο σύνδεσης (δευτερόλεπτα)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Ρυθμίσεις χρονοδιακόπτη"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Ασύγχρονη μεταφορά EPG"
@@ -71,3 +75,7 @@ msgstr "Ελαχ."
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Εγγραφή όλων των επεισοδίων"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Μέχρι να απαιτηθεί χώρος"

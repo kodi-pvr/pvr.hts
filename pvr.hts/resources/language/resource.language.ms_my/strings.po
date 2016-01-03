@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Had masa tamat sambungan (saat)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Tetapan pemasa"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Penambahan EPG segerak"
@@ -71,3 +75,7 @@ msgstr "Rendah"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Rakam semua episod"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Sehingga ruang diperlukan"

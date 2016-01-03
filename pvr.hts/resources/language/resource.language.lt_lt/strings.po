@@ -52,6 +52,14 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Išplėstiniai nustatymai"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Transliacijos nustatymai"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Laikmačio nustatymai"
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Automatinis įrašymas"
@@ -71,6 +79,22 @@ msgstr "Laisvas (pradžios laikas +/- paklaida)"
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr "Maksimali pradžios laiko paklaida (minutėmis)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Numatytasis prioritetas"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Numatytasis saugojimo laikas"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Numatytasis dublikatų aptikimas"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Numatytieji parametrai naujiems laikmačiams"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -140,6 +164,46 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Įrašyti daugiausiai vieną kartą per dieną"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 diena"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dienos"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 savaitė"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d savaitės"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mėnuo"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d mėnesiai"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 metai"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d metai"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Kol reikalinga vieta"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Visam laiką"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Nuspėjamas derinimas"
@@ -185,12 +249,12 @@ msgid "Subscription error"
 msgstr "Prenumeratos klaida"
 
 msgctxt "#30500"
-msgid "Streaming"
-msgstr "Transliuojama"
+msgid "Streaming profile"
+msgstr "Transliacijos profilis"
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Transliacijos profilis, kurį naudoti"
+msgid "Profile to use (empty = default)"
+msgstr "Profilis, kurį naudoti (tuščia = numatytasis)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

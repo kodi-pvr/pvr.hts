@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contraseña"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Programar eventos"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Transferencia de EPG asíncrona"
@@ -63,3 +67,7 @@ msgstr "Baja"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Grabar todos los episodios"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Hasta que se necesite el espacio"

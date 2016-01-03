@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Yhteyden aikakatkaisu (sekunneissa)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Ajastimen asetukset"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Epäsynkrooninen EPG-siirto"
@@ -71,3 +75,7 @@ msgstr "Alin"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Tallenna kaikki jaksot"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Kunnes tarvetta lisätilalle"

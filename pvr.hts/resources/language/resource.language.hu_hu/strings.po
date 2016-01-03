@@ -16,6 +16,10 @@ msgstr ""
 "Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Kapcsolódási beállítások"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "TVHeadend kiszolgálónév vagy IP cím"
@@ -40,6 +44,62 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Kapcsolódási időtúllépés (mp.)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Válasz időkorlát (másodpercben)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Haladó beállítások"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Adatfolyam beállítások"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Időzítő beállítások"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatikus felvételek"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Kezdési időablak kiszámítása"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Szigorú (kezdési idő + záró idő)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Laza (kezdési idő +/- margó)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maximális kezdési idő margó (percben)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Alapértelmezett fontosság"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Alapértelmezett élettartam"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Alapértelmezett duplikáció érzékelés"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Alapértelmezések az új időzítőkhöz"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Adatátvitel"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asszinkron EPG átvitel"
@@ -50,11 +110,19 @@ msgstr "Hibakeresés"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Nyomonkövetés (részletes)"
+msgstr "Nyomkövetés (részletes)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP verzió eltérés (támogatott: v%d, szükséges: v%d). Kérlek frissítsd  a TVHeadend-et."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Egyszeri (ismétlődő időzítő által ütemezve)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Fontos (legmagasabb)"
 
 msgctxt "#30352"
 msgid "High"
@@ -68,6 +136,126 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Alacsony"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nem fontos (legalacsonyabb)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Minden epizód felvétele"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Rögzítse ha az epizódszám különböző"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Rögzítse, ha az epizódnév különböző"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Rögzítse, ha a leírás különbözik"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Hetente max. egyszer rögzítse"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Naponta max. egyszer rögzítse"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 nap"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d nap"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 hét"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d hét"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 hónap"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d hónap"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 év"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d év"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Amíg van szabad hely"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Örökké"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Prediktív hangolás"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Használni kívánt feliratkozások száma"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Nem használt feliratkozások lezárási késleltetése (másodpercben)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Prediktív hangolás használata a csatornaváltások felgyorsítására"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nincs elérhető szabad adapter"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kódolt csatorna"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Nincs jel"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Hangolás sikertelen"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Felhasználó korlát elérve"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Nincs hozzáférés"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Feliratkozási hiba"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Adatfolyam profil"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Használandó profil (üres = alapértelmezett)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "%s adatfolyam profil nem elérhető"

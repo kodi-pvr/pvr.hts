@@ -52,9 +52,17 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Ajustes avanzados"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Ajustes de grabación"
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Grabaciones automáticas"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Iniciar cálculo de tiempo"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -87,6 +95,10 @@ msgstr "Traza (detallada)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "La versión de HTSP no coincide (soportada: v%d, requerida v%d). Por favor, actualice tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Una vez (Programado repetición del temporizador)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -124,13 +136,53 @@ msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Grabar si la descipción es diferente"
 
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Grabar máximo una vez por semana"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Grabar máximo una vez al día"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Hasta que necesite espacio"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonización predictiva"
+
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Número de suscripciones a usar"
 
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Demora al cerrar suscripción sin usar (segundos)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Usar sintonización predictiva para acelerar cambio de canales"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Sin adaptador libre disponible"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canal codificado"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Sin señal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Fallo en la sintonía"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Alcanzado número máximo de usuarios"
 
 msgctxt "#30455"
 msgid "No access"
@@ -139,14 +191,6 @@ msgstr "Sin acceso"
 msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Error de suscripción"
-
-msgctxt "#30500"
-msgid "Streaming"
-msgstr "Streaming"
-
-msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Perfil de streaming a usar"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

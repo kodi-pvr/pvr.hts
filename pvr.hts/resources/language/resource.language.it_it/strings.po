@@ -16,6 +16,10 @@ msgstr ""
 "Language: it_IT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Impostazioni di connessione"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend hostname o indirizzo IP"
@@ -39,6 +43,18 @@ msgstr "Password"
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Timeout Connessione (secondi)"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Impostazioni Streaming"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Impostazioni Timer"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Registrazioni Automatiche"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -71,3 +87,7 @@ msgstr "Bassa"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Registra tutti gli episodi"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Fino a spazio necessario"

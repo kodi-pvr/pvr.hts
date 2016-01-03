@@ -55,3 +55,7 @@ msgstr "Isel"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Recordio pob pennod"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Nes bod angen y lle"

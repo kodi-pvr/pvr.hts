@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "密碼"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "計時器設定"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "除錯"

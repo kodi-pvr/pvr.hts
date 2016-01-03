@@ -1,3 +1,6 @@
+2.2.11
+- updated language files from Transifex
+
 2.2.10
 - updated language files from Transifex
 - fixed: approximate start time setting 

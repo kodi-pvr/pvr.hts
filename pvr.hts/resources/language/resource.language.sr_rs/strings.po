@@ -16,6 +16,10 @@ msgstr ""
 "Language: sr_RS\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Подешавања повезивања"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend hostname или IP адреса"
@@ -36,6 +40,46 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Лозинка"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Истек времена за повезивање (секунде)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Истек времена за одзив (секунде)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Напредна подешавања"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Подешавања тајмера"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Аутоматска снимања"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Започни прорачун временског прозора"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Строг (време почетка + време краја)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Лежеран (време почетка +/- маргина)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Максимална маргина времена почетка (минути)"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Пренос података"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Асинхрони EPG пренос"
@@ -52,6 +96,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Непоклапање HTSP верзије (подржане: v%d, потребне: v%d). Молимо, ажурирајте tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Једном (Заказано од стране понављајућег тајмера)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Важно (Највише)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Високо"
@@ -64,10 +116,82 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Ниско"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Неважно (Најниже)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Сними све епизоде"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Сними ако је број епизоде различит"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Сними ако је име епизоде различито"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Сними ако је опис различит"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Сними максимално једном недељно"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Сними максимално једном дневно"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Док простор није потребан"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Предиктивни пријем"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Број претплата за коришћење"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Одлагање затварања некоришћених претплата (секунде)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Користи предиктиван пријем за убрзање промене канала"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Ниједан слободан адаптер није доступан"
+
 msgctxt "#30451"
 msgid "Scrambled channel"
 msgstr "Кодиран канал"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Нема сигнала"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Пријем није успео"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Достигнут лимит корисника"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Нема приступа"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Грешка претплате"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Профил стримовања %s није доступан"

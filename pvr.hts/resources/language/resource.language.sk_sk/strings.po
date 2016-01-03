@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Časový limit spojenia (v sekundách)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Nastavenia časovača"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asynchrónny prenos EPG"
@@ -71,3 +75,7 @@ msgstr "Nízka"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Nahrať všetky epizódy"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Dokiaľ nebude potrebné miesto"

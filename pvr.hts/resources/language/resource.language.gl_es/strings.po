@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tempo de espera da conexión (segundos)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Axuste do temporizador"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Transferencia asíncrona da Guía"
@@ -71,3 +75,7 @@ msgstr "Baixa"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episodios"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Até que precise de espazo"

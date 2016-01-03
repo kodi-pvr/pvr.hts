@@ -52,6 +52,14 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Geavanceerde Instellingen"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Streaming instellingen"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Timer-instellingen"
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Automatische opnamen"
@@ -71,6 +79,22 @@ msgstr "Ontspannen (starttijd +/- marge)"
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr "Maximale starttijd marge (minuten)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Standaard prioriteit"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Standaard levensduur"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Standaard dubbelingen detectie"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Standaard voor nieuwe opnames"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -140,6 +164,46 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Maximaal één keer per dag opnemen"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 dag"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dagen"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 week"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d weken"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 maand"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d maanden"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 jaar"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d jaren"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Tot wanneer ruimte benodigd is."
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Altijd"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Voorspellende tuning"
@@ -185,12 +249,12 @@ msgid "Subscription error"
 msgstr "Inschrijvingsfout"
 
 msgctxt "#30500"
-msgid "Streaming"
-msgstr "Streaming"
+msgid "Streaming profile"
+msgstr "Streaming profiel"
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Steamiing profiel te gebruiken"
+msgid "Profile to use (empty = default)"
+msgstr "Te gebruiken profiel (leeg = standaard)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

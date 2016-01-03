@@ -52,6 +52,14 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Napredne postavke"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Postavke stremanja"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Zakazana snimanja"
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Automatska snimanja"
@@ -71,6 +79,22 @@ msgstr "Prilagođeno (početno vrijeme +/- vrijednost)"
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr "Najveća vrijednost početnog vremena (minute)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Zadani prioritet"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Zadano trajanje snimanja"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Zadano otkrivanje duplikata"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Zadano za nova zakazana snimanja"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -140,6 +164,46 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi najviše jednom dnevno"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 dan"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dana"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 tjedan"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d tjedna"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mjesec"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d mjeseca"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 godina"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d godina"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Dok ima slobodnog prostora"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Zauvijek"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Predvidljivo podešavanje"
@@ -185,12 +249,12 @@ msgid "Subscription error"
 msgstr "Greška pretplate"
 
 msgctxt "#30500"
-msgid "Streaming"
-msgstr "Streamanje"
+msgid "Streaming profile"
+msgstr "Profil streamanja"
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Streaming profil za korištenje"
+msgid "Profile to use (empty = default)"
+msgstr "Profil za korištenje (prazno = zadano)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

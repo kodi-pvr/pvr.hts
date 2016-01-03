@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Setări conexiune"
+msgstr "Stabiliri conexiune"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -44,13 +44,57 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Expirare timp conexiune (secunde)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Limită de timp răspuns (secunde)"
+
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Setări avansate"
+msgstr "Stabiliri avansate"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Stabiliri difuzare în flux"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Stabiliri cronometru"
 
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Înregistrări automate"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Calculare fereastră timp de pornire"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strict (timp de începere + timp de încheiere)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relaxat (timp de începere +/- margine)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Margine maximă timp de începere (minute)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioritate implicită"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Durată de viață implicită"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detactare uplicată implicită"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Implicite pentru cronometrele noi"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -71,6 +115,10 @@ msgstr "Urmărire (detaliată)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nepotrivire versiune HTSP (compatibilă: v%d, necesară: v%d). Actualizați tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "O dată (Planificată de cronometru repetant)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -116,9 +164,69 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Înregistrează maxim o dată pe zi"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 zi"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d zile"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 săptămână"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d săptămâni"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 lună"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d luni"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 an"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d ani"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Până este nevoie de spațiu"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Pentru totdeauna"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Prindere prezicătoare"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Număr de abonamente de folosit"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Întârziere închidere abonament nefolosit (secunde)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Folosește prinderea prezicătoare pentru a face mai rapidă schimbarea canalelor"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Nu este disponibil niciun adaptor liber"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canal codat"
 
 msgctxt "#30452"
 msgid "No signal"
@@ -141,12 +249,12 @@ msgid "Subscription error"
 msgstr "Eroare abonament"
 
 msgctxt "#30500"
-msgid "Streaming"
-msgstr "Difuzare în flux"
+msgid "Streaming profile"
+msgstr "Profil difuzare în flux"
 
 msgctxt "#30501"
-msgid "Streaming profile to use"
-msgstr "Profil de folosit pentru difuzarea în flux"
+msgid "Profile to use (empty = default)"
+msgstr "Profil de folosit (gol = implicit)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

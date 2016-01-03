@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Czŏs na kuplowanie (sekōndy)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Nasztalowania minutnika"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Niysynchrōniczny przekŏz EPG"

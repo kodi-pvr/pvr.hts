@@ -16,6 +16,10 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Настройки подключения"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Имя пользователя или IP-адрес Tvheadend"
@@ -40,6 +44,62 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Таймаут подключения (секунд)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Ожидание ответа (секунд)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Дополнительные настройки"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Настройки потока"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Установки таймера"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Аудио записи"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Расчёт стартового времени"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Строгий (время начала + время конца)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Мягкий (время начала +/- отступы)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Максимальный отступ начального времени (минуты)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Приоритет по-умолчанию"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Хранение по-умолчанию"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Определение повторов по-умолчанию"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Настройки по-умолчанию для новых таймеров"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Передача данных"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Асинхронная получение EPG"
@@ -56,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Не соответствие версий HTSP (поддерживаемая: v%d, требуемая: v%d). Пожалуйста, обновите tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Одноразовый (запланирован повторяющимся таймером)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Важный (Наивысший)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Высокое"
@@ -68,6 +136,126 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Низкое"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Не важный (наименьший)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Запись всех эпизодов"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Записывать если номер серии отличается"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Записывать если имя серии отличается"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Записывать если описание отличается"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Записывать максимум раз в неделю"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Записывать максимум раз в день"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 день"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d дн."
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 неделя"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d недель(и)"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 месяц"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d месяцев(ца)"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 год"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d года/лет"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Пока не будет нужно свободное место"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Всегда"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Интеллектуальная регулировка"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Количество используемых подписок"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Задержка закрытия неиспользуемой подписки (секунд)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Использовать интеллектуальную регулировку для ускорения переключений каналов"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Нет доступных адаптеров"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Кодированный канал"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Нет сигнала"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Не удалось настроить"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Исчерпан лимит пользователей"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Нет доступа"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Ошибка подписки"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Профиль потока"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Использовать профиль (пустой = по-умолчанию)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Профиль потока %s не доступен"

@@ -46,15 +46,55 @@ msgstr "Verbindungszeitüberschreitung (Sekunden)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Antwortzeitüberschreitung in Sekunden"
+msgstr "Antwortzeitüberschreitung (Sekunden)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Erweiterte Einstellungen"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Timer-Einstellungen"
+
 msgctxt "#30050"
 msgid "Auto recordings"
-msgstr "Auto-Aufnahme"
+msgstr "Auto-Aufnahmen"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Startfenster-Berechnung"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strikt (Start- + Endzeit)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Entspannt (Startzeit +/- Zeitspanne)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Max. Startzeitspanne (Minuten)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Default für Aufnahme-Priorität"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Default für Aufnahme-Lebensdauer"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Default für Duplikat-Erkennung"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Defaults für neue Timer"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Datenübertragung"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -72,6 +112,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-Versionskonflikt (unterstützt: v%d, benötigt: v%d). Bitte tvheadend aktualisieren."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Einmalig (Erzeugt von mehrmaligem Timer)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Wichtig (höchste Prio)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Hoch"
@@ -84,6 +132,90 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Niedrig"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Unwichtig (niedrigste Prio)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Alle Episoden aufnehmen"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Aufnehmen, wenn Episodennummer unterschiedlich ist"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Aufnehmen, wenn Episodenname unterschiedlich ist"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Aufnehmen, wenn Episodenbeschreibung unterschiedlich ist"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Maximal einmal pro Woche aufnehmen"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Maximal einmal pro Tag aufnehmen"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 Tag"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d Tage"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 Woche"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d Wochen"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 Monat"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d Monate"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 Jahr"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d Jahre"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Bis Speicherplatz benötigt wird"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Kein Limit"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Kein freier Adapter verfügbar"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Verschlüsselter Kanal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Kein Signal"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Kein Zugriff"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streaming-Profil %s ist nicht verfügbar"
