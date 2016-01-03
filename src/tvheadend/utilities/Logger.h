@@ -42,7 +42,7 @@ namespace tvheadend
     /**
      * Short-hand for a function that acts as the logger implementation
      */
-    typedef std::function<void(LogLevel level, const char *message)> LogImplementation;
+    typedef std::function<void(LogLevel level, const char *message)> LoggerImplementation;
 
     /**
      * The logger class. It is a singleton that by default comes with no
@@ -54,6 +54,16 @@ namespace tvheadend
     public:
 
       /**
+       * Returns the singleton instance
+       * @return
+       */
+      static Logger &GetInstance()
+      {
+        static Logger instance;
+        return instance;
+      }
+
+      /**
        * Logs the specified message using the specified log level
        * @param level the log level
        * @param message the log message
@@ -61,24 +71,31 @@ namespace tvheadend
        */
       static void Log(LogLevel level, const std::string &message, ...)
       {
+        auto &logger = GetInstance();
+
         char buffer[MESSAGE_BUFFER_SIZE];
-        std::string logMessage = "pvr.hts - " + message;
+        std::string logMessage = message;
+        std::string prefix = logger.m_prefix;
+
+        // Prepend the prefix when set
+        if (!prefix.empty())
+          logMessage = prefix + " - " + message;
 
         va_list arguments;
         va_start(arguments, message);
         vsprintf(buffer, logMessage.c_str(), arguments);
         va_end(arguments);
 
-        GetInstance().m_implementation(level, buffer);
+        logger.m_implementation(level, buffer);
       }
 
       /**
        * Configures the logger to use the specified implementation
        * @þaram implementation lambda
        */
-      static void SetImplementation(LogImplementation implementation)
+      void SetImplementation(LoggerImplementation implementation)
       {
-        GetInstance().m_implementation = implementation;
+        m_implementation = implementation;
       }
 
     private:
@@ -88,18 +105,14 @@ namespace tvheadend
       { };
 
       /**
-       * @return the instance
-       */
-      static Logger &GetInstance()
-      {
-        static Logger instance;
-        return instance;
-      }
-
-      /**
        * The logger implementation
        */
-      LogImplementation m_implementation;
+      LoggerImplementation m_implementation;
+
+      /**
+       * The log message prefix
+       */
+      std::string m_prefix;
 
     };
   }
