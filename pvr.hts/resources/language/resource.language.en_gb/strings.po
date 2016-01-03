@@ -62,7 +62,7 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr ""
 
-#empty strings from id 300011 to 30049
+#empty strings from id 30011 to 30049
 
 msgctxt "#30050"
 msgid "Auto recordings"
