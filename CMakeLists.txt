@@ -54,6 +54,10 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/TimeRecording.h
                 src/tvheadend/entity/TimeRecording.cpp)
 
+set(HTS_SOURCES_TVHEADEND_HTSP
+                src/tvheadend/htsp/Response.h
+                src/tvheadend/htsp/Response.cpp)
+
 set(HTS_SOURCES_TVHEADEND_STATUS
                 src/tvheadend/status/Quality.h
                 src/tvheadend/status/QueueStatus.h
@@ -70,6 +74,7 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
+source_group("Source Files\\tvheadend\\htsp" FILES ${HTS_SOURCES_TVHEADEND_HTSP})
 source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STATUS})
 source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
@@ -88,6 +93,7 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 list(APPEND HTS_SOURCES
             ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
+            ${HTS_SOURCES_TVHEADEND_HTSP}
             ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})
 
