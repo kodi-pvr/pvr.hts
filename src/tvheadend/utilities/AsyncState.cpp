@@ -21,12 +21,13 @@
 
 #include "AsyncState.h"
 
+using namespace tvheadend::utilities;
+using namespace PLATFORM;
+
 struct Param {
   eAsyncState state;
   AsyncState *self;
 };
-
-using namespace PLATFORM;
 
 AsyncState::AsyncState(int timeout)
 {
