@@ -56,6 +56,8 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/TimeRecording.cpp)
 
 set(HTS_SOURCES_TVHEADEND_HTSP
+                src/tvheadend/htsp/Response.h
+                src/tvheadend/htsp/Response.cpp
                 src/tvheadend/htsp/ServerInformation.h
                 src/tvheadend/htsp/ServerInformation.cpp)
 
