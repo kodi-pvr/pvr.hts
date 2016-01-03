@@ -24,10 +24,12 @@
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Utilities.h"
+#include "tvheadend/utilities/Logger.h"
 
 using namespace PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
+using namespace tvheadend::utilities;
 
 AutoRecordings::AutoRecordings(CHTSPConnection &conn) :
   m_conn(conn)
@@ -132,7 +134,7 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &
     if (tit->second.GetStringId() == strId)
       return tit->second.GetId();
   }
-  tvherror("Autorec: Unable to obtain int id for string id %s", strId.c_str());
+  Logger::Log(LogLevel::ERROR, "Autorec: Unable to obtain int id for string id %s", strId.c_str());
   return 0;
 }
 
@@ -238,7 +240,7 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    tvherror("malformed addAutorecEntry response: 'success' missing");
+    Logger::Log(LogLevel::ERROR, "malformed addAutorecEntry response: 'success' missing");
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -287,7 +289,7 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER &timer)
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    tvherror("malformed deleteAutorecEntry response: 'success' missing");
+    Logger::Log(LogLevel::ERROR, "malformed deleteAutorecEntry response: 'success' missing");
   }
   htsmsg_destroy(m);
 
@@ -304,7 +306,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   /* Validate/set mandatory fields */
   if ((str = htsmsg_get_str(msg, "id")) == NULL)
   {
-    tvherror("malformed autorecEntryAdd/autorecEntryUpdate: 'id' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd/autorecEntryUpdate: 'id' missing");
     return false;
   }
 
@@ -321,7 +323,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'enabled' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'enabled' missing");
     return false;
   }
 
@@ -331,7 +333,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'retention' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'retention' missing");
     return false;
   }
 
@@ -341,7 +343,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd && (m_conn.GetProtocol() >= 24))
   {
-    tvherror("malformed autorecEntryAdd: 'removal' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'removal' missing");
     return false;
   }
 
@@ -351,7 +353,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'daysOfWeek' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'daysOfWeek' missing");
     return false;
   }
 
@@ -361,7 +363,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'priority' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'priority' missing");
     return false;
   }
 
@@ -371,7 +373,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'start' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'start' missing");
     return false;
   }
 
@@ -381,7 +383,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'startWindow' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'startWindow' missing");
     return false;
   }
 
@@ -391,7 +393,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'startExtra' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'startExtra' missing");
     return false;
   }
 
@@ -401,7 +403,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    tvherror("malformed autorecEntryAdd: 'stopExtra' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'stopExtra' missing");
     return false;
   }
 
@@ -411,7 +413,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd && (m_conn.GetProtocol() >= 20))
   {
-    tvherror("malformed autorecEntryAdd: 'dupDetect' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'dupDetect' missing");
     return false;
   }
 
@@ -461,10 +463,10 @@ bool AutoRecordings::ParseAutorecDelete(htsmsg_t *msg)
   /* Validate/set mandatory fields */
   if ((id = htsmsg_get_str(msg, "id")) == NULL)
   {
-    tvherror("malformed autorecEntryDelete: 'id' missing");
+    Logger::Log(LogLevel::ERROR, "malformed autorecEntryDelete: 'id' missing");
     return false;
   }
-  tvhtrace("delete autorec entry %s", id);
+  Logger::Log(LogLevel::TRACE, "delete autorec entry %s", id);
 
   /* Erase */
   m_autoRecordings.erase(std::string(id));

@@ -28,12 +28,14 @@ extern "C" {
 #include "libhts/sha1.h"
 }
 
+#include "tvheadend/utilities/Logger.h"
 #include "Tvheadend.h"
 
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 using namespace tvheadend;
+using namespace tvheadend::utilities;
 
 /*
  * HTSP Response objct
@@ -132,7 +134,7 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {
-    tvhtrace("waiting for registration...");
+    Logger::Log(LogLevel::TRACE, "waiting for registration...");
     m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().GetConnectTimeout());
   }
   return m_ready;
@@ -169,7 +171,7 @@ void CHTSPConnection::OnSleep ( void )
 {
   CLockObject lock(m_mutex);
 
-  tvhtrace("going to sleep (OnSleep)");
+  Logger::Log(LogLevel::TRACE, "going to sleep (OnSleep)");
 
   /* close connection, prevent reconnect while suspending/suspended */
   m_suspended = true;
@@ -179,7 +181,7 @@ void CHTSPConnection::OnWake ( void )
 {
   CLockObject lock(m_mutex);
 
-  tvhtrace("waking up (OnWake)");
+  Logger::Log(LogLevel::TRACE, "waking up (OnWake)");
 
   /* recreate connection */
   m_suspended = false;
@@ -231,7 +233,7 @@ bool CHTSPConnection::ReadMessage ( void )
     r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
-      tvherror("failed to read packet (%s)",
+      Logger::Log(LogLevel::ERROR, "failed to read packet (%s)",
                m_socket->GetError().c_str());
       free(buf);
       return false;
@@ -243,14 +245,14 @@ bool CHTSPConnection::ReadMessage ( void )
   if (!(msg = htsmsg_binary_deserialize(buf, len, buf)))
   {
     /* Do not free buf here. Already done by htsmsg_binary_deserialize. */
-    tvherror("failed to decode message");
+    Logger::Log(LogLevel::ERROR, "failed to decode message");
     return false;
   }
 
   /* Sequence number - response */
   if (htsmsg_get_u32(msg, "seq", &seq) == 0)
   {
-    tvhtrace("received response [%d]", seq);
+    Logger::Log(LogLevel::TRACE, "received response [%d]", seq);
     CLockObject lock(m_mutex);
     CHTSPResponseList::iterator it;
     if ((it = m_messages.find(seq)) != m_messages.end())
@@ -263,11 +265,11 @@ bool CHTSPConnection::ReadMessage ( void )
   /* Get method */
   if (!(method = htsmsg_get_str(msg, "method")))
   {
-    tvherror("message without a method");
+    Logger::Log(LogLevel::ERROR, "message without a method");
     htsmsg_destroy(msg);
     return true;
   }
-  tvhtrace("receive message [%s]", method);
+  Logger::Log(LogLevel::TRACE, "receive message [%s]", method);
 
   /* Pass (if return is true, message is finished) */
   if (tvh->ProcessMessage(method, msg))
@@ -290,11 +292,11 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 
   if (!htsmsg_get_u32(msg, "seq", &seq))
   {
-    tvhtrace("sending message [%s : %d]", method, seq);
+    Logger::Log(LogLevel::TRACE, "sending message [%s : %d]", method, seq);
   }
   else
   {
-    tvhtrace("sending message [%s]", method);
+    Logger::Log(LogLevel::TRACE, "sending message [%s]", method);
   }
   htsmsg_add_str(msg, "method", method);
 
@@ -309,7 +311,7 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
   free(buf);
   if (c != (ssize_t)len)
   {
-    tvherror("failed to write (%s)",
+    Logger::Log(LogLevel::ERROR, "failed to write (%s)",
               m_socket->GetError().c_str());
     if (!m_suspended)
       Disconnect();
@@ -339,7 +341,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   if (!SendMessage0(method, msg))
   {
     m_messages.erase(seq);
-    tvherror("failed to transmit");
+    Logger::Log(LogLevel::ERROR, "failed to transmit");
     return NULL;
   }
 
@@ -349,7 +351,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   if (!msg)
   {
     //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: No response received", method);
-    tvherror("Command %s failed: No response received", method);
+    Logger::Log(LogLevel::ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
     return NULL;
@@ -361,7 +363,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   {
     // access denied
     //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: Access denied", method);
-    tvherror("Command %s failed: Access denied", method);
+    Logger::Log(LogLevel::ERROR, "Command %s failed: Access denied", method);
     htsmsg_destroy(msg);
     return NULL;
   }
@@ -371,7 +373,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
     if((strError = htsmsg_get_str(msg, "error")) != NULL)
     {
       //XBMC->QueueNotification(QUEUE_ERROR, "Command %s failed: %s", method, strError);
-      tvherror("Command %s failed: %s", method, strError);
+      Logger::Log(LogLevel::ERROR, "Command %s failed: %s", method, strError);
       htsmsg_destroy(msg);
       return NULL;
     }
@@ -416,7 +418,7 @@ bool CHTSPConnection::SendHello ( void )
   m_serverVersion = htsmsg_get_str(msg, "serverversion");
   m_htspVersion   = htsmsg_get_u32_or_default(msg, "htspversion", 0);
   m_webRoot       = webroot ? webroot : "";
-  tvhdebug("connected to %s / %s (HTSPv%d)",
+  Logger::Log(LogLevel::DEBUG, "connected to %s / %s (HTSPv%d)",
             m_serverName.c_str(), m_serverVersion.c_str(), m_htspVersion);
 
   /* Capabilities */
@@ -480,16 +482,16 @@ void CHTSPConnection::Register ( void )
     CLockObject lock(m_mutex);
 
     /* Send Greeting */
-    tvhdebug("sending hello");
+    Logger::Log(LogLevel::DEBUG, "sending hello");
     if (!SendHello()) {
-      tvherror("failed to send hello");
+      Logger::Log(LogLevel::ERROR, "failed to send hello");
       goto fail;
     }
 
     /* Check htsp server version against client minimum htsp version */
     if (m_htspVersion < HTSP_MIN_SERVER_VERSION)
     {
-      tvherror("server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
+      Logger::Log(LogLevel::ERROR, "server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
       Disconnect();
       m_ready = false;
       m_regCond.Broadcast();
@@ -497,17 +499,17 @@ void CHTSPConnection::Register ( void )
     }
 
     /* Send Auth */
-    tvhdebug("sending auth");
+    Logger::Log(LogLevel::DEBUG, "sending auth");
     
     if (!SendAuth(user, pass))
       goto fail;
 
     /* Rebuild state */
-    tvhdebug("rebuilding state");
+    Logger::Log(LogLevel::DEBUG, "rebuilding state");
     if (!tvh->Connected())
       goto fail;
 
-    tvhdebug("registered");
+    Logger::Log(LogLevel::DEBUG, "registered");
     m_ready = true;
     m_regCond.Broadcast();
     return;
@@ -529,7 +531,7 @@ void* CHTSPConnection::Process ( void )
 
   while (!IsStopped())
   {
-    tvhdebug("new connection requested");
+    Logger::Log(LogLevel::DEBUG, "new connection requested");
 
     std::string host = settings.GetHostname();
     int port, timeout;
@@ -553,7 +555,7 @@ void* CHTSPConnection::Process ( void )
 
     while (m_suspended)
     {
-      tvhdebug("suspended. Waiting for wakeup...");
+      Logger::Log(LogLevel::DEBUG, "suspended. Waiting for wakeup...");
 
       /* Wait for wakeup */
       Sleep(1000);
@@ -561,20 +563,20 @@ void* CHTSPConnection::Process ( void )
 
     if (!log)
     {
-      tvhdebug("connecting to %s:%d", host.c_str(), port);
+      Logger::Log(LogLevel::DEBUG, "connecting to %s:%d", host.c_str(), port);
       log = true;
     }
     else
     {
-      tvhtrace("connecting to %s:%d", host.c_str(), port);
+      Logger::Log(LogLevel::TRACE, "connecting to %s:%d", host.c_str(), port);
     }
 
     /* Connect */
-    tvhtrace("waiting for connection...");
+    Logger::Log(LogLevel::TRACE, "waiting for connection...");
     if (!m_socket->Open(timeout))
     {
       /* Unable to connect */
-      tvherror("unable to connect to %s:%d", host.c_str(), port);
+      Logger::Log(LogLevel::ERROR, "unable to connect to %s:%d", host.c_str(), port);
       
       // Retry a few times with a short interval, after that with the default timeout
       if (++retryAttempt <= FAST_RECONNECT_ATTEMPTS)
@@ -584,7 +586,7 @@ void* CHTSPConnection::Process ( void )
       
       continue;
     }
-    tvhdebug("connected");
+    Logger::Log(LogLevel::DEBUG, "connected");
     log = false;
     retryAttempt = 0;
 
@@ -596,7 +598,7 @@ void* CHTSPConnection::Process ( void )
     {
       if (!ReadMessage())
       {
-        tvhdebug("attempting reconnect");
+        Logger::Log(LogLevel::DEBUG, "attempting reconnect");
         break;
       }
     }
