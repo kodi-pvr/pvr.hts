@@ -419,7 +419,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
            some versions of tvheadend and is here for backward compatibility. */
         if (stream.iWidth == 0 || stream.iHeight == 0)
         {
-          Logger::Log(LogLevel::INFO, "Ignoring subscriptionStart, stream details missing");
+          Logger::Log(LogLevel::DEBUG, "Ignoring subscriptionStart, stream details missing");
           return;
         }
         
