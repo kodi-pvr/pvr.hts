@@ -51,11 +51,7 @@ public:
   /**
    * @return the current state
    */
-  inline eAsyncState GetState()
-  {
-    PLATFORM::CLockObject lock(m_mutex);
-    return m_state;
-  }
+  eAsyncState GetState();
 
   /**
    * Changes the current state to "state"

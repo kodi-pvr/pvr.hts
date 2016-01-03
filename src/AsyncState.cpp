@@ -34,6 +34,12 @@ AsyncState::AsyncState(int timeout)
   m_timeout = timeout;
 }
 
+eAsyncState AsyncState::GetState()
+{
+  PLATFORM::CLockObject lock(m_mutex);
+  return m_state;
+}
+
 void AsyncState::SetState(eAsyncState state)
 {
   CLockObject lock(m_mutex);
