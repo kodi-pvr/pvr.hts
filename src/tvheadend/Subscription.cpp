@@ -248,9 +248,6 @@ void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
 
   const char *status = htsmsg_get_str(m, "status");
 
-  if (status != NULL)
-    Logger::Log(LogLevel::INFO, "Bad subscription status: %s", status);
-
   /* 'subscriptionErrors' was added in htsp v20, use 'status' for older backends */
   if (m_conn.GetProtocol() >= 20)
   {
