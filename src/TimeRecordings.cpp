@@ -130,10 +130,14 @@ PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
   struct tm *tm_stop = localtime(&timer.endTime);
   htsmsg_add_u32(m, "stop",       tm_stop->tm_hour  * 60 + tm_stop->tm_min);  // end time in minutes from midnight
   htsmsg_add_u32(m, "channelId",  timer.iClientChannelUid);
-  htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
-  if (m_conn.GetProtocol() >= 24)
-    htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+  if (m_conn.GetProtocol() >= 25)
+  {
+    htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
+    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
+  }
+  else
+    htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
 
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
   htsmsg_add_u32(m, "priority",   timer.iPriority);
@@ -253,24 +257,29 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     return false;
   }
 
-  if (!htsmsg_get_u32(msg, "retention", &u32))
+  if (m_conn.GetProtocol() >= 25)
   {
-    rec.SetRetention(u32);
+    if (!htsmsg_get_u32(msg, "removal", &u32))
+    {
+      rec.SetLifetime(u32);
+    }
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'removal' missing");
+      return false;
+    }
   }
-  else if (bAdd)
+  else
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'retention' missing");
-    return false;
-  }
-
-  if (!htsmsg_get_u32(msg, "removal", &u32))
-  {
-    rec.SetRemoval(u32);
-  }
-  else if (bAdd && (m_conn.GetProtocol() >= 24))
-  {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'removal' missing");
-    return false;
+    if (!htsmsg_get_u32(msg, "retention", &u32))
+    {
+      rec.SetLifetime(u32);
+    }
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'retention' missing");
+      return false;
+    }
   }
 
   if (!htsmsg_get_u32(msg, "priority", &u32))

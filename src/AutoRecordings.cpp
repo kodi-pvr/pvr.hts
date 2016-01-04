@@ -158,10 +158,15 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
 
   htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
   htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
-  htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
-  if (m_conn.GetProtocol() >= 24)
-    htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+  if (m_conn.GetProtocol() >= 25)
+  {
+    htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
+    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
+  }
+  else
+    htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
+
 
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
 
@@ -327,24 +332,29 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     return false;
   }
 
-  if (!htsmsg_get_u32(msg, "retention", &u32))
+  if (m_conn.GetProtocol() >= 25)
   {
-    rec.SetRetention(u32);
+    if (!htsmsg_get_u32(msg, "removal", &u32))
+    {
+      rec.SetLifetime(u32);
+    }
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'removal' missing");
+      return false;
+    }
   }
-  else if (bAdd)
+  else
   {
-    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'retention' missing");
-    return false;
-  }
-
-  if (!htsmsg_get_u32(msg, "removal", &u32))
-  {
-    rec.SetRemoval(u32);
-  }
-  else if (bAdd && (m_conn.GetProtocol() >= 24))
-  {
-    Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'removal' missing");
-    return false;
+    if (!htsmsg_get_u32(msg, "retention", &u32))
+    {
+      rec.SetLifetime(u32);
+    }
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed autorecEntryAdd: 'retention' missing");
+      return false;
+    }
   }
 
   if (!htsmsg_get_u32(msg, "daysOfWeek", &u32))
