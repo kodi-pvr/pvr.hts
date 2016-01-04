@@ -59,6 +59,9 @@ public:
   bool ParseAutorecDelete(htsmsg_t *msg);
 
 private:
+  const std::string GetTimerStringIdFromIntId(int intId) const;
+  PVR_ERROR SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool update);
+
   CHTSPConnection                      &m_conn;
   tvheadend::entity::AutoRecordingsMap  m_autoRecordings;
 };

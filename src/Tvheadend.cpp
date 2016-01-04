@@ -459,7 +459,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Priority */
       rec.iPriority = recording.GetPriority();
 
-      /* Lifetime (based on retention and removal) */
+      /* Lifetime (based on retention or removal) */
       rec.iLifetime = recording.GetLifetime();
 
       /* Directory */
@@ -999,10 +999,14 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 
     htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
-    htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
-    if (m_conn.GetProtocol() >= 24)
-      htsmsg_add_u32(m, "removal",  timer.iLifetime); // remove from disk
+    if (m_conn.GetProtocol() >= 25)
+    {
+      htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
+      htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
+    }
+    else
+      htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
 
     htsmsg_add_u32(m, "priority",   timer.iPriority);
 
@@ -1135,10 +1139,14 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_str(m, "description",  timer.strSummary);
     htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
     htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
-    htsmsg_add_u32(m, "retention",    timer.iLifetime); // remove from tvh database
 
-    if (m_conn.GetProtocol() >= 24)
+    if (m_conn.GetProtocol() >= 25)
+    {
       htsmsg_add_u32(m, "removal",    timer.iLifetime); // remove from disk
+      htsmsg_add_u32(m, "retention",  DVR_RET_ONREMOVE);// remove from tvh database
+    }
+    else
+      htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
     htsmsg_add_u32(m, "priority",     timer.iPriority);
 
@@ -1865,20 +1873,25 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (!htsmsg_get_u32(msg, "retention", &retention))
-    rec.SetRetention(retention);
-  else if (bAdd)
+  if (m_conn.GetProtocol() >= 25)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'retention' missing");
-    return;
+    if (!htsmsg_get_u32(msg, "removal", &removal))
+      rec.SetLifetime(removal);
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'removal' missing");
+      return;
+    }
   }
-
-  if (!htsmsg_get_u32(msg, "removal", &removal))
-    rec.SetRemoval(removal);
-  else if (bAdd && (m_conn.GetProtocol() >= 24))
+  else
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'removal' missing");
-    return;
+    if (!htsmsg_get_u32(msg, "retention", &retention))
+      rec.SetLifetime(retention);
+    else if (bAdd)
+    {
+      Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'retention' missing");
+      return;
+    }
   }
 
   if (!htsmsg_get_u32(msg, "priority", &priority))

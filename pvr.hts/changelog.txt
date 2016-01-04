@@ -1,5 +1,6 @@
 2.2.11
 - updated language files from Transifex
+- added: proper autorec/timerec support for HTSP v25 and above
 
 2.2.10
 - updated language files from Transifex
