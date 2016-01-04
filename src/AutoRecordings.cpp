@@ -138,12 +138,57 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &
   return 0;
 }
 
+const std::string AutoRecordings::GetTimerStringIdFromIntId(int intId) const
+{
+  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  {
+    if (tit->second.GetId() == intId)
+      return  tit->second.GetStringId();
+  }
+
+  Logger::Log(LogLevel::ERROR, "Autorec: Unable to obtain string id for int id %s", intId);
+  return "";
+}
+
 PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
 {
+  return SendAutorecAddOrUpdate(timer, false);
+}
+
+PVR_ERROR AutoRecordings::SendAutorecUpdate(const PVR_TIMER &timer)
+{
+  if (m_conn.GetProtocol() >= 25)
+    return SendAutorecAddOrUpdate(timer, true);
+
+  /* Note: there is no "updateAutorec" htsp method for htsp version < 25, thus delete + add. */
+  PVR_ERROR error = SendAutorecDelete(timer);
+
+  if (error == PVR_ERROR_NO_ERROR)
+    error = SendAutorecAdd(timer);
+
+  return error;
+}
+
+PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool update)
+{
   uint32_t u32;
+  const std::string method = update ? "updateAutorecEntry" : "addAutorecEntry";
 
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
+
+  if (update)
+  {
+    std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+    if (strId.empty())
+    {
+      htsmsg_destroy(m);
+      return PVR_ERROR_FAILED;
+    }
+
+    htsmsg_add_str(m, "id",       strId.c_str());            // Autorec DVR Entry ID (string!
+  }
+
   htsmsg_add_str(m, "name",       timer.strTitle);
 
   /* epg search data match string (regexp) */
@@ -161,14 +206,19 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
 
   if (m_conn.GetProtocol() >= 25)
   {
-    htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
-    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
+    htsmsg_add_u32(m, "removal",   timer.iLifetime);            // remove from disk
+    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE);           // remove from tvh database
+    htsmsg_add_s64(m, "channelId", timer.iClientChannelUid);    // channelId is signed for >= htspv25, -1 = any
   }
   else
-    htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
+  {
+    htsmsg_add_u32(m, "retention", timer.iLifetime);            // remove from tvh database
 
+    if (timer.iClientChannelUid >= 0)
+      htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);  // channelId is unsigned for < htspv25, not sending = any
+  }
 
-  htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
+  htsmsg_add_u32(m, "daysOfWeek",  timer.iWeekdays);
 
   if (m_conn.GetProtocol() >= 20)
     htsmsg_add_u32(m, "dupDetect", timer.iPreventDuplicateEpisodes);
@@ -182,9 +232,6 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   if (strcmp(timer.strDirectory, "/") != 0)
     htsmsg_add_str(m, "directory", timer.strDirectory);
 
-  /* Note: not sending any of the following three values will be interpreted by tvh as "any". */
-  if (timer.iClientChannelUid >= 0)
-    htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);
 
   /* bAutorecApproxTime enabled:  => start time in kodi = approximate start time in tvh     */
   /*                              => 'approximate'      = starting window / 2               */
@@ -236,7 +283,7 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   /* Send and Wait */
   {
     CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("addAutorecEntry", m);
+    m = m_conn.SendAndWait(method.c_str(), m);
   }
 
   if (m == NULL)
@@ -245,7 +292,7 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed addAutorecEntry response: 'success' missing");
+    Logger::Log(LogLevel::ERROR, "malformed %s response: 'success' missing", method.c_str());
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -253,31 +300,13 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const PVR_TIMER &timer)
   return u32 == 1 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR AutoRecordings::SendAutorecUpdate(const PVR_TIMER &timer)
-{
-  /* Note: there is no "updateAutorec" htsp method, thus delete + add. */
-
-  PVR_ERROR error = SendAutorecDelete(timer);
-
-  if (error == PVR_ERROR_NO_ERROR)
-    error = SendAutorecAdd(timer);
-
-  return error;
-}
-
 PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER &timer)
 {
   uint32_t u32;
 
-  std::string strId;
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
-  {
-    if (tit->second.GetId() == timer.iClientIndex)
-    {
-      strId = tit->second.GetStringId();
-      break;
-    }
-  }
+  std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+  if (strId.empty())
+    return PVR_ERROR_FAILED;
 
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "id", strId.c_str()); // Autorec DVR Entry ID (string!)
@@ -457,6 +486,8 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   {
     rec.SetChannel(u32);
   }
+  else
+    rec.SetChannel(PVR_TIMER_ANY_CHANNEL); // an empty channel field = any channel
 
   if (!htsmsg_get_u32(msg, "fulltext", &u32))
   {

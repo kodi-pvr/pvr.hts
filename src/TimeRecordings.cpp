@@ -113,31 +113,79 @@ const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string &
   return 0;
 }
 
+const std::string TimeRecordings::GetTimerStringIdFromIntId(int intId) const
+{
+  for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
+  {
+    if (tit->second.GetId() == intId)
+      return  tit->second.GetStringId();
+  }
+
+  Logger::Log(LogLevel::ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
+  return "";
+}
+
 PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
 {
+  return SendTimerecAddOrUpdate(timer, false);
+}
+
+PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER &timer)
+{
+  if (m_conn.GetProtocol() >= 25)
+    return SendTimerecAddOrUpdate(timer, true);
+
+  /* Note: there is no "updateTimerec" htsp method for htsp version < 25, thus delete + add. */
+  PVR_ERROR error = SendTimerecDelete(timer);
+
+  if (error == PVR_ERROR_NO_ERROR)
+    error = SendTimerecAdd(timer);
+
+  return error;
+}
+
+PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool update)
+{
   uint32_t u32;
+  const std::string method = update ? "updateTimerecEntry" : "addTimerecEntry";
+
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+
+  if (update)
+  {
+    std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+    if (strId.empty())
+    {
+      htsmsg_destroy(m);
+      return PVR_ERROR_FAILED;
+    }
+
+    htsmsg_add_str(m, "id",       strId.c_str());            // Autorec DVR Entry ID (string!)
+  }
 
   char title[PVR_ADDON_NAME_STRING_LENGTH+6];
   const char *titleExt = "%F-%R"; // timerec title should contain the pattern (e.g. %F-%R) for the generated recording files. Scary...
   snprintf(title, sizeof(title), "%s-%s", timer.strTitle, titleExt);
 
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "name",       timer.strTitle);
   htsmsg_add_str(m, "title",      title);
   struct tm *tm_start = localtime(&timer.startTime);
   htsmsg_add_u32(m, "start",      tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
   struct tm *tm_stop = localtime(&timer.endTime);
   htsmsg_add_u32(m, "stop",       tm_stop->tm_hour  * 60 + tm_stop->tm_min);  // end time in minutes from midnight
-  htsmsg_add_u32(m, "channelId",  timer.iClientChannelUid);
 
   if (m_conn.GetProtocol() >= 25)
   {
-    htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
-    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
+    htsmsg_add_u32(m, "removal",   timer.iLifetime);          // remove from disk
+    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE);         // remove from tvh database
+    htsmsg_add_s64(m, "channelId", timer.iClientChannelUid);  // channelId is signed for >= htspv25
   }
   else
-    htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
+  {
+    htsmsg_add_u32(m, "retention", timer.iLifetime);          // remove from tvh database
+    htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);  // channelId is unsigned for < htspv25
+  }
 
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
   htsmsg_add_u32(m, "priority",   timer.iPriority);
@@ -152,7 +200,7 @@ PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
   /* Send and Wait */
   {
     CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("addTimerecEntry", m);
+    m = m_conn.SendAndWait(method.c_str(), m);
   }
 
   if (m == NULL)
@@ -161,7 +209,7 @@ PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed addTimerecEntry response: 'success' missing");
+    Logger::Log(LogLevel::ERROR, "malformed %s response: 'success' missing", method.c_str());
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -169,31 +217,13 @@ PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
   return u32 == 1 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER &timer)
-{
-  /* Note: there is no "updateTimerec" htsp method, thus delete + add. */
-
-  PVR_ERROR error = SendTimerecDelete(timer);
-
-  if (error == PVR_ERROR_NO_ERROR)
-    error = SendTimerecAdd(timer);
-
-  return error;
-}
-
 PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
 {
   uint32_t u32;
 
-  std::string strId;
-  for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
-  {
-    if (tit->second.GetId() == timer.iClientIndex)
-    {
-      strId = tit->second.GetStringId();
-      break;
-    }
-  }
+  std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+  if (strId.empty())
+    return PVR_ERROR_FAILED;
 
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "id", strId.c_str()); // Timerec DVR Entry ID (string!)
@@ -341,6 +371,14 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   if (!htsmsg_get_u32(msg, "channel", &u32))
   {
     rec.SetChannel(u32);
+  }
+  else
+  {
+    /* A timerec can also have an empty channel field,
+     * the user can delete a channel or even an automated bouquet update can do this
+     * let kodi know that no channel is assigned, in this way the user can assign a new channel to this timerec
+     * note: "any channel" will be interpreted as "no channel" for timerecs by kodi */
+    rec.SetChannel(PVR_TIMER_ANY_CHANNEL);
   }
 
   return true;
