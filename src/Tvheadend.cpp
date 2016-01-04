@@ -92,7 +92,7 @@ PVR_ERROR CTvheadend::GetDriveSpace ( long long *total, long long *used )
 
 error:
   htsmsg_destroy(m);
-  Logger::Log(LogLevel::ERROR, "malformed getDiskSpace response: 'totaldiskspace'/'freediskspace' missing");
+  Logger::Log(LogLevel::LEVEL_ERROR, "malformed getDiskSpace response: 'totaldiskspace'/'freediskspace' missing");
   return PVR_ERROR_SERVER_ERROR;
 }
 
@@ -131,7 +131,7 @@ void CTvheadend::QueryAvailableProfiles()
 
   if ((l = htsmsg_get_list(m, "profiles")) == NULL)
   {
-    Logger::Log(LogLevel::ERROR, "malformed getProfiles: 'profiles' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed getProfiles: 'profiles' missing");
     htsmsg_destroy(m);
     return;
   }
@@ -149,7 +149,7 @@ void CTvheadend::QueryAvailableProfiles()
     if ((str = htsmsg_get_str(&f->hmf_msg, "comment")) != NULL)
       profile.SetComment(str);
 
-    Logger::Log(LogLevel::DEBUG, "profile name: %s, comment: %s added",
+    Logger::Log(LogLevel::LEVEL_DEBUG, "profile name: %s, comment: %s added",
              profile.GetName().c_str(), profile.GetComment().c_str());
 
     m_profiles.push_back(profile);
@@ -359,7 +359,7 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed deleteDvrEntry/cancelDvrEntry response: 'success' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed deleteDvrEntry/cancelDvrEntry response: 'success' missing");
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -383,7 +383,7 @@ PVR_ERROR CTvheadend::SendDvrUpdate( htsmsg_t* m )
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed updateDvrEntry response: 'success' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed updateDvrEntry response: 'success' missing");
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -506,7 +506,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", atoi(rec.strRecordingId));
 
-  Logger::Log(LogLevel::DEBUG, "dvr get cutpoints id=%s", rec.strRecordingId);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "dvr get cutpoints id=%s", rec.strRecordingId);
 
   /* Send and Wait */
   {
@@ -542,7 +542,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
         htsmsg_get_u32(&f->hmf_msg, "end",   &end)   ||
         htsmsg_get_u32(&f->hmf_msg, "type",  &type))
     {
-      Logger::Log(LogLevel::ERROR, "malformed getDvrCutpoints response: invalid EDL entry, will ignore");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed getDvrCutpoints response: invalid EDL entry, will ignore");
       continue;
     }
 
@@ -567,7 +567,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
     }
     idx++;
 
-    Logger::Log(LogLevel::DEBUG, "edl start:%d end:%d action:%d", start, end, type);
+    Logger::Log(LogLevel::LEVEL_DEBUG, "edl start:%d end:%d action:%d", start, end, type);
   }
   
   *num = idx;
@@ -1022,7 +1022,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     /* Check for error */
     if (htsmsg_get_u32(m, "success", &u32))
     {
-      Logger::Log(LogLevel::ERROR, "malformed addDvrEntry response: 'success' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed addDvrEntry response: 'success' missing");
       u32 = PVR_ERROR_FAILED;
     }
     htsmsg_destroy(m);
@@ -1042,7 +1042,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   else
   {
     /* unknown timer */
-    Logger::Log(LogLevel::ERROR, "unknown timer type");
+    Logger::Log(LogLevel::LEVEL_ERROR, "unknown timer type");
     return PVR_ERROR_INVALID_PARAMETERS;
   }
 }
@@ -1078,14 +1078,14 @@ PVR_ERROR CTvheadend::DeleteTimer
     }
     else
     {
-      Logger::Log(LogLevel::ERROR, "timer is read-only");
+      Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
       return PVR_ERROR_INVALID_PARAMETERS;
     }
   }
   else
   {
     /* unknown timer */
-    Logger::Log(LogLevel::ERROR, "unknown timer type");
+    Logger::Log(LogLevel::LEVEL_ERROR, "unknown timer type");
     return PVR_ERROR_INVALID_PARAMETERS;
   }
 }
@@ -1111,13 +1111,13 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
       const auto &it = m_recordings.find(timer.iClientIndex);
       if (it == m_recordings.end())
       {
-        Logger::Log(LogLevel::ERROR, "cannot find the timer to update");
+        Logger::Log(LogLevel::LEVEL_ERROR, "cannot find the timer to update");
         return PVR_ERROR_INVALID_PARAMETERS;
       }
 
       if (it->second.GetChannel() != static_cast<uint32_t>(timer.iClientChannelUid))
       {
-        Logger::Log(LogLevel::ERROR, "updating channels of one-shot timers not supported by HTSP v%d", m_conn.GetProtocol());
+        Logger::Log(LogLevel::LEVEL_ERROR, "updating channels of one-shot timers not supported by HTSP v%d", m_conn.GetProtocol());
         return PVR_ERROR_NOT_IMPLEMENTED;
       }
     }
@@ -1180,13 +1180,13 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
       }
     }
 
-    Logger::Log(LogLevel::ERROR, "timer is read-only");
+    Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
     return PVR_ERROR_INVALID_PARAMETERS;
   }
   else
   {
     /* unknown timer */
-    Logger::Log(LogLevel::ERROR, "unknown timer type");
+    Logger::Log(LogLevel::LEVEL_ERROR, "unknown timer type");
     return PVR_ERROR_INVALID_PARAMETERS;
   }
 }
@@ -1239,7 +1239,7 @@ PVR_ERROR CTvheadend::GetEpg
   htsmsg_field_t *f;
   int n = 0;
 
-  Logger::Log(LogLevel::TRACE, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
+  Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
            (long long)start, (long long)end);
 
   /* Async transfer */
@@ -1285,7 +1285,7 @@ PVR_ERROR CTvheadend::GetEpg
     if (!(l = htsmsg_get_list(msg, "events")))
     {
       htsmsg_destroy(msg);
-      Logger::Log(LogLevel::ERROR, "malformed getEvents response: 'events' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed getEvents response: 'events' missing");
       return PVR_ERROR_SERVER_ERROR;
     }
     HTSMSG_FOREACH(f, l)
@@ -1304,7 +1304,7 @@ PVR_ERROR CTvheadend::GetEpg
     htsmsg_destroy(msg);
   }
 
-  Logger::Log(LogLevel::TRACE, "get epg channel %d events %d", chn.iUniqueId, n);
+  Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d events %d", chn.iUniqueId, n);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -1352,7 +1352,7 @@ bool CTvheadend::Connected ( void )
     return false;
 
   htsmsg_destroy(msg);
-  Logger::Log(LogLevel::DEBUG, "async updates requested");
+  Logger::Log(LogLevel::LEVEL_DEBUG, "async updates requested");
 
   return true;
 }
@@ -1473,7 +1473,7 @@ void* CTvheadend::Process ( void )
 
       /* Unknown */
       else
-        Logger::Log(LogLevel::DEBUG, "unhandled message [%s]", method);
+        Logger::Log(LogLevel::LEVEL_DEBUG, "unhandled message [%s]", method);
 
       /* make a copy of events list to process it without lock. */
       eventsCopy = m_events;
@@ -1630,7 +1630,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed tagAdd/tagUpdate: 'tagId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed tagAdd/tagUpdate: 'tagId' missing");
     return;
   }
 
@@ -1651,7 +1651,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     tag.SetName(str);
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed tagAdd: 'tagName' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed tagAdd: 'tagName' missing");
     return;
   }
 
@@ -1675,7 +1675,7 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     existingTag = tag;
 
-    Logger::Log(LogLevel::DEBUG, "tag updated id:%u, name:%s",
+    Logger::Log(LogLevel::LEVEL_DEBUG, "tag updated id:%u, name:%s",
               existingTag.GetId(), existingTag.GetName().c_str());
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelGroupsUpdate();
@@ -1689,10 +1689,10 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed tagDelete: 'tagId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed tagDelete: 'tagId' missing");
     return;
   }
-  Logger::Log(LogLevel::DEBUG, "delete tag %u", u32);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "delete tag %u", u32);
   
   /* Erase */
   m_tags.erase(u32);
@@ -1708,7 +1708,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Validate */
   if (htsmsg_get_u32(msg, "channelId", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed channelAdd/channelUpdate: 'channelId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed channelAdd/channelUpdate: 'channelId' missing");
     return;
   }
 
@@ -1723,7 +1723,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     channel.SetName(str);
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed channelAdd: 'channelName' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed channelAdd: 'channelName' missing");
     return;
   }
 
@@ -1736,7 +1736,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed channelAdd: 'channelNumber' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed channelAdd: 'channelNumber' missing");
     return;
   }
   else if (!channel.GetNum())
@@ -1780,7 +1780,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Update Kodi */
   if (channel != comparison)
   {
-    Logger::Log(LogLevel::DEBUG, "channel %s id:%u, name:%s",
+    Logger::Log(LogLevel::LEVEL_DEBUG, "channel %s id:%u, name:%s",
              (bAdd ? "added" : "updated"), channel.GetId(), channel.GetName().c_str());
 
     if (bAdd)
@@ -1800,10 +1800,10 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "channelId", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed channelDelete: 'channelId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed channelDelete: 'channelId' missing");
     return;
   }
-  Logger::Log(LogLevel::DEBUG, "delete channel %u", u32);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "delete channel %u", u32);
   
   /* Erase */
   m_channels.erase(u32);
@@ -1823,25 +1823,25 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Validate */
   if (htsmsg_get_u32(msg, "id", &id))
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd/dvrEntryUpdate: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd/dvrEntryUpdate: 'id' missing");
     return;
   }
 
   if (htsmsg_get_s64(msg, "start", &start) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'start' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'start' missing");
     return;
   }
 
   if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'stop' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stop' missing");
     return;
   }
 
   if (((state = htsmsg_get_str(msg, "state")) == NULL) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'state' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'state' missing");
     return;
   }
 
@@ -1861,7 +1861,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     rec.SetStartExtra(startExtra);
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'startExtra' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'startExtra' missing");
     return;
   }
 
@@ -1869,7 +1869,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     rec.SetStopExtra(stopExtra);
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'stopExtra' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stopExtra' missing");
     return;
   }
 
@@ -1879,7 +1879,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       rec.SetLifetime(removal);
     else if (bAdd)
     {
-      Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'removal' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'removal' missing");
       return;
     }
   }
@@ -1889,7 +1889,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       rec.SetLifetime(retention);
     else if (bAdd)
     {
-      Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'retention' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'retention' missing");
       return;
     }
   }
@@ -1906,13 +1906,13 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
         rec.SetPriority(priority);
         break;
       default:
-        Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value %d", priority);
+        Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd/dvrEntryUpdate: unknown priority value %d", priority);
         return;
     }
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryAdd: 'priority' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'priority' missing");
     return;
   }
 
@@ -1981,7 +1981,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     std::string error = rec.GetError().empty() ? "none" : rec.GetError();
 
-    Logger::Log(LogLevel::DEBUG, "recording id:%d, state:%s, title:%s, desc:%s, error:%s",
+    Logger::Log(LogLevel::LEVEL_DEBUG, "recording id:%d, state:%s, title:%s, desc:%s, error:%s",
              rec.GetId(), state, rec.GetTitle().c_str(), rec.GetDescription().c_str(),
              error.c_str());
 
@@ -2000,10 +2000,10 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "id", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed dvrEntryDelete: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryDelete: 'id' missing");
     return;
   }
-  Logger::Log(LogLevel::DEBUG, "delete recording %u", u32);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "delete recording %u", u32);
   
   /* Erase */
   m_recordings.erase(u32);
@@ -2025,25 +2025,25 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId", &id))
   {
-    Logger::Log(LogLevel::ERROR, "malformed eventAdd/eventUpdate: 'eventId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd/eventUpdate: 'eventId' missing");
     return false;
   }
 
   if (htsmsg_get_u32(msg, "channelId", &channel) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed eventAdd: 'channelId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'channelId' missing");
     return false;
   }
 
   if (htsmsg_get_s64(msg, "start", &start) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed eventAdd: 'start' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'start' missing");
     return false;
   }
 
   if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed eventAdd: 'stop' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'stop' missing");
     return false;
   }
 
@@ -2118,7 +2118,7 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   /* Update */
   if (evt != comparison)
   {
-    Logger::Log(LogLevel::TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
+    Logger::Log(LogLevel::LEVEL_TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
              evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
              evt.GetTitle().c_str(), evt.GetDesc().c_str());
 
@@ -2134,10 +2134,10 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed eventDelete: 'eventId' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventDelete: 'eventId' missing");
     return;
   }
-  Logger::Log(LogLevel::TRACE, "delete event %u", u32);
+  Logger::Log(LogLevel::LEVEL_TRACE, "delete event %u", u32);
   
   /* Erase */
   for (auto &entry : m_schedules)
@@ -2150,7 +2150,7 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
 
     if (eit != events.end())
     {
-      Logger::Log(LogLevel::TRACE, "deleted event %d from channel %d", u32, schedule.GetId());
+      Logger::Log(LogLevel::LEVEL_TRACE, "deleted event %d from channel %d", u32, schedule.GetId());
       events.erase(eit);
       TriggerEpgUpdate(schedule.GetId());
       return;
@@ -2182,7 +2182,7 @@ void CTvheadend::TuneOnOldest( uint32_t channelId )
   }
   if (oldest)
   {
-    Logger::Log(LogLevel::TRACE, "pretuning channel %u on subscription %u",
+    Logger::Log(LogLevel::LEVEL_TRACE, "pretuning channel %u on subscription %u",
              m_channels[channelId].GetNum(), oldest->GetSubscriptionId());
     oldest->Open(channelId, SUBSCRIPTION_WEIGHT_PRETUNING);
   }
@@ -2222,7 +2222,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   {
     if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
     {
-      Logger::Log(LogLevel::TRACE, "retuning channel %u on subscription %u",
+      Logger::Log(LogLevel::LEVEL_TRACE, "retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].GetNum(), dmx->GetSubscriptionId());
 
       /* Lower the priority on the current subscrption */
@@ -2243,7 +2243,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   /* If we don't have an existing subscription for the channel we create one
    * on the oldest demuxer */
-  Logger::Log(LogLevel::TRACE, "tuning channel %u on subscription %u",
+  Logger::Log(LogLevel::LEVEL_TRACE, "tuning channel %u on subscription %u",
            m_channels[chn.iUniqueId].GetNum(), oldest->GetSubscriptionId());
 
   prevId = m_dmx_active->GetChannelId();
@@ -2282,7 +2282,7 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
       if (dmx->GetChannelId() && Settings::GetInstance().GetPreTunerCloseDelay() &&
           dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(NULL))
       {
-        Logger::Log(LogLevel::TRACE, "untuning channel %u on subscription %u",
+        Logger::Log(LogLevel::LEVEL_TRACE, "untuning channel %u on subscription %u",
                  m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
         dmx->Close();
       }

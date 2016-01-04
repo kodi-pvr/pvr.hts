@@ -34,10 +34,10 @@ namespace tvheadend
      */
     enum LogLevel
     {
-      ERROR,
-      INFO,
-      DEBUG,
-      TRACE
+      LEVEL_ERROR,
+      LEVEL_INFO,
+      LEVEL_DEBUG,
+      LEVEL_TRACE
     };
 
     /**

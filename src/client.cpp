@@ -91,10 +91,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
     switch (level)
     {
-      case LogLevel::ERROR:
+      case LogLevel::LEVEL_ERROR:
         addonLevel = addon_log_t::LOG_ERROR;
         break;
-      case LogLevel::INFO:
+      case LogLevel::LEVEL_INFO:
         addonLevel = addon_log_t::LOG_INFO;
         break;
       default:
@@ -102,7 +102,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     }
 
     /* Don't log trace messages unless told so */
-    if (level == LogLevel::TRACE && !Settings::GetInstance().GetTraceDebug())
+    if (level == LogLevel::LEVEL_TRACE && !Settings::GetInstance().GetTraceDebug())
       return;
 
     XBMC->Log(addonLevel, "%s", message);
@@ -110,7 +110,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
   Logger::GetInstance().SetPrefix("pvr.hts");
 
-  Logger::Log(LogLevel::INFO, "starting PVR client");
+  Logger::Log(LogLevel::LEVEL_INFO, "starting PVR client");
 
   ADDON_ReadSettings();
 
@@ -195,7 +195,7 @@ void ADDON_Announce
   (const char *flag, const char *sender, const char *message, 
    const void *_unused(data))
 {
-  Logger::Log(LogLevel::DEBUG, "Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
 
   /* XBMC/System */
   if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))

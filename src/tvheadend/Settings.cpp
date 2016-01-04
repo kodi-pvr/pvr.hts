@@ -149,7 +149,7 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetIntSetting(GetDvrDupdetect(), value);
   else
   {
-    Logger::Log(LogLevel::ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
     return ADDON_STATUS_UNKNOWN;
   }
 }
