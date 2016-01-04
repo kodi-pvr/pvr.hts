@@ -21,17 +21,24 @@
 
 #include "AsyncState.h"
 
+using namespace tvheadend::utilities;
+using namespace PLATFORM;
+
 struct Param {
   eAsyncState state;
   AsyncState *self;
 };
 
-using namespace PLATFORM;
-
 AsyncState::AsyncState(int timeout)
 {
   m_state   = ASYNC_NONE;
   m_timeout = timeout;
+}
+
+eAsyncState AsyncState::GetState()
+{
+  PLATFORM::CLockObject lock(m_mutex);
+  return m_state;
 }
 
 void AsyncState::SetState(eAsyncState state)

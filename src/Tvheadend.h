@@ -31,7 +31,6 @@
 #include "kodi/libXBMC_addon.h"
 #include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
-#include "AsyncState.h"
 #include "tvheadend/ChannelTuningPredictor.h"
 #include "tvheadend/Profile.h"
 #include "tvheadend/entity/Tag.h"
@@ -42,6 +41,7 @@
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
+#include "tvheadend/utilities/AsyncState.h"
 #include "tvheadend/Subscription.h"
 #include "TimeRecordings.h"
 #include "AutoRecordings.h"
@@ -440,7 +440,7 @@ private:
 
   SHTSPEventList              m_events;
 
-  AsyncState                  m_asyncState;
+  tvheadend::utilities::AsyncState  m_asyncState;
 
   TimeRecordings              m_timeRecordings;
   AutoRecordings              m_autoRecordings;
