@@ -42,7 +42,8 @@ using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
-    m_seekTime(INVALID_SEEKTIME)
+    m_seekTime(INVALID_SEEKTIME),
+    m_seeking(false), m_speedChange(false)
 {
 }
 
@@ -81,6 +82,8 @@ void CHTSPDemuxer::Abort0 ( void )
   CLockObject lock(m_mutex);
   m_streams.Clear();
   m_streamStat.clear();
+  m_seeking = false;
+  m_speedChange = false;
 }
 
 
@@ -151,6 +154,7 @@ bool CHTSPDemuxer::Seek
     return false;
 
   tvhdebug("demux seek %d", time);
+  m_seeking = true;
 
   /* Build message */
   m = htsmsg_create_map();  
@@ -160,23 +164,29 @@ bool CHTSPDemuxer::Seek
 
   /* Send and Wait */
   m = m_conn.SendAndWait("subscriptionSeek", m);
-  if (!m)
+  if (!m) {
+    m_seeking = false;
     return false;
+  }
   
   htsmsg_destroy(m);
 
   /* Wait for time */
+  m_seekTime = 0;
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, tvh->GetSettings().iResponseTimeout))
   {
     tvherror("failed to get subscriptionSeek response");
+    m_seeking = false;
+    Flush(); /* try to resync */
     return false;
   }
   
+  m_seeking = false;
   if (m_seekTime == INVALID_SEEKTIME)
     return false;
 
   /* Store */
-  *startpts = TVH_TO_DVD_TIME(m_seekTime);
+  *startpts = TVH_TO_DVD_TIME(m_seekTime - 1);
   tvhtrace("demux seek startpts = %lf", *startpts);
 
   return true;
@@ -187,6 +197,10 @@ void CHTSPDemuxer::Speed ( int speed )
   CLockObject lock(m_conn.Mutex());
   if (!m_subscription.active)
     return;
+  if (speed != m_subscription.speed && (speed < 0 || speed >= 4000)) {
+    m_speedChange = true;
+    Flush();
+  }
   m_subscription.speed = speed;
   SendSpeed();
 }
@@ -350,7 +364,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   size_t      binlen;
   DemuxPacket *pkt;
   char        _unused(type) = 0;
-  int         iStreamId;
+  int         iStreamId, ignore;
   
   /* Ignore packets while switching channels */
   if (!m_subscription.active)
@@ -405,11 +419,17 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   if (!type)
     type = '_';
 
-  tvhtrace("demux pkt idx %d:%d type %c pts %lf len %lld",
-           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen);
+  ignore = m_seeking || m_speedChange;
+
+  tvhtrace("demux pkt idx %d:%d type %c pts %lf len %lld%s",
+           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen,
+           ignore ? " IGNORE" : "");
 
   /* Store */
-  m_pktBuffer.Push(pkt);
+  if (!ignore)
+    m_pktBuffer.Push(pkt);
+  else
+    PVR->FreeDemuxPacket(pkt);
 }
 
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
@@ -583,8 +603,10 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   if (htsmsg_get_s64(m, "time", &s64)) {
     m_seekTime = INVALID_SEEKTIME;
   } else {
-    m_seekTime = s64;
+    m_seekTime = s64 < 0 ? 1 : s64 + 1; /* it must not be zero! */
+    Flush(); /* flush old packets (with wrong pts) */
   }
+  m_seeking = false;
   m_seekCond.Broadcast();
 }
 
@@ -593,6 +615,11 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   uint32_t u32;
   if (!htsmsg_get_u32(m, "speed", &u32))
     tvhtrace("recv speed %d", u32);
+  m_subscription.speed = u32;
+  if (m_speedChange) {
+    Flush();
+    m_speedChange = false;
+  }
 }
 
 void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
@@ -681,8 +708,8 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   tvhtrace("timeshiftStatus:");
   if (!htsmsg_get_u32(m, "full", &u32))
   {
-    tvhtrace("  full  : %d", m_timeshiftStatus.full);
     m_timeshiftStatus.full = (bool)u32;
+    tvhtrace("  full  : %d", m_timeshiftStatus.full);
   }
   else
   {
@@ -690,8 +717,8 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   }
   if (!htsmsg_get_s64(m, "shift", &s64))
   {
-    tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
     m_timeshiftStatus.shift = s64;
+    tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
   }
   else
   {
@@ -699,12 +726,12 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   }
   if (!htsmsg_get_s64(m, "start", &s64))
   {
-    tvhtrace("  start : %lld", m_timeshiftStatus.start);
     m_timeshiftStatus.start = s64;
+    tvhtrace("  start : %lld", m_timeshiftStatus.start);
   }
   if (!htsmsg_get_s64(m, "end", &s64))
   {
-    tvhtrace("  end   : %lld", m_timeshiftStatus.end);
     m_timeshiftStatus.end = s64;
+    tvhtrace("  end   : %lld", m_timeshiftStatus.end);
   }
 }

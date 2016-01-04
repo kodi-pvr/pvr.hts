@@ -253,6 +253,8 @@ private:
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
+  bool                                    m_seeking;
+  bool                                    m_speedChange;
   SSourceInfo                             m_sourceInfo;
   SQuality                                m_signalInfo;
   STimeshiftStatus                        m_timeshiftStatus;
