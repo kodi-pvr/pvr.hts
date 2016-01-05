@@ -92,8 +92,7 @@ void *CHTSPRegister::Process ( void )
 
 CHTSPConnection::CHTSPConnection ()
   : m_socket(NULL), m_regThread(this), m_ready(false), m_seq(0),
-    m_serverName(""), m_serverVersion(""), m_htspVersion(0),
-    m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false)
+    m_suspended(false)
 {
 }
 
@@ -124,7 +123,7 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 
   CLockObject lock(m_mutex);
   va_start(va, fmt);
-  url += m_webRoot;
+  url += m_serverInformation.GetWebRoot();
   url += StringUtils::FormatV(fmt, va);
   va_end(va);
 
@@ -143,13 +142,16 @@ bool CHTSPConnection::WaitForConnection ( void )
 std::string CHTSPConnection::GetServerName ( void )
 {
   CLockObject lock(m_mutex);
-  return m_serverName;
+  return m_serverInformation.GetServerName();
 }
 
 std::string CHTSPConnection::GetServerVersion ( void )
 {
   CLockObject lock(m_mutex);
-  return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
+
+  std::string serverVersion = m_serverInformation.GetServerVersion();
+  uint32_t htspVersion = m_serverInformation.GetHtspVersion();
+  return StringUtils::Format("%s (HTSP v%d)", serverVersion.c_str(), htspVersion);
 }
 
 std::string CHTSPConnection::GetServerString ( void )
@@ -163,8 +165,7 @@ std::string CHTSPConnection::GetServerString ( void )
 
 bool CHTSPConnection::HasCapability(const std::string &capability) const
 {
-  return std::find(m_capabilities.begin(), m_capabilities.end(), capability) 
-         != m_capabilities.end();
+  return m_serverInformation.HasCapability(capability);
 }
 
 void CHTSPConnection::OnSleep ( void )
@@ -407,39 +408,49 @@ bool CHTSPConnection::SendHello ( void )
     return false;
   
   /* Process */
+  const char *serverName;
+  const char *serverVersion;
+  uint32_t htspVersion;
   const char *webroot;
   const void *chal;
   size_t chal_len;
-  htsmsg_t *cap;
 
   /* Basic Info */
   webroot = htsmsg_get_str(msg, "webroot");
-  m_serverName    = htsmsg_get_str(msg, "servername");
-  m_serverVersion = htsmsg_get_str(msg, "serverversion");
-  m_htspVersion   = htsmsg_get_u32_or_default(msg, "htspversion", 0);
-  m_webRoot       = webroot ? webroot : "";
-  Logger::Log(LogLevel::LEVEL_DEBUG, "connected to %s / %s (HTSPv%d)",
-            m_serverName.c_str(), m_serverVersion.c_str(), m_htspVersion);
+  serverName = htsmsg_get_str(msg, "servername");
+  serverVersion = htsmsg_get_str(msg, "serverversion");
+  htspVersion = htsmsg_get_u32_or_default(msg, "htspversion", 0);
+
+  /* Store the information */
+  if (serverName)
+    m_serverInformation.SetServerName(serverName);
+  if (serverVersion)
+    m_serverInformation.SetServerVersion(serverVersion);
+  if (webroot)
+    m_serverInformation.SetWebRoot(webroot);
+
+  m_serverInformation.SetHtspVersion(htspVersion);
+
+  Logger::Log(LogLevel::LEVEL_DEBUG, "connected to %s / %s",
+            m_serverInformation.GetServerName().c_str(),
+            m_serverInformation.GetServerVersion().c_str());
 
   /* Capabilities */
-  if ((cap = htsmsg_get_list(msg, "servercapability")))
+  htsmsg_t *cap = htsmsg_get_list(msg, "servercapability");
+  if (cap)
   {
     htsmsg_field_t *f;
     HTSMSG_FOREACH(f, cap)
     {
       if (f->hmf_type == HMF_STR)
-        m_capabilities.push_back(f->hmf_str);
+        m_serverInformation.AddCapability(f->hmf_str);
     }
   }
       
   /* Authentication */
   htsmsg_get_bin(msg, "challenge", &chal, &chal_len);
   if (chal && chal_len)
-  {
-    m_challenge    = malloc(chal_len);
-    m_challengeLen = chal_len;
-    memcpy(m_challenge, chal, chal_len);
-  }
+    m_serverInformation.SetChallenge(chal, chal_len);
 
   htsmsg_destroy(msg);
  
@@ -458,8 +469,10 @@ bool CHTSPConnection::SendAuth
   uint8_t d[20];
   hts_sha1_init(sha);
   hts_sha1_update(sha, (const uint8_t*)pass.c_str(), pass.length());
-  if (m_challenge)
-    hts_sha1_update(sha, (const uint8_t*)m_challenge, m_challengeLen);
+
+  auto challenge = m_serverInformation.GetChallenge();
+  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(challenge.data()), challenge.size());
+
   hts_sha1_final(sha, d);
   htsmsg_add_bin(msg, "digest", d, sizeof(d));
   free(sha);
@@ -489,9 +502,13 @@ void CHTSPConnection::Register ( void )
     }
 
     /* Check htsp server version against client minimum htsp version */
-    if (m_htspVersion < HTSP_MIN_SERVER_VERSION)
+    uint32_t htspVersion = m_serverInformation.GetHtspVersion();
+
+    if (htspVersion < HTSP_MIN_SERVER_VERSION)
     {
-      Logger::Log(LogLevel::LEVEL_ERROR, "server htsp version (v%d) does not match minimum htsp version required by client (v%d)", m_htspVersion, HTSP_MIN_SERVER_VERSION);
+      Logger::Log(LogLevel::LEVEL_ERROR, "server htsp version (v%d) does not match minimum htsp version required by client (v%d)",
+                  htspVersion, HTSP_MIN_SERVER_VERSION);
+
       Disconnect();
       m_ready = false;
       m_regCond.Broadcast();
@@ -547,10 +564,6 @@ void* CHTSPConnection::Process ( void )
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready  = false;
       m_seq    = 0;
-      if (m_challenge) {
-        free(m_challenge);
-        m_challenge = NULL;
-      }
     }
 
     while (m_suspended)

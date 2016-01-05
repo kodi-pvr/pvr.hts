@@ -38,6 +38,7 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/htsp/ServerInformation.h"
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
@@ -178,7 +179,7 @@ public:
   htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
-  inline int  GetProtocol      ( void ) const { return m_htspVersion; }
+  inline int  GetProtocol      ( void ) const { return m_serverInformation.GetHtspVersion(); }
 
   std::string GetWebURL        ( const char *fmt, ... );
 
@@ -209,15 +210,13 @@ private:
   P8PLATFORM::CCondition<volatile bool> m_regCond;
   bool                                m_ready;
   uint32_t                            m_seq;
-  std::string                         m_serverName;
-  std::string                         m_serverVersion;
-  int                                 m_htspVersion;
-  std::string                         m_webRoot;
-  void*                               m_challenge;
-  int                                 m_challengeLen;
+
+  /**
+   * The server information
+   */
+  tvheadend::htsp::ServerInformation  m_serverInformation;
 
   CHTSPResponseList                   m_messages;
-  std::vector<std::string>            m_capabilities;
 
   bool                                m_suspended;
 };
