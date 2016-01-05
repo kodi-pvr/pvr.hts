@@ -197,7 +197,7 @@ ADDON_STATUS Settings::SetIntSetting(int oldValue, const void *newValue)
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(int oldValue, const void *newValue)
+ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const void *newValue)
 {
   if (oldValue == *(reinterpret_cast<const bool *>(newValue)))
     return ADDON_STATUS_OK;
