@@ -454,7 +454,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 
       /* Time/Duration */
       rec.recordingTime = (time_t)recording.GetStart();
-      rec.iDuration =     recording.GetStop() - recording.GetStart();
+      rec.iDuration = static_cast<int>(recording.GetStop() - recording.GetStart());
 
       /* Priority */
       rec.iPriority = recording.GetPriority();
@@ -907,8 +907,8 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   tmr.firstDay           = 0;                // not supported by tvh
   tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
   tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : -1;
-  tmr.iMarginStart       = tvhTmr.GetStartExtra();
-  tmr.iMarginEnd         = tvhTmr.GetStopExtra();
+  tmr.iMarginStart       = static_cast<unsigned int>(tvhTmr.GetStartExtra());
+  tmr.iMarginEnd         = static_cast<unsigned int>(tvhTmr.GetStopExtra());
   tmr.iGenreType         = 0;                // not supported by tvh?
   tmr.iGenreSubType      = 0;                // not supported by tvh?
   tmr.bFullTextEpgSearch = false;            // n/a for one-shot timers

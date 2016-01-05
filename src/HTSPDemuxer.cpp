@@ -592,7 +592,7 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   if (!htsmsg_get_u32(m, "full", &u32))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  full  : %d", u32);
-    m_timeshiftStatus.full = (bool)u32;
+    m_timeshiftStatus.full = u32 == 0 ? false : true;
   }
   else
   {

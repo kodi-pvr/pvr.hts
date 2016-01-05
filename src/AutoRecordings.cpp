@@ -116,8 +116,8 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     tmr.firstDay           = 0;                    // not supported by tvh
     tmr.iWeekdays          = tit->second.GetDaysOfWeek();
     tmr.iEpgUid            = PVR_TIMER_NO_EPG_UID; // n/a for repeating timers
-    tmr.iMarginStart       = tit->second.GetMarginStart();
-    tmr.iMarginEnd         = tit->second.GetMarginEnd();
+    tmr.iMarginStart       = static_cast<unsigned int>(tit->second.GetMarginStart());
+	tmr.iMarginEnd         = static_cast<unsigned int>(tit->second.GetMarginEnd());
     tmr.iGenreType         = 0;                    // not supported by tvh?
     tmr.iGenreSubType      = 0;                    // not supported by tvh?
     tmr.bFullTextEpgSearch = tit->second.GetFulltext();
