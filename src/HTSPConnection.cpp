@@ -121,7 +121,6 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
 
   std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
 
-  CLockObject lock(m_mutex);
   va_start(va, fmt);
   url += m_serverInformation.GetWebRoot();
   url += StringUtils::FormatV(fmt, va);
@@ -141,14 +140,11 @@ bool CHTSPConnection::WaitForConnection ( void )
 
 std::string CHTSPConnection::GetServerName ( void )
 {
-  CLockObject lock(m_mutex);
   return m_serverInformation.GetServerName();
 }
 
 std::string CHTSPConnection::GetServerVersion ( void )
 {
-  CLockObject lock(m_mutex);
-
   std::string serverVersion = m_serverInformation.GetServerVersion();
   uint32_t htspVersion = m_serverInformation.GetHtspVersion();
   return StringUtils::Format("%s (HTSP v%d)", serverVersion.c_str(), htspVersion);

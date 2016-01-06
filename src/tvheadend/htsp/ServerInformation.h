@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 #include <cstdint>
 #include <cstdlib>
 
@@ -32,7 +33,8 @@ namespace tvheadend
   {
 
     /**
-     * Holds information about a server (retrieved with the "hello" method)
+     * Holds information about a server (retrieved with the "hello" method).
+     * This class is thread-safe.
      */
     class ServerInformation
     {
@@ -89,6 +91,11 @@ namespace tvheadend
        * The server capabilities
        */
       std::vector <std::string> m_capabilities;
+
+      /**
+       * Protects access to member variables
+       */
+      mutable std::mutex m_mutex;
 
     };
 

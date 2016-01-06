@@ -35,63 +35,75 @@ ServerInformation::ServerInformation() :
 
 std::string ServerInformation::GetServerName() const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_serverName;
 }
 
 void ServerInformation::SetServerName(const std::string &serverName)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_serverName = serverName;
 }
 
 std::string ServerInformation::GetServerVersion() const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return StringUtils::Format("%s (HTSPv%d)",
                              m_serverVersion.c_str(), m_htspVersion);
 }
 
 void ServerInformation::SetServerVersion(const std::string &serverVersion)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_serverVersion = serverVersion;
 }
 
 uint32_t ServerInformation::GetHtspVersion() const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_htspVersion;
 }
 
 void ServerInformation::SetHtspVersion(uint32_t htspVersion)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_htspVersion = htspVersion;
 }
 
 std::string ServerInformation::GetWebRoot() const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_webRoot;
 }
 
 void ServerInformation::SetWebRoot(const std::string &webRoot)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_webRoot = webRoot;
 }
 
 bool ServerInformation::HasCapability(const std::string &capability) const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return std::find(m_capabilities.begin(), m_capabilities.end(), capability)
          != m_capabilities.end();
 }
 
 void ServerInformation::AddCapability(const std::string &capability)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_capabilities.push_back(capability);
 }
 
 std::vector<uint8_t> ServerInformation::GetChallenge() const
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   return m_challenge;
 }
 
 void ServerInformation::SetChallenge(const void *challenge, size_t challengeLen)
 {
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_challenge.assign(reinterpret_cast<const uint8_t*>(challenge),
                      reinterpret_cast<const uint8_t*>(challenge) + challengeLen);
 }
