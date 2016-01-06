@@ -27,7 +27,7 @@
 
 using namespace std;
 using namespace ADDON;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 

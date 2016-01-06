@@ -19,9 +19,9 @@
  *
  */
 
-#include "platform/threads/mutex.h"
-#include "platform/util/StringUtils.h"
-#include "platform/sockets/tcp.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/StringUtils.h"
+#include "p8-platform/sockets/tcp.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"
@@ -33,7 +33,7 @@ extern "C" {
 
 using namespace std;
 using namespace ADDON;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 

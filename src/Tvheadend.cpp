@@ -23,7 +23,7 @@
 #include <ctime>
 #include <memory>
 
-#include "platform/util/StringUtils.h"
+#include "p8-platform/util/StringUtils.h"
 
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
@@ -31,7 +31,7 @@
 
 using namespace std;
 using namespace ADDON;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
