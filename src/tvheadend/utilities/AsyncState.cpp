@@ -22,7 +22,7 @@
 #include "AsyncState.h"
 
 using namespace tvheadend::utilities;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 
 struct Param {
   eAsyncState state;
@@ -37,7 +37,7 @@ AsyncState::AsyncState(int timeout)
 
 eAsyncState AsyncState::GetState()
 {
-  PLATFORM::CLockObject lock(m_mutex);
+  P8PLATFORM::CLockObject lock(m_mutex);
   return m_state;
 }
 
