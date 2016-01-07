@@ -150,7 +150,7 @@ namespace tvheadend {
     // @return ADDON_STATUS_OK if value has not changed, ADDON_STATUS_NEED_RESTART otherwise
     static ADDON_STATUS SetStringSetting(const std::string &oldValue, const void *newValue);
     static ADDON_STATUS SetIntSetting(int oldValue, const void *newValue);
-    static ADDON_STATUS SetBoolSetting(int oldValue, const void *newValue);
+    static ADDON_STATUS SetBoolSetting(bool oldValue, const void *newValue);
 
     std::string m_strHostname;
     int         m_iPortHTSP;

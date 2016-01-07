@@ -149,7 +149,7 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetIntSetting(GetDvrDupdetect(), value);
   else
   {
-    Logger::Log(LogLevel::ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
     return ADDON_STATUS_UNKNOWN;
   }
 }
@@ -197,7 +197,7 @@ ADDON_STATUS Settings::SetIntSetting(int oldValue, const void *newValue)
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(int oldValue, const void *newValue)
+ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const void *newValue)
 {
   if (oldValue == *(reinterpret_cast<const bool *>(newValue)))
     return ADDON_STATUS_OK;

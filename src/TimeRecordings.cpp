@@ -109,7 +109,7 @@ const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string &
     if (tit->second.GetStringId() == strId)
       return tit->second.GetId();
   }
-  Logger::Log(LogLevel::ERROR, "Timerec: Unable to obtain int id for string id %s", strId.c_str());
+  Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain int id for string id %s", strId.c_str());
   return 0;
 }
 
@@ -121,7 +121,7 @@ const std::string TimeRecordings::GetTimerStringIdFromIntId(int intId) const
       return  tit->second.GetStringId();
   }
 
-  Logger::Log(LogLevel::ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
+  Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
   return "";
 }
 
@@ -209,7 +209,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed %s response: 'success' missing", method.c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed %s response: 'success' missing", method.c_str());
     u32 = PVR_ERROR_FAILED;
   }
   htsmsg_destroy(m);
@@ -240,7 +240,7 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
   /* Check for error */
   if (htsmsg_get_u32(m, "success", &u32))
   {
-    Logger::Log(LogLevel::ERROR, "malformed deleteTimerecEntry response: 'success' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed deleteTimerecEntry response: 'success' missing");
   }
   htsmsg_destroy(m);
 
@@ -256,7 +256,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   /* Validate/set mandatory fields */
   if ((str = htsmsg_get_str(msg, "id")) == NULL)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
     return false;
   }
 
@@ -273,7 +273,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'enabled' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'enabled' missing");
     return false;
   }
 
@@ -283,7 +283,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'daysOfWeek' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'daysOfWeek' missing");
     return false;
   }
 
@@ -295,7 +295,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     }
     else if (bAdd)
     {
-      Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'removal' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'removal' missing");
       return false;
     }
   }
@@ -307,7 +307,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
     }
     else if (bAdd)
     {
-      Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'retention' missing");
+      Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'retention' missing");
       return false;
     }
   }
@@ -318,7 +318,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'priority' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'priority' missing");
     return false;
   }
 
@@ -328,7 +328,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'start' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'start' missing");
     return false;
   }
 
@@ -338,7 +338,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   }
   else if (bAdd)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryAdd: 'stop' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd: 'stop' missing");
     return false;
   }
 
@@ -391,10 +391,10 @@ bool TimeRecordings::ParseTimerecDelete(htsmsg_t *msg)
   /* Validate/set mandatory fields */
   if ((id = htsmsg_get_str(msg, "id")) == NULL)
   {
-    Logger::Log(LogLevel::ERROR, "malformed timerecEntryDelete: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryDelete: 'id' missing");
     return false;
   }
-  Logger::Log(LogLevel::TRACE, "delete timerec entry %s", id);
+  Logger::Log(LogLevel::LEVEL_TRACE, "delete timerec entry %s", id);
 
   /* Erase */
   m_timeRecordings.erase(std::string(id));

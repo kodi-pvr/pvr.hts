@@ -50,10 +50,10 @@ void CHTSPVFS::Connected ( void )
   /* Re-open */
   if (m_fileId != 0)
   {
-    Logger::Log(LogLevel::DEBUG, "vfs re-open file");
+    Logger::Log(LogLevel::LEVEL_DEBUG, "vfs re-open file");
     if (!SendFileOpen(true) || !SendFileSeek(m_offset, SEEK_SET, true))
     {
-      Logger::Log(LogLevel::ERROR, "vfs failed to re-open file");
+      Logger::Log(LogLevel::LEVEL_ERROR, "vfs failed to re-open file");
       Close();
     }
   }
@@ -74,7 +74,7 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
   /* Send open */
   if (!SendFileOpen())
   {
-    Logger::Log(LogLevel::ERROR, "vfs failed to open file");
+    Logger::Log(LogLevel::LEVEL_ERROR, "vfs failed to open file");
     return false;
   }
 
@@ -133,7 +133,7 @@ long long CHTSPVFS::Size ( void )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
-  Logger::Log(LogLevel::TRACE, "vfs stat id=%d", m_fileId);
+  Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat id=%d", m_fileId);
   
   /* Send */
   {
@@ -148,7 +148,7 @@ long long CHTSPVFS::Size ( void )
   if (htsmsg_get_s64(m, "size", &ret))
     ret = -1;
   else
-    Logger::Log(LogLevel::TRACE, "vfs stat size=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat size=%lld", (long long)ret);
 
   htsmsg_destroy(m);
 
@@ -167,7 +167,7 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   m = htsmsg_create_map();
   htsmsg_add_str(m, "file", m_path.c_str());
 
-  Logger::Log(LogLevel::DEBUG, "vfs open file=%s", m_path.c_str());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "vfs open file=%s", m_path.c_str());
 
   /* Send */
   {
@@ -185,11 +185,11 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   /* Get ID */
   if (htsmsg_get_u32(m, "id", &m_fileId))
   {
-    Logger::Log(LogLevel::ERROR, "malformed fileOpen response: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileOpen response: 'id' missing");
     m_fileId = 0;
   }
   else
-    Logger::Log(LogLevel::TRACE, "vfs opened id=%d", m_fileId);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs opened id=%d", m_fileId);
 
   htsmsg_destroy(m);
   return m_fileId > 0;
@@ -203,7 +203,7 @@ void CHTSPVFS::SendFileClose ( void )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
-  Logger::Log(LogLevel::DEBUG, "vfs close id=%d", m_fileId);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "vfs close id=%d", m_fileId);
   
   /* Send */
   {
@@ -229,7 +229,7 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   else if (whence == SEEK_END)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
-  Logger::Log(LogLevel::TRACE, "vfs seek id=%d whence=%d pos=%lld",
+  Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek id=%d whence=%d pos=%lld",
            m_fileId, whence, (long long)pos);
 
   /* Send */
@@ -244,7 +244,7 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
 
   if (m == NULL)
   {
-    Logger::Log(LogLevel::ERROR, "vfs fileSeek failed");
+    Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileSeek failed");
     return -1;
   }
 
@@ -252,13 +252,13 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   if (htsmsg_get_s64(m, "offset", &ret))
   {
     ret = -1;
-    Logger::Log(LogLevel::ERROR, "vfs fileSeek response: 'offset' missing'");
+    Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileSeek response: 'offset' missing'");
 
   /* Update */
   }
   else
   {
-    Logger::Log(LogLevel::TRACE, "vfs seek offset=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", (long long)ret);
     m_offset = ret;
   }
 
@@ -279,7 +279,7 @@ ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "size", len);
 
-  Logger::Log(LogLevel::TRACE, "vfs read id=%d size=%d",
+  Logger::Log(LogLevel::LEVEL_TRACE, "vfs read id=%d size=%d",
     m_fileId, len);
 
   /* Send */
@@ -290,14 +290,14 @@ ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
 
   if (m == NULL)
   {
-    Logger::Log(LogLevel::ERROR, "vfs fileRead failed");
+    Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileRead failed");
     return -1;
   }
 
   /* Get Data */
   if (htsmsg_get_bin(m, "data", &buffer, reinterpret_cast<size_t *>(&read)))
   {
-    Logger::Log(LogLevel::ERROR, "malformed fileRead response: 'data' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
     read = -1;
 
   /* Store */
