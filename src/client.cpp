@@ -105,7 +105,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     if (level == LogLevel::TRACE && !Settings::GetInstance().GetTraceDebug())
       return;
 
-    XBMC->Log(addonLevel, message);
+    XBMC->Log(addonLevel, "%s", message);
   });
 
   Logger::GetInstance().SetPrefix("pvr.hts");
