@@ -22,8 +22,6 @@
 
 #include <string>
 #include <functional>
-#include <memory>
-#include <cstdarg>
 
 namespace tvheadend
 {
@@ -58,11 +56,7 @@ namespace tvheadend
        * Returns the singleton instance
        * @return
        */
-      static Logger &GetInstance()
-      {
-        static Logger instance;
-        return instance;
-      }
+      static Logger &GetInstance();
 
       /**
        * Logs the specified message using the specified log level
@@ -70,49 +64,24 @@ namespace tvheadend
        * @param message the log message
        * @param ... parameters for the log message
        */
-      static void Log(LogLevel level, const std::string &message, ...)
-      {
-        auto &logger = GetInstance();
-
-        char buffer[MESSAGE_BUFFER_SIZE];
-        std::string logMessage = message;
-        std::string prefix = logger.m_prefix;
-
-        // Prepend the prefix when set
-        if (!prefix.empty())
-          logMessage = prefix + " - " + message;
-
-        va_list arguments;
-        va_start(arguments, message);
-        vsprintf(buffer, logMessage.c_str(), arguments);
-        va_end(arguments);
-
-        logger.m_implementation(level, buffer);
-      }
+      static void Log(LogLevel level, const std::string &message, ...);
 
       /**
        * Configures the logger to use the specified implementation
-       * @þaram implementation lambda
+       * @param implementation lambda
        */
-      void SetImplementation(LoggerImplementation implementation)
-      {
-        m_implementation = implementation;
-      }
+      void SetImplementation(LoggerImplementation implementation);
 
       /**
        * Sets the prefix to use in log messages
        * @param prefix
        */
-      void SetPrefix(const std::string &prefix)
-      {
-        m_prefix = prefix;
-      }
+      void SetPrefix(const std::string &prefix);
 
     private:
       static const unsigned int MESSAGE_BUFFER_SIZE = 16384;
 
-      Logger()
-      { };
+      Logger();
 
       /**
        * The logger implementation
