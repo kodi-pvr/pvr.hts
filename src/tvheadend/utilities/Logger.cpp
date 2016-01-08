@@ -27,7 +27,11 @@ using namespace tvheadend::utilities;
 
 Logger::Logger()
 {
+  // Use an empty implementation by default
+  SetImplementation([](LogLevel level, const char *message)
+  {
 
+  });
 }
 
 Logger &Logger::GetInstance()
