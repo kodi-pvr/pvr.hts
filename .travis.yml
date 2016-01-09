@@ -1,0 +1,19 @@
+#
+# Travis defaults to building on Ubuntu Precise. We need Trusty
+# in order to get up to date versions of cmake and g++
+#
+language: cpp
+sudo: required
+dist: trusty
+
+#
+# The addon source is automatically checked out in $TRAVIS_BUILD_DIR,
+# we'll put the Kodi source on the same level
+#
+before_script:
+  - cd $TRAVIS_BUILD_DIR/..
+  - git clone --depth=1 https://github.com/xbmc/xbmc.git
+  - cd pvr.hts && mkdir build && cd build
+  - cmake -DADDONS_TO_BUILD=pvr.hts -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons
+
+script: make
