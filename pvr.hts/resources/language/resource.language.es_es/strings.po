@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Ajustes avanzados"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Ajustes de streaming"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajustes de grabación"
@@ -75,6 +79,14 @@ msgstr "Relajado (tiempo inicial +/- márgen)"
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr "Márgen máximo de tiempo inicial (en minutos)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioridad por defecto"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Tiempo de vida por defecto"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -144,9 +156,45 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Grabar máximo una vez al día"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 día"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d días"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d semanas"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d meses"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 año"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d años"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Hasta que necesite espacio"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Siempre"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -191,6 +239,14 @@ msgstr "Sin acceso"
 msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Error de suscripción"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil de streaming"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Perfil a usar (vacío = por defecto)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

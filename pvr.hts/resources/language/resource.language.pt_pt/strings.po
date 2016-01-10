@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Configurações da ligação"
+msgstr "Definições da ligação"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -42,15 +42,31 @@ msgstr "Palavra-passe"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Tempo limite de conexão (em segundos)"
+msgstr "Tempo limite de ligação (segundos)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Tempo limite da resposta (segundos)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Configurações avançadas"
+msgstr "Definições avançadas"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Definições da transmissão"
 
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Definições do temporizador"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Gravações automáticas"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioridade padrão"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -58,7 +74,7 @@ msgstr "Transferência de dados"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "EPG transferência assíncrona"
+msgstr "Transferência EPG assíncrona"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -66,11 +82,19 @@ msgstr "Depuração"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Localizar (detalhada)"
+msgstr "Rastreio (detalhado)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade da versão do HTSP (suportado: v%d, necessário: v%d). Por favor actualize o tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Uma vez (agendado pelo temporizador recorrente)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (mais alta)"
 
 msgctxt "#30352"
 msgid "High"
@@ -84,9 +108,33 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Baixa"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Não importante (mais baixa)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episódios"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Gravar se o número do episódio for diferente"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Gravar se o nome do episódio for diferente"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Gravar se a descrição do episódio for diferente"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Gravar, no máximo, uma vez por semana"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Gravar, no máximo, uma vez por semana"
 
 msgctxt "#30365"
 msgid "1 day"
@@ -123,3 +171,47 @@ msgstr "%d anos"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até ser necessário espaço"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Eternamente"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Número de subscrições a utilizar"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nenhum adaptador livre disponível"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sem sinal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Falha de sintonização"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Limite de utilizador atingido"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sem acesso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Erro de subscrição"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil de transmissão"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Perfila a utilizar (vazio = padrão)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "O perfil de transmissão %s não está disponível"

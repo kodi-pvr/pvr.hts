@@ -16,6 +16,10 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "连接设置"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend 主机名或 IP 地址"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "连接超时（秒）"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "响应超时（秒）"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "高级设置"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "流设置"
+
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "定时器设定"
+msgstr "定时器设置"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "自动录像"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "开始时间窗口计算"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "严格（开始时间+结束时间）"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "宽松（开始时间+/-余量）"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "最大开始时间余量（分钟）"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "默认优先级"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "默认生命期"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "默认重复检测"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "新定时器默认值"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "数据传输"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP 版本不匹配（支持：v%d，需要：v%d）。请升级 tvheadend。"
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "单次（由重复定时器计划）"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "重要（最高）"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "高"
@@ -72,10 +136,126 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "低"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "不重要（最低）"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "录制所有分集"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "录制集号不同的"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "录制集名不同的"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "录制描述不同的"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "每周最多录制一次"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "每天最多录制一次"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 天"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d 天"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 周"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d 周"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 月"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d 月"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 年"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d 年"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "直到需要空间"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "永远"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "预测调台"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "使用订阅数"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "未使用的订阅关闭延时（秒）"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "使用预测调台加快频道切换"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "无可用适配器"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "加密频道"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "无信号"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "调台失败"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "达到用户限制"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "无访问"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "订阅错误"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "流媒体配置"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "使用配置（空  =默认）"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "流媒体配置 %s 不可用"

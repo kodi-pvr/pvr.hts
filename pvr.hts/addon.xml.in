@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.2.11"
+  version="2.2.12"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -54,7 +54,7 @@
     <summary lang="nl_NL">Kodi's frontend voor Tvheadend</summary>
     <summary lang="pl_PL">Klient telewizyjny dla Tvheadend</summary>
     <summary lang="pt_BR">Frontend Kodi para Tvheadend</summary>
-    <summary lang="pt_PT">Frontend Kodi para Tvheadend</summary>
+    <summary lang="pt_PT">Interface Tvheadend para o Kodi</summary>
     <summary lang="ro_RO">Interfața Kodi pentru Tvheadend</summary>
     <summary lang="ru_RU">Интерфейс Kodi для Tvheadend</summary>
     <summary lang="sk_SK">Kodi rozhranie pre Tvheadend</summary>
@@ -109,7 +109,7 @@
     <description lang="nl_NL">Tvheadend frontend; ondersteuning van streaming, Live TV &amp; opnames, EPG, Timers</description>
     <description lang="pl_PL">Klient telewizyjny dla Tvheadend obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie i harmonogram nagrań oraz funkcje przewodnika telewizyjnego.</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
-    <description lang="pt_PT">Frontend Tvheadend; suporta transmissão de TV em directo e gravações, EPG, temporizadores</description>
+    <description lang="pt_PT">Interface Tvheadend. Suporta transmissão e gravação de TV em direto, EPG e temporizadores.</description>
     <description lang="ro_RO">Partea din față pentru Tvheadend; suportă difuzarea în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
     <description lang="ru_RU">Интерфейс для Tvheadend. Поддерживает просмотр и запись ТВ, EPG и таймеры</description>
     <description lang="sk_SK">Rozhranie pre Tvheadend; je podporované streamovanie živého televízneho vysielania a nahrávok, EPG, časovačov</description>
@@ -166,7 +166,7 @@
     <disclaimer lang="nl_NL">Dit is instabiele software! De auteurs zijn op geen enkele wijze verantwoordelijk voor de mislukte opnames, onjuiste timers, verspilde uren, of een andere ongewenste effecten.</disclaimer>
     <disclaimer lang="pl_PL">Oprogramowanie nadal jest w fazie rozwoju i jest niestabilne! Autorzy w żaden sposób nie są odpowiedzialni za nieudane nagrania, błędy w harmonogramie nagrań, zmarnowany czas ani jakiekolwiek inne niepożądane efekty.</disclaimer>
     <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas desperdiçadas, ou quaisquer outros efeitos indesejáveis...</disclaimer>
-    <disclaimer lang="pt_PT">Este software é instável! Os autores não são de forma alguma responsáveis por gravações falhadas, temporizadores incorrectos, horas desperdiçadas, ou qualquer outro tipo de efeitos indesejáveis..</disclaimer>
+    <disclaimer lang="pt_PT">Este software é instável! Os autores não podem ser responsabilizados por gravações falhadas, temporizadores incorretos, horas desperdiçadas ou qualquer outro tipo de efeitos indesejáveis...</disclaimer>
     <disclaimer lang="ro_RO">Acest software nu este stabil! Autorii nu sunt în niciun caz responsabili pentru înregistrările eșuate, cronometre incorecte, ore pierdute sau orice alt efect nedorit.</disclaimer>
     <disclaimer lang="ru_RU">Это нестабильная программа! Авторы не несут ответственности за неудачную запись, неправильные таймеры, потраченное время и другие нежелательные последствия.</disclaimer>
     <disclaimer lang="si_LK">මෙය අස්ථිර මෘදුකාංගයකි! මෙහි සිදුවන පටිගත කිරීම් අසාර්ථක වීම්, සාවද්‍ය මුහුර්තක, නාස්ති වූ කාලයන්, හෝ වෙනත් යමිකිසි නුසුදුසු බලපෑම් සඳහා කතෘ වග කියනු නොලැබේ.</disclaimer>

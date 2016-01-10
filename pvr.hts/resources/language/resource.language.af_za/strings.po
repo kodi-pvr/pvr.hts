@@ -36,6 +36,14 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Wagwoord"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Konneksie tydverstreke (sekondes)"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Tydhouer verstellings"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Ontfouting"

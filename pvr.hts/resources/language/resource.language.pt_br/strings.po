@@ -44,6 +44,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tempo limite para conexão (segundos)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Tempo limite para resposta (segundos)"
+
 msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Ajustes Avançados"
@@ -51,6 +55,14 @@ msgstr "Ajustes Avançados"
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajustes de Gravação"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioridade padrão"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferência de Dados"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -68,6 +80,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade de versão HTSP (suportado: v%d, requerido: v%d). Por favor atualize o tvheadend."
 
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (mais alto)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Máxima"
@@ -80,17 +96,69 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Mínima"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Sem importância (mais baixa)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episódios"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 dia"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dias"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d semanas"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mês"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d meses"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 ano"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d anos"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até existir espaço necessário"
 
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Para sempre"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nenhum adaptador livre disponível"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Sem sinal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Sintonização falhou"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Limite de usuário atingido"
 
 msgctxt "#30455"
 msgid "No access"
@@ -99,3 +167,15 @@ msgstr "Sem acesso"
 msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Erro de subscrição"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil streaming"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Perfil para uso (vazio = padrão)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Perfil streaming %s não está disponível"
