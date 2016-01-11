@@ -416,6 +416,14 @@ private:
   std::string GetStreamingProfile() const;
 
   /**
+   * Check if our event is valid
+   * @param eventId the event we want to check
+   * @param channelId the channel where the event belongs to
+   * @return true when valid, false otherwise
+   */
+  bool IsEventValid(uint32_t eventId, uint32_t channelId);
+
+  /**
    * The streaming profiles available on the server
    */
   tvheadend::Profiles         m_profiles;
