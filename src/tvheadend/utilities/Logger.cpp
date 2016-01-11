@@ -40,7 +40,7 @@ Logger &Logger::GetInstance()
   return instance;
 }
 
-void Logger::Log(LogLevel level, const std::string &message, ...)
+void Logger::Log(LogLevel level, const char *message, ...)
 {
   auto &logger = GetInstance();
 

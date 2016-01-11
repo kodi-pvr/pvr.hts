@@ -64,7 +64,7 @@ namespace tvheadend
        * @param message the log message
        * @param ... parameters for the log message
        */
-      static void Log(LogLevel level, const std::string &message, ...);
+      static void Log(LogLevel level, const char *message, ...);
 
       /**
        * Configures the logger to use the specified implementation
