@@ -328,11 +328,6 @@ void SetSpeed(int speed)
   tvh->DemuxSpeed(speed);
 }
 
-int GetCurrentClientChannel(void)
-{
-  return -1; // XBMC doesn't even use this
-}
-
 bool SwitchChannel(const PVR_CHANNEL &channel)
 {
   return tvh->DemuxOpen(channel);
