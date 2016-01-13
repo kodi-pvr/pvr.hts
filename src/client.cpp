@@ -609,12 +609,12 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
 
 const char* GetGUIAPIVersion(void)
 {
-  return KODI_GUILIB_API_VERSION;
+  return ""; // GUI API not used
 }
 
 const char* GetMininumGUIAPIVersion(void)
 {
-  return KODI_GUILIB_MIN_API_VERSION;
+  return ""; // GUI API not used
 }
 
 } /* extern "C" */
