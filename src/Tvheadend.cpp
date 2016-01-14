@@ -2109,6 +2109,7 @@ void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   Event    &evt    = events[tmp.GetId()];
   Event comparison = evt;
   sched.SetId(tmp.GetChannel());
+  sched.SetDirty(false);
   evt.SetId(tmp.GetId());
   evt.SetDirty(false);
   
