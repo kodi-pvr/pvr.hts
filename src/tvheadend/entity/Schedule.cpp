@@ -35,22 +35,12 @@ void Schedule::SetDirty(bool dirty)
   }
 }
 
-Segment Schedule::GetSegment(time_t startTime, time_t endTime) const
+EventUids& Schedule::GetEvents()
 {
-  Segment segment;
-
-  for (const auto &entry : m_events)
-  {
-    const Event &event = entry.second;
-
-    if (event.GetStart() < endTime && event.GetStop() > startTime)
-      segment.push_back(event);
-  }
-
-  return segment;
+  return m_events;
 }
 
-Events& Schedule::GetEvents()
+const EventUids& Schedule::GetEvents() const
 {
   return m_events;
 }

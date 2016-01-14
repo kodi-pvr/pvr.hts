@@ -27,6 +27,7 @@
 #include <map>
 #include <string>
 #include "client.h"
+#include "tvheadend/entity/Event.h"
 
 typedef enum {
   DVR_PRIO_IMPORTANT   = 0,
@@ -91,17 +92,27 @@ enum eHTSPEventType
 struct SHTSPEvent
 {
   eHTSPEventType m_type;
-  uint32_t       m_idx;
 
-  SHTSPEvent (eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0) :
+  // params for HTSP_EVENT_EPG_UPDATE
+  tvheadend::entity::Event m_epg;
+  EPG_EVENT_STATE          m_state;
+
+  SHTSPEvent (eHTSPEventType type = HTSP_EVENT_NONE) :
     m_type(type),
-    m_idx (idx)
+    m_state(EPG_EVENT_CREATED)
   {
   }
-  
+
+  SHTSPEvent (eHTSPEventType type, const tvheadend::entity::Event &epg, EPG_EVENT_STATE state) :
+    m_type(type),
+    m_epg(epg),
+    m_state(state)
+  {
+  }
+
   bool operator==(const SHTSPEvent &right) const
   {
-    return m_type == right.m_type && m_idx == right.m_idx;
+    return m_type == right.m_type && m_epg == right.m_epg && m_state && right.m_state;
   }
 
   bool operator!=(const SHTSPEvent &right) const

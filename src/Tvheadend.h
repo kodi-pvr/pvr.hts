@@ -455,10 +455,10 @@ private:
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
   }
-  inline void TriggerEpgUpdate ( uint32_t idx )
+  inline void PushEpgEventUpdate ( const tvheadend::entity::Event &epg, EPG_EVENT_STATE state )
   {
-    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, idx);
-    
+    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
+
     if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
       m_events.push_back(event);
   }
@@ -466,6 +466,8 @@ private:
   /*
    * Epg Handling
    */
+  void        CreateEvent     ( const tvheadend::entity::Event &event, EPG_TAG &epg );
+  void        TransferEvent   ( const tvheadend::entity::Event &event, EPG_EVENT_STATE state );
   void        TransferEvent   ( ADDON_HANDLE handle, const tvheadend::entity::Event &event );
 
   /*
