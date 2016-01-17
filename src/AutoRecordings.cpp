@@ -138,7 +138,7 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string &
   return 0;
 }
 
-const std::string AutoRecordings::GetTimerStringIdFromIntId(int intId) const
+const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) const
 {
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
