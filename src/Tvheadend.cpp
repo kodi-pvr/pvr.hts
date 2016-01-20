@@ -1627,6 +1627,13 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   const char *str;
   htsmsg_t *list;
 
+  /* Tvheadend will push tags this way:
+     -> "tagAdd" all tags without channel members (ignore these)
+     -> "channelAdd" all channels
+     -> "tagUpdate" all tags with channel members  */
+  if (m_asyncState.GetState() < ASYNC_CHN && bAdd)
+    return;
+
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
   {
