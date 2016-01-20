@@ -1550,14 +1550,6 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
-  /* Tags */
-  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
-  {
-    return entry.second.IsDirty();
-  });
-
-  TriggerChannelGroupsUpdate();
-
   /* Channels */
   utilities::erase_if(m_channels, [](const ChannelMapEntry &entry)
   {
@@ -1565,6 +1557,14 @@ void CTvheadend::SyncChannelsCompleted ( void )
   });
 
   TriggerChannelUpdate();
+
+  /* Tags */
+  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
+  {
+    return entry.second.IsDirty();
+  });
+
+  TriggerChannelGroupsUpdate();
   
   /* Next */
   m_asyncState.SetState(ASYNC_DVR);
