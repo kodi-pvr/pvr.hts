@@ -35,37 +35,8 @@ using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 using namespace tvheadend;
+using namespace tvheadend::htsp;
 using namespace tvheadend::utilities;
-
-/*
- * HTSP Response objct
- */
-CHTSPResponse::CHTSPResponse ()
-  : m_flag(false), m_msg(NULL)
-{
-}
-
-CHTSPResponse::~CHTSPResponse ()
-{
-  if (m_msg) htsmsg_destroy(m_msg);
-  Set(NULL); // ensure signal is sent
-}
-
-void CHTSPResponse::Set ( htsmsg_t *msg )
-{
-  m_msg  = msg;
-  m_flag = true;
-  m_cond.Broadcast();
-}
-
-htsmsg_t *CHTSPResponse::Get ( CMutex &mutex, uint32_t timeout )
-{
-  m_cond.Wait(mutex, m_flag, timeout);
-  htsmsg_t *r = m_msg;
-  m_msg       = NULL;
-  m_flag      = false;
-  return r;
-}
 
 /*
  * Registration thread
@@ -254,8 +225,10 @@ bool CHTSPConnection::ReadMessage ( void )
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
     CLockObject lock(m_mutex);
-    CHTSPResponseList::iterator it;
-    if ((it = m_messages.find(seq)) != m_messages.end())
+
+    auto it = m_messages.find(seq);
+
+    if (it != m_messages.end())
     {
       it->second->Set(msg);
       return true;
@@ -332,7 +305,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   uint32_t seq;
 
   /* Add Sequence number */
-  CHTSPResponse resp;
+  Response resp;
   seq = ++m_seq;
   htsmsg_add_u32(msg, "seq", seq);
   m_messages[seq] = &resp;

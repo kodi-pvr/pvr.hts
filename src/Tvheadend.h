@@ -38,6 +38,7 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/htsp/Response.h"
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
@@ -83,28 +84,10 @@ extern "C" {
 class CHTSPConnection;
 class CHTSPDemuxer;
 class CHTSPVFS;
-class CHTSPResponse;
 class CHTSPMessage;
 
 /* Typedefs */
-typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
 typedef PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
-
-/*
- * HTSP Response handler
- */
-class CHTSPResponse
-{
-public:
-  CHTSPResponse();
-  ~CHTSPResponse();
-  htsmsg_t *Get ( PLATFORM::CMutex &mutex, uint32_t timeout );
-  void      Set ( htsmsg_t *m );
-private:
-  PLATFORM::CCondition<volatile bool> m_cond;
-  bool                                m_flag;
-  htsmsg_t                           *m_msg;
-};
 
 /*
  * HTSP Message
@@ -215,7 +198,7 @@ private:
   void*                               m_challenge;
   int                                 m_challengeLen;
 
-  CHTSPResponseList                   m_messages;
+  tvheadend::htsp::ResponseList       m_messages;
   std::vector<std::string>            m_capabilities;
 
   bool                                m_suspended;
