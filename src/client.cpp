@@ -401,6 +401,12 @@ PVR_ERROR GetEPGForChannel
   return tvh->GetEpg(handle, channel, iStart, iEnd);
 }
 
+PVR_ERROR SetEPGTimeFrame(int iDays)
+{
+  // TODO: implement filter for epg data push according to this value
+  return PVR_ERROR_NO_ERROR;
+}
+
 /* **************************************************************************
  * Recording Management
  * *************************************************************************/
