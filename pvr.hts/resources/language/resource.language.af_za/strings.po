@@ -63,3 +63,7 @@ msgstr "Laag"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Neem alle episodes op"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Tot spasie benodig"
