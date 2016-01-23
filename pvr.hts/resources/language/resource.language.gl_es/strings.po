@@ -16,6 +16,10 @@ msgstr ""
 "Language: gl_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Configuración da Conexión"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nome do host ou enderezo IP"
@@ -76,6 +80,70 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episodios"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 día"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d días"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d semanas"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d meses"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 ano"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d anos"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até que precise de espazo"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonización preditiva"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Número de subscricións a empregar"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Sen adaptador libre dispoñíbel"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sen sinal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Fallou a sintonización"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sen acceso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Erro na subscrición"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Perfil a empregar (baleiro = predefinido)"
