@@ -25,7 +25,7 @@
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
 
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
