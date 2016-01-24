@@ -471,6 +471,9 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* EPG event id */
       rec.iEpgEventId = recording.GetEventId();
 
+      /* channel id */
+      rec.iChannelUid = recording.GetChannel();
+
       recs.push_back(rec);
     }
   }
