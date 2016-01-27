@@ -231,6 +231,17 @@ void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
   m_subscription.SetProfile(profile);
 }
 
+bool CHTSPDemuxer::IsRealTimeStream() const
+{
+  if (GetTimeshiftTime() == 0)
+    return true;
+
+  if (GetTimeshiftBufferEnd() - GetTimeshiftTime() < 10)
+    return true;
+
+  return false;
+}
+
 /* **************************************************************************
  * Parse incoming data
  * *************************************************************************/

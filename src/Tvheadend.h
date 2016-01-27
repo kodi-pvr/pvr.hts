@@ -265,6 +265,7 @@ public:
       return m_lastUse;
     return 0;
   }
+  bool IsRealTimeStream() const;
 
   /**
    * Tells each demuxer to use the specified profile for new subscriptions
@@ -273,9 +274,9 @@ public:
   void SetStreamingProfile(const std::string &profile);
 
 private:
-  P8PLATFORM::CMutex                        m_mutex;
+  P8PLATFORM::CMutex                      m_mutex;
   CHTSPConnection                        &m_conn;
-  P8PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
+  P8PLATFORM::SyncedBuffer<DemuxPacket*>  m_pktBuffer;
   ADDON::XbmcStreamProperties             m_streams;
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
@@ -568,6 +569,7 @@ public:
   int64_t      DemuxGetTimeshiftTime() const;
   int64_t      DemuxGetTimeshiftBufferStart() const;
   int64_t      DemuxGetTimeshiftBufferEnd() const;
+  bool         DemuxIsRealTimeStream() const;
 
   /*
    * VFS (pass-thru)

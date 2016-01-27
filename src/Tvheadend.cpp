@@ -2352,3 +2352,9 @@ int64_t CTvheadend::DemuxGetTimeshiftBufferEnd() const
 {
   return m_dmx_active->GetTimeshiftBufferEnd();
 }
+
+bool CTvheadend::DemuxIsRealTimeStream() const
+{
+  return m_dmx_active->IsRealTimeStream();
+}
+
