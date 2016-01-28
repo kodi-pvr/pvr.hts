@@ -89,6 +89,7 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 list(APPEND HTS_SOURCES
             ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
+            ${HTS_SOURCES_TVHEADEND_STATUS}
             ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})
 
