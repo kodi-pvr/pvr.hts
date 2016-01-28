@@ -1,6 +1,23 @@
 # build artifacts
-build
+build/
+debian/changelog
+debian/files
+debian/kodi-pvr-hts-dbg.debhelper.log
+debian/kodi-pvr-hts-dbg.substvars
+debian/kodi-pvr-hts-dbg/
+debian/kodi-pvr-hts.debhelper.log
+debian/kodi-pvr-hts.postinst.debhelper
+debian/kodi-pvr-hts.postrm.debhelper
+debian/kodi-pvr-hts.substvars
+debian/kodi-pvr-hts/
+debian/tmp/
+obj-x86_64-linux-gnu/
 pvr.hts/addon.xml
 
-# clion project (auto-generated from CMakeLists.txt)
+# clion
 .idea/
+
+# Eclipse/CDT
+.cproject
+.project
+.settings/
