@@ -34,7 +34,8 @@ using namespace tvheadend::utilities;
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
-    m_subscription(conn)
+    m_subscription(conn),
+    m_seeking(false), m_speedChange(false)
 {
   m_lastUse = 0;
 }
@@ -78,6 +79,8 @@ void CHTSPDemuxer::Abort0 ( void )
   CLockObject lock(m_mutex);
   m_streams.Clear();
   m_streamStat.clear();
+  m_seeking = false;
+  m_speedChange = false;
 }
 
 
@@ -159,21 +162,28 @@ bool CHTSPDemuxer::Seek
   if (!m_subscription.IsActive())
     return false;
 
-  if (!m_subscription.SendSeek(time))
+  m_seeking = true;
+  if (!m_subscription.SendSeek(time)) {
+    m_seeking = false;
     return false;
+  }
 
   /* Wait for time */
+  m_seekTime = 0;
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to get subscriptionSeek response");
+    m_seeking = false;
+    Flush(); /* try to resync */
     return false;
   }
   
+  m_seeking = false;
   if (m_seekTime == INVALID_SEEKTIME)
     return false;
 
   /* Store */
-  *startpts = TVH_TO_DVD_TIME(m_seekTime);
+  *startpts = TVH_TO_DVD_TIME(m_seekTime - 1);
   Logger::Log(LogLevel::LEVEL_TRACE, "demux seek startpts = %lf", *startpts);
 
   return true;
@@ -184,6 +194,10 @@ void CHTSPDemuxer::Speed ( int speed )
   CLockObject lock(m_conn.Mutex());
   if (!m_subscription.IsActive())
     return;
+  if (speed != m_subscription.GetSpeed() && (speed < 0 || speed >= 4000)) {
+    m_speedChange = true;
+    Flush();
+  }
   m_subscription.SendSpeed(speed);
 }
 
@@ -284,7 +298,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   size_t      binlen;
   DemuxPacket *pkt;
   char        _unused(type) = 0;
-  int         iStreamId;
+  int         iStreamId, ignore;
   
   /* Ignore packets while switching channels */
   if (!m_subscription.IsActive())
@@ -339,11 +353,17 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   if (!type)
     type = '_';
 
-  Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld",
-           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen);
+  ignore = m_seeking || m_speedChange;
+
+  Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld%s",
+           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen,
+           ignore ? " IGNORE" : "");
 
   /* Store */
-  m_pktBuffer.Push(pkt);
+  if (!ignore)
+    m_pktBuffer.Push(pkt);
+  else
+    PVR->FreeDemuxPacket(pkt);
 }
 
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
@@ -517,8 +537,10 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   if (htsmsg_get_s64(m, "time", &s64)) {
     m_seekTime = INVALID_SEEKTIME;
   } else {
-    m_seekTime = s64;
+    m_seekTime = s64 < 0 ? 1 : s64 + 1; /* it must not be zero! */
+    Flush(); /* flush old packets (with wrong pts) */
   }
+  m_seeking = false;
   m_seekCond.Broadcast();
 }
 
@@ -527,6 +549,10 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   uint32_t u32;
   if (!htsmsg_get_u32(m, "speed", &u32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", u32);
+  if (m_speedChange) {
+    Flush();
+    m_speedChange = false;
+  }
 }
 
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
