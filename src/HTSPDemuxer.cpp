@@ -53,9 +53,7 @@ void CHTSPDemuxer::Connected ( void )
     m_subscription.SendSubscribe(0, 0, true);
     m_subscription.SendSpeed(0, true);
 
-    /* Reset status */
-    m_signalInfo.Clear();
-    m_sourceInfo.Clear();
+    ResetStatus();
   }
 }
 
@@ -96,8 +94,7 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
   m_subscription.SendSubscribe(channelId, weight);
   
   /* Reset status */
-  m_signalInfo.Clear();
-  m_sourceInfo.Clear();
+  ResetStatus();
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
@@ -254,6 +251,14 @@ bool CHTSPDemuxer::IsRealTimeStream() const
     return true;
 
   return false;
+}
+
+void CHTSPDemuxer::ResetStatus()
+{
+  CLockObject lock(m_mutex);
+
+  m_signalInfo.Clear();
+  m_sourceInfo.Clear();
 }
 
 /* **************************************************************************
