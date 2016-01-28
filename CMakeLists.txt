@@ -31,6 +31,7 @@ set(HTS_SOURCES src/client.h
                 src/xbmc_codec_descriptor.hpp)
 
 set(HTS_SOURCES_TVHEADEND
+                src/tvheadend/Profile.h
                 src/tvheadend/Settings.cpp
                 src/tvheadend/Settings.h
                 src/tvheadend/ChannelTuningPredictor.h
@@ -88,6 +89,7 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 list(APPEND HTS_SOURCES
             ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
+            ${HTS_SOURCES_TVHEADEND_STATUS}
             ${HTS_SOURCES_TVHEADEND_UTILITIES}
             ${HTS_RESOURCES})
 
