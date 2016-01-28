@@ -301,6 +301,33 @@ bool IsTimeshifting(void)
   return tvh->DemuxGetTimeshiftTime() != 0;
 }
 
+static time_t ConvertMusecsToTime(int64_t musecs)
+{
+  // tvheadend reports microseconds for timeshifting values,
+  // Kodi expects it to be an absolute UNIX timestamp
+  return time(NULL) - static_cast<time_t>(static_cast<double>(musecs / 1000000));
+}
+
+time_t GetPlayingTime()
+{
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftTime());
+}
+
+time_t GetBufferTimeStart()
+{
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferStart());
+}
+
+time_t GetBufferTimeEnd()
+{
+  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferEnd());
+}
+
+bool IsRealTimeStream()
+{
+  return tvh->DemuxIsRealTimeStream();
+}
+
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
   return tvh->DemuxOpen(channel);
@@ -554,26 +581,6 @@ PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_unused(channel))
 /* Timeshift?? - not sure if we can use these? */
 void PauseStream(bool _unused(bPaused))
 {
-}
-
-static time_t ConvertMusecsToTime(int64_t musecs)
-{
-  // tvheadend reports microseconds for timeshifting values,
-  // Kodi expects it to be an absolute UNIX timestamp
-  return time(NULL) - static_cast<time_t>(static_cast<double>(musecs / 1000000));
-}
-
-time_t GetPlayingTime()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftTime());
-}
-time_t GetBufferTimeStart()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferStart());
-}
-time_t GetBufferTimeEnd()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferEnd());
 }
 
 /* Live stream (VFS interface - not relevant) */
