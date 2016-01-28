@@ -1,10 +1,34 @@
-#
-# Travis defaults to building on Ubuntu Precise. We need Trusty
-# in order to get up to date versions of cmake and g++
-#
 language: cpp
-sudo: required
-dist: trusty
+
+#
+# Define the build matrix
+#
+# Travis defaults to building on Ubuntu Precise when building on 
+# Linux. We need Trusty in order to get up to date versions of 
+# cmake and g++.
+#
+matrix:
+  include:
+    - os: linux
+      dist: trusty    
+      sudo: required
+      compiler: gcc
+    - os: linux
+      dist: trusty    
+      sudo: required
+      compiler: clang
+    - os: osx
+      osx_image: xcode7.3
+    - os: osx
+      osx_image: xcode6.1
+
+#
+# Some of the OS X images don't have cmake, contrary to what people 
+# on the Internet say
+#
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then which cmake || brew update        ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then which cmake || brew install cmake ; fi
 
 #
 # The addon source is automatically checked out in $TRAVIS_BUILD_DIR,
