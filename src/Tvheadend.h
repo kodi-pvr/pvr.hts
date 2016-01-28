@@ -235,38 +235,14 @@ public:
 
   bool   ProcessMessage ( const char *method, htsmsg_t *m );
   void   Connected      ( void );
-  
-  inline int64_t GetTimeshiftTime() const
-  {
-    return m_timeshiftStatus.shift;
-  }
-  inline int64_t GetTimeshiftBufferStart() const
-  {
-    // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
-    return m_timeshiftStatus.end;
-  }
-  inline int64_t GetTimeshiftBufferEnd() const
-  {
-    // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
-    return m_timeshiftStatus.start;
-  }
-  inline uint32_t GetSubscriptionId() const
-  {
-    return m_subscription.GetId();
-  }
-  inline uint32_t GetChannelId() const
-  {
-    if (m_subscription.IsActive())
-      return m_subscription.GetChannelId();
-    return 0;
-  }
-  inline time_t GetLastUse() const
-  {
-    if (m_subscription.IsActive())
-      return m_lastUse.load();
-    return 0;
-  }
+
   bool IsRealTimeStream() const;
+  int64_t GetTimeshiftTime() const;
+  int64_t GetTimeshiftBufferStart() const;
+  int64_t GetTimeshiftBufferEnd() const;
+  uint32_t GetSubscriptionId() const;
+  uint32_t GetChannelId() const;
+  time_t GetLastUse() const;
 
   /**
    * Tells each demuxer to use the specified profile for new subscriptions

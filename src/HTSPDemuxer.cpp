@@ -240,6 +240,47 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
+int64_t CHTSPDemuxer::GetTimeshiftTime() const
+{
+  CLockObject lock(m_mutex);
+  return m_timeshiftStatus.shift;
+}
+
+int64_t CHTSPDemuxer::GetTimeshiftBufferStart() const
+{
+  CLockObject lock(m_mutex);
+
+  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+  return m_timeshiftStatus.end;
+}
+
+int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
+{
+  CLockObject lock(m_mutex);
+
+  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+  return m_timeshiftStatus.start;
+}
+
+uint32_t CHTSPDemuxer::GetSubscriptionId() const
+{
+  return m_subscription.GetId();
+}
+
+uint32_t CHTSPDemuxer::GetChannelId() const
+{
+  if (m_subscription.IsActive())
+    return m_subscription.GetChannelId();
+  return 0;
+}
+
+time_t CHTSPDemuxer::GetLastUse() const
+{
+  if (m_subscription.IsActive())
+    return m_lastUse.load();
+  return 0;
+}
+
 void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 {
   m_subscription.SetProfile(profile);
