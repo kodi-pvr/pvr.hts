@@ -274,7 +274,7 @@ public:
   void SetStreamingProfile(const std::string &profile);
 
 private:
-  PLATFORM::CMutex                        m_mutex;
+  mutable PLATFORM::CMutex                m_mutex;
   CHTSPConnection                        &m_conn;
   PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
   ADDON::XbmcStreamProperties             m_streams;
