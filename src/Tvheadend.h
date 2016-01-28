@@ -49,6 +49,7 @@
 #include <queue>
 #include <cstdarg>
 #include <stdexcept>
+#include <atomic>
 
 extern "C" {
 #include <sys/types.h>
@@ -262,7 +263,7 @@ public:
   inline time_t GetLastUse() const
   {
     if (m_subscription.IsActive())
-      return m_lastUse;
+      return m_lastUse.load();
     return 0;
   }
   bool IsRealTimeStream() const;
@@ -287,7 +288,7 @@ private:
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
   tvheadend::Subscription                 m_subscription;
-  time_t                                  m_lastUse;
+  std::atomic<time_t>                     m_lastUse;
   
   void         Close0         ( void );
   void         Abort0         ( void );

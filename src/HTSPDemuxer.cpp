@@ -35,9 +35,9 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
     m_subscription(conn),
-    m_seeking(false), m_speedChange(false)
+    m_seeking(false), m_speedChange(false),
+    m_lastUse(0)
 {
-  m_lastUse = 0;
 }
 
 CHTSPDemuxer::~CHTSPDemuxer ()
@@ -100,7 +100,7 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
   if (!m_subscription.IsActive())
     m_subscription.SendUnsubscribe();
   else
-    m_lastUse = time(NULL);
+    m_lastUse.store(time(nullptr));
   
   return m_subscription.IsActive();
 }
@@ -115,7 +115,8 @@ void CHTSPDemuxer::Close ( void )
 DemuxPacket *CHTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
-  m_lastUse = time(NULL);
+  m_lastUse.store(time(nullptr));
+
   if (m_pktBuffer.Pop(pkt, 1000)) {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld",
              pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
