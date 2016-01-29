@@ -288,10 +288,14 @@ void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 
 bool CHTSPDemuxer::IsRealTimeStream() const
 {
-  if (GetTimeshiftTime() == 0)
+  /* Avoid using the getters since they lock individually and
+   * we want the calculation to be consistent */
+  CLockObject lock(m_mutex);
+
+  if (m_timeshiftStatus.shift == 0)
     return true;
 
-  if (GetTimeshiftBufferEnd() - GetTimeshiftTime() < 10)
+  if (m_timeshiftStatus.start - m_timeshiftStatus.shift < 10)
     return true;
 
   return false;
