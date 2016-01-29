@@ -180,6 +180,44 @@ std::string CTvheadend::GetStreamingProfile() const
   return streamingProfile;
 }
 
+bool CTvheadend::IsEventValid(uint32_t eventId, uint32_t channelId)
+{
+  uint32_t id, channel;
+  htsmsg_t *m;
+
+  if (eventId <= PVR_TIMER_NO_EPG_UID)
+    return false;
+
+  /* Mismatch should not happen with async epg */
+  if (Settings::GetInstance().GetAsyncEpg())
+    return true;
+
+  /* Request event from server */
+  m = htsmsg_create_map();
+  htsmsg_add_u32(m, "eventId", eventId);
+
+  /* Send and Wait */
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("getEvent", m);
+  }
+
+  /* Event not found on server? */
+  if (!m)
+    return false;
+
+  /* Check response */
+  htsmsg_get_u32(m, "eventId",   &id);
+  htsmsg_get_u32(m, "channelId", &channel);
+  htsmsg_destroy(m);
+
+  /* Id or channel mismatch */
+  if (id != eventId || channel != channelId)
+    return false;
+
+  return true;
+}
+
 /* **************************************************************************
  * Tags
  * *************************************************************************/
@@ -968,10 +1006,21 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     /* one shot timer */
 
     uint32_t u32;
+    bool bEventValid;
+
+    if (timer.iTimerType == TIMER_ONCE_EPG)
+    {
+      /* Kodi refreshes it's guide data with an interval of minimum 15 minutes */
+      /* So there is a chance that the iEpgUid isn't valid anymore on the backend */
+      /* If so, fallback to an manual timer */
+      bEventValid = IsEventValid(timer.iEpgUid, timer.iClientChannelUid);
+      if (!bEventValid)
+        Logger::Log(LogLevel::LEVEL_INFO, "Event %i isn't valid anymore, fallback to a manual timer", timer.iEpgUid);
+    }
 
     /* Build message */
     htsmsg_t *m = htsmsg_create_map();
-    if (timer.iEpgUid > PVR_TIMER_NO_EPG_UID && timer.iTimerType == TIMER_ONCE_EPG)
+    if (timer.iTimerType == TIMER_ONCE_EPG && bEventValid)
     {
       /* EPG-based timer */
       htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
