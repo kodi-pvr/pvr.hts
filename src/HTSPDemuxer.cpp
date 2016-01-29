@@ -35,9 +35,9 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
     m_subscription(conn),
-    m_seeking(false), m_speedChange(false)
+    m_seeking(false), m_speedChange(false),
+    m_lastUse(0)
 {
-  m_lastUse = 0;
 }
 
 CHTSPDemuxer::~CHTSPDemuxer ()
@@ -53,9 +53,7 @@ void CHTSPDemuxer::Connected ( void )
     m_subscription.SendSubscribe(0, 0, true);
     m_subscription.SendSpeed(0, true);
 
-    /* Reset status */
-    m_signalInfo.Clear();
-    m_sourceInfo.Clear();
+    ResetStatus();
   }
 }
 
@@ -96,14 +94,13 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
   m_subscription.SendSubscribe(channelId, weight);
   
   /* Reset status */
-  m_signalInfo.Clear();
-  m_sourceInfo.Clear();
+  ResetStatus();
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
     m_subscription.SendUnsubscribe();
   else
-    m_lastUse = time(NULL);
+    m_lastUse.store(time(nullptr));
   
   return m_subscription.IsActive();
 }
@@ -118,7 +115,8 @@ void CHTSPDemuxer::Close ( void )
 DemuxPacket *CHTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
-  m_lastUse = time(NULL);
+  m_lastUse.store(time(nullptr));
+
   if (m_pktBuffer.Pop(pkt, 1000)) {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld",
              pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
@@ -169,7 +167,9 @@ bool CHTSPDemuxer::Seek
   }
 
   /* Wait for time */
+  CLockObject lock(m_conn.Mutex());
   m_seekTime = 0;
+
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to get subscriptionSeek response");
@@ -240,6 +240,47 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
+int64_t CHTSPDemuxer::GetTimeshiftTime() const
+{
+  CLockObject lock(m_mutex);
+  return m_timeshiftStatus.shift;
+}
+
+int64_t CHTSPDemuxer::GetTimeshiftBufferStart() const
+{
+  CLockObject lock(m_mutex);
+
+  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+  return m_timeshiftStatus.end;
+}
+
+int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
+{
+  CLockObject lock(m_mutex);
+
+  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
+  return m_timeshiftStatus.start;
+}
+
+uint32_t CHTSPDemuxer::GetSubscriptionId() const
+{
+  return m_subscription.GetId();
+}
+
+uint32_t CHTSPDemuxer::GetChannelId() const
+{
+  if (m_subscription.IsActive())
+    return m_subscription.GetChannelId();
+  return 0;
+}
+
+time_t CHTSPDemuxer::GetLastUse() const
+{
+  if (m_subscription.IsActive())
+    return m_lastUse.load();
+  return 0;
+}
+
 void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 {
   m_subscription.SetProfile(profile);
@@ -247,13 +288,25 @@ void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 
 bool CHTSPDemuxer::IsRealTimeStream() const
 {
-  if (GetTimeshiftTime() == 0)
+  /* Avoid using the getters since they lock individually and
+   * we want the calculation to be consistent */
+  CLockObject lock(m_mutex);
+
+  if (m_timeshiftStatus.shift == 0)
     return true;
 
-  if (GetTimeshiftBufferEnd() - GetTimeshiftTime() < 10)
+  if (m_timeshiftStatus.start - m_timeshiftStatus.shift < 10)
     return true;
 
   return false;
+}
+
+void CHTSPDemuxer::ResetStatus()
+{
+  CLockObject lock(m_mutex);
+
+  m_signalInfo.Clear();
+  m_sourceInfo.Clear();
 }
 
 /* **************************************************************************
