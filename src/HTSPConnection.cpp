@@ -109,11 +109,6 @@ bool CHTSPConnection::WaitForConnection ( void )
   return m_ready;
 }
 
-bool CHTSPConnection::HasCapability(const std::string &capability) const
-{
-  return m_serverInformation.HasCapability(capability);
-}
-
 void CHTSPConnection::OnSleep ( void )
 {
   CLockObject lock(m_mutex);

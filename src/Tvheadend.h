@@ -166,8 +166,6 @@ public:
   const tvheadend::htsp::ServerInformation& GetServerInformation() const { return m_serverInformation; }
 
   std::string GetWebURL        ( const char *fmt, ... );
-  
-  bool        HasCapability(const std::string &capability) const;
 
   inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
@@ -495,7 +493,7 @@ public:
   }
   inline bool HasCapability(const std::string &capability) const
   {
-    return m_conn.HasCapability(capability);
+    return m_conn.GetServerInformation().HasCapability(capability);
   }
   inline bool IsConnected ( void ) const
   {
