@@ -395,12 +395,6 @@ private:
   bool HasStreamingProfile(const std::string &streamingProfile) const;
 
   /**
-   * @return the streaming profile to use for new subscriptions, or an
-   *         empty string if no particular profile should be used
-   */
-  std::string GetStreamingProfile() const;
-
-  /**
    * The streaming profiles available on the server
    */
   tvheadend::Profiles         m_profiles;

@@ -170,16 +170,6 @@ bool CTvheadend::HasStreamingProfile(const std::string &streamingProfile) const
   ) != m_profiles.cend();
 }
 
-std::string CTvheadend::GetStreamingProfile() const
-{
-  std::string streamingProfile;
-
-  if (HasStreamingProfile(Settings::GetInstance().GetStreamingProfile()))
-    streamingProfile = Settings::GetInstance().GetStreamingProfile();
-
-  return streamingProfile;
-}
-
 /* **************************************************************************
  * Tags
  * *************************************************************************/
