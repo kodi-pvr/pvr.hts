@@ -163,12 +163,9 @@ public:
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
   inline int  GetProtocol      ( void ) const { return m_serverInformation.GetHtspVersion(); }
+  const tvheadend::htsp::ServerInformation& GetServerInformation() const { return m_serverInformation; }
 
   std::string GetWebURL        ( const char *fmt, ... );
-
-  std::string GetServerName    ( void );
-  std::string GetServerVersion ( void );
-  std::string GetServerString  ( void );
   
   bool        HasCapability(const std::string &capability) const;
 
@@ -479,6 +476,11 @@ private:
   bool ParseEvent                ( htsmsg_t *msg, bool bAdd, tvheadend::entity::Event &evt );
 
 public:
+
+  std::string GetServerName() const;
+  std::string GetServerVersion() const;
+  std::string GetServerString() const;
+
   /*
    * Connection (pass-thru)
    */
@@ -486,18 +488,6 @@ public:
   {
     P8PLATFORM::CLockObject lock(m_conn.Mutex());
     return m_conn.WaitForConnection();
-  }
-  std::string GetServerName    ( void )
-  {
-    return m_conn.GetServerName();
-  }
-  std::string GetServerVersion ( void )
-  {
-    return m_conn.GetServerVersion();
-  }
-  std::string GetServerString  ( void )
-  {
-    return m_conn.GetServerString();
   }
   inline int GetProtocol ( void ) const
   {

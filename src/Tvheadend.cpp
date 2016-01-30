@@ -111,6 +111,23 @@ std::string CTvheadend::GetImageURL ( const char *str )
   }
 }
 
+std::string CTvheadend::GetServerName() const
+{
+  return m_conn.GetServerInformation().GetServerName();
+}
+
+std::string CTvheadend::GetServerVersion() const
+{
+  return m_conn.GetServerInformation().GetServerVersion();
+}
+
+std::string CTvheadend::GetServerString() const
+{
+  const Settings &settings = Settings::GetInstance();
+
+  return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
+}
+
 void CTvheadend::QueryAvailableProfiles()
 {
   /* Build message */

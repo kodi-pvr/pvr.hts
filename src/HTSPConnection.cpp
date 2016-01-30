@@ -109,27 +109,6 @@ bool CHTSPConnection::WaitForConnection ( void )
   return m_ready;
 }
 
-std::string CHTSPConnection::GetServerName ( void )
-{
-  return m_serverInformation.GetServerName();
-}
-
-std::string CHTSPConnection::GetServerVersion ( void )
-{
-  std::string serverVersion = m_serverInformation.GetServerVersion();
-  uint32_t htspVersion = m_serverInformation.GetHtspVersion();
-  return StringUtils::Format("%s (HTSP v%d)", serverVersion.c_str(), htspVersion);
-}
-
-std::string CHTSPConnection::GetServerString ( void )
-{
-  const Settings &settings = Settings::GetInstance();
-
-  CLockObject lock(m_mutex);
-  return StringUtils::Format("%s:%d [%s]", settings.GetHostname().c_str(), settings.GetPortHTSP(),
-             m_ready ? "connected" : "disconnected");
-}
-
 bool CHTSPConnection::HasCapability(const std::string &capability) const
 {
   return m_serverInformation.HasCapability(capability);
