@@ -72,7 +72,9 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/Logger.h
                 src/tvheadend/utilities/Logger.cpp
                 src/tvheadend/utilities/AsyncState.cpp
-                src/tvheadend/utilities/AsyncState.h)
+                src/tvheadend/utilities/AsyncState.h
+                src/tvheadend/utilities/UrlHelper.h
+                src/tvheadend/utilities/UrlHelper.cpp)
                 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})

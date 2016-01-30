@@ -28,6 +28,7 @@
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
+#include "tvheadend/utilities/UrlHelper.h"
 
 using namespace std;
 using namespace ADDON;
@@ -94,21 +95,6 @@ error:
   htsmsg_destroy(m);
   Logger::Log(LogLevel::LEVEL_ERROR, "malformed getDiskSpace response: 'totaldiskspace'/'freediskspace' missing");
   return PVR_ERROR_SERVER_ERROR;
-}
-
-std::string CTvheadend::GetImageURL ( const char *str )
-{
-  if (*str != '/')
-  {
-    if (strncmp(str, "imagecache/", 11) == 0)
-      return m_conn.GetWebURL("/%s", str);
-
-    return str;
-  }
-  else
-  {
-    return m_conn.GetWebURL("%s", str);
-  }
 }
 
 std::string CTvheadend::GetServerName() const
@@ -1674,7 +1660,10 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Icon */
   if ((str = htsmsg_get_str(msg, "tagIcon")) != NULL)
-    tag.SetIcon(GetImageURL(str));
+  {
+    UrlHelper urlHelper(Settings::GetInstance(), m_conn.GetServerInformation());
+    tag.SetIcon(urlHelper.GetImageUrl(str));
+  }
 
   /* Members */
   if ((list = htsmsg_get_list(msg, "members")) != NULL)
@@ -1765,7 +1754,10 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Channel icon */
   if ((str = htsmsg_get_str(msg, "channelIcon")) != NULL)
-    channel.SetIcon(GetImageURL(str));
+  {
+    UrlHelper urlHelper(Settings::GetInstance(), m_conn.GetServerInformation());
+    channel.SetIcon(urlHelper.GetImageUrl(str));
+  }
 
   /* Services */
   if ((list = htsmsg_get_list(msg, "services")) != NULL)

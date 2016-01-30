@@ -74,32 +74,6 @@ CHTSPConnection::~CHTSPConnection()
   StopThread(0);
 }
 
-/*
- * Info
- */
-
-std::string CHTSPConnection::GetWebURL ( const char *fmt, ... )
-{
-  va_list va;
-  const Settings &settings = Settings::GetInstance();
-
-  // Generate the authentication string (user:pass@)
-  std::string auth = settings.GetUsername();
-  if (!(auth.empty() || settings.GetPassword().empty()))
-    auth += ":" + settings.GetPassword();
-  if (!auth.empty())
-    auth += "@";
-
-  std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
-
-  va_start(va, fmt);
-  url += m_serverInformation.GetWebRoot();
-  url += StringUtils::FormatV(fmt, va);
-  va_end(va);
-
-  return url;
-}
-
 bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {

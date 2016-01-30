@@ -165,8 +165,6 @@ public:
   inline int  GetProtocol      ( void ) const { return m_serverInformation.GetHtspVersion(); }
   const tvheadend::htsp::ServerInformation& GetServerInformation() const { return m_serverInformation; }
 
-  std::string GetWebURL        ( const char *fmt, ... );
-
   inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
 
@@ -357,7 +355,6 @@ private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
 
   uint32_t GetNextUnnumberedChannelNumber ();
-  std::string GetImageURL     ( const char *str );
 
   /**
    * Queries the server for available streaming profiles and populates
