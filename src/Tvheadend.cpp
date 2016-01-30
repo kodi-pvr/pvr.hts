@@ -1509,8 +1509,6 @@ void* CTvheadend::Process ( void )
         case HTSP_EVENT_EPG_UPDATE:
           PVR->TriggerEpgUpdate(it->m_idx);
           break;
-        case HTSP_EVENT_NONE:
-          break;
       }
     }
   }

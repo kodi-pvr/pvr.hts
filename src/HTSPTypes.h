@@ -81,11 +81,10 @@ typedef enum {
 
 enum eHTSPEventType
 {
-  HTSP_EVENT_NONE = 0,
-  HTSP_EVENT_CHN_UPDATE = 1,
-  HTSP_EVENT_TAG_UPDATE = 2,
-  HTSP_EVENT_EPG_UPDATE = 3,
-  HTSP_EVENT_REC_UPDATE = 4,
+  HTSP_EVENT_CHN_UPDATE,
+  HTSP_EVENT_TAG_UPDATE,
+  HTSP_EVENT_EPG_UPDATE,
+  HTSP_EVENT_REC_UPDATE,
 };
 
 struct SHTSPEvent
@@ -93,7 +92,7 @@ struct SHTSPEvent
   eHTSPEventType m_type;
   uint32_t       m_idx;
 
-  SHTSPEvent (eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0) :
+  SHTSPEvent (eHTSPEventType type, uint32_t idx = 0) :
     m_type(type),
     m_idx (idx)
   {
