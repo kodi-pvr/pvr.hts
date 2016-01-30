@@ -34,9 +34,8 @@ using namespace tvheadend::utilities;
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
-    m_subscription(conn),
     m_seeking(false), m_speedChange(false),
-    m_lastUse(0)
+    m_subscription(conn), m_lastUse(0)
 {
 }
 
