@@ -169,6 +169,8 @@ bool CHTSPDemuxer::Seek
   }
 
   /* Wait for time */
+  CLockObject lock(m_conn.Mutex());
+
   m_seekTime = 0;
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
   {
