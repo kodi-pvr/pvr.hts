@@ -1497,28 +1497,32 @@ void* CTvheadend::Process ( void )
 
 void CTvheadend::TriggerChannelGroupsUpdate()
 {
-  m_events.push_back(htsp::Event(htsp::EventType::TAG_UPDATE));
+  QueueEvent(htsp::Event(htsp::EventType::TAG_UPDATE));
 }
 
 void CTvheadend::TriggerChannelUpdate()
 {
-  m_events.push_back(htsp::Event(htsp::EventType::CHN_UPDATE));
+  QueueEvent(htsp::Event(htsp::EventType::CHN_UPDATE));
 }
 
 void CTvheadend::TriggerRecordingUpdate()
 {
-  m_events.push_back(htsp::Event(htsp::EventType::REC_UPDATE));
+  QueueEvent(htsp::Event(htsp::EventType::REC_UPDATE));
 }
 
 void CTvheadend::TriggerTimerUpdate()
 {
-  m_events.push_back(htsp::Event(htsp::EventType::REC_UPDATE));
+  QueueEvent(htsp::Event(htsp::EventType::REC_UPDATE));
 }
 
 void CTvheadend::TriggerEpgUpdate(uint32_t idx)
 {
-  auto event = htsp::Event(htsp::EventType::EPG_UPDATE, idx);
+  QueueEvent(htsp::Event(htsp::EventType::EPG_UPDATE, idx));
+}
 
+void CTvheadend::QueueEvent(const tvheadend::htsp::Event &event)
+{
+  /* Avoid queuing duplicate events */
   if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
     m_events.push_back(event);
 }

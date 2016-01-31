@@ -427,6 +427,7 @@ private:
   void TriggerRecordingUpdate();
   void TriggerTimerUpdate();
   void TriggerEpgUpdate(uint32_t idx);
+  void QueueEvent(const tvheadend::htsp::Event &event);
   void ProcessEvents(const tvheadend::htsp::EventList &events);
 
   /*
