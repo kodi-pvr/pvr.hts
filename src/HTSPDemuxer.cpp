@@ -162,6 +162,7 @@ bool CHTSPDemuxer::Seek
   if (!m_subscription.IsActive())
     return false;
 
+  m_seekTime = 0;
   m_seeking = true;
   if (!m_subscription.SendSeek(time)) {
     m_seeking = false;
