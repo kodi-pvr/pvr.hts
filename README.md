@@ -7,6 +7,10 @@ This is a [Kodi] (http://kodi.tv) PVR addon for connecting to a [tvheadend](http
 
 ## Build instructions
 
+When building the addon you have to use the correct branch depending on which version of Kodi you're building against. 
+For example, if you're building the `Jarvis` branch of Kodi you should checkout the `Jarvis` branch of this repository. 
+Addon releases are also tagged regularly.
+
 ### Linux
 
 1. `git clone https://github.com/xbmc/xbmc.git`
