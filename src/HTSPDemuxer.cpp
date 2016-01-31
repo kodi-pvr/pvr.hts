@@ -159,6 +159,7 @@ bool CHTSPDemuxer::Seek
   if (!m_subscription.IsActive())
     return false;
 
+  m_seekTime = 0;
   m_seeking = true;
   if (!m_subscription.SendSeek(time)) {
     m_seeking = false;
@@ -167,7 +168,6 @@ bool CHTSPDemuxer::Seek
 
   /* Wait for time */
   CLockObject lock(m_conn.Mutex());
-  m_seekTime = 0;
 
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, Settings::GetInstance().GetResponseTimeout()))
   {
