@@ -597,10 +597,7 @@ void* CHTSPConnection::Process ( void )
     while (!IsStopped())
     {
       if (!ReadMessage())
-      {
-        Logger::Log(LogLevel::LEVEL_DEBUG, "attempting reconnect");
         break;
-      }
     }
 
     /* Stop connect thread (if not already) */
