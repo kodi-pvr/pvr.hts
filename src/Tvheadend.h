@@ -38,6 +38,7 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/htsp/Event.h"
 #include "tvheadend/htsp/Response.h"
 #include "tvheadend/htsp/ServerInformation.h"
 #include "tvheadend/status/Quality.h"
@@ -397,7 +398,10 @@ private:
 
   tvheadend::ChannelTuningPredictor m_channelTuningPredictor;
 
-  SHTSPEventList              m_events;
+  /**
+   * List of pending events
+   */
+  tvheadend::htsp::EventList m_events;
 
   tvheadend::utilities::AsyncState  m_asyncState;
 
@@ -418,29 +422,12 @@ private:
   /*
    * Event handling
    */
-  inline void TriggerChannelGroupsUpdate ( void )
-  {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
-  }
-  inline void TriggerChannelUpdate ( void )
-  {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
-  }
-  inline void TriggerRecordingUpdate ( void )
-  {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void TriggerTimerUpdate ( void )
-  {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void TriggerEpgUpdate ( uint32_t idx )
-  {
-    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, idx);
-    
-    if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
-      m_events.push_back(event);
-  }
+  void TriggerChannelGroupsUpdate();
+  void TriggerChannelUpdate();
+  void TriggerRecordingUpdate();
+  void TriggerTimerUpdate();
+  void TriggerEpgUpdate(uint32_t idx);
+  void ProcessEvents(const tvheadend::htsp::EventList &events);
 
   /*
    * Epg Handling

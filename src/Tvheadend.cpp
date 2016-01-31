@@ -1399,7 +1399,7 @@ void* CTvheadend::Process ( void )
       continue;
     method = msg.m_method.c_str();
 
-    SHTSPEventList eventsCopy;
+    htsp::EventList eventsCopy;
     /* Scope lock for processing */
     {
       CLockObject lock(m_mutex);
@@ -1487,34 +1487,63 @@ void* CTvheadend::Process ( void )
     htsmsg_destroy(msg.m_msg);
     msg.m_msg = NULL;
 
-    /* Process events
-     * Note: due to potential deadly embrace this must be done without the
-     *       m_mutex held!
-     */
-    SHTSPEventList::const_iterator it;
-    for (it = eventsCopy.begin(); it != eventsCopy.end(); ++it)
-    {
-      switch (it->m_type)
-      {
-        case HTSP_EVENT_TAG_UPDATE:
-          PVR->TriggerChannelGroupsUpdate();
-          break;
-        case HTSP_EVENT_CHN_UPDATE:
-          PVR->TriggerChannelUpdate();
-          break;
-        case HTSP_EVENT_REC_UPDATE:
-          PVR->TriggerTimerUpdate();
-          PVR->TriggerRecordingUpdate();
-          break;
-        case HTSP_EVENT_EPG_UPDATE:
-          PVR->TriggerEpgUpdate(it->m_idx);
-          break;
-      }
-    }
+    /* Process all pending events */
+    ProcessEvents(eventsCopy);
   }
 
   /* Local */
   return NULL;
+}
+
+void CTvheadend::TriggerChannelGroupsUpdate()
+{
+  m_events.push_back(htsp::Event(htsp::EventType::TAG_UPDATE));
+}
+
+void CTvheadend::TriggerChannelUpdate()
+{
+  m_events.push_back(htsp::Event(htsp::EventType::CHN_UPDATE));
+}
+
+void CTvheadend::TriggerRecordingUpdate()
+{
+  m_events.push_back(htsp::Event(htsp::EventType::REC_UPDATE));
+}
+
+void CTvheadend::TriggerTimerUpdate()
+{
+  m_events.push_back(htsp::Event(htsp::EventType::REC_UPDATE));
+}
+
+void CTvheadend::TriggerEpgUpdate(uint32_t idx)
+{
+  auto event = htsp::Event(htsp::EventType::EPG_UPDATE, idx);
+
+  if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
+    m_events.push_back(event);
+}
+
+void CTvheadend::ProcessEvents(const htsp::EventList &events)
+{
+  for (const auto &event : events)
+  {
+    switch (event.GetType())
+    {
+      case htsp::EventType::TAG_UPDATE:
+        PVR->TriggerChannelGroupsUpdate();
+        break;
+      case htsp::EventType::CHN_UPDATE:
+        PVR->TriggerChannelUpdate();
+        break;
+      case htsp::EventType::REC_UPDATE:
+        PVR->TriggerTimerUpdate();
+        PVR->TriggerRecordingUpdate();
+        break;
+      case htsp::EventType::EPG_UPDATE:
+        PVR->TriggerEpgUpdate(event.GetIdx());
+        break;
+    }
+  }
 }
 
 void CTvheadend::SyncCompleted ( void )

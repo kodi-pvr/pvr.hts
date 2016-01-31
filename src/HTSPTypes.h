@@ -78,35 +78,3 @@ typedef enum {
   DVR_RET_SPACE     = INT32_MAX-1,  // the server may delete this recording if space for a new recording is needed (removal only)
   DVR_RET_FOREVER   = INT32_MAX     // the server should never delete this recording or database entry, only the user can do this
 } dvr_retention_t;
-
-enum eHTSPEventType
-{
-  HTSP_EVENT_CHN_UPDATE,
-  HTSP_EVENT_TAG_UPDATE,
-  HTSP_EVENT_EPG_UPDATE,
-  HTSP_EVENT_REC_UPDATE,
-};
-
-struct SHTSPEvent
-{
-  eHTSPEventType m_type;
-  uint32_t       m_idx;
-
-  SHTSPEvent (eHTSPEventType type, uint32_t idx = 0) :
-    m_type(type),
-    m_idx (idx)
-  {
-  }
-  
-  bool operator==(const SHTSPEvent &right) const
-  {
-    return m_type == right.m_type && m_idx == right.m_idx;
-  }
-
-  bool operator!=(const SHTSPEvent &right) const
-  {
-    return !(*this == right);
-  }
-};
-
-typedef std::vector<SHTSPEvent> SHTSPEventList;
