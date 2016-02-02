@@ -431,6 +431,8 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed subscriptionStart: 'streams' missing");
     return;
   }
+
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
   m_streamStat.clear();
 
   /* Process each */
@@ -450,7 +452,6 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     /* Find stream */
     m_streamStat[idx] = 0;
     m_streams.GetStreamData(idx, &stream);
-    Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
     
     CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
     xbmc_codec_t codec = codecDescriptor.Codec();
