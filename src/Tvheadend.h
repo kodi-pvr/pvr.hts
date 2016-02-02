@@ -265,6 +265,7 @@ private:
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
   tvheadend::Subscription                 m_subscription;
   std::atomic<time_t>                     m_lastUse;
+  bool                                    m_gotIframe;
   
   void         Close0         ( void );
   void         Abort0         ( void );
