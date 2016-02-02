@@ -481,6 +481,9 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
         
         if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
           strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
+
+        Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u, language: %s",
+                    idx, type, stream.iCodecId, stream.strLanguage);
       }
 
       /* Audio data */
@@ -515,10 +518,12 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
           stream.iFPSScale = u32;
           stream.iFPSRate  = DVD_TIME_BASE;
         }
+
+        Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u, dimensions: %dx%d",
+                    idx, type, stream.iCodecId, stream.iWidth, stream.iHeight);
       }
         
       streams.push_back(stream);
-      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
     }
   }
 
