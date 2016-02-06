@@ -1,12 +1,9 @@
-version: .{build}
+version: BuildNr.{build}
 
 init:
 - ps: $commit = $env:appveyor_repo_commit.SubString(0,7)
 - ps: $timestamp = $env:appveyor_repo_commit_timestamp.SubString(0,10)
-- ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch-$commit-$timestamp"
-
-
-#- ps: Update-AppveyorBuild -Version "$env:appveyor_repo_branch-$env:appveyor_repo_commit-$env:appveyor_repo_commit_timestamp"
+- ps: Update-AppveyorBuild -Version ("{0}-{1}-{2}" -f $env:appveyor_repo_branch, $commit, $timestamp)
 
 #branches:
 #    only:
@@ -17,14 +14,6 @@ clone_folder: c:\projects\pvr.hts
 
 # fetch repository as zip archive
 shallow_clone: true                 # default is "false"
-
-install:
-  - ps: wget https://s3.amazonaws.com/biibinaries/thirdparty/cmake-3.0.2-win32-x86.zip -OutFile cmake.zip
-  - cmd: echo "Unzipping cmake..."
-  - cmd: 7z x cmake.zip -o"C:\Program Files (x86)\" -y > nul
-  - cmd: set PATH=%PATH:CMake 2.8\bin=%;C:\Program Files (x86)\cmake-3.0.2-win32-x86\bin
-  - cmd: cmake --version
-  - cmd: del cmake.zip
 
 environment:
   app_id: pvr.hts
