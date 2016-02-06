@@ -7,6 +7,10 @@ language: cpp
 # Linux. We need Trusty in order to get up to date versions of 
 # cmake and g++.
 #
+env:
+  global:
+    - app_id=pvr.hts
+
 matrix:
   include:
     - os: linux
@@ -37,7 +41,7 @@ before_install:
 before_script:
   - cd $TRAVIS_BUILD_DIR/..
   - git clone --depth=1 https://github.com/xbmc/xbmc.git
-  - cd pvr.hts && mkdir build && cd build
-  - cmake -DADDONS_TO_BUILD=pvr.hts -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons
+  - cd ${app_id} && mkdir build && cd build
+  - cmake -DADDONS_TO_BUILD=${app_id} -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons
 
 script: make
