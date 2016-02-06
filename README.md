@@ -1,9 +1,11 @@
-[![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=master)](https://travis-ci.org/kodi-pvr/pvr.hts)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
-
 # Tvheadend PVR addon for Kodi
 
 This is a [Kodi] (http://kodi.tv) PVR addon for connecting to a [tvheadend](https://tvheadend.org) backend.
+
+#### CI Testing
+* Tarvis-CI for OS X, iOS, Linux [![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=master)](https://travis-ci.org/kodi-pvr/pvr.hts)
+* AppVeyor for Windows [![Build status](https://ci.appveyor.com/api/projects/status/om02uriby21nek4g?svg=true)](https://ci.appveyor.com/project/MartijnKaijser/pvr-hts-hr8p4)
+* Code analyses for Linux [![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
 
 ## Build instructions
 
