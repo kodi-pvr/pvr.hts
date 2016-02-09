@@ -472,7 +472,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       rec.iEpgEventId = recording.GetEventId();
 
       /* channel id */
-      rec.iChannelUid = recording.GetChannel();
+      rec.iChannelUid = recording.GetChannel() > 0 ? recording.GetChannel() : PVR_CHANNEL_INVALID_UID;
 
       recs.push_back(rec);
     }
@@ -868,7 +868,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   memset(&tmr, 0, sizeof(tmr));
 
   tmr.iClientIndex       = tvhTmr.GetId();
-  tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : -1;
+  tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : PVR_CHANNEL_INVALID_UID;
   tmr.startTime          = static_cast<time_t>(tvhTmr.GetStart());
   tmr.endTime            = static_cast<time_t>(tvhTmr.GetStop());
   strncpy(tmr.strTitle,
