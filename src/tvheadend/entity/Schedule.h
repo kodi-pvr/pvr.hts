@@ -21,9 +21,9 @@
  *
  */
 
+#include <map>
 #include <vector>
 #include "Entity.h"
-#include "Event.h"
 
 namespace tvheadend
 {
@@ -32,7 +32,9 @@ namespace tvheadend
     class Schedule;
     typedef std::pair<int, Schedule> ScheduleMapEntry;
     typedef std::map<int, Schedule> Schedules;
-    typedef std::vector<Event> Segment;
+
+    typedef std::pair<uint32_t, Entity> EventUidsMapEntry;
+    typedef std::map<uint32_t, Entity> EventUids;
 
     /**
      * Represents a schedule. A schedule has a channel and a bunch of events. 
@@ -44,18 +46,17 @@ namespace tvheadend
       virtual void SetDirty(bool dirty);
 
       /**
-       * @return a segment containing the events that occur within the
-       * specified times
-       */
-      Segment GetSegment(time_t startTime, time_t endTime) const;
-
-      /**
        * @return read-write reference to the events in this schedule
        */
-      Events& GetEvents();
+      EventUids& GetEvents();
+
+      /**
+       * @return read-only reference to the events in this schedule
+       */
+      const EventUids& GetEvents() const;
 
     private:
-      Events m_events;
+      EventUids m_events; // event uids
     };
   }
 }

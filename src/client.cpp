@@ -41,7 +41,6 @@ using namespace tvheadend::utilities;
  * Client state
  */
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
-bool         m_bAlertHtspVersionMismatch = true;
 
 /*
  * Globals
@@ -80,7 +79,8 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     SAFE_DELETE(PVR);
     SAFE_DELETE(CODEC);
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_PERMANENT_FAILURE;
+    m_CurStatus = ADDON_STATUS_PERMANENT_FAILURE;
+    return m_CurStatus;
   }
 
   /* Configure the logger */
@@ -117,41 +117,13 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   tvh = new CTvheadend();
   tvh->Start();
 
-  /* Wait for connection */
-  if (!tvh->WaitForConnection())
-  {
-    if (m_bAlertHtspVersionMismatch &&
-        (tvh->GetProtocol() > 0) && // 0 => tvh server down
-        (tvh->GetProtocol() < HTSP_MIN_SERVER_VERSION))
-    {
-      m_bAlertHtspVersionMismatch = false; // alert max once during addon lifetime
-
-      /* client/server API version mismatch */
-      XBMC->QueueNotification(
-        QUEUE_ERROR,
-        XBMC->GetLocalizedString(30300), tvh->GetProtocol(), HTSP_MIN_SERVER_VERSION);
-    }
-
-    SAFE_DELETE(tvh);
-    SAFE_DELETE(PVR);
-    SAFE_DELETE(CODEC);
-    SAFE_DELETE(XBMC);
-
-    return ADDON_STATUS_LOST_CONNECTION;
-  }
-
-  m_CurStatus     = ADDON_STATUS_OK;
+  m_CurStatus = ADDON_STATUS_OK;
   return m_CurStatus;
 }
 
 ADDON_STATUS ADDON_GetStatus()
 {
   CLockObject lock(g_mutex);
-
-  // Check that we're still connected
-  if (m_CurStatus == ADDON_STATUS_OK && !tvh->IsConnected())
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-
   return m_CurStatus;
 }
 
@@ -180,7 +152,9 @@ unsigned int ADDON_GetSettings
 ADDON_STATUS ADDON_SetSetting
   (const char *settingName, const void *settingValue)
 {
-  return Settings::GetInstance().SetSetting(settingName, settingValue);
+  CLockObject lock(g_mutex);
+  m_CurStatus = Settings::GetInstance().SetSetting(settingName, settingValue);
+  return m_CurStatus;
 }
 
 void ADDON_Stop()
@@ -245,19 +219,25 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static std::string serverName = tvh->GetServerName();
+  static std::string serverName;
+
+  serverName = tvh->GetServerName();
   return serverName.c_str();
 }
 
 const char *GetBackendVersion(void)
 {
-  static std::string serverVersion = tvh->GetServerVersion();
+  static std::string serverVersion;
+
+  serverVersion = tvh->GetServerVersion();
   return serverVersion.c_str();
 }
 
 const char *GetConnectionString(void)
 {
-  static std::string serverString = tvh->GetServerString();
+  static std::string serverString;
+
+  serverString = tvh->GetServerString();
   return serverString.c_str();
 }
 
@@ -348,11 +328,6 @@ void SetSpeed(int speed)
   tvh->DemuxSpeed(speed);
 }
 
-int GetCurrentClientChannel(void)
-{
-  return -1; // XBMC doesn't even use this
-}
-
 bool SwitchChannel(const PVR_CHANNEL &channel)
 {
   return tvh->DemuxOpen(channel);
@@ -424,6 +399,12 @@ PVR_ERROR GetEPGForChannel
   (ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   return tvh->GetEpg(handle, channel, iStart, iEnd);
+}
+
+PVR_ERROR SetEPGTimeFrame(int iDays)
+{
+  // TODO: implement filter for epg data push according to this value
+  return PVR_ERROR_NO_ERROR;
 }
 
 /* **************************************************************************
@@ -609,12 +590,12 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
 
 const char* GetGUIAPIVersion(void)
 {
-  return KODI_GUILIB_API_VERSION;
+  return ""; // GUI API not used
 }
 
 const char* GetMininumGUIAPIVersion(void)
 {
-  return KODI_GUILIB_MIN_API_VERSION;
+  return ""; // GUI API not used
 }
 
 } /* extern "C" */

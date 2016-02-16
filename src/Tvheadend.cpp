@@ -471,6 +471,9 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* EPG event id */
       rec.iEpgEventId = recording.GetEventId();
 
+      /* channel id */
+      rec.iChannelUid = recording.GetChannel() > 0 ? recording.GetChannel() : PVR_CHANNEL_INVALID_UID;
+
       recs.push_back(rec);
     }
   }
@@ -658,26 +661,24 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* PVR_Timer.iLifetime values and presentation.*/
-  static std::vector< std::pair<int, std::string> > lifetimeValues;
-  if (lifetimeValues.size() == 0)
-  {
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30365)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 5)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30367)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30369)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 3)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 6)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30371)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 2)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 3)));
-    if (m_conn.GetProtocol() >= 25)
-      lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
-  }
+  std::vector< std::pair<int, std::string> > lifetimeValues;
+
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30365)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    StringUtils::Format(XBMC->GetLocalizedString(30366), 5)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30367)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   StringUtils::Format(XBMC->GetLocalizedString(30368), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30369)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 3)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  StringUtils::Format(XBMC->GetLocalizedString(30370), 6)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30371)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 2)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  StringUtils::Format(XBMC->GetLocalizedString(30372), 3)));
+  if (m_conn.GetProtocol() >= 25)
+    lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
+  lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
 
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS
     = PVR_TIMER_TYPE_IS_MANUAL           |
@@ -703,134 +704,132 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* Timer types definition. */
-  static std::vector< std::unique_ptr<TimerType> > timerTypes;
-  if (timerTypes.size() == 0)
+  std::vector< std::unique_ptr<TimerType> > timerTypes;
+
+  timerTypes.push_back(
+    /* One-shot manual (time and channel based) */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_MANUAL,
+      /* Attributes. */
+      TIMER_ONCE_MANUAL_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* One-shot epg based */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_EPG,
+      /* Attributes. */
+      TIMER_ONCE_EPG_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Read-only one-shot for timers generated by timerec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_CREATED_BY_TIMEREC,
+      /* Attributes. */
+      TIMER_ONCE_MANUAL_ATTRIBS  |
+      PVR_TIMER_TYPE_IS_READONLY |
+      PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      /* Description. */
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Read-only one-shot for timers generated by autorec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_ONCE_CREATED_BY_AUTOREC,
+      /* Attributes. */
+      TIMER_ONCE_EPG_ATTRIBS     |
+      PVR_TIMER_TYPE_IS_READONLY |
+      PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      /* Description. */
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  timerTypes.push_back(
+    /* Repeating manual (time and channel based) - timerec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_REPEATING_MANUAL,
+      /* Attributes. */
+      PVR_TIMER_TYPE_IS_MANUAL                  |
+      PVR_TIMER_TYPE_IS_REPEATING               |
+      PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE    |
+      PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
+      PVR_TIMER_TYPE_SUPPORTS_START_TIME        |
+      PVR_TIMER_TYPE_SUPPORTS_END_TIME          |
+      PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS          |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME          |
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues)));
+
+  unsigned int TIMER_REPEATING_EPG_ATTRIBS
+    = PVR_TIMER_TYPE_IS_REPEATING                |
+      PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
+      PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
+      PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
+      PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
+      PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
+      PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
+      PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
+
+  if (m_conn.GetProtocol() >= 20)
   {
-    timerTypes.push_back(
-      /* One-shot manual (time and channel based) */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_MANUAL,
-        /* Attributes. */
-        TIMER_ONCE_MANUAL_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* One-shot epg based */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_EPG,
-        /* Attributes. */
-        TIMER_ONCE_EPG_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Read-only one-shot for timers generated by timerec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_CREATED_BY_TIMEREC,
-        /* Attributes. */
-        TIMER_ONCE_MANUAL_ATTRIBS  |
-        PVR_TIMER_TYPE_IS_READONLY |
-        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
-        /* Description. */
-        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Read-only one-shot for timers generated by autorec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_ONCE_CREATED_BY_AUTOREC,
-        /* Attributes. */
-        TIMER_ONCE_EPG_ATTRIBS     |
-        PVR_TIMER_TYPE_IS_READONLY |
-        PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
-        /* Description. */
-        XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    timerTypes.push_back(
-      /* Repeating manual (time and channel based) - timerec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_REPEATING_MANUAL,
-        /* Attributes. */
-        PVR_TIMER_TYPE_IS_MANUAL                  |
-        PVR_TIMER_TYPE_IS_REPEATING               |
-        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE    |
-        PVR_TIMER_TYPE_SUPPORTS_CHANNELS          |
-        PVR_TIMER_TYPE_SUPPORTS_START_TIME        |
-        PVR_TIMER_TYPE_SUPPORTS_END_TIME          |
-        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS          |
-        PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
-        PVR_TIMER_TYPE_SUPPORTS_LIFETIME          |
-        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues)));
-
-    unsigned int TIMER_REPEATING_EPG_ATTRIBS
-      = PVR_TIMER_TYPE_IS_REPEATING                |
-        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
-        PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH    |
-        PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
-        PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
-        PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
-        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
-        PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
-        PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
-        PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
-        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
-
-    if (m_conn.GetProtocol() >= 20)
-    {
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
-    }
-
-    if (!Settings::GetInstance().GetAutorecApproxTime())
-    {
-      /* We need the end time to represent the end of the tvh starting window */
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
-      TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
-    }
-
-    timerTypes.push_back(
-      /* Repeating epg based - autorec */
-      std::unique_ptr<TimerType>(new TimerType(
-        /* Type id. */
-        TIMER_REPEATING_EPG,
-        /* Attributes. */
-        TIMER_REPEATING_EPG_ATTRIBS,
-        /* Let Kodi generate the description. */
-        "",
-        /* Values definitions for priorities. */
-        priorityValues,
-        /* Values definitions for lifetime. */
-        lifetimeValues,
-        /* Values definitions for prevent duplicate episodes. */
-        deDupValues)));
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
   }
+
+  if (!Settings::GetInstance().GetAutorecApproxTime())
+  {
+    /* We need the end time to represent the end of the tvh starting window */
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
+    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
+  }
+
+  timerTypes.push_back(
+    /* Repeating epg based - autorec */
+    std::unique_ptr<TimerType>(new TimerType(
+      /* Type id. */
+      TIMER_REPEATING_EPG,
+      /* Attributes. */
+      TIMER_REPEATING_EPG_ATTRIBS,
+      /* Let Kodi generate the description. */
+      "",
+      /* Values definitions for priorities. */
+      priorityValues,
+      /* Values definitions for lifetime. */
+      lifetimeValues,
+      /* Values definitions for prevent duplicate episodes. */
+      deDupValues)));
 
   /* Copy data to target array. */
   int i = 0;
@@ -869,7 +868,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   memset(&tmr, 0, sizeof(tmr));
 
   tmr.iClientIndex       = tvhTmr.GetId();
-  tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : -1;
+  tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : PVR_CHANNEL_INVALID_UID;
   tmr.startTime          = static_cast<time_t>(tvhTmr.GetStart());
   tmr.endTime            = static_cast<time_t>(tvhTmr.GetStop());
   strncpy(tmr.strTitle,
@@ -1185,12 +1184,9 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
  * EPG
  * *************************************************************************/
 
-/* Transfer schedule to XBMC */
-void CTvheadend::TransferEvent
-  ( ADDON_HANDLE handle, const Event &event )
+void CTvheadend::CreateEvent
+  ( const Event &event, EPG_TAG &epg )
 {
-  /* Build */
-  EPG_TAG epg;
   memset(&epg, 0, sizeof(EPG_TAG));
   epg.iUniqueBroadcastId  = event.GetId();
   epg.strTitle            = event.GetTitle().c_str();
@@ -1218,43 +1214,40 @@ void CTvheadend::TransferEvent
   epg.iEpisodePartNumber  = event.GetPart();
   epg.strEpisodeName      = event.GetSubtitle().c_str();
   epg.iFlags              = EPG_TAG_FLAG_UNDEFINED;
+}
 
-  /* Callback. */
-  PVR->TransferEpgEntry(handle, &epg);
+void CTvheadend::TransferEvent
+  ( const Event &event, EPG_EVENT_STATE state )
+{
+  /* Build */
+  EPG_TAG tag;
+  CreateEvent(event, tag);
+
+  /* Transfer event to Kodi */
+  PVR->EpgEventStateChange(&tag, event.GetChannel(), state);
+}
+
+void CTvheadend::TransferEvent
+  ( ADDON_HANDLE handle, const Event &event )
+{
+  /* Build */
+  EPG_TAG tag;
+  CreateEvent(event, tag);
+
+  /* Transfer event to Kodi */
+  PVR->TransferEpgEntry(handle, &tag);
 }
 
 PVR_ERROR CTvheadend::GetEpg
   ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
 {
   htsmsg_field_t *f;
-  int n = 0;
 
   Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
            (long long)start, (long long)end);
 
-  /* Async transfer */
-  if (Settings::GetInstance().GetAsyncEpg())
-  {
-    if (!m_asyncState.WaitForState(ASYNC_DONE))
-      return PVR_ERROR_FAILED;
-    
-    // Find the relevant events
-    Segment segment;
-    {
-      CLockObject lock(m_mutex);
-      auto sit = m_schedules.find(chn.iUniqueId);
-
-      if (sit != m_schedules.cend())
-        segment = sit->second.GetSegment(start, end);
-    }
-
-    // Transfer
-    for (const auto &event : segment)
-      TransferEvent(handle, event);
-
-  /* Synchronous transfer */
-  }
-  else
+  /* Note: Nothing to do if "async epg transfer" is enabled as all changes are pushed live to Kodi, then. */
+  if (!Settings::GetInstance().GetAsyncEpg())
   {
     /* Build message */
     htsmsg_t *msg = htsmsg_create_map();
@@ -1271,13 +1264,16 @@ PVR_ERROR CTvheadend::GetEpg
 
     /* Process */
     htsmsg_t *l;
-    
+
     if (!(l = htsmsg_get_list(msg, "events")))
     {
       htsmsg_destroy(msg);
       Logger::Log(LogLevel::LEVEL_ERROR, "malformed getEvents response: 'events' missing");
       return PVR_ERROR_SERVER_ERROR;
     }
+
+    int n = 0;
+
     HTSMSG_FOREACH(f, l)
     {
       Event event;
@@ -1292,10 +1288,8 @@ PVR_ERROR CTvheadend::GetEpg
       }
     }
     htsmsg_destroy(msg);
+    Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d events %d", chn.iUniqueId, n);
   }
-
-  Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d events %d", chn.iUniqueId, n);
-
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -1494,7 +1488,7 @@ void* CTvheadend::Process ( void )
           PVR->TriggerRecordingUpdate();
           break;
         case HTSP_EVENT_EPG_UPDATE:
-          PVR->TriggerEpgUpdate(it->m_idx);
+          TransferEvent(it->m_epg, it->m_state);
           break;
         case HTSP_EVENT_NONE:
           break;
@@ -1592,23 +1586,44 @@ void CTvheadend::SyncEpgCompleted ( void )
     return;
 
   /* Schedules */
-  utilities::erase_if(m_schedules, [](const ScheduleMapEntry &entry)
+  std::vector<std::pair<uint32_t, uint32_t > > deletedEvents;
+  utilities::erase_if(m_schedules, [&](const ScheduleMapEntry &entry)
   {
-    return entry.second.IsDirty();
+    if (entry.second.IsDirty())
+    {
+      // all events are dirty too!
+      for (auto &evt : entry.second.GetEvents())
+        deletedEvents.push_back(
+          std::make_pair(evt.second.GetId() /* event uid */, entry.second.GetId() /* channel uid */));
+
+      return true;
+    }
+    return false;
   });
 
   /* Events */
   for (auto &entry : m_schedules)
   {
-    utilities::erase_if(entry.second.GetEvents(), [](const EventMapEntry &entry)
+    utilities::erase_if(entry.second.GetEvents(), [&](const EventUidsMapEntry &mapEntry)
     {
-      return entry.second.IsDirty();
+      if (mapEntry.second.IsDirty())
+      {
+        deletedEvents.push_back(
+          std::make_pair(mapEntry.second.GetId() /* event uid */, entry.second.GetId() /* channel uid */));
+        return true;
+      }
+      return false;
     });
   }
-  
-  /* Trigger updates */
-  for (const auto &entry : m_schedules)
-    TriggerEpgUpdate(entry.second.GetId());
+
+  Event evt;
+  for (auto &entry : deletedEvents)
+  {
+    /* Transfer event to Kodi (callback) */
+    evt.SetId(entry.first);
+    evt.SetChannel(entry.second);
+    PushEpgEventUpdate(evt, EPG_EVENT_DELETED);
+  }
 }
 
 void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
@@ -2087,41 +2102,56 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
 
 void CTvheadend::ParseEventAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
-  Event tmp;
+  Event evt;
 
   /* Parse */
-  if (!ParseEvent(msg, bAdd, tmp))
+  if (!ParseEvent(msg, bAdd, evt))
     return;
 
-  /* Get event handle */
-  Schedule &sched  = m_schedules[tmp.GetChannel()];
-  Events   &events = sched.GetEvents();
-  Event    &evt    = events[tmp.GetId()];
-  Event comparison = evt;
-  sched.SetId(tmp.GetChannel());
+  /* create/update schedule */
+  Schedule &sched = m_schedules[evt.GetChannel()];
+  sched.SetId(evt.GetChannel());
   sched.SetDirty(false);
-  evt.SetId(tmp.GetId());
-  evt.SetDirty(false);
-  
-  /* Store */
-  evt = tmp;
 
-  /* Update */
-  if (evt != comparison)
+  /* create/update event */
+  EventUids &events = sched.GetEvents();
+
+  bool bUpdated(false);
+  if (bAdd && m_asyncState.GetState() < ASYNC_DONE)
   {
-    Logger::Log(LogLevel::LEVEL_TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-             evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
-             evt.GetTitle().c_str(), evt.GetDesc().c_str());
+    // After a reconnect, during processing of "enableAsyncMetadata" htsp
+    // method, tvheadend sends all events as "added". Check whether we
+    // announced the event already and in case send it as "updated" to Kodi.
+    auto it = events.find(evt.GetId());
+    if (it != events.end())
+    {
+      bUpdated = true;
 
-    if (m_asyncState.GetState() > ASYNC_EPG)
-      TriggerEpgUpdate(tmp.GetChannel());
+      Entity &ent = it->second;
+      ent.SetId(evt.GetId());
+      ent.SetDirty(false);
+    }
   }
+
+  if (!bUpdated)
+  {
+    Entity &ent = events[evt.GetId()];
+    ent.SetId(evt.GetId());
+    ent.SetDirty(false);
+  }
+
+  Logger::Log(LogLevel::LEVEL_TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
+              evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
+              evt.GetTitle().c_str(), evt.GetDesc().c_str());
+
+  /* Transfer event to Kodi (callback) */
+  PushEpgEventUpdate(evt, (!bAdd || bUpdated) ? EPG_EVENT_UPDATED : EPG_EVENT_CREATED);
 }
 
 void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
 {
   uint32_t u32;
-  
+
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId", &u32))
   {
@@ -2129,12 +2159,12 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
     return;
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "delete event %u", u32);
-  
+
   /* Erase */
   for (auto &entry : m_schedules)
   {
-    Schedule &schedule = entry.second;
-    Events &events = schedule.GetEvents();
+    Schedule  &schedule = entry.second;
+    EventUids &events   = schedule.GetEvents();
 
     // Find the event so we can get the channel number
     auto eit = events.find(u32);
@@ -2143,7 +2173,12 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
     {
       Logger::Log(LogLevel::LEVEL_TRACE, "deleted event %d from channel %d", u32, schedule.GetId());
       events.erase(eit);
-      TriggerEpgUpdate(schedule.GetId());
+
+      /* Transfer event to Kodi (callback) */
+      Event evt;
+      evt.SetId(u32);
+      evt.SetChannel(schedule.GetId());
+      PushEpgEventUpdate(evt, EPG_EVENT_DELETED);
       return;
     }
   }

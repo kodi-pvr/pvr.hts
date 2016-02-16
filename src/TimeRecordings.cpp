@@ -68,7 +68,7 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
     memset(&tmr, 0, sizeof(tmr));
 
     tmr.iClientIndex       = tit->second.GetId();
-    tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : -1;
+    tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
     tmr.startTime          = tit->second.GetStart();
     tmr.endTime            = tit->second.GetStop();
     strncpy(tmr.strTitle,
