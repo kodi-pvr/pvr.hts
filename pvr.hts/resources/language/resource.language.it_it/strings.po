@@ -44,6 +44,14 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Timeout Connessione (secondi)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Timeout risposta (secondi)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Impostazioni avanzate"
+
 msgctxt "#30009"
 msgid "Streaming settings"
 msgstr "Impostazioni Streaming"
@@ -55,6 +63,42 @@ msgstr "Impostazioni Timer"
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Registrazioni Automatiche"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Avvia calcolo della finestra temporale"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Stretto necessario (ora inizio + ora fine)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Rilassato (ora inizio +/- margine)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Massimo margine di tempo (minuti)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Priorità predefinita"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Durata di vita predefinita"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Rilevamento dei duplicati predefinito"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Preimpostazione per nuovi timer"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Trasferimento dati"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -72,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "La versione di HTSP non corrisponde (supportata: v%d, necessaria: v&d). Aggiorna tvheadend, per favore."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Ona volta (Pianificato da timer ripetitivo)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (Maggiore)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Alta"
@@ -84,10 +136,126 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Bassa"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Meno importante (Minore)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Registra tutti gli episodi"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Registra se il numero dell'episodio è differente"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Registra se il nome dell'episodio è differente"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Registra se la descrizione è differente"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Registra al massimo una volta a settimana"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Registra al massimo una volta al giorno"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 giorno"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d giorni"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "una settimana"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d settimane"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 mese"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d mesi"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "un anno"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d anni"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Fino a spazio necessario"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Per sempre"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonizzazione predittiva"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Numero di sottoscrizioni da usare"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Ritardo nella chiusura della sottoscrizioni inutilizzate (secondi)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Usa sintonizzazione predittiva per accelerare il cambio canale"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Nessun adattatore libero disponibile"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canale codificato"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Nessun segnale"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Sintonizzazione fallita"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Raggiunto limite utente"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Nessun accesso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Errore di sottoscrizione"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Profilo di streaming"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profilo da usare (vuoto = predefinito)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profilo di streaming %s non disponibile"

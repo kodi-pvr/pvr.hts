@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.2.13"
+  version="2.2.14"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -88,7 +88,7 @@
     <description lang="es_ES">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="et_EE">Tvheadend esi. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend; tukee reaaliaikaisen television ja nauhoituksien streamausta, EPGtä ja nauhoituksien ajastusta.</description>
-    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
+    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>

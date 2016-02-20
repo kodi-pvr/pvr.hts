@@ -44,9 +44,33 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tempo de espera da conexión (segundos)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Tempo de espera da resposta (segundos)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Axustes avanzados"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Axustes da transmisión"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Axuste do temporizador"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Gravacións auto."
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioridade predefinida"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferencia de datos"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -79,6 +103,18 @@ msgstr "Baixa"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episodios"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Gravar se o número do episodio é diferente"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Gravar se o nome do episodio é diferente"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Gravar se a descrición é diferente"
 
 msgctxt "#30365"
 msgid "1 day"
@@ -128,6 +164,10 @@ msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Sen adaptador libre dispoñíbel"
 
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canles codificadas"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Sen sinal"
@@ -144,6 +184,14 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Erro na subscrición"
 
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil da transmisión"
+
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Perfil a empregar (baleiro = predefinido)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "O perfil de transmisión %s non está dispoñible"

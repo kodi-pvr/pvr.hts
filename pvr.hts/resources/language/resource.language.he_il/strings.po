@@ -16,6 +16,10 @@ msgstr ""
 "Language: he_IL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "הגדרות חיבור"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "שם מארח או כתובת IP"
@@ -40,9 +44,33 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "זמן מירבי לניסיון חיבור (שנ')"
 
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "הגדרות מתקדמות"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "הגדרות הזרמה"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "הגדרות תזמון"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "הקלטות אוטומטיות"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "קדימות ברירת מחדל"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "אורך חיים ברירת מחדל"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "ברירות מחדל לתזמון חדש"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -62,20 +90,60 @@ msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). �
 
 msgctxt "#30352"
 msgid "High"
-msgstr "גבוה"
+msgstr "גבוהה"
 
 msgctxt "#30353"
 msgid "Normal"
-msgstr "רגיל"
+msgstr "רגילה"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "נמוך"
+msgstr "נמוכה"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "הקלטת כל הפרקים"
+msgstr "הקלט כל הפרקים"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "יום יחיד"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d ימים"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "שבוע יחיד"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d שבועות"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d חודשים"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d שנים"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "עד שנפח האחסון נדרש"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "לעד"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "ערוץ מוצפן"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "אין אות"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "אין גישה"
