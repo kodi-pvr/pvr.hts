@@ -337,7 +337,7 @@ class CTvheadend
   : public P8PLATFORM::CThread
 {
 public:
-  CTvheadend();
+  CTvheadend(PVR_PROPERTIES *pvrProps);
   ~CTvheadend();
 
   void Start ( void );
@@ -376,6 +376,7 @@ public:
 
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
+  PVR_ERROR SetEPGTimeFrame   ( int iDays );
 
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
@@ -424,6 +425,8 @@ private:
 
   TimeRecordings              m_timeRecordings;
   AutoRecordings              m_autoRecordings;
+
+  int                         m_epgMaxDays;
 
   /*
    * Predictive tuning
