@@ -474,6 +474,22 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* channel id */
       rec.iChannelUid = recording.GetChannel() > 0 ? recording.GetChannel() : PVR_CHANNEL_INVALID_UID;
 
+      /* channel type */
+      if (rec.iChannelUid == PVR_CHANNEL_INVALID_UID)
+      {
+        rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
+      }
+      else
+      {
+        auto cit = m_channels.find(rec.iChannelUid);
+        if (cit == m_channels.cend())
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
+        else if (cit->second.IsRadio())
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_RADIO;
+        else
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
+      }
+
       recs.push_back(rec);
     }
   }
