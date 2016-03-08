@@ -74,7 +74,7 @@ void CHTSPDemuxer::Close0 ( void )
 void CHTSPDemuxer::Abort0 ( void )
 {
   CLockObject lock(m_mutex);
-  m_streams.Clear();
+  m_streams.iStreamCount = 0;
   m_streamStat.clear();
   m_seeking = false;
   m_speedChange = false;
@@ -207,11 +207,16 @@ void CHTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
   m_subscription.SendWeight(static_cast<uint32_t>(weight));
 }
 
-PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
+PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *props )
 {
   CLockObject lock(m_mutex);
-  return m_streams.GetProperties(streams) ? PVR_ERROR_NO_ERROR
-                                          : PVR_ERROR_SERVER_ERROR; 
+  for (int i = 0; i < m_streams.iStreamCount; i++)
+  {
+    memcpy(&props->stream[i], &m_streams.stream[i], sizeof(PVR_STREAM_PROPERTIES::PVR_STREAM));
+  }
+
+  props->iStreamCount = m_streams.iStreamCount;
+  return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
@@ -350,7 +355,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   size_t      binlen;
   DemuxPacket *pkt;
   char        _unused(type) = 0;
-  int         iStreamId, ignore;
+  int         ignore;
   
   /* Ignore packets while switching channels */
   if (!m_subscription.IsActive())
@@ -367,22 +372,22 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
     return;
   }
 
-  /* Record */
-  m_streamStat[idx]++;
-  
   /* Drop packets for unknown streams */
-  if (-1 == (iStreamId = m_streams.GetStreamId(idx)))
+  if (m_streamStat.find(idx) == m_streamStat.end())
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "Dropped packet with unknown stream index %i", idx);
     return;
   }
-  
+
+  /* Record */
+  m_streamStat[idx]++;
+
   /* Allocate buffer */
   if (!(pkt = PVR->AllocateDemuxPacket(binlen)))
     return;
   memcpy(pkt->pData, bin, binlen);
   pkt->iSize     = binlen;
-  pkt->iStreamId = iStreamId;
+  pkt->iStreamId = idx;
 
   /* Duration */
   if (!htsmsg_get_u32(m, "duration", &u32))
@@ -420,10 +425,9 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 {
-  vector<XbmcPvrStream>  streams;
-  htsmsg_t               *l;
-  htsmsg_field_t         *f;
-  DemuxPacket            *pkt;
+  htsmsg_t       *l;
+  htsmsg_field_t *f;
+  DemuxPacket    *pkt;
 
   /* Validate */
   if ((l = htsmsg_get_list(m, "streams")) == NULL)
@@ -432,13 +436,14 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     return;
   }
   m_streamStat.clear();
+  m_streams.iStreamCount = 0;
 
   /* Process each */
+  int count = 0;
   HTSMSG_FOREACH(f, l)
   {
-    uint32_t      idx, u32;
-    const char    *type;
-    XbmcPvrStream stream;
+    uint32_t   idx, u32;
+    const char *type;
 
     if (f->hmf_type != HMF_MAP)
       continue;
@@ -449,81 +454,82 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 
     /* Find stream */
     m_streamStat[idx] = 0;
-    m_streams.GetStreamData(idx, &stream);
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
     
     CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
     xbmc_codec_t codec = codecDescriptor.Codec();
-    
+
+    memset(&m_streams.stream[count], 0, sizeof(m_streams.stream[count]));
+
     if (codec.codec_type != XBMC_CODEC_TYPE_UNKNOWN)
     {
-      stream.iCodecType  = codec.codec_type;
-      stream.iCodecId    = codec.codec_id;
-      stream.iPhysicalId = idx;
+      m_streams.stream[count].iCodecType = codec.codec_type;
+      m_streams.stream[count].iCodecId   = codec.codec_id;
+      m_streams.stream[count].iPID       = idx;
 
       /* Subtitle ID */
-      if ((stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
+      if ((m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
           !strcmp("DVBSUB", type))
       {
         uint32_t composition_id = 0, ancillary_id = 0;
         htsmsg_get_u32(&f->hmf_msg, "composition_id", &composition_id);
         htsmsg_get_u32(&f->hmf_msg, "ancillary_id"  , &ancillary_id);
-        stream.iIdentifier = (composition_id & 0xffff)
-                           | ((ancillary_id & 0xffff) << 16);
+        m_streams.stream[count].iSubtitleInfo = (composition_id & 0xffff)
+                                              | ((ancillary_id & 0xffff) << 16);
       }
 
       /* Language */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
-          stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
+      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
+          m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
         const char *language;
         
         if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
+          strncpy(m_streams.stream[count].strLanguage, language, sizeof(m_streams.stream[count].strLanguage) - 1);
       }
 
       /* Audio data */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
+      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
-        stream.iChannels
+        m_streams.stream[count].iChannels
           = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
-        stream.iSampleRate
+        m_streams.stream[count].iSampleRate
           = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
       }
 
       /* Video */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_VIDEO)
+      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_VIDEO)
       {
-        stream.iWidth   = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
-        stream.iHeight  = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
+        m_streams.stream[count].iWidth  = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
+        m_streams.stream[count].iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
         
         /* Ignore this message if the stream details haven't been determined 
            yet, a new message will be sent once they have. This is fixed in 
            some versions of tvheadend and is here for backward compatibility. */
-        if (stream.iWidth == 0 || stream.iHeight == 0)
+        if (m_streams.stream[count].iWidth == 0 || m_streams.stream[count].iHeight == 0)
         {
           Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring subscriptionStart, stream details missing");
           return;
         }
         
         /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
-        stream.fAspect = 0.0f;
+        m_streams.stream[count].fAspect = 0.0f;
         
         if ((u32 = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
         {
-          stream.iFPSScale = u32;
-          stream.iFPSRate  = DVD_TIME_BASE;
+          m_streams.stream[count].iFPSScale = u32;
+          m_streams.stream[count].iFPSRate  = DVD_TIME_BASE;
         }
       }
         
-      streams.push_back(stream);
-      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
+      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, m_streams.stream[count].iCodecId);
+      count++;
     }
   }
 
   /* Update streams */
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
-  m_streams.UpdateStreams(streams);
+  m_streams.iStreamCount = count;
   pkt = PVR->AllocateDemuxPacket(0);
   pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
   m_pktBuffer.Push(pkt);

@@ -27,7 +27,6 @@
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/buffer.h"
 #include "kodi/xbmc_codec_types.h"
-#include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"
 #include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
@@ -255,7 +254,7 @@ private:
   mutable P8PLATFORM::CMutex              m_mutex;
   CHTSPConnection                        &m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*>  m_pktBuffer;
-  ADDON::XbmcStreamProperties             m_streams;
+  PVR_STREAM_PROPERTIES                   m_streams;
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   P8PLATFORM::CCondition<volatile int64_t>  m_seekCond;
