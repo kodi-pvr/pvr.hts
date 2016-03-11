@@ -36,10 +36,10 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-CTvheadend::CTvheadend()
+CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
   : m_streamchange(false), m_vfs(m_conn),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
-    m_timeRecordings(m_conn), m_autoRecordings(m_conn)
+    m_timeRecordings(m_conn), m_autoRecordings(m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays)
 {
   for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
   {
@@ -473,6 +473,22 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 
       /* channel id */
       rec.iChannelUid = recording.GetChannel() > 0 ? recording.GetChannel() : PVR_CHANNEL_INVALID_UID;
+
+      /* channel type */
+      if (rec.iChannelUid == PVR_CHANNEL_INVALID_UID)
+      {
+        rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
+      }
+      else
+      {
+        auto cit = m_channels.find(rec.iChannelUid);
+        if (cit == m_channels.cend())
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
+        else if (cit->second.IsRadio())
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_RADIO;
+        else
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
+      }
 
       recs.push_back(rec);
     }
@@ -1293,6 +1309,21 @@ PVR_ERROR CTvheadend::GetEpg
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR CTvheadend::SetEPGTimeFrame(int iDays)
+{
+  if (m_epgMaxDays != iDays)
+  {
+    m_epgMaxDays = iDays;
+
+    if (Settings::GetInstance().GetAsyncEpg())
+    {
+      Logger::Log(LogLevel::LEVEL_TRACE, "reconnecting to synchronize epg data. epg max time: old = %d, new = %d", m_epgMaxDays, iDays);
+      m_conn.Disconnect(); // reconnect to synchronize epg data
+    }
+  }
+  return PVR_ERROR_NO_ERROR;
+}
+
 /* **************************************************************************
  * Connection
  * *************************************************************************/
@@ -1329,9 +1360,15 @@ bool CTvheadend::Connected ( void )
   m_asyncState.SetState(ASYNC_NONE);
   
   msg = htsmsg_create_map();
-  htsmsg_add_u32(msg, "epg", Settings::GetInstance().GetAsyncEpg());
-  //htsmsg_add_u32(msg, "epgMaxTime", 0);
-  //htsmsg_add_s64(msg, "lastUpdate", 0);
+  if (Settings::GetInstance().GetAsyncEpg())
+  {
+    htsmsg_add_u32(msg, "epg", 1);
+    if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
+      htsmsg_add_s64(msg, "epgMaxTime", static_cast<int64_t>(time(NULL) + m_epgMaxDays * int64_t(24 * 60 *60)));
+  }
+  else
+    htsmsg_add_u32(msg, "epg", 0);
+
   if ((msg = m_conn.SendAndWait0("enableAsyncMetadata", msg)) == NULL)
     return false;
 

@@ -63,11 +63,11 @@ void ADDON_ReadSettings(void)
   Settings::GetInstance().ReadSettings();
 }
 
-ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
+ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
-  if (!hdl)
+  if (!hdl || !props)
     return m_CurStatus;
-  
+
   /* Instantiate helpers */
   XBMC  = new CHelper_libXBMC_addon;
   CODEC = new CHelper_libXBMC_codec;
@@ -114,7 +114,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
   ADDON_ReadSettings();
 
-  tvh = new CTvheadend();
+  tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES *>(props));
   tvh->Start();
 
   m_CurStatus = ADDON_STATUS_OK;
@@ -403,8 +403,7 @@ PVR_ERROR GetEPGForChannel
 
 PVR_ERROR SetEPGTimeFrame(int iDays)
 {
-  // TODO: implement filter for epg data push according to this value
-  return PVR_ERROR_NO_ERROR;
+  return tvh->SetEPGTimeFrame(iDays);
 }
 
 /* **************************************************************************
