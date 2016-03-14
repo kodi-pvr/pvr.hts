@@ -297,7 +297,12 @@ msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr ""
 
-#empty strings from id 30389 to 30399
+#. Recording lifetime representation (for setting dialog only)
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr ""
+
+#empty strings from id 30390 to 30399
 
 msgctxt "#30400"
 msgid "Predictive tuning"
