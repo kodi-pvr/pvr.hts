@@ -200,55 +200,7 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr ""
 
-#empty strings from id 30362 to 30364
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30365"
-msgid "1 day"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30366"
-msgid "%d days"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30367"
-msgid "1 week"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30369"
-msgid "1 month"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30370"
-msgid "%d months"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30371"
-msgid "1 year"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30372"
-msgid "%d years"
-msgstr ""
+#empty strings from id 30362 to 30372
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp
@@ -262,7 +214,95 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr ""
 
-#empty strings from id 30375 to 30399
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30375"
+msgid "1 day"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30376"
+msgid "3 days"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30377"
+msgid "5 days"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30378"
+msgid "1 week"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30381"
+msgid "1 month"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30382"
+msgid "2 months"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30383"
+msgid "3 months"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30384"
+msgid "6 months"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30385"
+msgid "1 year"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30386"
+msgid "2 years"
+msgstr ""
+
+#. Recording lifetime representation
+#: src/Tvheadend.cpp
+msgctxt "#30387"
+msgid "3 years"
+msgstr ""
+
+#. Recording lifetime representation (for setting dialog only)
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr ""
+
+#. Recording lifetime representation (for setting dialog only)
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr ""
+
+#empty strings from id 30390 to 30399
 
 msgctxt "#30400"
 msgid "Predictive tuning"
