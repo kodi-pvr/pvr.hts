@@ -216,7 +216,7 @@ void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
   if (prevState != newState)
   {
     /* Notify connection state change (callback!) */
-    PVR->ConnectionStateChange(GetServerString().c_str(), newState, NULL);
+    PVR->ConnectionStateChange(GetServerString().c_str(), newState, "");
   }
 }
 
