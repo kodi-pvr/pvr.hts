@@ -228,8 +228,11 @@ void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
 
   if (prevState != newState)
   {
+    static std::string serverString;
+
     /* Notify connection state change (callback!) */
-    PVR->ConnectionStateChange(GetServerString().c_str(), newState, NULL);
+    serverString = GetServerString();
+    PVR->ConnectionStateChange(serverString.c_str(), newState, NULL);
   }
 }
 
