@@ -52,15 +52,15 @@ CTvheadend::~CTvheadend()
   {
     delete dmx;
   }
-  m_conn.StopThread(-1);
-  m_conn.Disconnect();
+
+  m_conn.Stop();
   StopThread();
 }
 
 void CTvheadend::Start ( void )
 {
   CreateThread();
-  m_conn.CreateThread();
+  m_conn.Start();
 }
 
 /* **************************************************************************

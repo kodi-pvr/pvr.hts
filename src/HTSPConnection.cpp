@@ -105,6 +105,19 @@ CHTSPConnection::~CHTSPConnection()
   StopThread(0);
 }
 
+void CHTSPConnection::Start()
+{
+  // Note: "connecting" must only be set one time, before the very first connection attempt, not on every reconnect.
+  SetState(PVR_CONNECTION_STATE_CONNECTING);
+  CreateThread();
+}
+
+void CHTSPConnection::Stop()
+{
+  StopThread(-1);
+  Disconnect();
+}
+
 /*
  * Info
  */

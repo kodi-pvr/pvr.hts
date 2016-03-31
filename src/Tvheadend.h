@@ -171,6 +171,8 @@ public:
   CHTSPConnection();
   ~CHTSPConnection();
 
+  void Start       ( void );
+  void Stop        ( void );
   void Disconnect  ( void );
   
   bool      SendMessage0    ( const char *method, htsmsg_t *m );
