@@ -105,6 +105,19 @@ CHTSPConnection::~CHTSPConnection()
   StopThread(0);
 }
 
+void CHTSPConnection::Start()
+{
+  // Note: "connecting" must only be set one time, before the very first connection attempt, not on every reconnect.
+  SetState(PVR_CONNECTION_STATE_CONNECTING);
+  CreateThread();
+}
+
+void CHTSPConnection::Stop()
+{
+  StopThread(-1);
+  Disconnect();
+}
+
 /*
  * Info
  */
@@ -215,8 +228,11 @@ void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
 
   if (prevState != newState)
   {
+    static std::string serverString;
+
     /* Notify connection state change (callback!) */
-    PVR->ConnectionStateChange(GetServerString().c_str(), newState, NULL);
+    serverString = GetServerString();
+    PVR->ConnectionStateChange(serverString.c_str(), newState, NULL);
   }
 }
 

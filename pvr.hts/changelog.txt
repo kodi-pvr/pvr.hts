@@ -1,3 +1,7 @@
+3.2.2
+- Updated to PVR API v5.1.1 (added: support for PVR_CONNECTION_STATE_CONNECTING)
+- fixed: potential crash in connection state change callback
+
 3.2.1
 - fixed: lifetime 'forever' should be disabled for HTSP v24 and lower 
 - improved: make lifetime settings translatable
