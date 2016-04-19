@@ -74,7 +74,7 @@ uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint3
    * it will point at the channel we should tune to */
   std::set<ChannelPair>::iterator predictedIt = m_channels.cend();
 
-  if (std::next(fromIt, 1) == toIt || toIt->second == firstNum) {
+  if (fromIt == m_channels.cend() || std::next(fromIt, 1) == toIt || toIt->second == firstNum) {
     /* Tuning up or if we're tuning the first channel */
     predictedIt = ++toIt;
   }
