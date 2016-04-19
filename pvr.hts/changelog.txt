@@ -1,3 +1,6 @@
+2.2.15
+- fixed: potential crash in the channel tuning predictor
+
 2.2.14
 - updated language files from Transifex
 
