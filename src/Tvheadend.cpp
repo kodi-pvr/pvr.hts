@@ -1329,15 +1329,18 @@ bool CTvheadend::Connected ( void )
   for (auto &entry : m_schedules)
     entry.second.SetDirty(true);
 
-  /* Request Async data */
-  m_asyncState.SetState(ASYNC_NONE);
+  /* Request Async data, first is channels */
+  m_asyncState.SetState(ASYNC_CHN);
   
   msg = htsmsg_create_map();
   htsmsg_add_u32(msg, "epg", Settings::GetInstance().GetAsyncEpg());
   //htsmsg_add_u32(msg, "epgMaxTime", 0);
   //htsmsg_add_s64(msg, "lastUpdate", 0);
   if ((msg = m_conn.SendAndWait0("enableAsyncMetadata", msg)) == NULL)
+  {
+    m_asyncState.SetState(ASYNC_NONE);
     return false;
+  }
 
   htsmsg_destroy(msg);
   Logger::Log(LogLevel::LEVEL_DEBUG, "async updates requested");
@@ -1534,8 +1537,8 @@ void CTvheadend::SyncCompleted ( void )
 
 void CTvheadend::SyncChannelsCompleted ( void )
 {
-  /* Already done */
-  if (m_asyncState.GetState() > ASYNC_CHN)
+  /* check state engine */
+  if (m_asyncState.GetState() != ASYNC_CHN)
     return;
 
   /* Tags */
@@ -1560,8 +1563,8 @@ void CTvheadend::SyncChannelsCompleted ( void )
 
 void CTvheadend::SyncDvrCompleted ( void )
 {
-  /* Done */
-  if (m_asyncState.GetState() > ASYNC_DVR)
+  /* check state engine */
+  if (m_asyncState.GetState() != ASYNC_DVR)
     return;
 
   /* Recordings */
@@ -1585,8 +1588,15 @@ void CTvheadend::SyncDvrCompleted ( void )
 
 void CTvheadend::SyncEpgCompleted ( void )
 {
-  /* Done */
-  if (!Settings::GetInstance().GetAsyncEpg() || m_asyncState.GetState() > ASYNC_EPG)
+  /* check state engine */
+  if (!Settings::GetInstance().GetAsyncEpg())
+  {
+    m_asyncState.SetState(ASYNC_DONE);
+    return;
+  }
+
+  /* check state engine */
+  if (m_asyncState.GetState() != ASYNC_EPG)
     return;
 
   /* Schedules */
@@ -1607,6 +1617,9 @@ void CTvheadend::SyncEpgCompleted ( void )
   /* Trigger updates */
   for (const auto &entry : m_schedules)
     TriggerEpgUpdate(entry.second.GetId());
+
+  /* Next */
+  m_asyncState.SetState(ASYNC_DONE);
 }
 
 void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
