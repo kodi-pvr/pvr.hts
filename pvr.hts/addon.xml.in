@@ -2,7 +2,7 @@
 <addon
   id="pvr.hts"
   version="3.2.3"
-  name="Tvheadend HTSP Client"
+  name="Tvheadend PVR Client Addon"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
     <c-pluff version="0.1"/>
@@ -80,10 +80,10 @@
     <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere</description>
     <description lang="de_DE">PVR-Client für Tvheadend. Unterstützt TV &amp; Aufnahmen, TV-Guide (EPG) und Timer.</description>
     <description lang="el_GR">Frontend για το Tvheadend. Υποστηρίζει ροές Live TV &amp; Εγγραφές, EPG, Χρονοδιακόπτες</description>
-    <description lang="en_AU">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
-    <description lang="en_GB">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
-    <description lang="en_NZ">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
-    <description lang="en_US">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
+    <description lang="en_AU">Tvheadend PVR client addon for Kodi's PVR API and frontend GUI; supporting streaming of Live TV &amp; Recordings, Timeshifting, EPG, and Timers, over Tvheadend's HTSP protocol.</description>
+    <description lang="en_GB">Tvheadend PVR client addon for Kodi's PVR API and frontend GUI; supporting streaming of Live TV &amp; Recordings, Timeshifting, EPG, and Timers, over Tvheadend's HTSP protocol.</description>
+    <description lang="en_NZ">Tvheadend PVR client addon for Kodi's PVR API and frontend GUI; supporting streaming of Live TV &amp; Recordings, Timeshifting, EPG, and Timers, over Tvheadend's HTSP protocol.</description>
+    <description lang="en_US">Tvheadend PVR client addon for Kodi's PVR API and frontend GUI; supporting streaming of Live TV &amp; Recordings, Timeshifting, EPG, and Timers, over Tvheadend's HTSP protocol.</description>
     <description lang="es_AR">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="es_ES">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="et_EE">Tvheadend esi. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
