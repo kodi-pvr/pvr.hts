@@ -165,20 +165,24 @@ void ADDON_FreeSettings()
 {
 }
 
-void ADDON_Announce
-  (const char *flag, const char *sender, const char *message, 
-   const void *_unused(data))
+void OnSystemSleep()
 {
-  Logger::Log(LogLevel::LEVEL_DEBUG, "Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
+  if (tvh)
+    tvh->OnSleep();
+}
 
-  /* XBMC/System */
-  if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))
-  {
-    if (!strcmp("OnSleep", message))
-      tvh->OnSleep();
-    else if (!strcmp("OnWake", message))
-      tvh->OnWake();
-  }
+void OnSystemWake()
+{
+  if (tvh)
+    tvh->OnWake();
+}
+
+void OnPowerSavingActivated()
+{
+}
+
+void OnPowerSavingDeactivated()
+{
 }
 
 /* **************************************************************************
