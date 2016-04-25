@@ -56,6 +56,10 @@ msgctxt "#30352"
 msgid "High"
 msgstr "Өндөр"
 
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Энгийн"
+
 msgctxt "#30354"
 msgid "Low"
 msgstr "Бага"

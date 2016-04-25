@@ -16,6 +16,10 @@ msgstr ""
 "Language: fi_FI\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Yhteysasetukset"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend-palvelimen nimi tai IP-osoite"
@@ -40,9 +44,37 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Yhteyden aikakatkaisu (sekunneissa)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Vastauksen aikakatkaisu (sekuntia)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Lisäasetukset"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Suoratoistoasetukset"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajastimen asetukset"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Oletustärkeys"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Oletuselinikä"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Uusien ajastimien oletus"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Tiedonsiirto"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,6 +92,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP versio yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
 
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Tärkeä (Korkein)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Ylin"
@@ -72,10 +108,82 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Alin"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Ei-tärkeä (Matalin)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Tallenna kaikki jaksot"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 päivä"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d päivää"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 viikko"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d viikkoa"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 kuukausi"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d kuukautta"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 vuosi"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d vuotta"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Kunnes tarvetta lisätilalle"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Ikuisesti"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Ennakoiva viritys"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Ei signaalia"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Viritys epäonnistui"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Ei pääsyä"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Tilausvirhe"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Suoratoistoprofiili"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Käytettävä proffili (tyhjä = oletus)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Suoratoistoprofiili %s ei ole saatavilla"

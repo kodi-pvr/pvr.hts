@@ -60,9 +60,37 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajustes de Gravação"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Auto gravar"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Iniciar o cálculo na janela de tempo"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Estrito (hora início + hora final)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relaxado (hora início +/- margem)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Margem máxima de tempo de início (minutos)"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioridade padrão"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Tempo de vida útil padrão"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detecção de padrão para itens duplicados"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
@@ -88,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade de versão HTSP (suportado: v%d, requerido: v%d). Por favor atualize o tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Uma Vez (Marcado pelo agendamento recorrente)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (mais alto)"
@@ -111,6 +143,26 @@ msgstr "Sem importância (mais baixa)"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episódios"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Gravar se o número do episódio difira"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Gravar se o nome do episódio difira"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Gravar se a descrição difira"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Máximo gravações na semana"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Máximo de gravações por dia"
 
 msgctxt "#30365"
 msgid "1 day"
@@ -151,6 +203,22 @@ msgstr "Até existir espaço necessário"
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Para sempre"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonização preditiva"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Número de subscrições para uso"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Subscrição não utilizada encerre o atraso (segundos)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Usar sintonização preditiva para acelerar a troca entre canais"
 
 msgctxt "#30450"
 msgid "No free adapter available"

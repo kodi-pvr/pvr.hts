@@ -16,6 +16,10 @@ msgstr ""
 "Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Ρυθμίσεις σύνδεσης"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Όνομα Υπολογιστή ή διεύθυνση IP του Tvheadend"
@@ -40,9 +44,21 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Χρονικό όριο σύνδεσης (δευτερόλεπτα)"
 
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ρυθμίσεις για προχωρημένους"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ρυθμίσεις χρονοδιακόπτη"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "προεπιλεγμένη προτεραιότητα"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Μεταφορά δεδομένων"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -72,10 +88,58 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Ελαχ."
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "ασήμαντο (χαμηλότερο)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Εγγραφή όλων των επεισοδίων"
 
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 πρώτη ημέρα"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d ημέρες"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 εβδομάδα"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 μήνας"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d μήνες"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 χρόνο"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d χρόνια"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Μέχρι να απαιτηθεί χώρος"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Αριθμός των συνδρομών για χρήση"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Κωδικοποιημένο κανάλι"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Χωρίς σήμα"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Χωρίς πρόσβαση"

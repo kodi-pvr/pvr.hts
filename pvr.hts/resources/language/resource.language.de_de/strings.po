@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Erweiterte Einstellungen"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Streaming Einstellungen"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Timer-Einstellungen"
@@ -200,6 +204,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Kein Limit"
 
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Voraussagendes Tuning"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Anzahl zu verwendender Abos"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Verzögerung bevor nicht genutzte Abos geschlossen werden (Sekunden)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Verwende voraussagendes Tuning um Kanalwechsel zu beschleunigen"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Kein freier Adapter verfügbar"
@@ -212,9 +232,29 @@ msgctxt "#30452"
 msgid "No signal"
 msgstr "Kein Signal"
 
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Tuning fehlgeschlagen"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Benutzer-Limit erreicht"
+
 msgctxt "#30455"
 msgid "No access"
 msgstr "Kein Zugriff"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Abo Fehler"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Streaming-Profil"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil (Leer=Standard)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

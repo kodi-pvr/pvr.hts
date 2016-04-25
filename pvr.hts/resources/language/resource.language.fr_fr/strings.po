@@ -94,7 +94,7 @@ msgstr "Détection de duplication par défaut"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Réglages par défaut des nouvelles programmations"
+msgstr "Préréglages des nouvelles programmations"
 
 msgctxt "#30100"
 msgid "Data transfer"
