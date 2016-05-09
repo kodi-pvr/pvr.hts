@@ -1,3 +1,6 @@
+2.2.17
+- updated language files from Transifex
+
 2.2.16
 - updated language files from Transifex
 
