@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <map>
 #include <string>
-#include "kodi/xbmc_pvr_types.h"
+#include "xbmc_pvr_types.h"
 #include "Entity.h"
 
 // Timer types

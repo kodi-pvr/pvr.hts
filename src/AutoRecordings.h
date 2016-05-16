@@ -29,7 +29,7 @@ extern "C"
 #include "libhts/htsmsg.h"
 }
 
-#include "kodi/libXBMC_pvr.h"
+#include "libXBMC_pvr.h"
 #include "tvheadend/entity/AutoRecording.h"
 
 class CHTSPConnection;
