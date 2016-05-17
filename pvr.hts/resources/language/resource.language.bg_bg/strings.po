@@ -16,6 +16,10 @@ msgstr ""
 "Language: bg_BG\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Настройки на връзката"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend хост или IP адрес"
@@ -35,6 +39,14 @@ msgstr "Потребител"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Парола"
+
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Време на изчакване при свързване в секунди"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Време на изчакване за отговор в секунди"
 
 msgctxt "#30008"
 msgid "Advanced settings"
@@ -75,3 +87,23 @@ msgstr "Запиши всички епизоди"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Докато няма недостиг на място"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Няма свободен адаптор"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Няма сигнал"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Достигнат е лимита на потребители"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Няма достъп"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Профил в употреба (празен = основен)"
