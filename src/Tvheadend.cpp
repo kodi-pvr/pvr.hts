@@ -976,7 +976,9 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
 
     /* Build message */
     htsmsg_t *m = htsmsg_create_map();
-    if (timer.iEpgUid > PVR_TIMER_NO_EPG_UID && timer.iTimerType == TIMER_ONCE_EPG)
+
+    int64_t start = timer.startTime;
+    if (timer.iEpgUid > PVR_TIMER_NO_EPG_UID && timer.iTimerType == TIMER_ONCE_EPG && start != 0)
     {
       /* EPG-based timer */
       htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
@@ -986,7 +988,6 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
       /* manual timer */
       htsmsg_add_str(m, "title",        timer.strTitle);
 
-      int64_t start = timer.startTime;
       if (start == 0)
       {
         /* Instant timer. Adjust start time to 'now'. */

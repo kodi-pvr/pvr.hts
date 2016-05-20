@@ -1,3 +1,6 @@
+3.4.1
+- Fix instant timers
+
 3.4.0
 - Cmake: rename find_package kodi to Kodi
 
