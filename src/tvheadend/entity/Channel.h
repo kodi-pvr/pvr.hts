@@ -25,6 +25,7 @@
 #include <string>
 #include <map>
 #include "Entity.h"
+#include "../../HTSPTypes.h"
 
 namespace tvheadend
 {
@@ -44,7 +45,7 @@ namespace tvheadend
       Channel() :
         m_num(0),
         m_numMinor(0),
-        m_radio(false),
+        m_type(CHANNEL_TYPE_OTHER),
         m_caid(0)
       {
       }
@@ -59,7 +60,7 @@ namespace tvheadend
         return m_id == other.m_id &&
                m_num == other.m_num &&
                m_numMinor == other.m_numMinor &&
-               m_radio == other.m_radio &&
+               m_type == other.m_type &&
                m_caid == other.m_caid &&
                m_name == other.m_name &&
                m_icon == other.m_icon;
@@ -76,8 +77,8 @@ namespace tvheadend
       uint32_t GetNumMinor() const { return m_numMinor; }
       void SetNumMinor(uint32_t numMinor) { m_numMinor = numMinor; }
 
-      bool IsRadio() const { return m_radio; }
-      void SetRadio(bool radio) { m_radio = radio; }
+      uint32_t GetType() const { return m_type; }
+      void SetType(uint32_t type) { m_type = type; }
 
       uint32_t GetCaid() const { return m_caid; }
       void SetCaid(uint32_t caid) { m_caid = caid; }
@@ -91,7 +92,7 @@ namespace tvheadend
     private:
       uint32_t         m_num;
       uint32_t         m_numMinor;
-      bool             m_radio;
+      uint32_t         m_type;
       uint32_t         m_caid;
       std::string      m_name;
       std::string      m_icon;

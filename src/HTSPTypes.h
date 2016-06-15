@@ -80,6 +80,12 @@ typedef enum {
   DVR_RET_FOREVER   = INT32_MAX     // the server should never delete this recording or database entry, only the user can do this
 } dvr_retention_t;
 
+typedef enum {
+  CHANNEL_TYPE_OTHER = 0,
+  CHANNEL_TYPE_TV    = 1,
+  CHANNEL_TYPE_RADIO = 2
+} channel_type_t;
+
 enum eHTSPEventType
 {
   HTSP_EVENT_NONE = 0,
