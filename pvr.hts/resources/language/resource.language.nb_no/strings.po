@@ -16,6 +16,10 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Tilkoblingsinnstillinger"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend vertsnavn eller IP-adresse"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Tidsavbrudd for tilkobling (sekunder)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Respons tidsavbrudd (sekunder)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Avanserte innstillinger"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Strømmeinnstillinger"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Instillinger for tidsur"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Autoopptak"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Start tid vindus kalkuleringer"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Streng (start tid + slutt tid)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Avslappet (start tid +/- margin)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maksimum start tid margin (minutter)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Stadard prioritet"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Standard levetid"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Standard duplikatgjenkjennelse"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Standard for nytt tidsur"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Dataoverføring"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP versjon stemmer ikke (supported: v%d, required: v%d). Venligst oppdater tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "En gang (Opprettet av gjentagende tidsur)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Viktig (Høyeste)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Høy"
@@ -72,10 +136,126 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Lav"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Uviktig (Laveste)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Ta opp alle episoder"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Ta opp dersom episode nummer er annerledes"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Ta opp dersom episode navn er annerledes"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Ta opp dersom beskrivelsen er annerledes"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Ta opp maks en gang i uken"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Ta opp maks en gang om dagen"
+
+msgctxt "#30365"
+msgid "1 day"
+msgstr "1 dag"
+
+msgctxt "#30366"
+msgid "%d days"
+msgstr "%d dager"
+
+msgctxt "#30367"
+msgid "1 week"
+msgstr "1 uke"
+
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d uker"
+
+msgctxt "#30369"
+msgid "1 month"
+msgstr "1 måned"
+
+msgctxt "#30370"
+msgid "%d months"
+msgstr "%d måneder"
+
+msgctxt "#30371"
+msgid "1 year"
+msgstr "1 år"
+
+msgctxt "#30372"
+msgid "%d years"
+msgstr "%d år"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Frem til plass trengs"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Alltid"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Forutsigbar søking"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Antall abbonement ønskes brukt"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Ubrukte abbonement stenges forsinkelse (sekunder)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Brukt forutsigbar søking for å gjøre kanalbytte hurtigere"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Ingen ledige tilkoblinger"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kryptert kanal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Intet signal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Søking feilet"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Maks antall brukere oppnåd"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Ingen tilgang"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Abbonement feil"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Strømningsprofil"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil som brukes (tom = standard)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Strømningsprofil %s er ikke tilgjengelig"

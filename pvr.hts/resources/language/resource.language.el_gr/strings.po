@@ -52,6 +52,10 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ρυθμίσεις χρονοδιακόπτη"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Αυτόματες εγγραφές"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "προεπιλεγμένη προτεραιότητα"
@@ -108,6 +112,10 @@ msgctxt "#30367"
 msgid "1 week"
 msgstr "1 εβδομάδα"
 
+msgctxt "#30368"
+msgid "%d weeks"
+msgstr "%d εβδομάδες"
+
 msgctxt "#30369"
 msgid "1 month"
 msgstr "1 μήνας"
@@ -127,6 +135,10 @@ msgstr "%d χρόνια"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Μέχρι να απαιτηθεί χώρος"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Για πάντα"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"

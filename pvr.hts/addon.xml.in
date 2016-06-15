@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="2.2.19"
+  version="2.2.20"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -54,7 +54,7 @@
     <summary lang="nl_NL">Kodi's frontend voor Tvheadend</summary>
     <summary lang="pl_PL">Klient telewizyjny dla Tvheadend</summary>
     <summary lang="pt_BR">Frontend Kodi para Tvheadend</summary>
-    <summary lang="pt_PT">Interface Tvheadend para o Kodi</summary>
+    <summary lang="pt_PT">Interface Kodi para Tvheadend</summary>
     <summary lang="ro_RO">Interfața Kodi pentru Tvheadend</summary>
     <summary lang="ru_RU">Интерфейс Kodi для Tvheadend</summary>
     <summary lang="sk_SK">Kodi rozhranie pre Tvheadend</summary>

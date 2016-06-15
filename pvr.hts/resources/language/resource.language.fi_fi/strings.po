@@ -60,6 +60,10 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajastimen asetukset"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automaattiset tallennukset"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Oletustärkeys"
@@ -160,6 +164,10 @@ msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Ennakoiva viritys"
 
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Salattu kanava"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Ei signaalia"
@@ -167,6 +175,10 @@ msgstr "Ei signaalia"
 msgctxt "#30453"
 msgid "Tuning failed"
 msgstr "Viritys epäonnistui"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Käyttäjäraja saavutettu"
 
 msgctxt "#30455"
 msgid "No access"
