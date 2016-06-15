@@ -1841,7 +1841,7 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
         {
           if (!strcmp(str, "Radio"))
             channel.SetType(CHANNEL_TYPE_RADIO);
-          else
+          else if (!strcmp(str, "SDTV") || !strcmp(str, "HDTV"))
             channel.SetType(CHANNEL_TYPE_TV);
         }
       }
