@@ -164,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Записывать максимум раз в день"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 день"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d дн."
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 неделя"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d недель(и)"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 месяц"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d месяцев(ца)"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 год"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d года/лет"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Пока не будет нужно свободное место"

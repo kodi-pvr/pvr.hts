@@ -68,6 +68,10 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Mín."
 
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Gravar tots els episodis"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Fins que necessiti espai"

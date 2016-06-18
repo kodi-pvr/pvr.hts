@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Avancerade inställningar"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Stream inställningar"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Inställningar för tidtagning"
@@ -76,6 +80,22 @@ msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
 msgstr "Maximal marginal för starttid (minuter)"
 
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Standard-prioritet"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Standardlivstid"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Standard duplikat detektering"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Standard för nya timer"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Dataöverföring"
@@ -95,6 +115,10 @@ msgstr "Trace (detaljerad)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versioner överensstämmer inte (stöds: v%d, krävs: v%d). Vänligen uppdatera tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "En gång (schemalagd genom att upprepa timer)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -140,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Spela in max en gång per dag"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 dag"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d dagar"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 vecka"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d veckor"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 månad"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d månader"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 år"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d år"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Tills utrymme krävs"
@@ -179,6 +171,26 @@ msgstr "Tills utrymme krävs"
 msgctxt "#30374"
 msgid "Forever"
 msgstr "För alltid"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Prediktiva stämning"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Antal abonnemang att använda"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Oanvänd abonnemang stäng fördröjning (sekunder)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Använd automatisk avstämning för att påskynda kanal omkopplare"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Ingen fri adapter tillgänglig"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
@@ -188,6 +200,30 @@ msgctxt "#30452"
 msgid "No signal"
 msgstr "Ingen signal"
 
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Justeringen misslyckades"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Användargräns nådd"
+
 msgctxt "#30455"
 msgid "No access"
 msgstr "Ingen tillgång"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Prenumerationsfel"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Streaming profil"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil att använda (tom = standard)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streaming profil %s är inte tillänglig"

@@ -16,6 +16,10 @@ msgstr ""
 "Language: he_IL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "הגדרות חיבור"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "שם מארח או כתובת IP"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "זמן מירבי לניסיון חיבור (שנ')"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "זמן מירבי לתגובה משרת (שנ')"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "הגדרות מתקדמות"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "הגדרות הזרמה"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "הגדרות תזמון"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "הקלטות אוטומטיות"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "חלון התחל חישוב זמן"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "קפדני (שעת התחלה + שעת סיום)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "רגוע (שעת ההתחלה +/- מרווח)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "מרווח מקסימלי שעת התחלה (דקות)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "קדימות ברירת מחדל"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "אורך חיים ברירת מחדל"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "ברירת מחדל לזיהוי כפילויות"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "ברירות מחדל לתזמון חדש"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "העברת נתונים"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,22 +116,114 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). יש לעדכן את שרת Tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "חד פעמי (נוצר ע\"י תזמון חוזר)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "חשובה (גבוהה ביותר)"
+
 msgctxt "#30352"
 msgid "High"
-msgstr "גבוה"
+msgstr "גבוהה"
 
 msgctxt "#30353"
 msgid "Normal"
-msgstr "רגיל"
+msgstr "רגילה"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "נמוך"
+msgstr "נמוכה"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "לא חשובה (נמוכה ביותר)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "הקלטת כל הפרקים"
+msgstr "הקלט כל הפרקים"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "הקלט כאשר מספר הפרק שונה"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "הקלט כאשר שם הפרק שונה"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "הקלט כאשר תיאור הפרק שונה"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "הקלטה מקסימלית פעם בשבוע"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "הקלטה מקסימלית פעם ביום"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "עד שנפח האחסון נדרש"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "לעד"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "כוונון חזוי"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "מספר המנויים המוגדר לשימוש"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "סגירת השהיה מנויים בשימוש (שניות)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "השתמש בכוונון חזוי בכדי להאיץ החלפת ערוצים"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "אין מקלט זמין"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "ערוץ מוצפן"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "אין קליטה"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "כוונון נכשל"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "המערכת הגיעה למגבלת המשתמש"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "אין גישה"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "שגיאה במנויים"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "פרופיל הזרמה"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "פרופיל לשימוש (ריק = ברירת מחדל)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "פרופיל הזרמה %s אינו זמין"

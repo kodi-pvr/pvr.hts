@@ -47,3 +47,7 @@ msgstr "نرمال"
 msgctxt "#30354"
 msgid "Low"
 msgstr "کم"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "همه قسمت‌ها را ضبط کن"

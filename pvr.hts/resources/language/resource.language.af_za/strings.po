@@ -16,6 +16,10 @@ msgstr ""
 "Language: af_ZA\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Verbinding verstellings"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend gasheernaam of IP adres"
@@ -40,13 +44,85 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Konneksie tydverstreke (sekondes)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Reageer tydverstreke (sekondes)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Gevorderde verstellings"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Stroom verstellings"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Tydhouer verstellings"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Outo opnames"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Begin tyd venster berekening"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Streng (begin tyd + eind tyd)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Ontspanne (begin tyd +/- marge)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maksimum begin tyd marge (minute)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Verstek prioriteit"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Verstek leeftyd"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Verstek duplikaat deteksie"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Verstek vir nuwe tydhouers"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Data oordrag"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Asinchrone EPG oordrag"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Ontfouting"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Spoor na (gedetailleerd)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP weergawe stem nie ooreen (ondersteun: v%d, vereis: v%d). Opdateer asseblief tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Een keer (geskeduleer deur herhalende tydhouer)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Belangrik (hoogste)"
 
 msgctxt "#30352"
 msgid "High"
@@ -60,10 +136,94 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Laag"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Onbelangrik (laagste)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Neem alle episodes op"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Neem op as episode nommer verskil"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Neem op as episode naam verskil"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Neem op as beskrywing verskil"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Neem maks een keer per week op"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Neem maks een keer per dag op"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Tot spasie benodig"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Vir ewig"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Voorspellende instemming"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Hoeveelheid intekeninge om te gebruik"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Ongebruikte intekening toemaak vertraging (sekondes)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Gebruik voorspellende instemming om kanaal veranderinge te versnel"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Geen vrye passtuk beskikbaar"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Vermengde kanaal"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Geen sein"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Instem het gefaal"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Gebruiker limiet bereik"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Geen toegang"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Intekening fout"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Stroom profiel"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profiel om te gebruik (leeg = verstek)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Stroom profiel %s is nie beskikbaar nie"

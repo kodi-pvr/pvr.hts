@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Нууц үг"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Цагалбарын тохиргоо"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Асинхрон EPG дамжуулалт"
@@ -55,6 +59,10 @@ msgstr "HTSP ийн хувилбар таарахгүй байна (боломж
 msgctxt "#30352"
 msgid "High"
 msgstr "Өндөр"
+
+msgctxt "#30353"
+msgid "Normal"
+msgstr "Энгийн"
 
 msgctxt "#30354"
 msgid "Low"

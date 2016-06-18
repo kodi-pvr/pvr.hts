@@ -94,7 +94,7 @@ msgstr "Détection de duplication par défaut"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Réglages par défaut des nouvelles programmations"
+msgstr "Préréglages des nouvelles programmations"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -163,38 +163,6 @@ msgstr "Enregistrer max. une fois pas semaine"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Enregistrer max. une fois pas jour"
-
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 jour"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d jours"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 semaine"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d semaines"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 mois"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d mois"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 an"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d ans"
 
 msgctxt "#30373"
 msgid "Until space needed"

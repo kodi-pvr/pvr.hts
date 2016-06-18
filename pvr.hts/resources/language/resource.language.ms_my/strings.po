@@ -16,6 +16,10 @@ msgstr ""
 "Language: ms_MY\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Tetapan sambungan"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nama hos atau alamat IP Tvheadend"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Had masa tamat sambungan (saat)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Had masa tamat respons (saat)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Tetapan lanjutan"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Tetapan penstriman"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Tetapan pemasa"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Auto-rakaman"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Pengiraan tetingkap masa mula"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Ketat (masa mula + masa tamat)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Santai (masa mula +/1 margin)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Margin masa mula maksimum (minit)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Keutamaan lalai"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Masa hayat lalai"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Pengesanan pendua lalai"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Lalai untuk pemasa baharu"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Pemindahan data"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Versi HTSP tidak sepadan (disokong: v%d, diperlukan: v%d). Sila kemaskini tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Satu Kali (Dijadual mengikut pemasa pengulangan)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Penting (Paling Tinggi)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Tinggi"
@@ -72,10 +136,94 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Rendah"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Tidak Penting (Paling Rendah)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Rakam semua episod"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Rakam jika nombor episod berbeza"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Rakam jika nama episod berbeza"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Rakam jika keterangan berbeza"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Rakam maksimum sekali dalam seminggu"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Rakam maksimum sekali dalam sehari"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Sehingga ruang diperlukan"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Selama-lamanya"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Penalaan jangkaan"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Bilangan langganan yang digunakan"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Lengahan tutup langganan yang tidak digunakan (saat)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Guna penalaan jangkaan untuk lajukan pertukaran saluran"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Tiada penyesuai bebas tersedia"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Saluran terkarau"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Tiada isyarat"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Penalaan gagal"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Had pengguna dicapai"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Tiada capaian"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Ralat langganan"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Profil penstriman"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil yang digunakan (kosong = lalai)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profil penstriman %s tidak tersedia"

@@ -164,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Enregistrer au plus une fois par jour"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 jour"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d jours"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 semaine"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d semaines"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 mois"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d mois"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 an"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d ans"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Jusqu'à ce que l'espace soit requis"

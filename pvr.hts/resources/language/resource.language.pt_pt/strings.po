@@ -54,7 +54,7 @@ msgstr "Definições avançadas"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Definições da transmissão"
+msgstr "Definições da emissão"
 
 msgctxt "#30010"
 msgid "Timer settings"
@@ -64,9 +64,37 @@ msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Gravações automáticas"
 
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Cálculo do intervalo da hora de início"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Restrito (hora inicial e hora final)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Tolerante (hora inicial +/- margem)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Margem máxima da hora inicial (minutos)"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioridade padrão"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Ciclo de vida"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Deteção de duplicados"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Padrão para novos temporizadores"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -86,11 +114,11 @@ msgstr "Rastreio (detalhado)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "Incompatibilidade da versão do HTSP (suportado: v%d, necessário: v%d). Por favor actualize o tvheadend."
+msgstr "Incompatibilidade da versão HTSP (suportado: v%d, necessário: v%d). Atualize o tvheadend."
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
-msgstr "Uma vez (agendado pelo temporizador recorrente)"
+msgstr "Uma vez (agendado por um temporizador recorrente)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -136,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Gravar, no máximo, uma vez por semana"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 dia"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d dias"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 semana"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d semanas"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 mês"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d meses"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 ano"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d anos"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até ser necessário espaço"
@@ -176,13 +172,29 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Eternamente"
 
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonização preditiva"
+
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Número de subscrições a utilizar"
 
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Atraso para fechar subscrições inativas (segundos)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Utilizar sintonização preditiva para melhorar a troca de canais"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Nenhum adaptador livre disponível"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canal misturado"
 
 msgctxt "#30452"
 msgid "No signal"

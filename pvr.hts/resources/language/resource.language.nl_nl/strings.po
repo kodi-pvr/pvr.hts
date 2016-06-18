@@ -164,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Maximaal één keer per dag opnemen"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 dag"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d dagen"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 week"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d weken"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 maand"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d maanden"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 jaar"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d jaren"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Tot wanneer ruimte benodigd is."

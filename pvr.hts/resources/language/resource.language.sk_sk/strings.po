@@ -16,6 +16,10 @@ msgstr ""
 "Language: sk_SK\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Nastavenia pripojenia"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Názov hostiteľa Tvheadend alebo IP adresa"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Časový limit spojenia (v sekundách)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Časový limit pre odpoveď (sekundy)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Pokročilé nastavenia"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Nastavenia streamovania"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Nastavenia časovača"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Automatické nahrávania"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Výpočet okna pre čas začiatku"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Striktné (čas začiatku + čas konca)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Zmiernené (čas začiatku +/- okraj)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Maximálny okraj pre čas začiatku (minúty)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Predvolená priorita"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Predvolená životnosť"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Predvolená detekcia duplikátov"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Predvolené pre nové časovače"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Prenos údajov"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -60,6 +116,14 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nezhoda verzie HTSP (podporované: v%d, požadované: v%d). Aktualizujte tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Jednorazovo (naplánované opakujúcim sa časovačom)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Dôležité (najvyššia)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Vysoká"
@@ -72,10 +136,94 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Nízka"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Nedôležité (najnižšia)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Nahrať všetky epizódy"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Nahrávať, ak sa číslo epizódy líši"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Nahrávať, ak sa názov epizódy líši"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Nahrávať, ak sa popis líši"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Nahrávať najviac raz za týždeň"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Nahrávať najviac raz za deň"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dokiaľ nebude potrebné miesto"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Navždy"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Prediktívne ladenie"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Počet odberov, ktoré sa majú použiť"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Oneskorenie pre uzavretie nepoužitého odberu (sekundy)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Použiť prediktívne ladenie na urýchlenie prepínania kanálov"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "K dispozícii nie je žiadny voľný adaptér"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kódovaný kanál"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Žiadny signál"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Ladenie zlyhalo"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Bol dosiahnutý používateľský limit"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Žiadny prístup"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Chyba odberu"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Profil streamovania"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil, ktorý sa má použiť (prázdny = predvolené)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profil streamovania %s nie je k dispozícii"

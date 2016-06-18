@@ -164,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "每天最多录制一次"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 天"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d 天"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 周"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d 周"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 月"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d 月"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 年"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d 年"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "直到需要空间"

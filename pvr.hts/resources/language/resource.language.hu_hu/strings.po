@@ -164,38 +164,6 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Naponta max. egyszer rögzítse"
 
-msgctxt "#30365"
-msgid "1 day"
-msgstr "1 nap"
-
-msgctxt "#30366"
-msgid "%d days"
-msgstr "%d nap"
-
-msgctxt "#30367"
-msgid "1 week"
-msgstr "1 hét"
-
-msgctxt "#30368"
-msgid "%d weeks"
-msgstr "%d hét"
-
-msgctxt "#30369"
-msgid "1 month"
-msgstr "1 hónap"
-
-msgctxt "#30370"
-msgid "%d months"
-msgstr "%d hónap"
-
-msgctxt "#30371"
-msgid "1 year"
-msgstr "1 év"
-
-msgctxt "#30372"
-msgid "%d years"
-msgstr "%d év"
-
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Amíg van szabad hely"
