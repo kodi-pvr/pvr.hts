@@ -55,6 +55,7 @@ namespace tvheadend
       Recording() :
         m_enabled(0),
         m_channel(0),
+        m_channelType(0),
         m_eventId(0),
         m_start(0),
         m_stop(0),
@@ -71,6 +72,8 @@ namespace tvheadend
         return m_id == other.m_id &&
                m_enabled == other.m_enabled &&
                m_channel == other.m_channel &&
+               m_channelType == other.m_channelType &&
+               m_channelName == other.m_channelName &&
                m_eventId == other.m_eventId &&
                m_start == other.m_start &&
                m_stop == other.m_stop &&
@@ -128,6 +131,12 @@ namespace tvheadend
       uint32_t GetChannel() const { return m_channel; }
       void SetChannel(uint32_t channel) { m_channel = channel; }
 
+      uint32_t GetChannelType() const { return m_channelType; }
+      void SetChannelType(uint32_t channelType) { m_channelType = channelType; }
+
+      const std::string& GetChannelName() const { return m_channelName; }
+      void SetChannelName(const std::string &channelName) { m_channelName = channelName; }
+
       uint32_t GetEventId() const { return m_eventId; }
       void SetEventId(uint32_t eventId) { m_eventId = eventId; }
 
@@ -181,6 +190,8 @@ namespace tvheadend
     private:
       uint32_t         m_enabled;
       uint32_t         m_channel;
+      uint32_t         m_channelType;
+      std::string      m_channelName;
       uint32_t         m_eventId;
       int64_t          m_start;
       int64_t          m_stop;

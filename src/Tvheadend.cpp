@@ -195,7 +195,7 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
       /* Does group contain channels of the requested type?             */
       /* Note: tvheadend groups can contain both radio and tv channels. */
       /*       Thus, one tvheadend group can 'map' to two Kodi groups.  */
-      if (!entry.second.ContainsChannelType(bRadio))
+      if (!entry.second.ContainsChannelType(bRadio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         continue;
 
       PVR_CHANNEL_GROUP tag;
@@ -245,7 +245,8 @@ PVR_ERROR CTvheadend::GetTagMembers
       {
         auto cit = m_channels.find(channelId);
 
-        if (cit != m_channels.cend() && cit->second.IsRadio() == group.bIsRadio)
+        if (cit != m_channels.cend() && cit->second.GetType() == (group.bIsRadio ?
+            CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         {
           PVR_CHANNEL_GROUP_MEMBER gm;
           memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
@@ -295,14 +296,14 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
     {
       const auto &channel = entry.second;
 
-      if (radio != channel.IsRadio())
+      if (channel.GetType() != (radio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         continue;
 
       PVR_CHANNEL chn;
       memset(&chn, 0 , sizeof(PVR_CHANNEL));
 
       chn.iUniqueId         = channel.GetId();
-      chn.bIsRadio          = channel.IsRadio();
+      chn.bIsRadio          = radio;
       chn.iChannelNumber    = channel.GetNum();
       chn.iSubChannelNumber = channel.GetNumMinor();
       chn.iEncryptionSystem = channel.GetCaid();
@@ -417,15 +418,16 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       PVR_RECORDING rec;
       memset(&rec, 0, sizeof(rec));
 
-      /* Channel name and icon */
+      /* Channel icon */
       if ((cit = m_channels.find(recording.GetChannel())) != m_channels.end())
       {
-        strncpy(rec.strChannelName, cit->second.GetName().c_str(),
-                sizeof(rec.strChannelName) - 1);
-
         strncpy(rec.strIconPath, cit->second.GetIcon().c_str(),
                 sizeof(rec.strIconPath) - 1);
       }
+
+      /* Channel name */
+      strncpy(rec.strChannelName, recording.GetChannelName().c_str(),
+              sizeof(rec.strChannelName) - 1);
 
       /* ID */
       snprintf(buf, sizeof(buf), "%i", recording.GetId());
@@ -473,19 +475,18 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       rec.iChannelUid = recording.GetChannel() > 0 ? recording.GetChannel() : PVR_CHANNEL_INVALID_UID;
 
       /* channel type */
-      if (rec.iChannelUid == PVR_CHANNEL_INVALID_UID)
+      switch (recording.GetChannelType())
       {
-        rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
-      }
-      else
-      {
-        auto cit = m_channels.find(rec.iChannelUid);
-        if (cit == m_channels.cend())
-          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
-        else if (cit->second.IsRadio())
-          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_RADIO;
-        else
+        case CHANNEL_TYPE_TV:
           rec.channelType = PVR_RECORDING_CHANNEL_TYPE_TV;
+          break;
+        case CHANNEL_TYPE_RADIO:
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_RADIO;
+          break;
+        case CHANNEL_TYPE_OTHER:
+        default:
+          rec.channelType = PVR_RECORDING_CHANNEL_TYPE_UNKNOWN;
+          break;
       }
 
       recs.push_back(rec);
@@ -1811,17 +1812,26 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   {
     htsmsg_field_t *f;
     uint32_t caid  = 0;
-    bool     radio = false;
     HTSMSG_FOREACH(f, list)
     {
       if (f->hmf_type != HMF_MAP)
         continue;
 
-      /* Radio? */
-      if ((str = htsmsg_get_str(&f->hmf_msg, "type")) != NULL)
+      /* Channel type */
+      if (m_conn.GetProtocol() >= 25)
       {
-        if (!strcmp(str, "Radio"))
-          radio = true;
+        if (!htsmsg_get_u32(&f->hmf_msg, "content", &u32))
+          channel.SetType(u32);
+      }
+      else
+      {
+        if ((str = htsmsg_get_str(&f->hmf_msg, "type")) != NULL)
+        {
+          if (!strcmp(str, "Radio"))
+            channel.SetType(CHANNEL_TYPE_RADIO);
+          else if (!strcmp(str, "SDTV") || !strcmp(str, "HDTV"))
+            channel.SetType(CHANNEL_TYPE_TV);
+        }
       }
 
       /* CAID */
@@ -1829,7 +1839,6 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
         htsmsg_get_u32(&f->hmf_msg, "caid", &caid);
     }
 
-    channel.SetRadio(radio);
     channel.SetCaid(caid);
   }
 
@@ -1911,7 +1920,62 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 
   /* Channel is optional, it may not exist anymore */
   if (!htsmsg_get_u32(msg, "channel", &channel))
+  {
+    /* Channel Id */
     rec.SetChannel(channel);
+
+    auto cit = m_channels.find(rec.GetChannel());
+    if (cit != m_channels.cend())
+    {
+      /* Channel type */
+      rec.SetChannelType(cit->second.GetType());
+
+      /* Channel name */
+      rec.SetChannelName(cit->second.GetName());
+    }
+  }
+
+  /* Channel type fallback (in case channel was deleted) */
+  if (!rec.GetChannelType() && m_conn.GetProtocol() >= 25)
+  {
+    htsmsg_t *files, *streams;
+    if ((files = htsmsg_get_list(msg, "files")) != NULL)
+    {
+      htsmsg_field_t *file, *stream;
+      uint32_t hasAudio = 0, hasVideo = 0, u32;
+
+      HTSMSG_FOREACH(file, files) // Loop through all files
+      {
+        if (file->hmf_type != HMF_MAP)
+          continue;
+
+        if ((streams = htsmsg_get_list(&file->hmf_msg, "info")) != NULL)
+        {
+          HTSMSG_FOREACH(stream, streams) // Loop through all streams
+          {
+            if (stream->hmf_type != HMF_MAP)
+              continue;
+
+            if (!htsmsg_get_u32(&stream->hmf_msg, "audio_type", &u32)) // Only present for audio streams
+              hasAudio = 1;
+            if (!htsmsg_get_u32(&stream->hmf_msg, "aspect_num", &u32)) // Only present for video streams
+              hasVideo = 1;
+            if (hasAudio && hasVideo) // No need to parse the rest
+              break;
+          }
+        }
+      }
+      rec.SetChannelType(hasVideo ? CHANNEL_TYPE_TV :
+          (hasAudio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_OTHER));
+    }
+  }
+
+  /* Channel name fallback (in case channel was deleted) */
+  if (rec.GetChannelName().empty() && m_conn.GetProtocol() >= 25)
+  {
+    if ((str = htsmsg_get_str(msg, "channelName")) != NULL)
+      rec.SetChannelName(str);
+  }
 
   if (!htsmsg_get_s64(msg, "startExtra", &startExtra))
     rec.SetStartExtra(startExtra);

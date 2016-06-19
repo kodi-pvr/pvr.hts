@@ -21,7 +21,6 @@
 
 #include "Tag.h"
 #include "Channel.h"
-#include "../../HTSPTypes.h"
 #include "../../Tvheadend.h"
 
 using namespace tvheadend::entity;
@@ -80,7 +79,7 @@ std::vector<uint32_t>& Tag::GetChannels()
   return m_channels;
 }
 
-bool Tag::ContainsChannelType(bool bRadio) const
+bool Tag::ContainsChannelType(channel_type_t eType) const
 {
   std::vector<uint32_t>::const_iterator it;
   Channels::const_iterator cit;
@@ -90,7 +89,7 @@ bool Tag::ContainsChannelType(bool bRadio) const
   {
     if ((cit = channels.find(*it)) != channels.end())
     {
-      if (bRadio == cit->second.IsRadio())
+      if (cit->second.GetType() == eType)
         return true;
     }
   }

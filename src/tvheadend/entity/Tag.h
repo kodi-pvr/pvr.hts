@@ -26,6 +26,7 @@
 #include <map>
 #include <vector>
 #include "Entity.h"
+#include "../../HTSPTypes.h"
 
 namespace tvheadend
 {
@@ -57,7 +58,7 @@ namespace tvheadend
       const std::vector<uint32_t>& GetChannels() const;
       std::vector<uint32_t>& GetChannels();
 
-      bool ContainsChannelType(bool bRadio) const;
+      bool ContainsChannelType(channel_type_t eType) const;
 
     private:
       uint32_t              m_index;
