@@ -912,7 +912,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
   tmr.firstDay           = 0;                // not supported by tvh
   tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
-  tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : -1;
+  tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : PVR_TIMER_NO_EPG_UID;
   tmr.iMarginStart       = static_cast<unsigned int>(tvhTmr.GetStartExtra());
   tmr.iMarginEnd         = static_cast<unsigned int>(tvhTmr.GetStopExtra());
   tmr.iGenreType         = 0;                // not supported by tvh?
@@ -1818,12 +1818,20 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
         continue;
 
       /* Channel type */
+      bool bGotContent = false;
       if (m_conn.GetProtocol() >= 25)
       {
         if (!htsmsg_get_u32(&f->hmf_msg, "content", &u32))
+        {
           channel.SetType(u32);
+          bGotContent = true;
+        }
       }
-      else
+
+      // The 'content' htsp method field was added to tvheadend htsp api without htsp version bump.
+      // Unfortunately, there are many semi-official tvheadend builds with htsp version 25 in the wild which
+      // do not support the 'content' htsp attribute. Just checking htsp api version is not sufficient. :-/
+      if (!bGotContent)
       {
         if ((str = htsmsg_get_str(&f->hmf_msg, "type")) != NULL)
         {

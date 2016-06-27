@@ -1,3 +1,7 @@
+3.4.4
+- fixed: setting channel type for 'early' htsp v25 servers
+- fixed: setting epg uid for timers
+
 3.4.3
 - improved: only show real radio and TV channels in Kodi
 - improved: recording handling when it's channel doesn't exist anymore (HTSP v25 and above)
