@@ -912,7 +912,7 @@ bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
   tmr.iPreventDuplicateEpisodes = 0;         // n/a for one-shot timers
   tmr.firstDay           = 0;                // not supported by tvh
   tmr.iWeekdays          = PVR_WEEKDAY_NONE; // n/a for one-shot timers
-  tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : -1;
+  tmr.iEpgUid            = (tvhTmr.GetEventId() > 0) ? tvhTmr.GetEventId() : PVR_TIMER_NO_EPG_UID;
   tmr.iMarginStart       = static_cast<unsigned int>(tvhTmr.GetStartExtra());
   tmr.iMarginEnd         = static_cast<unsigned int>(tvhTmr.GetStopExtra());
   tmr.iGenreType         = 0;                // not supported by tvh?
