@@ -172,6 +172,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Selama-lamanya"
 
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 hari"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 minggu"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 bulan"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 tahun"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Penalaan jangkaan"

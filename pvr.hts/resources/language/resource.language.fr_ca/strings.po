@@ -172,6 +172,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Permanent"
 
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 jour"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 semaine"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mois"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 an"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Syntonisation prévisionnelle"

@@ -1,3 +1,6 @@
+3.4.5
+- updated language files from Transifex
+
 3.4.4
 - fixed: setting channel type for 'early' htsp v25 servers
 - fixed: setting epg uid for timers

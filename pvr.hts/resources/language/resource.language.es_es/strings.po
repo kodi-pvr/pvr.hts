@@ -88,6 +88,14 @@ msgctxt "#30056"
 msgid "Default lifetime"
 msgstr "Tiempo de vida por defecto"
 
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detección de duplicados por defecto"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Por defecto para nuevos temporizadores"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
@@ -163,6 +171,66 @@ msgstr "Hasta que necesite espacio"
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Siempre"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 día"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 días"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 días"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 semanas"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 semanas"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meses"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 meses"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 meses"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 año"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 años"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 años"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Hasta que se necesite espacio (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Para siempre (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

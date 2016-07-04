@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Stabiliri conexiune"
+msgstr "Setări conexiune"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -171,6 +171,30 @@ msgstr "Până este nevoie de spațiu"
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Pentru totdeauna"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 zi"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 săptămână"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 lună"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 an"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 ani"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 ani"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

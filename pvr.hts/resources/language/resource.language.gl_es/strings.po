@@ -64,6 +64,14 @@ msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Gravacións auto."
 
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Estrito (hora de inicio + hora de fin)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relaxado (hora de inicio +/- marxe)"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioridade predefinida"
@@ -87,6 +95,10 @@ msgstr "Rexistro (detallado)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "A versión do HTSP non coincide (soportado: v%d, requirido: v%d). Por favor actualice o tvheadend."
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (Maior)"
 
 msgctxt "#30352"
 msgid "High"
@@ -120,6 +132,70 @@ msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até que precise de espazo"
 
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Sempre"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 día"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 días"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 días"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 semanas"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 semanas"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meses"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 meses"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 meses"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 ano"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 anos"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 anos"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Até que precise de espazo (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Sempre (tvh 4.1+)"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Sintonización preditiva"
@@ -143,6 +219,10 @@ msgstr "Sen sinal"
 msgctxt "#30453"
 msgid "Tuning failed"
 msgstr "Fallou a sintonización"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Acadado o límite do usuario"
 
 msgctxt "#30455"
 msgid "No access"

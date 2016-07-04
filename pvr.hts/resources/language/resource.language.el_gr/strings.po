@@ -108,6 +108,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Για πάντα"
 
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 πρώτη ημέρα"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 εβδομάδα"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 μήνας"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 χρόνο"
+
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Αριθμός των συνδρομών για χρήση"

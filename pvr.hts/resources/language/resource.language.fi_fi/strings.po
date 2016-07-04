@@ -128,6 +128,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Ikuisesti"
 
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 päivä"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 viikko"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 kuukausi"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 vuosi"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Ennakoiva viritys"

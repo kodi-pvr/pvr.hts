@@ -172,6 +172,22 @@ msgctxt "#30374"
 msgid "Forever"
 msgstr "Forever"
 
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 day"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 week"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 month"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 year"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Predictive tuning"
