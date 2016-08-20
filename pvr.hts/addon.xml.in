@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="3.4.6"
+  version="3.4.7"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -74,7 +74,7 @@
     <description lang="af_ZA">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="be_BY">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="bg_BG">Tvheadend клиент. Поддържа поточна телевизия, записване, електронен програмен справочник и броячи.</description>
-    <description lang="ca_ES">Interfície per al Tvheadend; compatible amb la transmissió de TV en viu i enregistraments, EPG, temporitzadors</description>
+    <description lang="ca_ES">Interfície per al Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, EPG, temporitzadors</description>
     <description lang="cs_CZ">Rozhraní Tvheadend. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače.</description>
     <description lang="cy_GB">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
     <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere</description>

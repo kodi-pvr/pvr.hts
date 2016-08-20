@@ -68,6 +68,18 @@ msgctxt "#30051"
 msgid "Start time window calculation"
 msgstr "Aloita aikaikkunan laskenta"
 
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Tarkka (aloitus + lopetusaika)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Joustava (aloitusaika +/- marginaali)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Aloitusajan enimmäismarginaali (minuuteissa)"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Oletustärkeys"
@@ -75,6 +87,10 @@ msgstr "Oletustärkeys"
 msgctxt "#30056"
 msgid "Default lifetime"
 msgstr "Oletuselinikä"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Oletus kaksoiskappaleiden tunnistus"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
@@ -99,6 +115,10 @@ msgstr "Jäljitä (yksityiskohtainen)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP versio yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Yksittäinen (Ajastettu toistuvalla ajastimella)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -204,6 +224,10 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 vuotta"
 
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Kunnes tarvitaan lisätilaa (tvh 4.1+)"
+
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "Ikuisesti (tvh 4.1+)"
@@ -216,9 +240,17 @@ msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Käytettävien tilausten määrä"
 
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Viive tilaamattoman maksukanavan sulkemiselle (sekuntia)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Käytä ennakoivaa kanavanvaihtoa"
+
 msgctxt "#30450"
 msgid "No free adapter available"
-msgstr "Ei vapaata sovitinta käytettävissä"
+msgstr "Ei vapaata viritintä käytettävissä"
 
 msgctxt "#30451"
 msgid "Scrambled channel"

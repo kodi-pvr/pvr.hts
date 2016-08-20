@@ -176,17 +176,53 @@ msgctxt "#30375"
 msgid "1 day"
 msgstr "1 den"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dny"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dnů"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 týden"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 týdny"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 týdny"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 měsíc"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 měsíce"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 měsíce"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 měsíců"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 rok"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 roky"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 roky"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

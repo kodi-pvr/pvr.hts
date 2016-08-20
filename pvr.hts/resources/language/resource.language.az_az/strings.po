@@ -19,3 +19,15 @@ msgstr ""
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Normal"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 həftə"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 ay"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 il"

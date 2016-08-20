@@ -26,11 +26,11 @@ msgstr "Nome do servidor Tvheadend ou endereço IP"
 
 msgctxt "#30002"
 msgid "HTTP port"
-msgstr "Porta HTTP"
+msgstr "Porto de HTTP"
 
 msgctxt "#30003"
 msgid "HTSP port"
-msgstr "Porta HTSP"
+msgstr "Porto de HTSP"
 
 msgctxt "#30004"
 msgid "Username"
@@ -42,11 +42,11 @@ msgstr "Palavra-passe"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Tempo limite de ligação (segundos)"
+msgstr "Tempo-limite de ligação (segundos)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Tempo limite da resposta (segundos)"
+msgstr "Tempo-limite da resposta (segundos)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
@@ -114,7 +114,7 @@ msgstr "Rastreio (detalhado)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "Incompatibilidade da versão HTSP (suportado: v%d, necessário: v%d). Atualize o tvheadend."
+msgstr "Incompatibilidade na versão do HTSP (suportado: v%d, necessário: v%d). Atualize o tvheadend."
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
@@ -162,7 +162,7 @@ msgstr "Gravar, no máximo, uma vez por semana"
 
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Gravar, no máximo, uma vez por semana"
+msgstr "Gravar, no máximo, uma vez por dia"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -170,23 +170,67 @@ msgstr "Até ser necessário espaço"
 
 msgctxt "#30374"
 msgid "Forever"
-msgstr "Eternamente"
+msgstr "Para sempre"
 
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dia"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dias"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dias"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 semana"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 semanas"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 semanas"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 mês"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meses"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 meses"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 meses"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 ano"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 anos"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 anos"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Até ser necessário espaço (TVH 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Para sempre (TVH 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -202,7 +246,7 @@ msgstr "Atraso para fechar subscrições inativas (segundos)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Utilizar sintonização preditiva para melhorar a troca de canais"
+msgstr "Usar a sintonização preditiva para melhorar a troca de canais"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -210,7 +254,7 @@ msgstr "Nenhum adaptador livre disponível"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
-msgstr "Canal misturado"
+msgstr "Canal codificado"
 
 msgctxt "#30452"
 msgid "No signal"
@@ -222,7 +266,7 @@ msgstr "Falha de sintonização"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Limite de utilizador atingido"
+msgstr "Limite de utilizadores atingido"
 
 msgctxt "#30455"
 msgid "No access"
@@ -238,7 +282,7 @@ msgstr "Perfil de transmissão"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Perfila a utilizar (vazio = padrão)"
+msgstr "Perfil a usar (vazio = padrão)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"

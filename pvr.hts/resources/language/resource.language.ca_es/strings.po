@@ -16,6 +16,10 @@ msgstr ""
 "Language: ca_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Ajusts de la connexió"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Nom de màquina o IP del Tvheadend"
@@ -36,9 +40,13 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contrasenya"
 
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ajusts avançats"
+
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Paràmetres del temporitzador"
+msgstr "Ajusts del temporitzador"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"

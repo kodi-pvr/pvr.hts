@@ -1,3 +1,6 @@
+3.4.7
+- updated language files from Transifex
+
 3.4.6
 - updated language files from Transifex
 
