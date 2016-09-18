@@ -22,6 +22,12 @@ Addon releases are also tagged regularly.
 The addon files will be placed in `../../xbmc/addons` so if you build Kodi from source and run it directly 
 the addon will be available as a system addon.
 
+#### Building for Kodi built with CMake
+
+If you've built Kodi with CMake you'll want to change the 
+`CMAKE_INSTALL_PREFIX` to `../../xbmc/kodi-build/addons` instead 
+(assuming `kodi-build` is your build directory).
+
 ##### Useful links
 
 * [Kodi's PVR user support] (http://forum.kodi.tv/forumdisplay.php?fid=167)
