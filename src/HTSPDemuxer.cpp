@@ -41,6 +41,7 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
 
 CHTSPDemuxer::~CHTSPDemuxer ()
 {
+  Close();
 }
 
 void CHTSPDemuxer::Connected ( void )
