@@ -6,10 +6,10 @@ enable_language(CXX)
 
 find_package(kodi REQUIRED)
 find_package(kodiplatform REQUIRED)
-find_package(platform REQUIRED)
+find_package(p8-platform REQUIRED)
 
 include_directories(${kodiplatform_INCLUDE_DIRS}
-                    ${platform_INCLUDE_DIRS}
+                    ${p8-platform_INCLUDE_DIRS}
                     ${KODI_INCLUDE_DIR}
                     ${PROJECT_SOURCE_DIR}/lib)
 
@@ -95,7 +95,7 @@ list(APPEND HTS_SOURCES
 
 add_subdirectory(lib/libhts)
 
-set(DEPLIBS ${platform_LIBRARIES} hts)
+set(DEPLIBS ${p8-platform_LIBRARIES} hts)
 if(WIN32)
   list(APPEND DEPLIBS ws2_32)
 endif()

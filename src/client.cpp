@@ -22,14 +22,14 @@
 #include "client.h"
 #include "kodi/xbmc_pvr_dll.h"
 #include "kodi/libKODI_guilib.h"
-#include "platform/util/util.h"
+#include "p8-platform/util/util.h"
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 
 using namespace std;
 using namespace ADDON;
-using namespace PLATFORM;
+using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
