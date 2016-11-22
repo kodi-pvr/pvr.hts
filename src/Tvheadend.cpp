@@ -1261,8 +1261,9 @@ PVR_ERROR CTvheadend::GetEpg
 {
   htsmsg_field_t *f;
 
-  Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
+  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
            (long long)start, (long long)end);
+
 
   /* Note: Nothing to do if "async epg transfer" is enabled as all changes are pushed live to Kodi, then. */
   if (!Settings::GetInstance().GetAsyncEpg())
@@ -1306,7 +1307,11 @@ PVR_ERROR CTvheadend::GetEpg
       }
     }
     htsmsg_destroy(msg);
-    Logger::Log(LogLevel::LEVEL_TRACE, "get epg channel %d events %d", chn.iUniqueId, n);
+    Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d events %d", chn.iUniqueId, n);
+  }
+  else
+  {
+    Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d ignored", chn.iUniqueId);
   }
   return PVR_ERROR_NO_ERROR;
 }
@@ -1364,6 +1369,7 @@ bool CTvheadend::Connected ( void )
   msg = htsmsg_create_map();
   if (Settings::GetInstance().GetAsyncEpg())
   {
+    Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%ld)", (long)m_epgMaxDays);
     htsmsg_add_u32(msg, "epg", 1);
     if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
       htsmsg_add_s64(msg, "epgMaxTime", static_cast<int64_t>(time(NULL) + m_epgMaxDays * int64_t(24 * 60 *60)));
@@ -1378,7 +1384,7 @@ bool CTvheadend::Connected ( void )
   }
 
   htsmsg_destroy(msg);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "async updates requested");
+  Logger::Log(LogLevel::LEVEL_INFO, "async updates requested");
 
   return true;
 }
@@ -1544,6 +1550,8 @@ void* CTvheadend::Process ( void )
 
 void CTvheadend::SyncCompleted ( void )
 {
+  Logger::Log(LogLevel::LEVEL_INFO, "async updates initialised");
+
   /* The complete calls are probably redundant, but its a safety feature */
   SyncChannelsCompleted();
   SyncDvrCompleted();
