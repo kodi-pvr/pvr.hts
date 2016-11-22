@@ -2083,16 +2083,8 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetPart(u32);
 
   /* Add optional recording link */
-  auto rit = std::find_if(
-    m_recordings.cbegin(), 
-    m_recordings.cend(), 
-    [evt](const RecordingMapEntry &entry)
-  {
-    return entry.second.GetEventId() == evt.GetId();
-  });
-
-  if (rit != m_recordings.cend())
-    evt.SetRecordingId(evt.GetId());
+  if (!htsmsg_get_u32(msg, "dvrId", &u32))
+    evt.SetRecordingId(u32);
   
   return true;
 }
