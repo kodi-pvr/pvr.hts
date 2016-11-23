@@ -1,3 +1,6 @@
+3.4.8
+- improve EPG loading performance
+
 3.4.7
 - updated language files from Transifex
 
