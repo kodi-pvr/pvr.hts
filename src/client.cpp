@@ -322,7 +322,7 @@ void CloseLiveStream(void)
   tvh->DemuxClose();
 }
 
-bool SeekTime(int time,bool backward,double *startpts)
+bool SeekTime(double time,bool backward,double *startpts)
 {
   return tvh->DemuxSeek(time, backward, startpts);
 }
