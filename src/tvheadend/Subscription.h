@@ -93,7 +93,7 @@ namespace tvheadend
      * @param time timestamp to seek to
      * @return false if the command failed, true otherwise
      */
-    bool SendSeek(int time);
+    bool SendSeek(double time);
 
     /**
      * Change the subscription speed on the backend
