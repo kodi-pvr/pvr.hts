@@ -2466,7 +2466,7 @@ void CTvheadend::DemuxAbort ( void )
   }
 }
 
-bool CTvheadend::DemuxSeek ( int time, bool backward, double *startpts )
+bool CTvheadend::DemuxSeek ( double time, bool backward, double *startpts )
 {
   return m_dmx_active->Seek(time, backward, startpts);
 }

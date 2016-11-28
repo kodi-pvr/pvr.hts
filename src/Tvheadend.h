@@ -277,7 +277,7 @@ private:
   void         Trim           ( void );
   void         Flush          ( void );
   void         Abort          ( void );
-  bool         Seek           ( int time, bool backwards, double *startpts );
+  bool         Seek           ( double time, bool backwards, double *startpts );
   void         Speed          ( int speed );
   void         Weight         ( tvheadend::eSubscriptionWeight weight );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
@@ -538,7 +538,7 @@ public:
   DemuxPacket *DemuxRead           ( void );
   void         DemuxFlush          ( void );
   void         DemuxAbort          ( void );
-  bool         DemuxSeek           ( int time, bool backward, double *startpts );
+  bool         DemuxSeek           ( double time, bool backward, double *startpts );
   void         DemuxSpeed          ( int speed );
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
