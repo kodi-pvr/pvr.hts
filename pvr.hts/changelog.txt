@@ -1,3 +1,6 @@
+4.0.0
+- Initial Kodi v18 version
+
 3.4.10
 - Adpations for PVR API v5.2.1
 
