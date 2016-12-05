@@ -173,7 +173,7 @@ void Subscription::SendUnsubscribe(void)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux successfully unsubscribed from channel id %d, subscription id %d", GetChannelId(), GetId());
 }
 
-bool Subscription::SendSeek(int time)
+bool Subscription::SendSeek(double time)
 {
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();

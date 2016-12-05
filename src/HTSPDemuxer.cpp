@@ -154,7 +154,7 @@ void CHTSPDemuxer::Abort ( void )
 }
 
 bool CHTSPDemuxer::Seek 
-  ( int time, bool _unused(backwards), double *startpts )
+  ( double time, bool _unused(backwards), double *startpts )
 {
   if (!m_subscription.IsActive())
     return false;
