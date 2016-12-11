@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="3.4.10"
+  version="3.4.11"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -19,7 +19,7 @@
     <summary lang="af_ZA">Kodi se voorprogram vir Tvheadend</summary>
     <summary lang="be_BY">Kodi's frontend for Tvheadend</summary>
     <summary lang="bg_BG">Kodi клиент за Tvheadend</summary>
-    <summary lang="ca_ES">Frontal del Kodi pel Tvheadend</summary>
+    <summary lang="ca_ES">Frontal de Kodi per a Tvheadend</summary>
     <summary lang="cs_CZ">Rozhraní Kodi pro Tvheadend</summary>
     <summary lang="cy_GB">Blaen Kodi ar gyfer Tvheadend</summary>
     <summary lang="da_DK">Kodis brugerflade til Tvheadend</summary>
@@ -31,8 +31,9 @@
     <summary lang="en_US">Kodi's frontend for Tvheadend</summary>
     <summary lang="es_AR">Interfaz Kodi para Tvheadend</summary>
     <summary lang="es_ES">Interfaz Kodi para Tvheadend</summary>
+    <summary lang="es_MX">El frontend de Kodi para Tvheadend</summary>
     <summary lang="et_EE">Kodi esi Tvheadend'ile</summary>
-    <summary lang="fi_FI">Kodi:n Tvheadend-tuki</summary>
+    <summary lang="fi_FI">Kodin Tvheadend-asiakasohjelma</summary>
     <summary lang="fr_CA">Frontal Kodi pour Tvheadend</summary>
     <summary lang="fr_FR">Interface logicielle pour Tvheadend</summary>
     <summary lang="gl_ES">Interface do Kodi para Tvheadend</summary>
@@ -52,7 +53,7 @@
     <summary lang="mt_MT">Faċċata ta' Kodi għat- TVheadend</summary>
     <summary lang="nb_NO">Kodi sitt frontend for Tvheadend</summary>
     <summary lang="nl_NL">Kodi's frontend voor Tvheadend</summary>
-    <summary lang="pl_PL">Klient telewizyjny dla Tvheadend</summary>
+    <summary lang="pl_PL">Klient telewizji dla Tvheadend</summary>
     <summary lang="pt_BR">Frontend Kodi para Tvheadend</summary>
     <summary lang="pt_PT">Interface Kodi para Tvheadend</summary>
     <summary lang="ro_RO">Interfața Kodi pentru Tvheadend</summary>
@@ -70,11 +71,11 @@
     <summary lang="uk_UA">Інтерфейс Kodi для Tvheadend</summary>
     <summary lang="vi_VN">Giao tiếp Kodi cho Tvheadend</summary>
     <summary lang="zh_CN">Kodi 的 Tvheadend 前端</summary>
-    <summary lang="zh_TW">Kodi的前端Tvheadend</summary>
+    <summary lang="zh_TW">Kodi的Tvheadend前端介面</summary>
     <description lang="af_ZA">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="be_BY">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="bg_BG">Tvheadend клиент. Поддържа поточна телевизия, записване, електронен програмен справочник и броячи.</description>
-    <description lang="ca_ES">Interfície per al Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, EPG, temporitzadors</description>
+    <description lang="ca_ES">Frontal de Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, guia electrònica de programació (EPG), temporitzadors</description>
     <description lang="cs_CZ">Rozhraní Tvheadend. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače.</description>
     <description lang="cy_GB">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
     <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere</description>
@@ -86,8 +87,9 @@
     <description lang="en_US">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="es_AR">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="es_ES">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
+    <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend esi. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
-    <description lang="fi_FI">Tvheadend; tukee reaaliaikaisen television ja nauhoituksien streamausta, EPGtä ja nauhoituksien ajastusta.</description>
+    <description lang="fi_FI">Tvheadend-asiakasohjelma. Tukee suorien tv-lähetysten ja tallennusten katsomista, ohjelmaopasta ja ohjelmien ajastamista.</description>
     <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
@@ -107,7 +109,7 @@
     <description lang="mt_MT">Faċċata ta' TVheadend; jiflaħ għal streaming ta' TV Lajv u rekordings, EPG, Arloġġi</description>
     <description lang="nb_NO">Tvheadend frontend; støtte for visning av direkte TV og opptakk, EPG, tidstakere</description>
     <description lang="nl_NL">Tvheadend frontend; ondersteuning van streaming, Live TV &amp; opnames, EPG, Timers</description>
-    <description lang="pl_PL">Klient telewizyjny dla Tvheadend obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie i harmonogram nagrań oraz funkcje przewodnika telewizyjnego.</description>
+    <description lang="pl_PL">Klient telewizji dla Tvheadend obsługuje transmisję kanałów radiowych i telewizyjnych, nagrywanie i harmonogram nagrań oraz funkcje przewodnika telewizyjnego.</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
     <description lang="pt_PT">Interface Tvheadend. Suporta transmissão e gravação de TV em direto, EPG e temporizadores.</description>
     <description lang="ro_RO">Partea din față pentru Tvheadend; suportă difuzarea în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
@@ -143,7 +145,7 @@
     <disclaimer lang="es_ES">¡Este software es inestable! Los autores no se responsabilizan de grabaciones fallidas, temporizadores incorrectos, horas perdidas, o cualquier otro efecto no deseado...</disclaimer>
     <disclaimer lang="es_MX">¡Esto es software inestable! Los autores no son de ninguna manera responsables por grabaciones fallidas, temporizadores incorrectos, horas perdidas o cualquier otro efecto no deseado...</disclaimer>
     <disclaimer lang="et_EE">See on ebastabiilne tarkvara! Autorid ei ole kuidagi moodi vastutavad nurjunud salvestiste, ebaõige aegrelee, raisatud tundide ega muude soovimatute asjade eest.</disclaimer>
-    <disclaimer lang="fi_FI">Tämä on epävakaa ohjelma! Ohjelman kirjoittavat eivät vastaa millään tavalla epäonnistuneista nauhoituksista, ajastimen väärästä toiminnasta, hukatusta ajasta tai muista ei-halutuista tapahtumista.</disclaimer>
+    <disclaimer lang="fi_FI">Tämä on epävakaa ohjelma! Sen tekijät eivät ole millään muotoa vastuussa epäonnistuneista tallennuksista, virheellisistä ajastuksista, haaskatusta ajasta, verenpaineen noususta tai mistään muusta epäsuotuisasta vaikutuksesta.</disclaimer>
     <disclaimer lang="fr_CA">Ce logiciel est instable! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
     <disclaimer lang="fr_FR">Logiciel en cours d'élaboration ! Les auteurs ne sont en aucun cas responsables de l'échec des enregistrements, programmations défectueuses, temps perdu ou autres effets indésirables.</disclaimer>
     <disclaimer lang="gl_ES">Este é software non estable, os autores non se fan responsábeis dos erros na gravacións, temporizadores incorrectos, e outros efectos non desexados.</disclaimer>
@@ -167,7 +169,7 @@
     <disclaimer lang="pl_PL">Oprogramowanie nadal jest w fazie rozwoju i jest niestabilne! Autorzy w żaden sposób nie są odpowiedzialni za nieudane nagrania, błędy w harmonogramie nagrań, zmarnowany czas ani jakiekolwiek inne niepożądane efekty.</disclaimer>
     <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas desperdiçadas, ou quaisquer outros efeitos indesejáveis...</disclaimer>
     <disclaimer lang="pt_PT">Este software é instável! Os autores não podem ser responsabilizados por gravações falhadas, temporizadores incorretos, horas desperdiçadas ou qualquer outro tipo de efeitos indesejáveis...</disclaimer>
-    <disclaimer lang="ro_RO">Acest software nu este stabil! Autorii nu sunt în niciun caz responsabili pentru înregistrările eșuate, cronometre incorecte, ore pierdute sau orice alt efect nedorit.</disclaimer>
+    <disclaimer lang="ro_RO">Această parte din program nu este stabilă! Autorii nu sunt în niciun caz responsabili pentru înregistrările eșuate, cronometre incorecte, ore pierdute sau orice alt efect nedorit.</disclaimer>
     <disclaimer lang="ru_RU">Это нестабильная программа! Авторы не несут ответственности за неудачную запись, неправильные таймеры, потраченное время и другие нежелательные последствия.</disclaimer>
     <disclaimer lang="si_LK">මෙය අස්ථිර මෘදුකාංගයකි! මෙහි සිදුවන පටිගත කිරීම් අසාර්ථක වීම්, සාවද්‍ය මුහුර්තක, නාස්ති වූ කාලයන්, හෝ වෙනත් යමිකිසි නුසුදුසු බලපෑම් සඳහා කතෘ වග කියනු නොලැබේ.</disclaimer>
     <disclaimer lang="sk_SK">Tento softvér nie je stabilný! Autori nenesú žiadnu zodpovednosť za chybné nahrávky vysielania, nesprávne časovače alebo iné neželané udalosti spôsobené týmto softvérom..</disclaimer>

@@ -42,7 +42,7 @@ msgstr "Salasana"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Yhteyden aikakatkaisu (sekunneissa)"
+msgstr "Yhteyden aikakatkaisu (sekuntia)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
@@ -58,7 +58,7 @@ msgstr "Suoratoistoasetukset"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Ajastimen asetukset"
+msgstr "Ajastuksen asetukset"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -66,11 +66,11 @@ msgstr "Automaattiset tallennukset"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Aloita aikaikkunan laskenta"
+msgstr "Aloitusajan määrittely"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
-msgstr "Tarkka (aloitus + lopetusaika)"
+msgstr "Tarkka (aloitusaika + lopetusaika)"
 
 msgctxt "#30053"
 msgid "Relaxed (start time +/- margin)"
@@ -78,23 +78,23 @@ msgstr "Joustava (aloitusaika +/- marginaali)"
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Aloitusajan enimmäismarginaali (minuuteissa)"
+msgstr "Aloitusajan enimmäismarginaali (minuuttia)"
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Oletustärkeys"
+msgstr "Tärkeys"
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Oletuselinikä"
+msgstr "Elinikä"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Oletus kaksoiskappaleiden tunnistus"
+msgstr "Kaksoiskappaleiden tunnistus"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Uusien ajastimien oletus"
+msgstr "Ajastusten oletusasetukset"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -102,11 +102,11 @@ msgstr "Tiedonsiirto"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Epäsynkrooninen EPG-siirto"
+msgstr "Epäsynkroninen ohjelmaoppaan lataus"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Debugging"
+msgstr "Virhelokin kirjoitus"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
@@ -114,7 +114,7 @@ msgstr "Jäljitä (yksityiskohtainen)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "HTSP versio yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
+msgstr "HTSP-versio on yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
@@ -250,7 +250,7 @@ msgstr "Käytä ennakoivaa kanavanvaihtoa"
 
 msgctxt "#30450"
 msgid "No free adapter available"
-msgstr "Ei vapaata viritintä käytettävissä"
+msgstr "Yhtään viritintä ei ole vapaana"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
