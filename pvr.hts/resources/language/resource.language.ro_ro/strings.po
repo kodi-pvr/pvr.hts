@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Setări conexiune"
+msgstr "Stabiliri conexiune"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"

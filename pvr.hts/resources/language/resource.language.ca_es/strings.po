@@ -22,7 +22,7 @@ msgstr "Ajusts de la connexió"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Nom de màquina o IP del Tvheadend"
+msgstr "Nom d'amfitrió o IP de Tvheadend"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -40,17 +40,45 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contrasenya"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Temps d'expiració de la connexió (segons)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Temps d'expiració de la resposta (segons)"
+
 msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Ajusts avançats"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Ajusts de la transmissió en línia"
 
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Ajusts del temporitzador"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Enregistraments automàtics"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Estricte (hora de començament + hora d'acabament)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relaxat (hora de començament +/- marge)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioritat predeterminada"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Transferència asíncrona de EPG"
+msgstr "Transferència asíncrona de l'EPG"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -64,9 +92,13 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "desajust de la versió HTSP (suportat: v%d, es requereix: v%d). Si us plau, actualitzi tvheadend."
 
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Important (el més alt)"
+
 msgctxt "#30352"
 msgid "High"
-msgstr "Màx."
+msgstr "Alt"
 
 msgctxt "#30353"
 msgid "Normal"
@@ -74,12 +106,100 @@ msgstr "Normal"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "Mín."
+msgstr "Baix"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "No important (el més baix)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Gravar tots els episodis"
+msgstr "Enregistra tots els episodis"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Fins que necessiti espai"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Per sempre"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 dia"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dies"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dies"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 setmana"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 setmanes"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 setmanes"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 mesos"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 mesos"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 mesos"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 any"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 anys"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 anys"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Per sempre (tvh 4.1+)"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "No hi ha cap adaptador disponible"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sense senyal"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sense accés"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Error de subscripció"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil de la transmissió en línia"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "El perfil de la transmissió en línia %s no està disponible"

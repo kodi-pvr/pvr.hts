@@ -54,7 +54,7 @@ msgstr "Ustawienia zaawansowane"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Ustawienia strumieniowania"
+msgstr "Ustawienia transmisji"
 
 msgctxt "#30010"
 msgid "Timer settings"
@@ -278,7 +278,7 @@ msgstr "Błąd subskrypcji"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Profil strumieniowania"
+msgstr "Profil transmisji"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -286,4 +286,4 @@ msgstr "Używany profil (pusty = domyślny)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Profil strumieniowania %s niedostępny"
+msgstr "Profil transmisji %s niedostępny"

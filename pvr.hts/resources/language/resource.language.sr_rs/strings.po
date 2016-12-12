@@ -176,17 +176,53 @@ msgctxt "#30375"
 msgid "1 day"
 msgstr "1 дан"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 дана"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 дана"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 недеља"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 недеље"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 недеље"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 месец"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 месеца"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 месеца"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 месеци"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 година"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 године"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 године"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

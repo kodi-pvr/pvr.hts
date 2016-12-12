@@ -16,6 +16,10 @@ msgstr ""
 "Language: szl\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Sztelōnki skuplowaniŏ"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Miano ôd hosta Tvheadend abo ôd niygo adresa IP"
@@ -40,9 +44,61 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Czŏs na kuplowanie (sekōndy)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Limit czŏsu ôdpowiydzi (sekundy)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Sztelōnki ekszperta"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Sztelōnki szpricowaniŏ"
+
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Nasztalowania minutnika"
+msgstr "Sztelōnki minutnika"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Nagrowanie autōmatyczne"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Rachowanie ôkna czŏsu napoczyńciŏ"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Sztram (czŏs zaczōntku + czŏs kōńca)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Frajny (czŏs zaczōntku +/- margines)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Nagrowej przed ôbcyrklowanym czŏsym zaczōntku (minuty)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Wychodny priorytet"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Wychodny czŏs życiŏ"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Wychodnŏ detekcyjŏ tuplikatōw"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Wychodne dlŏ nowych auftragōw"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transfer danych"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -56,6 +112,18 @@ msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Szlakować (akuratne)"
 
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Niynŏleżnŏ wersyjŏ HTSP (ôbsugowanŏ: v%d, fołdrowanŏ: v%d). Zaktualizuj program tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Jedyn rŏz (ôbcyrklowane bez auftrag cykliczne)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Wŏżnŏ (Nŏjzwielgszŏ)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Wysokŏ"
@@ -67,3 +135,155 @@ msgstr "Ôbyczajny"
 msgctxt "#30354"
 msgid "Low"
 msgstr "min."
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Niywŏżnŏ (Nŏjniższŏ)"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Nagrowej wszyjske party"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Nagrowej jeźli numer partu je inkszy"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Nagrowej jeźli miano partu je inksze"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Nagrowej jeźli ôpis je inkszy"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Nagrowej maksymalnie rŏz na tydziyń"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Nagrowej maksymalnie rŏz na dziyń"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Aż braknie placu"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Dycki"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 dziyń"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dni"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dni"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 tydziyń"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 tydni"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 tydni"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 miesiōnc"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 miesiōnce"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 miesiōnce"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 miesiyncy"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 rok"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 lata"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 lata"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Aż braknie przestrzyństwa (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Bez kōńca (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Stympne dostrajanie"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Numer subskrypcyje we użyciu"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Zniyskorzynie zawiyraniŏ niyużywanych subskrypcyji (sekundy)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Używej wstympnygo dostrãjaniŏ, coby zrychlić szaltrowanie kanałōw"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Niy ma swobodnych adapterów"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Kanał zakodowany"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Niy ma sygnału"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Niypodarzōne dostrŏjanie"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Przestōmpiōny limit używŏczōw"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Niy ma dostympu"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Feler subskrypcyje"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Profil szpricowaniŏ"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Używany profil (prōżny = wychodny)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Profil szpricowaniŏ %s niydostympny"
