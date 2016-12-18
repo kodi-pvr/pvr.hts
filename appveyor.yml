@@ -29,7 +29,7 @@ build_script:
   - call "%VS120COMNTOOLS%..\..\VC\bin\vcvars32.bat"
   - set cur_dir=%cd%
   - cd ..
-  - git clone --depth=1 https://github.com/xbmc/xbmc.git
+  - git clone --depth=1 https://github.com/FernetMenta/kodi-agile
   - cd %app_id%
   - mkdir build
   - cd build
