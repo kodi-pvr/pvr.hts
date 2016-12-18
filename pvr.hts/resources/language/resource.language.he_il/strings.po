@@ -176,17 +176,53 @@ msgctxt "#30375"
 msgid "1 day"
 msgstr "יום יחיד"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 ימים"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 ימים"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "שבוע יחיד"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "שבועיים"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 שבועות"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "חודש יחיד"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "חודשיים"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 חודשים"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 חודשים"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "שנה אחת"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "שנתיים"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 שנים"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

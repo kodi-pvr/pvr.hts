@@ -16,17 +16,21 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "連接設定"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend主機名稱或IP位址"
 
 msgctxt "#30002"
 msgid "HTTP port"
-msgstr "HTTP端口"
+msgstr "HTTP連接埠"
 
 msgctxt "#30003"
 msgid "HTSP port"
-msgstr "HTSP端口"
+msgstr "HTSP連接埠"
 
 msgctxt "#30004"
 msgid "Username"
@@ -36,17 +40,93 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "密碼"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "連接逾時 (秒)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "回應逾時 (秒)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "進階設定"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "串流設定"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "計時器設定"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "自動錄影"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "開始時間計算視窗"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "精確 (開始時間 + 結束時間)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "粗略 (開始時間 +/- 緩衝空間)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "最大的開始時間緩衝值 (分)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "預設優先權"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "預設的生命週期"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "預設的重複偵測"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "新設計時器的預設值"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "資料傳輸"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "非同步的電子節目表傳輸"
 
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "除錯"
 
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "追蹤 (詳細)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "HTSP版本不匹配 (支援：v%d, 最低：v%d)。請更新電視端程式。"
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "單次 (以重複定時器進行排程)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "重要 (最高)"
+
 msgctxt "#30352"
 msgid "High"
-msgstr "高溫"
+msgstr "高"
 
 msgctxt "#30353"
 msgid "Normal"
@@ -54,8 +134,156 @@ msgstr "一般"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "低溫"
+msgstr "低"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "不重要 (最低)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "記錄所有插曲"
+msgstr "錄製全集"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "若影集編號不同則進行錄影"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "若影集名稱不同則進行錄影"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "若描述不同即進行錄影"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "每週單次錄影的最大值"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "每日單次錄影的最大值"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "直到空間不足"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "無限"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1天"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3天"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5天"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1週"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2週"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3週"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1個月"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2個月"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3個月"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6個月"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1年"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2年"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3年"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "直到空間不足 (tvh 4.1以上)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "無限 (tvh 4.1以上)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "預知式轉台"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "使用的訂閱數量"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "未使用的訂閱內容關閉延遲 (秒)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "使用預知式轉台來加速頻道轉換"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "沒有可用的連接介面"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "加密頻道"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "沒有訊號"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "轉台失敗"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "已達使用者限量"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "不可存取"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "訂閱錯誤"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "串流設定檔"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "欲使用的設定檔 (瘤空 = 預設值)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "串流設定檔 %s 不可用"

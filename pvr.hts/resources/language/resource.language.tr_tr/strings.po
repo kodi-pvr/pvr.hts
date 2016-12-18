@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Gelişmiş Ayarlar"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Akış ayarları"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Zamanlayıcı ayarları"
@@ -59,6 +63,38 @@ msgstr "Zamanlayıcı ayarları"
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Otomatik Kayıtlar"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Başlangıç zamanı pencere hesaplaması"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Kesin (başlangıç zamanı + bitiş zamanı)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Gevşek (başlangıç zamanı +/- ihtiyat payı)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "En fazla başlangıç zamanı ihtiyat payı (dakika)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Varsayılan öncelik"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Varsayılan ömür"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Varsayılan kopya tespiti"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Yeni zamanlayıcılar için varsayılanlar"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -79,6 +115,10 @@ msgstr "İz (ayrıntılı)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP sürümü uyuşmadı (desteklenen: v%d, gereken: v%d). Lütfen tvheadend'i güncelleyin."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Tek seferlik (Tekrarlanan zamanlayıcı ile planlanmış)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -128,6 +168,94 @@ msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Boşluk gerekene kadar"
 
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Sonsuza dek"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 gün"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 gün"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 gün"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "Bir hafta"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 hafta"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 hafta"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "Bir ay"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 ay"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 ay"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 ay"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "Bir yıl"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 yıl"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 yıl"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Boş alan gerekene kadar (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Sonsuza dek (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Öngörüsel ayarlama"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Kullanılacak abonelik sayısı"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Kullanılmayan aboneliğin sonlandırılma mühleti (saniye)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Kanal geçişlerini hızlandırmak için öngörüsel ayarlama kullan"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Boşta adaptör yok"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Şifreli kanal"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Sinyal Yok"
@@ -143,3 +271,19 @@ msgstr "Kullanıcı Sayısı Limitine Erişildi"
 msgctxt "#30455"
 msgid "No access"
 msgstr "Yetkiniz Yok"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Abonelik hatası"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Akış profili"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Kullanılacak profil (boş = varsayılan)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Akış profili %s mevcut değil"

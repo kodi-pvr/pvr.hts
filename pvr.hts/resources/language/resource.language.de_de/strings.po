@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Verbindungseinstellungen"
+msgstr "Verbindung"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -50,15 +50,15 @@ msgstr "Antwortzeitüberschreitung (Sekunden)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Erweiterte Einstellungen"
+msgstr "Erweitert"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Streaming-Einstellungen"
+msgstr "Streaming"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Timer-Einstellungen"
+msgstr "Timer"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -118,7 +118,7 @@ msgstr "HTSP-Versionskonflikt (unterstützt: v%d, benötigt: v%d). Bitte tvheade
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
-msgstr "Einmalig (Erzeugt von mehrmaligem Timer)"
+msgstr "Einmalig (Erzeugt von Timer-Regel)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"

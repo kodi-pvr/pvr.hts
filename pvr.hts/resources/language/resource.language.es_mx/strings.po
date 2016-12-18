@@ -16,6 +16,14 @@ msgstr ""
 "Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Configuración de la conexión"
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Nombre de host o dirección IP de Tvheadend"
+
 msgctxt "#30002"
 msgid "HTTP port"
 msgstr "Puerto HTTP"
@@ -32,9 +40,89 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Contraseña"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Tiempo de espera de la conexión (segundos)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Tiempo de espera de respuesta (segundos)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Ajustes avanzados"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Configuración de transmisión"
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Configuración del temporizador"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Grabaciones automáticas"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Ventana de cálculo de tiempo de inicio"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Estricto (hora de inicio + hora de finalización)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Relajado (tiempo de inicio +/- margen)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Margen máximo de tiempo de inicio (minutos)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Prioridad predeterminada"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Vida predeterminada"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detección de duplicados predeterminada"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Predeterminados para nuevos temporizadores"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferencia de datos"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Transferencia asíncrona de EPG"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Debugging"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Traza (detallado)"
+
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Versión distinta de HTSP (soportado: v%d, requerido: v%d). Por favor, actualice tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by repeating timer)"
+msgstr "Una vez (Programado por el temporizador de repetición)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Importante (más alto)"
 
 msgctxt "#30352"
 msgid "High"
@@ -48,6 +136,154 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Bajo"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Sin importancia (Menor)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Grabar todos los episodios"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Grabar si el número de episodio es diferente"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Grabar si el nombre del episodio difiere"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Grabar si la descripción difiere"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Registro máximo una vez por semana"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Registro máximo una vez por semana"
+
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr "Hasta que se necesite espacio"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Por sienpre"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 día"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 días"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 días"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 semana"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 semanas"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 semanas"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mes"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meses"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 meses"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 meses"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 año"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 años"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 años"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Hasta el espacio necesario (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Siempre (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Sintonización predictiva"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Número de suscripciones a usar"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Duración de cierre de la suscripción no utilizada (segundos)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Use la sintonía predictiva para acelerar los conmutadores de canal"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "No hay adaptador disponible"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Canal codificado"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Sin señal"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "El ajuste falló"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Se ha alcanzado el límite de usuario"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Sin acceso"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Error de suscripción"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Perfil de transmisión"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Perfil a usar (vacío = predeterminado)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "El perfil de streaming %s no está disponible"

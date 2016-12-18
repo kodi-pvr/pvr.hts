@@ -54,7 +54,7 @@ msgstr "Paramètres avancés"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Méthode de diffusion en continu"
+msgstr "Paramètres de diffusion en continu"
 
 msgctxt "#30010"
 msgid "Timer settings"
