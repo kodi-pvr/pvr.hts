@@ -153,10 +153,6 @@ ADDON_STATUS ADDON_SetSetting
   return m_CurStatus;
 }
 
-void ADDON_Stop()
-{
-}
-
 void ADDON_FreeSettings()
 {
 }
