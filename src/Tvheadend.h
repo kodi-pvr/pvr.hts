@@ -26,7 +26,6 @@
 #include "p8-platform/threads/threads.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/buffer.h"
-#include "xbmc_codec_types.h"
 #include "libXBMC_addon.h"
 #include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
