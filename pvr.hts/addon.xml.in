@@ -6,7 +6,7 @@
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
     <c-pluff version="0.1"/>
-    <import addon="xbmc.pvr" version="5.2.2"/>
+    <import addon="xbmc.pvr" version="5.2.3"/>
   </requires>
   <extension
     point="xbmc.pvrclient"
