@@ -6,10 +6,10 @@
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
     <c-pluff version="0.1"/>
-    <import addon="xbmc.pvr" version="5.2.3"/>
+    <import addon="kodi.pvr" version="5.2.3"/>
   </requires>
   <extension
-    point="xbmc.pvrclient"
+    point="kodi.pvrclient"
     library_@PLATFORM@="@LIBRARY_FILENAME@"
     avahi_type="_htsp._tcp."
     avahi_ip_setting="host"

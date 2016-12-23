@@ -33,5 +33,5 @@ build_script:
   - cd %app_id%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../kodi-agile/addons -DPACKAGE_ZIP=1 ../../kodi-agile/project/cmake/addons
+  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../kodi-agile/addons -DPACKAGE_ZIP=1 ../../kodi-agile/cmake/addons
   - cmake --build "%cur_dir%\build" --target %app_id%
