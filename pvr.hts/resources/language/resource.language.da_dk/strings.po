@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Avancerede indstillinger"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Streaming indstillinger"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Indstil Optagelse"
