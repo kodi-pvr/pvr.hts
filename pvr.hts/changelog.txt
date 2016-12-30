@@ -1,3 +1,15 @@
+3.4.14
+- enable async epg transfer by default
+
+3.4.13
+- updated language files from Transifex
+
+3.4.12
+- updated language files from Transifex
+
+3.4.11
+- updated language files from Transifex
+
 3.4.10
 - Adpations for PVR API v5.2.1
 
