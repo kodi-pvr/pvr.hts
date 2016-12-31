@@ -1324,7 +1324,7 @@ PVR_ERROR CTvheadend::SetEPGTimeFrame(int iDays)
 
     if (Settings::GetInstance().GetAsyncEpg())
     {
-      Logger::Log(LogLevel::LEVEL_TRACE, "reconnecting to synchronize epg data. epg max time: old = %d, new = %d", m_epgMaxDays, iDays);
+      Logger::Log(LogLevel::LEVEL_TRACE, "reconnecting to synchronize epg data. epg max days: old = %d, new = %d", m_epgMaxDays, iDays);
       m_conn.Disconnect(); // reconnect to synchronize epg data
     }
   }
@@ -1369,10 +1369,17 @@ bool CTvheadend::Connected ( void )
   msg = htsmsg_create_map();
   if (Settings::GetInstance().GetAsyncEpg())
   {
-    Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%ld)", (long)m_epgMaxDays);
     htsmsg_add_u32(msg, "epg", 1);
-    if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
+
+    if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED && m_conn.GetProtocol() >= 25) // "epgMaxTime" is buggy in htsp versions prior to 25
+    {
+      Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%ld)", static_cast<long>(m_epgMaxDays));
       htsmsg_add_s64(msg, "epgMaxTime", static_cast<int64_t>(time(NULL) + m_epgMaxDays * int64_t(24 * 60 *60)));
+    }
+    else
+    {
+      Logger::Log(LogLevel::LEVEL_INFO, "request async EPG");
+    }
   }
   else
     htsmsg_add_u32(msg, "epg", 0);
@@ -2158,6 +2165,23 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   /* Recordings complete */
   SyncDvrCompleted();
 
+  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'stop' missing");
+    return false;
+  }
+
+  // tvheadend's "epgMaxTime" implementation is buggy in htsp versions prior to 25.
+  // To workaround this, we must request all epg data and filter it here.
+  if (m_conn.GetProtocol() < 25 &&
+      Settings::GetInstance().GetAsyncEpg() &&
+      m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
+  {
+    // check event's stop time against m_epgMaxDays, return if to large
+    if (stop > static_cast<int64_t>(time(NULL) + m_epgMaxDays * int64_t(24 * 60 *60)))
+      return false;
+  }
+
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId", &id))
   {
@@ -2174,12 +2198,6 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   if (htsmsg_get_s64(msg, "start", &start) && bAdd)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'start' missing");
-    return false;
-  }
-
-  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed eventAdd: 'stop' missing");
     return false;
   }
 
