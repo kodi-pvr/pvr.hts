@@ -33,5 +33,5 @@ build_script:
   - cd %app_id%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons
+  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/cmake/addons
   - cmake --build "%cur_dir%\build" --target %app_id%
