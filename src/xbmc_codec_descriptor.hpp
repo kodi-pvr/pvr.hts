@@ -20,7 +20,7 @@
 #ifndef XBMC_CODEC_DESCRIPTOR_HPP
 #define	XBMC_CODEC_DESCRIPTOR_HPP
 
-#include "kodi/libXBMC_pvr.h"
+#include "libXBMC_pvr.h"
 
 /**
  * Adapter which converts codec names used by tvheadend and VDR into their 
