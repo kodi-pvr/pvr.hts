@@ -33,7 +33,7 @@
   
   <category label="30008">
     <setting label="30100" type="lsep"/>
-    <setting id="epg_async" type="bool" label="30101" default="false"/>
+    <setting id="epg_async" type="bool" label="30101" default="true"/>
     
     <setting label="30200" type="lsep"/>
     <setting id="trace_debug" type="bool" label="30201" default="false"/>
