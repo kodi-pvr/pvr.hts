@@ -272,7 +272,7 @@ ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
 {
   htsmsg_t   *m;
   const void *buffer;
-  ssize_t read;
+  size_t read;
 
   /* Build */
   m = htsmsg_create_map();
@@ -295,11 +295,10 @@ ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
   }
 
   /* Get Data */
-  if (htsmsg_get_bin(m, "data", &buffer, reinterpret_cast<size_t *>(&read)))
+  if (htsmsg_get_bin(m, "data", &buffer, &read))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
-    read = -1;
-
+    return -1;
   /* Store */
   }
   else
