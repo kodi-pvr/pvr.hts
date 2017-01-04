@@ -256,7 +256,7 @@ private:
   mutable P8PLATFORM::CMutex              m_mutex;
   CHTSPConnection                        &m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*>  m_pktBuffer;
-  PVR_STREAM_PROPERTIES                   m_streams;
+  std::vector<PVR_STREAM_PROPERTIES::PVR_STREAM> m_streams;
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   P8PLATFORM::CCondition<volatile int64_t>  m_seekCond;
