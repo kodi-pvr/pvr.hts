@@ -1,3 +1,9 @@
+4.0.2
+- updated build instructions in the README
+- fixed Travis CI and AppVeyor automated builds
+- fixed a bunch of cast warnings
+- cleanup stream handling somewhat
+
 4.0.1
 - updated language files from Transifex
 
