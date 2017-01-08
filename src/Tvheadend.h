@@ -74,6 +74,7 @@ extern "C" {
                                            // actual server HTSP version matches (runtime htsp version check).
 #define FAST_RECONNECT_ATTEMPTS     (5)
 #define FAST_RECONNECT_INTERVAL   (500) // ms
+#define SLOW_RECONNECT_INTERVAL  (5000) // ms
 #define UNNUMBERED_CHANNEL      (10000)
 #define INVALID_SEEKTIME           (-1)
 
