@@ -1008,10 +1008,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-    {
       htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
-      htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
-    }
     else
       htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
 
@@ -1148,10 +1145,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-    {
       htsmsg_add_u32(m, "removal",    timer.iLifetime); // remove from disk
-      htsmsg_add_u32(m, "retention",  DVR_RET_ONREMOVE);// remove from tvh database
-    }
     else
       htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
