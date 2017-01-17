@@ -309,13 +309,8 @@ bool CHTSPDemuxer::IsRealTimeStream() const
    * we want the calculation to be consistent */
   CLockObject lock(m_mutex);
 
-  if (m_timeshiftStatus.shift == 0)
-    return true;
-
-  if (m_timeshiftStatus.start - m_timeshiftStatus.shift < 10)
-    return true;
-
-  return false;
+  /* Handle as real time when reading close to the EOF (10000000µs - 10s) */
+  return (m_timeshiftStatus.shift < 10000000);
 }
 
 void CHTSPDemuxer::ResetStatus()
