@@ -282,7 +282,7 @@ bool CanSeekStream(void)
 
 bool IsTimeshifting(void)
 {
-  return tvh->DemuxGetTimeshiftTime() != 0;
+  return tvh->DemuxIsTimeShifting();
 }
 
 static time_t ConvertMusecsToTime(int64_t musecs)

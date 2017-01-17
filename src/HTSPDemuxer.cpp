@@ -267,6 +267,18 @@ int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
   return m_timeshiftStatus.start;
 }
 
+bool CHTSPDemuxer::IsTimeShifting() const
+{
+  if (m_subscription.GetSpeed() != SPEED_NORMAL)
+    return true;
+
+  CLockObject lock(m_mutex);
+  if (m_timeshiftStatus.shift != 0)
+    return true;
+
+  return false;
+}
+
 uint32_t CHTSPDemuxer::GetSubscriptionId() const
 {
   return m_subscription.GetId();
