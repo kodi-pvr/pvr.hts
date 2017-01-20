@@ -77,6 +77,7 @@ extern "C" {
 #define SLOW_RECONNECT_INTERVAL  (5000) // ms
 #define UNNUMBERED_CHANNEL      (10000)
 #define INVALID_SEEKTIME           (-1)
+#define SPEED_NORMAL             (1000) // x1 playback speed
 
 /*
  * Forward decleration of classes
@@ -239,6 +240,7 @@ public:
   bool   ProcessMessage ( const char *method, htsmsg_t *m );
   void   Connected      ( void );
 
+  bool IsTimeShifting() const;
   bool IsRealTimeStream() const;
   int64_t GetTimeshiftTime() const;
   int64_t GetTimeshiftBufferStart() const;
@@ -546,6 +548,7 @@ public:
   int64_t      DemuxGetTimeshiftTime() const;
   int64_t      DemuxGetTimeshiftBufferStart() const;
   int64_t      DemuxGetTimeshiftBufferEnd() const;
+  bool         DemuxIsTimeShifting() const;
   bool         DemuxIsRealTimeStream() const;
 
   /*

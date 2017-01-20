@@ -1,3 +1,9 @@
+4.0.4
+- improved: use the default retention (from server configuration)
+- improved: buffering method when timeshifting
+- fixed: possible empty duplicate detection field when opening a timer rule
+- fixed: possible time offset when tuning a channel with predictive tuning enabled
+
 4.0.3
 - fixed unresponsiveness when wrong credentials are used
 
