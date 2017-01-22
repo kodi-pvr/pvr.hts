@@ -665,14 +665,20 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
   static std::vector< std::pair<int, std::string> > deDupValues;
-  if (deDupValues.size() == 0)
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+  if (m_conn.GetProtocol() >= 26)
   {
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30362)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30363)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          XBMC->GetLocalizedString(30364)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30365)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30366)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30367)));
   }
 
   /* PVR_Timer.iLifetime values and presentation.*/
