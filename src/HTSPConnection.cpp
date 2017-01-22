@@ -517,7 +517,11 @@ void CHTSPConnection::Register ( void )
 
 fail:
   if (!m_suspended)
+  {
+    /* Don't immediately reconnect (spare server CPU cycles)*/
+    Sleep(SLOW_RECONNECT_INTERVAL);
     Disconnect();
+  }
 }
 
 /*
