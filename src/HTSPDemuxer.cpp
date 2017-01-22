@@ -611,9 +611,9 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 {
-  uint32_t u32;
-  if (!htsmsg_get_u32(m, "speed", &u32))
-    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", u32);
+  int32_t s32;
+  if (!htsmsg_get_s32(m, "speed", &s32))
+    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
   if (m_speedChange) {
     Flush();
     m_speedChange = false;
