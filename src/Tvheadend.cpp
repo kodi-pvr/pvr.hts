@@ -2384,6 +2384,10 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
 
+      /* Don't keep a timeshifting demux active */
+      if (m_dmx_active->IsTimeShifting())
+        m_dmx_active->Close();
+
       /* Promote the lingering subscription to the active one */
       dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active = dmx;
@@ -2403,6 +2407,10 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+
+  /* Don't keep a timeshifting demux active */
+  if (m_dmx_active->IsTimeShifting())
+    m_dmx_active->Close();
 
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
@@ -2505,6 +2513,11 @@ int64_t CTvheadend::DemuxGetTimeshiftBufferStart() const
 int64_t CTvheadend::DemuxGetTimeshiftBufferEnd() const
 {
   return m_dmx_active->GetTimeshiftBufferEnd();
+}
+
+bool CTvheadend::DemuxIsTimeShifting() const
+{
+  return m_dmx_active->IsRealTimeStream();
 }
 
 bool CTvheadend::DemuxIsRealTimeStream() const
