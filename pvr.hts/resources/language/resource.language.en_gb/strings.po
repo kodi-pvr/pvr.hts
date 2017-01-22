@@ -200,7 +200,43 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr ""
 
-#empty strings from id 30362 to 30372
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr ""
+
+#empty strings from id 30368 to 30372
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp
