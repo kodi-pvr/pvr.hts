@@ -1,3 +1,22 @@
+3.4.15
+- improved: use the default retention (from server configuration)
+- improved: buffering method when timeshifting
+- fixed: possible empty duplicate detection field when opening a timer rule
+- fixed: possible time offset when tuning a channel with predictive tuning enabled
+- fixed: unresponsiveness when wrong credentials are used
+
+3.4.14
+- updated language files from Transifex
+
+3.4.13
+- updated language files from Transifex
+
+3.4.12
+- updated language files from Transifex
+
+3.4.11
+- updated language files from Transifex
+
 3.4.10
 - Adpations for PVR API v5.2.1
 
