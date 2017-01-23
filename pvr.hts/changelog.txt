@@ -1,3 +1,6 @@
+4.0.5
+- fix CTvheadend::DemuxIsTimeShifting
+
 4.0.4
 - improved: use the default retention (from server configuration)
 - improved: buffering method when timeshifting
