@@ -217,6 +217,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = true;
   pCapabilities->bSupportsRecordingEdl       = true;
+  pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 26);
+  pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 26);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -450,6 +452,21 @@ PVR_ERROR DeleteAllRecordingsFromTrash()
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+{
+  return tvh->SetPlayCount(recording, count);
+}
+
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  return tvh->SetPlayPosition(recording, lastplayedposition);
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  return tvh->GetPlayPosition(recording);
+}
+
 PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int *size)
 {
   return tvh->GetTimerTypes(types, size);
@@ -519,22 +536,6 @@ long long LengthRecordedStream(void)
  * *************************************************************************/
 
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-
-/* Recording History */
-PVR_ERROR SetRecordingPlayCount
-  (const PVR_RECORDING &_unused(recording), int _unused(count))
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-PVR_ERROR SetRecordingLastPlayedPosition  
-  (const PVR_RECORDING &_unused(recording), int _unused(lastplayedposition))
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &_unused(recording))
-{
-  return -1;
-}
 
 /* Channel Management */
 PVR_ERROR OpenDialogChannelScan(void)
