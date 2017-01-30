@@ -1914,31 +1914,27 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (htsmsg_get_s64(msg, "start", &start) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'start' missing");
-    return;
-  }
-
-  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stop' missing");
-    return;
-  }
-
-  if (((state = htsmsg_get_str(msg, "state")) == NULL) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'state' missing");
-    return;
-  }
-
   /* Get entry */
   Recording &rec = m_recordings[id];
   Recording comparison = rec;
   rec.SetId(id);
   rec.SetDirty(false);
-  rec.SetStart(start);
-  rec.SetStop(stop);
+
+  if (!htsmsg_get_s64(msg, "start", &start))
+    rec.SetStart(start);
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'start' missing");
+    return;
+  }
+
+  if (!htsmsg_get_s64(msg, "stop", &stop))
+    rec.SetStop(stop);
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stop' missing");
+    return;
+  }
 
   /* Channel is optional, it may not exist anymore */
   if (!htsmsg_get_u32(msg, "channel", &channel))
@@ -2058,9 +2054,9 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (state != NULL)
+  /* Parse state */
+  if ((state = htsmsg_get_str(msg, "state")) != NULL)
   {
-    /* Parse state */
     if      (strstr(state, "scheduled") != NULL)
       rec.SetState(PVR_TIMER_STATE_SCHEDULED);
     else if (strstr(state, "recording") != NULL)
@@ -2071,6 +2067,11 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       rec.SetState(PVR_TIMER_STATE_ERROR);
     else if (strstr(state, "invalid") != NULL)
       rec.SetState(PVR_TIMER_STATE_ERROR);
+  }
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'state' missing");
+    return;
   }
 
   /* Add optional fields */
