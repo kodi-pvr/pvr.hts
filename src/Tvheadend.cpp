@@ -626,7 +626,7 @@ PVR_ERROR CTvheadend::SetPlayPosition ( const PVR_RECORDING &rec, int playPositi
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id",           atoi(rec.strRecordingId));
-  htsmsg_add_u32(m, "playposition", playPosition);
+  htsmsg_add_u32(m, "playposition", playPosition >= 0 ? playPosition : 0); // Kodi uses -1 when fully watched
   return SendDvrUpdate(m);
 }
 
