@@ -1,3 +1,7 @@
+4.0.6
+- added HTSP v26 support 
+- added server based playstatus for recordings (HTSP v26 and up)
+
 4.0.5
 - fix CTvheadend::DemuxIsTimeShifting
 
