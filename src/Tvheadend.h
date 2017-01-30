@@ -68,7 +68,7 @@ extern "C" {
  * Configuration defines
  */
 #define HTSP_MIN_SERVER_VERSION       (19) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION           (25) // Client uses HTSP features up to this version. If the respective
+#define HTSP_CLIENT_VERSION           (26) // Client uses HTSP features up to this version. If the respective
                                            // addon feature requires htsp features introduced after
                                            // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                            // actual server HTSP version matches (runtime htsp version check).
@@ -371,6 +371,9 @@ public:
                                 int *num );
   PVR_ERROR DeleteRecording   ( const PVR_RECORDING &rec );
   PVR_ERROR RenameRecording   ( const PVR_RECORDING &rec );
+  PVR_ERROR SetPlayCount      ( const PVR_RECORDING &rec, int playcount );
+  PVR_ERROR SetPlayPosition   ( const PVR_RECORDING &rec, int playposition );
+  int GetPlayPosition         ( const PVR_RECORDING &rec );
   PVR_ERROR GetTimerTypes     ( PVR_TIMER_TYPE types[], int *size );
   int       GetTimerCount     ( void );
   PVR_ERROR GetTimers         ( ADDON_HANDLE handle );
