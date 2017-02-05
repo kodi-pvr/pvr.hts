@@ -713,7 +713,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
-  static std::vector< std::pair<int, std::string> > deDupValues;
+  std::vector< std::pair<int, std::string> > deDupValues;
+
   deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
   deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
   deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
