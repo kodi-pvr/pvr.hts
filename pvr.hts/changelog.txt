@@ -1,5 +1,8 @@
+3.4.17
+- fixed: duplicate 'prevent duplicate episodes' timer settings values
+
 3.4.16
-- fix CTvheadend::DemuxIsTimeShifting
+- fixed: CTvheadend::DemuxIsTimeShifting
 
 3.4.15
 - improved: use the default retention (from server configuration)
