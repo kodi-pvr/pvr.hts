@@ -1,3 +1,6 @@
+4.0.7
+- fixed duplicate 'prevent duplicate episodes' timer settings values
+
 4.0.6
 - added HTSP v26 support 
 - added server based playstatus for recordings (HTSP v26 and up)
