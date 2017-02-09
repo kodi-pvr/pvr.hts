@@ -452,10 +452,6 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Lifetime (based on retention or removal) */
       rec.iLifetime = recording.GetLifetime();
 
-      /* Play status */
-      rec.iPlayCount = recording.GetPlayCount();
-      rec.iLastPlayedPosition = recording.GetPlayPosition();
-
       /* Directory */
       // TODO: Move this logic to GetPath(), alternatively GetMangledPath()
       if (recording.GetPath() != "")
@@ -600,51 +596,6 @@ PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
   htsmsg_add_str(m, "title",  rec.strTitle);
 
   return SendDvrUpdate(m);
-}
-
-PVR_ERROR CTvheadend::SetPlayCount ( const PVR_RECORDING &rec, int playCount )
-{
-  if (m_conn.GetProtocol() < 26)
-    return PVR_ERROR_NOT_IMPLEMENTED;
-
-  Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play count to %i for recording %s", playCount, rec.strRecordingId);
-
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "id",        atoi(rec.strRecordingId));
-  htsmsg_add_u32(m, "playcount", playCount);
-  return SendDvrUpdate(m);
-}
-
-PVR_ERROR CTvheadend::SetPlayPosition ( const PVR_RECORDING &rec, int playPosition )
-{
-  if (m_conn.GetProtocol() < 26)
-    return PVR_ERROR_NOT_IMPLEMENTED;
-
-  Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play position to %i for recording %s", playPosition, rec.strRecordingId);
-
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "id",           atoi(rec.strRecordingId));
-  htsmsg_add_u32(m, "playposition", playPosition);
-  return SendDvrUpdate(m);
-}
-
-int CTvheadend::GetPlayPosition ( const PVR_RECORDING &rec )
-{
-  if (m_conn.GetProtocol() < 26)
-    return PVR_ERROR_NOT_IMPLEMENTED;
-
-  const auto &it = m_recordings.find(atoi(rec.strRecordingId));
-  if (it != m_recordings.end() && it->second.IsRecording())
-  {
-    int playPosition = it->second.GetPlayPosition();
-    Logger::Log(LogLevel::LEVEL_DEBUG, "Getting play position %i for recording %s", playPosition, rec.strRecordingId);
-
-    return it->second.GetPlayPosition();
-  }
-
-  return PVR_ERROR_INVALID_PARAMETERS;
 }
 
 namespace
@@ -1937,7 +1888,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   const char *state, *str;
-  uint32_t id, channel, eventId, retention, removal, priority, enabled, playCount, playPosition;
+  uint32_t id, channel, eventId, retention, removal, priority, enabled;
   int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
@@ -2153,15 +2104,6 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       if (!strcmp("noFreeAdapter", str))
         rec.SetState(PVR_TIMER_STATE_CONFLICT_NOK);
     }
-  }
-
-  /* Play status (optional) */
-  if (m_conn.GetProtocol() >= 26)
-  {
-    if (!htsmsg_get_u32(msg, "playcount", &playCount))
-      rec.SetPlayCount(playCount);
-    if (!htsmsg_get_u32(msg, "playposition", &playPosition))
-      rec.SetPlayPosition(playPosition);
   }
 
   /* Update */

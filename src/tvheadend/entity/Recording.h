@@ -63,9 +63,7 @@ namespace tvheadend
         m_stopExtra(0),
         m_state(PVR_TIMER_STATE_ERROR),
         m_lifetime(0),
-        m_priority(50),   // Kodi default - "normal"
-        m_playCount(0),
-        m_playPosition(0)
+        m_priority(50)   // Kodi default - "normal"
       {
       }
 
@@ -89,9 +87,7 @@ namespace tvheadend
                m_state == other.m_state &&
                m_error == other.m_error &&
                m_lifetime == other.m_lifetime &&
-               m_priority == other.m_priority &&
-               m_playCount == other.m_playCount &&
-               m_playPosition == other.m_playPosition;
+               m_priority == other.m_priority;
       }
 
       bool operator!=(const Recording &other) const
@@ -191,12 +187,6 @@ namespace tvheadend
       uint32_t GetPriority() const { return m_priority; }
       void SetPriority(uint32_t priority) { m_priority = priority; }
 
-      uint32_t GetPlayCount() const { return m_playCount; }
-      void SetPlayCount(uint32_t playCount) { m_playCount = playCount; }
-
-      uint32_t GetPlayPosition() const { return m_playPosition; }
-      void SetPlayPosition(uint32_t playPosition) { m_playPosition = playPosition; }
-
     private:
       uint32_t         m_enabled;
       uint32_t         m_channel;
@@ -217,8 +207,6 @@ namespace tvheadend
       std::string      m_error;
       uint32_t         m_lifetime;
       uint32_t         m_priority;
-      uint32_t         m_playCount;
-      uint32_t         m_playPosition;
     };
   }
 }
