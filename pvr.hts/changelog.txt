@@ -1,3 +1,6 @@
+4.0.8
+- revert server based playstatus, tvheadend is not compatible at the moment
+
 4.0.7
 - fixed duplicate 'prevent duplicate episodes' timer settings values
 
