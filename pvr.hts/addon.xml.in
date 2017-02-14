@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="3.4.17"
+  version="3.4.18"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>
@@ -51,7 +51,7 @@
     <summary lang="mn_MN">Tvheadend зориулагдсан Kodi-ийн нүүр</summary>
     <summary lang="ms_MY">Bahagian hadapan Kodi untuk </summary>
     <summary lang="mt_MT">Faċċata ta' Kodi għat- TVheadend</summary>
-    <summary lang="nb_NO">Kodi sitt frontend for Tvheadend</summary>
+    <summary lang="nb_NO">Kodis grenseflate for Tvheadend</summary>
     <summary lang="nl_NL">Kodi's frontend voor Tvheadend</summary>
     <summary lang="pl_PL">Klient telewizji dla Tvheadend</summary>
     <summary lang="pt_BR">Frontend Kodi para Tvheadend</summary>
@@ -76,7 +76,7 @@
     <description lang="be_BY">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="bg_BG">Tvheadend клиент. Поддържа поточна телевизия, записване, електронен програмен справочник и броячи.</description>
     <description lang="ca_ES">Frontal de Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, guia electrònica de programació (EPG), temporitzadors</description>
-    <description lang="cs_CZ">Rozhraní Tvheadend. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače.</description>
+    <description lang="cs_CZ">Rozhraní Tvheadend; podporuje streamování živého vysílání a nahrávání, televizní program, časovače.</description>
     <description lang="cy_GB">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
     <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere</description>
     <description lang="de_DE">PVR-Client für Tvheadend. Unterstützt TV &amp; Aufnahmen, TV-Guide (EPG) und Timer.</description>
@@ -107,7 +107,7 @@
     <description lang="mn_MN">Tvheadend нүүр; Live TV &amp; бичлэг дамжуулалт, EPG, Timer</description>
     <description lang="ms_MY">Bahagian hadapan Tvheadend; menyokong penstriman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="mt_MT">Faċċata ta' TVheadend; jiflaħ għal streaming ta' TV Lajv u rekordings, EPG, Arloġġi</description>
-    <description lang="nb_NO">Tvheadend frontend; støtte for visning av direkte TV og opptakk, EPG, tidstakere</description>
+    <description lang="nb_NO">Tvheadend-grenseflate; støtte for visning av direkte-TV og opptak, EPG, tidsur</description>
     <description lang="nl_NL">Tvheadend frontend; ondersteuning van streaming, Live TV &amp; opnames, EPG, Timers</description>
     <description lang="pl_PL">Klient telewizji dla Tvheadend obsługuje transmisję kanałów radiowych i telewizyjnych, nagrywanie i harmonogram nagrań oraz funkcje przewodnika telewizyjnego.</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
@@ -132,7 +132,7 @@
     <disclaimer lang="be_BY">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
     <disclaimer lang="bg_BG">Тази програма е нестабилна! Авторите не носят отговорност за неуспешно записване, некоректни броячи, пропиляното време и други нежелани ефекти.</disclaimer>
     <disclaimer lang="ca_ES">Això és programari inestable! Els autors no són de cap manera responsables dels enregistraments que han fallat, temporitzadors incorrectes, hores perdudes, o qualssevol altres efectes no desitjats..</disclaimer>
-    <disclaimer lang="cs_CZ">Tento software není stabilní. Autoři nejsou žádným způsobem zodpovědní za selhání při nahrávání, neplatné časovače, ztracený čas, či jakékoliv jiné nežádoucí události...</disclaimer>
+    <disclaimer lang="cs_CZ">Tento software není stabilní! Autoři nejsou žádným způsobem zodpovědní za neúspěšná nahrávání, chybné časovače, ztracený čas nebo jakékoliv jiné nežádoucí výsledky...</disclaimer>
     <disclaimer lang="cy_GB">Mae hwn yn feddalwedd ansad! Nid yw'r awduron yn gyfrifol mewn unrhyw ffordd am fethu recordio, amseru gwallus, oriau wedi eu gwastraffu nac effeithiau anymunol eraill.</disclaimer>
     <disclaimer lang="da_DK">Dette er ustabil software! Ophavsmændene er på ingen måde ansvarlige for mislykkede optagelser, ukorrekte timere, spildte timer, eller andre uønskede konsekvenser.</disclaimer>
     <disclaimer lang="de_DE">Dies ist instabile Software! Die Autoren sind in keiner Weise verantwortlich für fehlgeschlagene Aufnahmen, falsche Timer, verschwendete Zeit oder andere ungewünschte Effekte.</disclaimer>

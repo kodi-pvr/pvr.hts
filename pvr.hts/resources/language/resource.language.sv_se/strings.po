@@ -58,7 +58,7 @@ msgstr "Stream inställningar"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Inställningar för tidtagning"
+msgstr "Inställningar för timer"
 
 msgctxt "#30050"
 msgid "Auto recordings"

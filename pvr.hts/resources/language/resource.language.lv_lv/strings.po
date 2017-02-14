@@ -16,6 +16,10 @@ msgstr ""
 "Language: lv_LV\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Pieslēguma iestatījumi"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend saimniekvārds vai IP adrese"
@@ -35,6 +39,10 @@ msgstr "LIetotājs"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Parole"
+
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "Pieslēguma noilgums (sekundes)"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"

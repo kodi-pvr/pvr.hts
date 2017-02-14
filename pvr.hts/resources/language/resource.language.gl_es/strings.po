@@ -76,6 +76,14 @@ msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioridade predefinida"
 
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detección de duplicados predefinida"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Predefinicións para novos temporizadores"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
@@ -203,6 +211,10 @@ msgstr "Sintonización preditiva"
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Número de subscricións a empregar"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Empregar sintonización predictiva para mellorar o troco de canles"
 
 msgctxt "#30450"
 msgid "No free adapter available"

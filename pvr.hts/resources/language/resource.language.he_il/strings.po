@@ -224,6 +224,14 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 שנים"
 
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "עד שנפח האיחסון הנדרש (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "לתמיד (tvh 4.1+)"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "כוונון חזוי"

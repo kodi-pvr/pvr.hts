@@ -42,11 +42,11 @@ msgstr "Парола"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Време на изчакване при свързване в секунди"
+msgstr "Време на изчакване при свързване (секунди)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Време на изчакване за отговор в секунди"
+msgstr "Време на изчакване за отговор (секунди)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
