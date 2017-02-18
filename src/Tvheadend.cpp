@@ -400,12 +400,16 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return PVR_ERROR_FAILED;
-  
+
   std::vector<PVR_RECORDING> recs;
   {
     CLockObject lock(m_mutex);
     Channels::const_iterator cit;
     char buf[128];
+
+    bool _http = Settings::GetInstance().GetHttPlayRec();
+    int port = Settings::GetInstance().GetPortHTTP();
+    std::string host = Settings::GetInstance().GetHostname();
 
     for (const auto &entry : m_recordings)
     {
@@ -466,6 +470,11 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
             d = "/" + d;
           strncpy(rec.strDirectory, d.c_str(), sizeof(rec.strDirectory) - 1);
         }
+      }
+
+      /* Fill recording url */
+      if (_http) {
+        snprintf(rec.strStreamURL, sizeof(rec.strStreamURL), "http://%s:%d/dvrfile/%s",host.c_str(), port, rec.strRecordingId);
       }
 
       /* EPG event id */
