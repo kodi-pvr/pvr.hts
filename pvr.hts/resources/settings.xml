@@ -37,5 +37,6 @@
     
     <setting label="30200" type="lsep"/>
     <setting id="trace_debug" type="bool" label="30201" default="false"/>
+    <setting id="http_rec" type="bool" label="30202" default="false"/>
   </category>
 </settings>
