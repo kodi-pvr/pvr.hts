@@ -29,6 +29,7 @@
 #include "kodi/xbmc_codec_types.h"
 #include "kodi/xbmc_stream_utils.hpp"
 #include "kodi/libXBMC_addon.h"
+#include "CircBuffer.h"
 #include "tvheadend/Settings.h"
 #include "HTSPTypes.h"
 #include "tvheadend/ChannelTuningPredictor.h"
@@ -318,6 +319,7 @@ private:
  * HTSP VFS - recordings
  */
 class CHTSPVFS 
+  : public PLATFORM::CThread
 {
   friend class CTvheadend;
 
@@ -333,17 +335,30 @@ private:
   uint32_t        m_fileId;
   int64_t         m_offset;
 
+  CCircBuffer                  m_buffer;
+  PLATFORM::CMutex             m_mutex;
+  bool                         m_bHasData;
+  bool                         m_bSeekDone;
+  PLATFORM::CCondition<bool>   m_condition;
+  PLATFORM::CCondition<bool>   m_seekCondition;
+  size_t                       m_currentReadLength;
   bool      Open   ( const PVR_RECORDING &rec );
   void      Close  ( void );
   ssize_t   Read   ( unsigned char *buf, unsigned int len );
   long long Seek   ( long long pos, int whence );
   long long Tell   ( void );
   long long Size   ( void );
+  void      Reset  ( void );
+
+  void *Process();
 
   bool      SendFileOpen  ( bool force = false );
   void      SendFileClose ( void );
-  ssize_t   SendFileRead  ( unsigned char *buf, unsigned int len );
+  bool      SendFileRead  ( void );
   long long SendFileSeek  ( int64_t pos, int whence, bool force = false );
+  static const int MAX_BUFFER_SIZE = 1024 * 1024 * 10;  // 10 MB
+  static const int MIN_READ_LENGTH = 1024 * 128;        // 128 KB
+  static const int MAX_READ_LENGTH = 1024 * 1024 * 2;   // 2 MB
 };
 
 /*
