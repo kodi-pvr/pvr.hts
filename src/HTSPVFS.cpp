@@ -45,15 +45,20 @@ void *CHTSPVFS::Process(void)
       if (!SendFileRead())
         continue;
 
-      CLockObject lock(m_mutex);
-      m_bHasData = true;
-      m_condition.Broadcast();
+      {
+        CLockObject lock(m_mutex);
+        // Check if buffer is empty
+        if (m_buffer.avail()) {
+          m_bHasData = true;
+          m_condition.Broadcast();
+        }
+      }
     }
 
     {
       // Take a break, we're either stopped or full
       CLockObject lock(m_mutex);
-      m_condition.Wait(m_mutex, 5000);
+      m_condition.Wait(m_mutex, 1000);
       if (!m_bHasData)
         m_currentReadLength = MIN_READ_LENGTH;
     }
@@ -74,6 +79,7 @@ CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
   m_buffer.alloc(MAX_BUFFER_SIZE);
 
   // Start the buffer thread
+  m_retry_cnt = 0;
   CreateThread();
 }
 
@@ -137,6 +143,7 @@ void CHTSPVFS::Reset()
   m_buffer.reset();
   m_bHasData = false;
   m_bSeekDone = true;
+  m_retry_cnt = 0;
   m_currentReadLength = MIN_READ_LENGTH;
   m_seekCondition.Signal();
 }
@@ -149,18 +156,19 @@ ssize_t CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
   if (!m_fileId)
     return -1;
 
-  m_seekCondition.Wait(m_mutex, m_bSeekDone, 5000);
+  m_seekCondition.Wait(m_mutex, m_bSeekDone, 3000);
 
   /* Signal that we need more data in the buffer. Reset the read length to the
      requested length so we don't wait unnecessarily long */
   if (m_buffer.avail() < len)
   {
+    m_retry_cnt++;
     m_bHasData = false;
     m_condition.Broadcast();
   }
 
   /* Wait for data */
-  m_condition.Wait(m_mutex, m_bHasData, 5000);
+  m_condition.Wait(m_mutex, m_bHasData, 3000);
 
   /* Read */
   ret = m_buffer.read(buf, len);
@@ -335,25 +343,22 @@ bool CHTSPVFS::SendFileRead()
   htsmsg_t   *m;
   const void *buf;
   size_t      len;
-  size_t      readLength;
-
-  {
-    CLockObject lock(m_mutex);
-
-    /* Determine read length */
-    if (m_currentReadLength > m_buffer.free())
-      readLength = m_buffer.free();
-    else
-      readLength = m_currentReadLength;
-  }
 
   /* Build */
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
-  htsmsg_add_s64(m, "size", readLength);
+
+  {
+    CLockObject lock(m_mutex);
+    /* Determine read length */
+    m_currentReadLength = (m_currentReadLength > m_buffer.free()) ?
+                            m_buffer.free() : m_currentReadLength;
+    htsmsg_add_s64(m, "size", m_currentReadLength);
+//    printf("%s %lu %u %lu\n", __func__, m_currentReadLength, m_retry_cnt, m_buffer.free());
+  }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "vfs read id=%d size=%d",
-    m_fileId, readLength);
+    m_fileId, m_currentReadLength);
 
   /* Send */
   {
@@ -385,9 +390,13 @@ bool CHTSPVFS::SendFileRead()
     /* Gradually increase read length */
     CLockObject lock(m_mutex);
 
-    if (m_currentReadLength * 2 <= MAX_READ_LENGTH)
+    if (MAX_RETRY_CNT < m_retry_cnt) {
       m_currentReadLength *= 2;
+      m_currentReadLength = (m_currentReadLength < MAX_READ_LENGTH) ?
+                              m_currentReadLength : MAX_READ_LENGTH;
+    }
   }
+
 
   htsmsg_destroy(m);
   return true;
