@@ -164,6 +164,30 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Nahrávat max. jednou denně"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Pouze toto pravidlo: Nahrávat, pokud se liší číslo epizody"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Pouze toto pravidlo: Nahrávat, pokud se liší název epizody"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Pouze toto pravidlo: Nahrávat, pokud se liší název"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Pouze toto pravidlo: Nahrávat, pokud se liší popis"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Pouze toto pravidlo: Nahrávat max. jednou týdně"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Pouze toto pravidlo: Nahrávat max. jednou denně"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dokud není potřeba místo"

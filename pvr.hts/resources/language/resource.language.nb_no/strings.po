@@ -164,6 +164,30 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Ta opp maks en gang om dagen"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Kun denne regelen: Ta opp dersom episode nummer er annerledes"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Kun denne regelen: Ta opp dersom episode navn er annerledes"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Kun denne regelen: Ta opp dersom tittelen er annerledes"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Kun denne regelen: Ta opp dersom beskrivelsen er annerledes"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Kun denne regelen: Ta opp maks en gang i uken"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Kun denne regelen: Ta opp maks en gang per dag"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Frem til plass trengs"

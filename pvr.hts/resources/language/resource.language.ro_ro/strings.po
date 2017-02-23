@@ -164,6 +164,30 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Înregistrează maxim o dată pe zi"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Doar această regulă: Înregistrează dacă numărul episodului diferă"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Doar această regulă: Înregistrează dacă numele episodului diferă"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Doar această regulă: Înregistrează dacă titlul diferă"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Doar această regulă: Înregistrează dacă descrierea diferă"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Doar această regulă: Înregistrează maxim o dată pe săptămână"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Doar această regulă: Înregistrează maxim o dată pe zi"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Până este nevoie de spațiu"
