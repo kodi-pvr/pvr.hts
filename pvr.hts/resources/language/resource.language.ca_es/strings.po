@@ -64,6 +64,10 @@ msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Enregistraments automàtics"
 
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Inicia el càlcul de la finestra de temps"
+
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
 msgstr "Estricte (hora de començament + hora d'acabament)"
@@ -75,6 +79,10 @@ msgstr "Relaxat (hora de començament +/- marge)"
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioritat predeterminada"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferència de dades"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"

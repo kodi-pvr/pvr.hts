@@ -258,7 +258,7 @@ msgstr "För alltid (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
-msgstr "Förutspå inställning"
+msgstr "Förutspå förinställning"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
@@ -270,7 +270,7 @@ msgstr "Oanvänd abonnemang stängningsfördröjning (sekunder)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Använd automatisk avstämning för att påskynda kanal omkopplare"
+msgstr "Använd automatisk avstämning för att påskynda kanalbyte"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -286,7 +286,7 @@ msgstr "Ingen signal"
 
 msgctxt "#30453"
 msgid "Tuning failed"
-msgstr "Justeringen misslyckades"
+msgstr "Förinställning misslyckades"
 
 msgctxt "#30454"
 msgid "User limit reached"
