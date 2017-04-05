@@ -1,3 +1,6 @@
+4.0.9
+- fixed: timeshift state and data calculation if demuxer is not active (e.g. when playing a recording)
+
 4.0.8
 - revert server based playstatus, tvheadend is not compatible at the moment
 
