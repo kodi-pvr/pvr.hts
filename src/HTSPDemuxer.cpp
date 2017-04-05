@@ -108,6 +108,7 @@ void CHTSPDemuxer::Close ( void )
 {
   CLockObject lock(m_conn.Mutex());
   Close0();
+  ResetStatus();
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
 
@@ -151,6 +152,7 @@ void CHTSPDemuxer::Abort ( void )
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
   CLockObject lock(m_conn.Mutex());
   Abort0();
+  ResetStatus();
 }
 
 bool CHTSPDemuxer::Seek 
@@ -268,6 +270,9 @@ int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
 
 bool CHTSPDemuxer::IsTimeShifting() const
 {
+  if (!m_subscription.IsActive())
+    return false;
+
   if (m_subscription.GetSpeed() != SPEED_NORMAL)
     return true;
 
@@ -304,6 +309,9 @@ void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 
 bool CHTSPDemuxer::IsRealTimeStream() const
 {
+  if (!m_subscription.IsActive())
+    return false;
+
   /* Avoid using the getters since they lock individually and
    * we want the calculation to be consistent */
   CLockObject lock(m_mutex);
@@ -318,6 +326,7 @@ void CHTSPDemuxer::ResetStatus()
 
   m_signalInfo.Clear();
   m_sourceInfo.Clear();
+  m_timeshiftStatus.Clear();
 }
 
 /* **************************************************************************
