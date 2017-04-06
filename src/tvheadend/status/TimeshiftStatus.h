@@ -54,12 +54,20 @@ namespace tvheadend
       /**
        * Constructor
        */
-      TimeshiftStatus() :
-          full(0),
-          shift(0),
-          start(0),
-          end(0)
+      TimeshiftStatus()
       {
+        Clear();
+      }
+
+      /**
+       * Clears the current status
+       */
+      void Clear()
+      {
+        full = false;
+        shift = 0;
+        start = 0;;
+        end = 0;
       }
     };
   }
