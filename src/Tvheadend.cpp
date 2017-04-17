@@ -1585,14 +1585,6 @@ void CTvheadend::SyncChannelsCompleted ( void )
   if (m_asyncState.GetState() != ASYNC_CHN)
     return;
 
-  /* Tags */
-  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
-  {
-    return entry.second.IsDirty();
-  });
-
-  TriggerChannelGroupsUpdate();
-
   /* Channels */
   utilities::erase_if(m_channels, [](const ChannelMapEntry &entry)
   {
@@ -1600,6 +1592,14 @@ void CTvheadend::SyncChannelsCompleted ( void )
   });
 
   TriggerChannelUpdate();
+
+  /* Tags */
+  utilities::erase_if(m_tags, [](const TagMapEntry &entry)
+  {
+    return entry.second.IsDirty();
+  });
+
+  TriggerChannelGroupsUpdate();
   
   /* Next */
   m_asyncState.SetState(ASYNC_DVR);
@@ -1692,6 +1692,13 @@ void CTvheadend::ParseTagAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   uint32_t u32;
   const char *str;
   htsmsg_t *list;
+
+  /* Tvheadend will push tags this way:
+     -> "tagAdd" all tags without channel members (ignore these)
+     -> "channelAdd" all channels
+     -> "tagUpdate" all tags with channel members  */
+  if (m_asyncState.GetState() < ASYNC_CHN && bAdd)
+    return;
 
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
