@@ -1,3 +1,8 @@
+4.0.10
+- removed old never used basic addon interface functions
+- removed the use of kodi's addon codec library and do direct in pvr library
+- changed to automatic set of kodi<->addon interface versions during compile
+
 4.0.9
 - fixed: timeshift state and data calculation if demuxer is not active (e.g. when playing a recording)
 
