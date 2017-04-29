@@ -48,7 +48,6 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 CMutex g_mutex;
 CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
-CHelper_libXBMC_codec *CODEC     = NULL;
 PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
 
@@ -70,14 +69,12 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   /* Instantiate helpers */
   XBMC  = new CHelper_libXBMC_addon;
-  CODEC = new CHelper_libXBMC_codec;
   PVR   = new CHelper_libXBMC_pvr;
   
   if (!XBMC->RegisterMe(hdl) ||
-      !CODEC->RegisterMe(hdl) || !PVR->RegisterMe(hdl))
+      !PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
-    SAFE_DELETE(CODEC);
     SAFE_DELETE(XBMC);
     m_CurStatus = ADDON_STATUS_PERMANENT_FAILURE;
     return m_CurStatus;
@@ -132,7 +129,6 @@ void ADDON_Destroy()
   CLockObject lock(g_mutex);
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
-  SAFE_DELETE(CODEC);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);
   m_CurStatus = ADDON_STATUS_UNKNOWN;

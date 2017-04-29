@@ -24,11 +24,9 @@
 #include "p8-platform/threads/mutex.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
-#include "libXBMC_codec.h"
 
 extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;
-extern CHelper_libXBMC_codec*         CODEC;
 
 /* timer type ids */
 #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
