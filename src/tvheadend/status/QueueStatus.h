@@ -21,6 +21,8 @@
  *
  */
 
+#include <cstdint>
+
 namespace tvheadend {
   namespace status {
     /**

@@ -21,6 +21,7 @@
  *
  */
 
+#include <cstdint>
 #include <string>
 
 namespace tvheadend

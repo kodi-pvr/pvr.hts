@@ -36,6 +36,7 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/status/DescrambleInfo.h"
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
@@ -267,6 +268,7 @@ private:
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
+  tvheadend::status::DescrambleInfo       m_descrambleInfo;
   tvheadend::Subscription                 m_subscription;
   std::atomic<time_t>                     m_lastUse;
   
@@ -299,6 +301,7 @@ private:
   void ParseQueueStatus         ( htsmsg_t *m );
   void ParseSignalStatus        ( htsmsg_t *m );
   void ParseTimeshiftStatus     ( htsmsg_t *m );
+  void ParseDescrambleInfo      ( htsmsg_t *m );
 };
 
 /*
