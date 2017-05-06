@@ -164,6 +164,30 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Сними максимално једном дневно"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Само ово правило: Снимај ако је различит број епизоде"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Само ово правило: Снимај ако је различито име епизоде"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Само ово правило: Снимај ако је наслов различит"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Само ово правило: Снимај ако је опис различит"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Само ово правило: Снимај максимално једном недељно"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Само ово правило: Снимај максимално једном дневно"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Док простор није потребан"
