@@ -495,6 +495,7 @@ bool CHTSPConnection::SendHello ( void )
 bool CHTSPConnection::SendAuth
   ( const std::string &user, const std::string &pass )
 {
+  uint32_t u32;
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "username", user.c_str());
 
@@ -513,7 +514,33 @@ bool CHTSPConnection::SendAuth
   /* Send and Wait */
   msg = SendAndWait0("authenticate", msg);
 
-  return (msg != NULL);
+  if (msg == NULL)
+    return 0;
+
+  if (m_htspVersion >= 26)
+  {
+    /* Log received permissions */
+    Logger::Log(LogLevel::LEVEL_INFO, "  Received permissions:");
+    if (!htsmsg_get_u32(msg, "admin", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  administrator              : %i", u32);
+    if (!htsmsg_get_u32(msg, "streaming", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  HTSP streaming             : %i", u32);
+    if (!htsmsg_get_u32(msg, "dvr", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  HTSP DVR                   : %i", u32);
+    if (!htsmsg_get_u32(msg, "faileddvr", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  Failed/aborted DVR         : %i", u32);
+    if (!htsmsg_get_u32(msg, "anonymous", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  anonymous HTSP only        : %i", u32);
+    if (!htsmsg_get_u32(msg, "limitall", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  global connection limit    : %i", u32);
+    if (!htsmsg_get_u32(msg, "limitdvr", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  DVR connection limit       : %i", u32);
+    if (!htsmsg_get_u32(msg, "limitstreaming", &u32))
+      Logger::Log(LogLevel::LEVEL_INFO, "  streaming connection limit : %i", u32);
+  }
+
+  htsmsg_destroy(msg);
+  return 1;
 }
 
 /**
@@ -567,7 +594,11 @@ void CHTSPConnection::Register ( void )
 
 fail:
   if (!m_suspended)
+  {
+    /* Don't immediately reconnect (spare server CPU cycles)*/
+    Sleep(SLOW_RECONNECT_INTERVAL);
     Disconnect();
+  }
 }
 
 /*

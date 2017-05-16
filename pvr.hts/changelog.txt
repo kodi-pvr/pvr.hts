@@ -1,3 +1,41 @@
+4.0.10
+- set dependency versions automatic during build
+- removed never used kodi to addon functions
+
+4.0.9
+- fixed: timeshift state and data calculation if demuxer is not active (e.g. when playing a recording)
+
+4.0.8
+- revert server based playstatus, tvheadend is not compatible at the moment
+
+4.0.7
+- fixed duplicate 'prevent duplicate episodes' timer settings values
+
+4.0.6
+- added HTSP v26 support 
+- added server based playstatus for recordings (HTSP v26 and up)
+
+4.0.5
+- fix CTvheadend::DemuxIsTimeShifting
+
+4.0.4
+- improved: use the default retention (from server configuration)
+- improved: buffering method when timeshifting
+- fixed: possible empty duplicate detection field when opening a timer rule
+- fixed: possible time offset when tuning a channel with predictive tuning enabled
+
+4.0.3
+- fixed unresponsiveness when wrong credentials are used
+
+4.0.2
+- updated build instructions in the README
+- fixed Travis CI and AppVeyor automated builds
+- fixed a bunch of cast warnings
+- cleanup stream handling somewhat
+
+4.0.1
+- updated language files from Transifex
+
 4.0.0
 - Initial Kodi v18 version
 

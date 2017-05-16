@@ -3,30 +3,28 @@
 This is a [Kodi] (http://kodi.tv) PVR addon for connecting to a [tvheadend](https://tvheadend.org) backend.
 
 [![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=master)](https://travis-ci.org/kodi-pvr/pvr.hts)
+[![Build status](https://ci.appveyor.com/api/projects/status/9mh6hi08j00pto6x?svg=true)](https://ci.appveyor.com/project/MartijnKaijser/pvr-hts)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
 
 ## Build instructions
 
 When building the addon you have to use the correct branch depending on which version of Kodi you're building against. 
 For example, if you're building the `Jarvis` branch of Kodi you should checkout the `Jarvis` branch of this repository. 
-Addon releases are also tagged regularly.
+Also make sure you follow this README from the branch in question.
 
 ### Linux
+
+The following instructions assume you will have built Kodi already in the `kodi-build` directory 
+suggested by the README.
 
 1. `git clone https://github.com/xbmc/xbmc.git`
 2. `git clone https://github.com/kodi-pvr/pvr.hts.git`
 3. `cd pvr.hts && mkdir build && cd build`
-4. `cmake -DADDONS_TO_BUILD=pvr.hts -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons`
+4. `cmake -DADDONS_TO_BUILD=pvr.hts -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/kodi-build/addons -DPACKAGE_ZIP=1 ../../xbmc/cmake/addons`
 5. `make`
 
-The addon files will be placed in `../../xbmc/addons` so if you build Kodi from source and run it directly 
+The addon files will be placed in `../../xbmc/kodi-build/addons` so if you build Kodi from source and run it directly 
 the addon will be available as a system addon.
-
-#### Building for Kodi built with CMake
-
-If you've built Kodi with CMake you'll want to change the 
-`CMAKE_INSTALL_PREFIX` to `../../xbmc/kodi-build/addons` instead 
-(assuming `kodi-build` is your build directory).
 
 ##### Useful links
 

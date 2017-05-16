@@ -1,0 +1,48 @@
+From 8665f99f1eda149b9bb5aed3b00ad5e9e3c74a04 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Wed, 21 Dec 2016 21:08:12 +0100
+Subject: [PATCH 08/10] Change GetAddonCapabilities to 'void GetCapabilities'
+
+---
+ pvr.hts/addon.xml.in | 2 +-
+ src/client.cpp       | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/pvr.hts/addon.xml.in b/pvr.hts/addon.xml.in
+index 7eea427..df89e91 100644
+--- a/pvr.hts/addon.xml.in
++++ b/pvr.hts/addon.xml.in
+@@ -6,7 +6,7 @@
+   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
+   <requires>
+     <c-pluff version="0.1"/>
+-    <import addon="xbmc.pvr" version="5.2.2"/>
++    <import addon="xbmc.pvr" version="5.2.3"/>
+   </requires>
+   <extension
+     point="xbmc.pvrclient"
+diff --git a/src/client.cpp b/src/client.cpp
+index f2df596..256b83f 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -190,7 +190,7 @@ void OnPowerSavingDeactivated()
+  * Capabilities / Info
+  * *************************************************************************/
+ 
+-PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
++void GetCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
+ {
+   pCapabilities->bSupportsEPG                = true;
+   pCapabilities->bSupportsTV                 = true;
+@@ -202,8 +202,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
+   pCapabilities->bHandlesInputStream         = true;
+   pCapabilities->bHandlesDemuxing            = true;
+   pCapabilities->bSupportsRecordingEdl       = true;
+-
+-  return PVR_ERROR_NO_ERROR;
+ }
+ 
+ const char *GetBackendName(void)
+-- 
+2.7.4
+

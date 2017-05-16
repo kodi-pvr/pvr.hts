@@ -1,0 +1,26 @@
+From 50b7196671812a7f81ac4305366c77a760e3f2bd Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Wed, 21 Dec 2016 19:31:29 +0100
+Subject: [PATCH 07/10] API Version increase
+
+---
+ pvr.hts/addon.xml.in | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/pvr.hts/addon.xml.in b/pvr.hts/addon.xml.in
+index dba476d..7eea427 100644
+--- a/pvr.hts/addon.xml.in
++++ b/pvr.hts/addon.xml.in
+@@ -6,8 +6,7 @@
+   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
+   <requires>
+     <c-pluff version="0.1"/>
+-    <import addon="xbmc.pvr" version="5.2.1"/>
+-    <import addon="xbmc.codec" version="1.0.1"/>
++    <import addon="xbmc.pvr" version="5.2.2"/>
+   </requires>
+   <extension
+     point="xbmc.pvrclient"
+-- 
+2.7.4
+

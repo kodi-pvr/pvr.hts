@@ -1,0 +1,110 @@
+From 586d39cc85c0088da11092bf9575248bbe63d677 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Sun, 18 Dec 2016 15:29:41 +0100
+Subject: [PATCH 02/10] change libXBMC_codec to libXBMC_pvr
+
+---
+ src/Tvheadend.h               |  1 -
+ src/client.cpp                |  6 +-----
+ src/client.h                  |  2 --
+ src/xbmc_codec_descriptor.hpp | 10 +++++-----
+ 4 files changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/src/Tvheadend.h b/src/Tvheadend.h
+index bbbbc29..64cf866 100644
+--- a/src/Tvheadend.h
++++ b/src/Tvheadend.h
+@@ -26,7 +26,6 @@
+ #include "p8-platform/threads/threads.h"
+ #include "p8-platform/threads/mutex.h"
+ #include "p8-platform/util/buffer.h"
+-#include "xbmc_codec_types.h"
+ #include "libXBMC_addon.h"
+ #include "tvheadend/Settings.h"
+ #include "HTSPTypes.h"
+diff --git a/src/client.cpp b/src/client.cpp
+index 8e50e4a..efd2f23 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -48,7 +48,6 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
+ CMutex g_mutex;
+ CHelper_libXBMC_addon *XBMC      = NULL;
+ CHelper_libXBMC_pvr   *PVR       = NULL;
+-CHelper_libXBMC_codec *CODEC     = NULL;
+ PVR_MENUHOOK          *menuHook  = NULL;
+ CTvheadend            *tvh       = NULL;
+ 
+@@ -70,14 +69,12 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
+ 
+   /* Instantiate helpers */
+   XBMC  = new CHelper_libXBMC_addon;
+-  CODEC = new CHelper_libXBMC_codec;
+   PVR   = new CHelper_libXBMC_pvr;
+   
+   if (!XBMC->RegisterMe(hdl) ||
+-      !CODEC->RegisterMe(hdl) || !PVR->RegisterMe(hdl))
++      !PVR->RegisterMe(hdl))
+   {
+     SAFE_DELETE(PVR);
+-    SAFE_DELETE(CODEC);
+     SAFE_DELETE(XBMC);
+     m_CurStatus = ADDON_STATUS_PERMANENT_FAILURE;
+     return m_CurStatus;
+@@ -132,7 +129,6 @@ void ADDON_Destroy()
+   CLockObject lock(g_mutex);
+   SAFE_DELETE(tvh);
+   SAFE_DELETE(PVR);
+-  SAFE_DELETE(CODEC);
+   SAFE_DELETE(XBMC);
+   SAFE_DELETE(menuHook);
+   m_CurStatus = ADDON_STATUS_UNKNOWN;
+diff --git a/src/client.h b/src/client.h
+index 5173db2..6a78eb5 100644
+--- a/src/client.h
++++ b/src/client.h
+@@ -24,11 +24,9 @@
+ #include "p8-platform/threads/mutex.h"
+ #include "libXBMC_addon.h"
+ #include "libXBMC_pvr.h"
+-#include "libXBMC_codec.h"
+ 
+ extern ADDON::CHelper_libXBMC_addon*  XBMC;
+ extern CHelper_libXBMC_pvr*           PVR;
+-extern CHelper_libXBMC_codec*         CODEC;
+ 
+ /* timer type ids */
+ #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
+diff --git a/src/xbmc_codec_descriptor.hpp b/src/xbmc_codec_descriptor.hpp
+index 1450abb..7e52ee2 100644
+--- a/src/xbmc_codec_descriptor.hpp
++++ b/src/xbmc_codec_descriptor.hpp
+@@ -20,7 +20,7 @@
+ #ifndef XBMC_CODEC_DESCRIPTOR_HPP
+ #define	XBMC_CODEC_DESCRIPTOR_HPP
+ 
+-#include "kodi/libXBMC_codec.h"
++#include "kodi/libXBMC_pvr.h"
+ 
+ /**
+  * Adapter which converts codec names used by tvheadend and VDR into their 
+@@ -47,13 +47,13 @@ public:
+     CodecDescriptor retVal;
+     // some of Tvheadend's and VDR's codec names don't match ffmpeg's, so translate them to something ffmpeg understands
+     if (!strcmp(strCodecName, "MPEG2AUDIO"))
+-      retVal = CodecDescriptor(CODEC->GetCodecByName("MP2"), strCodecName);
++      retVal = CodecDescriptor(PVR->GetCodecByName("MP2"), strCodecName);
+     else if (!strcmp(strCodecName, "MPEGTS"))
+-      retVal = CodecDescriptor(CODEC->GetCodecByName("MPEG2VIDEO"), strCodecName);
++      retVal = CodecDescriptor(PVR->GetCodecByName("MPEG2VIDEO"), strCodecName);
+     else if (!strcmp(strCodecName, "TEXTSUB"))
+-      retVal = CodecDescriptor(CODEC->GetCodecByName("TEXT"), strCodecName);
++      retVal = CodecDescriptor(PVR->GetCodecByName("TEXT"), strCodecName);
+     else
+-      retVal = CodecDescriptor(CODEC->GetCodecByName(strCodecName), strCodecName);
++      retVal = CodecDescriptor(PVR->GetCodecByName(strCodecName), strCodecName);
+ 
+     return retVal;
+   }
+-- 
+2.7.4
+

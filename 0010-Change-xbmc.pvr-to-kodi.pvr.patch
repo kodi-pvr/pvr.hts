@@ -1,0 +1,42 @@
+From 85cc7ac2857b694419f6ade60949771523248973 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Fri, 23 Dec 2016 17:23:37 +0100
+Subject: [PATCH 10/10] Change xbmc.pvr to kodi.pvr
+
+---
+ appveyor.yml         | 2 +-
+ pvr.hts/addon.xml.in | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/appveyor.yml b/appveyor.yml
+index f27facc..c8288ab 100644
+--- a/appveyor.yml
++++ b/appveyor.yml
+@@ -33,5 +33,5 @@ build_script:
+   - cd %app_id%
+   - mkdir build
+   - cd build
+-  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../kodi-agile/addons -DPACKAGE_ZIP=1 ../../kodi-agile/project/cmake/addons
++  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../kodi-agile/addons -DPACKAGE_ZIP=1 ../../kodi-agile/cmake/addons
+   - cmake --build "%cur_dir%\build" --target %app_id%
+\ No newline at end of file
+diff --git a/pvr.hts/addon.xml.in b/pvr.hts/addon.xml.in
+index df89e91..7dd575f 100644
+--- a/pvr.hts/addon.xml.in
++++ b/pvr.hts/addon.xml.in
+@@ -6,10 +6,10 @@
+   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
+   <requires>
+     <c-pluff version="0.1"/>
+-    <import addon="xbmc.pvr" version="5.2.3"/>
++    <import addon="kodi.pvr" version="5.2.3"/>
+   </requires>
+   <extension
+-    point="xbmc.pvrclient"
++    point="kodi.pvrclient"
+     library_@PLATFORM@="@LIBRARY_FILENAME@"
+     avahi_type="_htsp._tcp."
+     avahi_ip_setting="host"
+-- 
+2.7.4
+

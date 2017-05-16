@@ -1,0 +1,27 @@
+From 8089ec92a83da468f6f2d6e70d6dad1a0d6a0a06 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Sun, 18 Dec 2016 16:29:41 +0100
+Subject: [PATCH 03/10] Remove no more used 'void ADDON_Stop()'
+
+---
+ src/client.cpp | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/client.cpp b/src/client.cpp
+index efd2f23..18f037d 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -153,10 +153,6 @@ ADDON_STATUS ADDON_SetSetting
+   return m_CurStatus;
+ }
+ 
+-void ADDON_Stop()
+-{
+-}
+-
+ void ADDON_FreeSettings()
+ {
+ }
+-- 
+2.7.4
+

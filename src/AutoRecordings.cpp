@@ -207,7 +207,6 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
   if (m_conn.GetProtocol() >= 25)
   {
     htsmsg_add_u32(m, "removal",   timer.iLifetime);            // remove from disk
-    htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE);           // remove from tvh database
     htsmsg_add_s64(m, "channelId", timer.iClientChannelUid);    // channelId is signed for >= htspv25, -1 = any
   }
   else

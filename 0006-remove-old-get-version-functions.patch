@@ -1,0 +1,39 @@
+From f1b5b75c73482669ee6bb95549ba680d5e3750aa Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Mon, 19 Dec 2016 23:38:45 +0100
+Subject: [PATCH 06/10] remove old get version functions
+
+---
+ src/client.cpp | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+diff --git a/src/client.cpp b/src/client.cpp
+index 18f037d..f2df596 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -187,22 +187,6 @@ void OnPowerSavingDeactivated()
+ }
+ 
+ /* **************************************************************************
+- * Versioning
+- * *************************************************************************/
+-
+-const char* GetPVRAPIVersion(void)
+-{
+-  static const char *strApiVersion = XBMC_PVR_API_VERSION;
+-  return strApiVersion;
+-}
+-
+-const char* GetMininumPVRAPIVersion(void)
+-{
+-  static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
+-  return strMinApiVersion;
+-}
+-
+-/* **************************************************************************
+  * Capabilities / Info
+  * *************************************************************************/
+ 
+-- 
+2.7.4
+

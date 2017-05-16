@@ -1,0 +1,33 @@
+From c46b47ff35fe9bb43858c7b0b7de61bccf0b670a Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Mon, 5 Dec 2016 16:52:43 +0100
+Subject: [PATCH 01/10] add initial functions for instance handling (currently
+ unused)
+
+---
+ src/client.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/client.cpp b/src/client.cpp
+index 8888207..72a4d5d 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -165,6 +165,15 @@ void ADDON_FreeSettings()
+ {
+ }
+ 
++ADDON_STATUS ADDON_CreateInstance(int instanceType, const char* instanceID, const void* instanceProps, void* instanceFunctions, void* kodiInstance, void** addonInstance)
++{
++  return ADDON_STATUS_UNKNOWN;
++}
++
++void ADDON_DestroyInstance(int instanceType, const char* instanceID, void* instance)
++{
++}
++
+ void OnSystemSleep()
+ {
+   if (tvh)
+-- 
+2.7.4
+

@@ -74,7 +74,7 @@ void CHTSPDemuxer::Close0 ( void )
 void CHTSPDemuxer::Abort0 ( void )
 {
   CLockObject lock(m_mutex);
-  m_streams.iStreamCount = 0;
+  m_streams.clear();
   m_streamStat.clear();
   m_seeking = false;
   m_speedChange = false;
@@ -108,6 +108,7 @@ void CHTSPDemuxer::Close ( void )
 {
   CLockObject lock(m_conn.Mutex());
   Close0();
+  ResetStatus();
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
 
@@ -151,6 +152,7 @@ void CHTSPDemuxer::Abort ( void )
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
   CLockObject lock(m_conn.Mutex());
   Abort0();
+  ResetStatus();
 }
 
 bool CHTSPDemuxer::Seek 
@@ -210,12 +212,13 @@ void CHTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
 PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *props )
 {
   CLockObject lock(m_mutex);
-  for (int i = 0; i < m_streams.iStreamCount; i++)
+
+  for (size_t i = 0; i < m_streams.size(); i++)
   {
-    memcpy(&props->stream[i], &m_streams.stream[i], sizeof(PVR_STREAM_PROPERTIES::PVR_STREAM));
+    memcpy(&props->stream[i], &m_streams.at(i), sizeof(PVR_STREAM_PROPERTIES::PVR_STREAM));
   }
 
-  props->iStreamCount = m_streams.iStreamCount;
+  props->iStreamCount = static_cast<unsigned int>(m_streams.size());
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -266,6 +269,21 @@ int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
   return m_timeshiftStatus.start;
 }
 
+bool CHTSPDemuxer::IsTimeShifting() const
+{
+  if (!m_subscription.IsActive())
+    return false;
+
+  if (m_subscription.GetSpeed() != SPEED_NORMAL)
+    return true;
+
+  CLockObject lock(m_mutex);
+  if (m_timeshiftStatus.shift != 0)
+    return true;
+
+  return false;
+}
+
 uint32_t CHTSPDemuxer::GetSubscriptionId() const
 {
   return m_subscription.GetId();
@@ -292,17 +310,15 @@ void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 
 bool CHTSPDemuxer::IsRealTimeStream() const
 {
+  if (!m_subscription.IsActive())
+    return false;
+
   /* Avoid using the getters since they lock individually and
    * we want the calculation to be consistent */
   CLockObject lock(m_mutex);
 
-  if (m_timeshiftStatus.shift == 0)
-    return true;
-
-  if (m_timeshiftStatus.start - m_timeshiftStatus.shift < 10)
-    return true;
-
-  return false;
+  /* Handle as real time when reading close to the EOF (10000000µs - 10s) */
+  return (m_timeshiftStatus.shift < 10000000);
 }
 
 void CHTSPDemuxer::ResetStatus()
@@ -311,6 +327,7 @@ void CHTSPDemuxer::ResetStatus()
 
   m_signalInfo.Clear();
   m_sourceInfo.Clear();
+  m_timeshiftStatus.Clear();
 }
 
 /* **************************************************************************
@@ -436,10 +453,11 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     return;
   }
   m_streamStat.clear();
-  m_streams.iStreamCount = 0;
+  m_streams.clear();
+
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 
   /* Process each */
-  int count = 0;
   HTSMSG_FOREACH(f, l)
   {
     uint32_t   idx, u32;
@@ -454,82 +472,87 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 
     /* Find stream */
     m_streamStat[idx] = 0;
+    PVR_STREAM_PROPERTIES::PVR_STREAM stream = {};
+
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
     
     CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
     xbmc_codec_t codec = codecDescriptor.Codec();
 
-    memset(&m_streams.stream[count], 0, sizeof(m_streams.stream[count]));
-
     if (codec.codec_type != XBMC_CODEC_TYPE_UNKNOWN)
     {
-      m_streams.stream[count].iCodecType = codec.codec_type;
-      m_streams.stream[count].iCodecId   = codec.codec_id;
-      m_streams.stream[count].iPID       = idx;
+      stream.iCodecType = codec.codec_type;
+      stream.iCodecId   = codec.codec_id;
+      stream.iPID       = idx;
 
       /* Subtitle ID */
-      if ((m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
+      if ((stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
           !strcmp("DVBSUB", type))
       {
         uint32_t composition_id = 0, ancillary_id = 0;
         htsmsg_get_u32(&f->hmf_msg, "composition_id", &composition_id);
         htsmsg_get_u32(&f->hmf_msg, "ancillary_id"  , &ancillary_id);
-        m_streams.stream[count].iSubtitleInfo = (composition_id & 0xffff)
-                                              | ((ancillary_id & 0xffff) << 16);
+        stream.iSubtitleInfo = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
       }
 
       /* Language */
-      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
-          m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_AUDIO)
+      if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
+          stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
         const char *language;
         
         if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(m_streams.stream[count].strLanguage, language, sizeof(m_streams.stream[count].strLanguage) - 1);
+          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
       }
 
       /* Audio data */
-      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_AUDIO)
+      if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
-        m_streams.stream[count].iChannels
-          = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
-        m_streams.stream[count].iSampleRate
-          = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
+        stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
+        stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
       }
 
       /* Video */
-      if (m_streams.stream[count].iCodecType == XBMC_CODEC_TYPE_VIDEO)
+      if (stream.iCodecType == XBMC_CODEC_TYPE_VIDEO)
       {
-        m_streams.stream[count].iWidth  = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
-        m_streams.stream[count].iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
+        stream.iWidth  = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
+        stream.iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
         
         /* Ignore this message if the stream details haven't been determined 
            yet, a new message will be sent once they have. This is fixed in 
            some versions of tvheadend and is here for backward compatibility. */
-        if (m_streams.stream[count].iWidth == 0 || m_streams.stream[count].iHeight == 0)
+        if (stream.iWidth == 0 || stream.iHeight == 0)
         {
           Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring subscriptionStart, stream details missing");
           return;
         }
         
         /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
-        m_streams.stream[count].fAspect = 0.0f;
+        stream.fAspect = 0.0f;
         
         if ((u32 = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
         {
-          m_streams.stream[count].iFPSScale = u32;
-          m_streams.stream[count].iFPSRate  = DVD_TIME_BASE;
+          stream.iFPSScale = u32;
+          stream.iFPSRate  = DVD_TIME_BASE;
         }
       }
-        
-      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, m_streams.stream[count].iCodecId);
-      count++;
+
+      /* We can only use PVR_STREAM_MAX_STREAMS streams */
+      if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
+      {
+        Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
+        m_streams.push_back(stream);
+      }
+      else
+      {
+        Logger::Log(LogLevel::LEVEL_INFO, "Maximum stream limit reached ignoring id: %d, type %s, codec: %u", idx, type,
+                    stream.iCodecId);
+      }
     }
   }
 
   /* Update streams */
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
-  m_streams.iStreamCount = count;
   pkt = PVR->AllocateDemuxPacket(0);
   pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
   m_pktBuffer.Push(pkt);
@@ -604,9 +627,9 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 {
-  uint32_t u32;
-  if (!htsmsg_get_u32(m, "speed", &u32))
-    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", u32);
+  int32_t s32;
+  if (!htsmsg_get_s32(m, "speed", &s32))
+    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
   if (m_speedChange) {
     Flush();
     m_speedChange = false;

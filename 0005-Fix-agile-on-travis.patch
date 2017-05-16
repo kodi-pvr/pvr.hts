@@ -1,0 +1,37 @@
+From 9320f5a5044484b5c15972c2cd9612357ea65db2 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Mon, 19 Dec 2016 00:17:20 +0100
+Subject: [PATCH 05/10] Fix agile on travis
+
+---
+ .travis.yml  | 2 +-
+ appveyor.yml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index 42ddd3f..c5d87ee 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -43,6 +43,6 @@ before_script:
+   - cd $TRAVIS_BUILD_DIR/..
+   - git clone --depth=1 https://github.com/FernetMenta/kodi-agile
+   - cd ${app_id} && mkdir build && cd build
+-  - cmake -DADDONS_TO_BUILD=${app_id} -DADDON_SRC_PREFIX=$TRAVIS_BUILD_DIR/.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/../xbmc/addons -DPACKAGE_ZIP=1 $TRAVIS_BUILD_DIR/../xbmc/project/cmake/addons
++  - cmake -DADDONS_TO_BUILD=${app_id} -DADDON_SRC_PREFIX=$TRAVIS_BUILD_DIR/.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/../kodi-agile/addons -DPACKAGE_ZIP=1 $TRAVIS_BUILD_DIR/../kodi-agile/project/cmake/addons
+ 
+ script: make
+diff --git a/appveyor.yml b/appveyor.yml
+index ca8e3db..f27facc 100644
+--- a/appveyor.yml
++++ b/appveyor.yml
+@@ -33,5 +33,5 @@ build_script:
+   - cd %app_id%
+   - mkdir build
+   - cd build
+-  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../xbmc/addons -DPACKAGE_ZIP=1 ../../xbmc/project/cmake/addons
++  - cmake -G "NMake Makefiles" -DADDONS_TO_BUILD=%app_id% -DCMAKE_BUILD_TYPE=%CONFIG% -DADDON_SRC_PREFIX=../.. -DCMAKE_INSTALL_PREFIX=../../kodi-agile/addons -DPACKAGE_ZIP=1 ../../kodi-agile/project/cmake/addons
+   - cmake --build "%cur_dir%\build" --target %app_id%
+\ No newline at end of file
+-- 
+2.7.4
+

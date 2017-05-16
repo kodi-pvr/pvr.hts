@@ -134,27 +134,12 @@ void ADDON_Destroy()
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 
-bool ADDON_HasSettings()
-{
-  return true;
-}
-
-unsigned int ADDON_GetSettings
-  (ADDON_StructSetting ***_unused(sSet))
-{
-  return 0;
-}
-
 ADDON_STATUS ADDON_SetSetting
   (const char *settingName, const void *settingValue)
 {
   CLockObject lock(g_mutex);
   m_CurStatus = Settings::GetInstance().SetSetting(settingName, settingValue);
   return m_CurStatus;
-}
-
-void ADDON_FreeSettings()
-{
 }
 
 ADDON_STATUS ADDON_CreateInstance(int instanceType, const char* instanceID, KODI_HANDLE instance, KODI_HANDLE* addonInstance)
@@ -265,7 +250,7 @@ bool CanSeekStream(void)
 
 bool IsTimeshifting(void)
 {
-  return tvh->DemuxGetTimeshiftTime() != 0;
+  return tvh->DemuxIsTimeShifting();
 }
 
 static time_t ConvertMusecsToTime(int64_t musecs)

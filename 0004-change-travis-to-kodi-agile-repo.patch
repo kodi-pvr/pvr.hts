@@ -1,0 +1,39 @@
+From d9f418d1e23887804c4862e8660924e140881500 Mon Sep 17 00:00:00 2001
+From: Alwin Esch <alwin.esch@web.de>
+Date: Sun, 18 Dec 2016 23:13:51 +0100
+Subject: [PATCH 04/10] change travis to kodi-agile repo
+
+---
+ .travis.yml  | 2 +-
+ appveyor.yml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index 9fe4b61..42ddd3f 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -41,7 +41,7 @@ before_install:
+ #
+ before_script:
+   - cd $TRAVIS_BUILD_DIR/..
+-  - git clone --depth=1 https://github.com/xbmc/xbmc.git
++  - git clone --depth=1 https://github.com/FernetMenta/kodi-agile
+   - cd ${app_id} && mkdir build && cd build
+   - cmake -DADDONS_TO_BUILD=${app_id} -DADDON_SRC_PREFIX=$TRAVIS_BUILD_DIR/.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/../xbmc/addons -DPACKAGE_ZIP=1 $TRAVIS_BUILD_DIR/../xbmc/project/cmake/addons
+ 
+diff --git a/appveyor.yml b/appveyor.yml
+index f1eb856..ca8e3db 100644
+--- a/appveyor.yml
++++ b/appveyor.yml
+@@ -29,7 +29,7 @@ build_script:
+   - call "%VS120COMNTOOLS%..\..\VC\bin\vcvars32.bat"
+   - set cur_dir=%cd%
+   - cd ..
+-  - git clone --depth=1 https://github.com/xbmc/xbmc.git
++  - git clone --depth=1 https://github.com/FernetMenta/kodi-agile
+   - cd %app_id%
+   - mkdir build
+   - cd build
+-- 
+2.7.4
+

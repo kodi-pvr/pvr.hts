@@ -664,15 +664,22 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   }
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
-  static std::vector< std::pair<int, std::string> > deDupValues;
-  if (deDupValues.size() == 0)
+  std::vector< std::pair<int, std::string> > deDupValues;
+
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
+  deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+  if (m_conn.GetProtocol() >= 26)
   {
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      XBMC->GetLocalizedString(30356)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30357)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30358)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30359)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30360)));
-    deDupValues.push_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30361)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, XBMC->GetLocalizedString(30362)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       XBMC->GetLocalizedString(30363)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          XBMC->GetLocalizedString(30364)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    XBMC->GetLocalizedString(30365)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            XBMC->GetLocalizedString(30366)));
+    deDupValues.push_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             XBMC->GetLocalizedString(30367)));
   }
 
   /* PVR_Timer.iLifetime values and presentation.*/
@@ -1008,10 +1015,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-    {
       htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
-      htsmsg_add_u32(m, "retention", DVR_RET_ONREMOVE); // remove from tvh database
-    }
     else
       htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
 
@@ -1148,10 +1152,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-    {
       htsmsg_add_u32(m, "removal",    timer.iLifetime); // remove from disk
-      htsmsg_add_u32(m, "retention",  DVR_RET_ONREMOVE);// remove from tvh database
-    }
     else
       htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
 
@@ -1826,20 +1827,12 @@ void CTvheadend::ParseChannelAddOrUpdate ( htsmsg_t *msg, bool bAdd )
         continue;
 
       /* Channel type */
-      bool bGotContent = false;
-      if (m_conn.GetProtocol() >= 25)
+      if (m_conn.GetProtocol() >= 26)
       {
         if (!htsmsg_get_u32(&f->hmf_msg, "content", &u32))
-        {
           channel.SetType(u32);
-          bGotContent = true;
-        }
       }
-
-      // The 'content' htsp method field was added to tvheadend htsp api without htsp version bump.
-      // Unfortunately, there are many semi-official tvheadend builds with htsp version 25 in the wild which
-      // do not support the 'content' htsp attribute. Just checking htsp api version is not sufficient. :-/
-      if (!bGotContent)
+      else
       {
         if ((str = htsmsg_get_str(&f->hmf_msg, "type")) != NULL)
         {
@@ -1908,31 +1901,27 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (htsmsg_get_s64(msg, "start", &start) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'start' missing");
-    return;
-  }
-
-  if (htsmsg_get_s64(msg, "stop", &stop) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stop' missing");
-    return;
-  }
-
-  if (((state = htsmsg_get_str(msg, "state")) == NULL) && bAdd)
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'state' missing");
-    return;
-  }
-
   /* Get entry */
   Recording &rec = m_recordings[id];
   Recording comparison = rec;
   rec.SetId(id);
   rec.SetDirty(false);
-  rec.SetStart(start);
-  rec.SetStop(stop);
+
+  if (!htsmsg_get_s64(msg, "start", &start))
+    rec.SetStart(start);
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'start' missing");
+    return;
+  }
+
+  if (!htsmsg_get_s64(msg, "stop", &stop))
+    rec.SetStop(stop);
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'stop' missing");
+    return;
+  }
 
   /* Channel is optional, it may not exist anymore */
   if (!htsmsg_get_u32(msg, "channel", &channel))
@@ -2052,9 +2041,9 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  if (state != NULL)
+  /* Parse state */
+  if ((state = htsmsg_get_str(msg, "state")) != NULL)
   {
-    /* Parse state */
     if      (strstr(state, "scheduled") != NULL)
       rec.SetState(PVR_TIMER_STATE_SCHEDULED);
     else if (strstr(state, "recording") != NULL)
@@ -2065,6 +2054,11 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       rec.SetState(PVR_TIMER_STATE_ERROR);
     else if (strstr(state, "invalid") != NULL)
       rec.SetState(PVR_TIMER_STATE_ERROR);
+  }
+  else if (bAdd)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'state' missing");
+    return;
   }
 
   /* Add optional fields */
@@ -2378,6 +2372,10 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
 
+      /* Don't keep a timeshifting demux active */
+      if (m_dmx_active->IsTimeShifting())
+        m_dmx_active->Close();
+
       /* Promote the lingering subscription to the active one */
       dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active = dmx;
@@ -2397,6 +2395,10 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+
+  /* Don't keep a timeshifting demux active */
+  if (m_dmx_active->IsTimeShifting())
+    m_dmx_active->Close();
 
   ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
@@ -2499,6 +2501,11 @@ int64_t CTvheadend::DemuxGetTimeshiftBufferStart() const
 int64_t CTvheadend::DemuxGetTimeshiftBufferEnd() const
 {
   return m_dmx_active->GetTimeshiftBufferEnd();
+}
+
+bool CTvheadend::DemuxIsTimeShifting() const
+{
+  return m_dmx_active->IsTimeShifting();
 }
 
 bool CTvheadend::DemuxIsRealTimeStream() const
