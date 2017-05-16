@@ -90,8 +90,7 @@ list(APPEND HTS_SOURCES
             ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
             ${HTS_SOURCES_TVHEADEND_STATUS}
-            ${HTS_SOURCES_TVHEADEND_UTILITIES}
-            ${HTS_RESOURCES})
+            ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
 add_subdirectory(lib/libhts)
 
