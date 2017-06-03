@@ -92,6 +92,13 @@ typedef enum {
   CHANNEL_TYPE_RADIO = 2
 } channel_type_t;
 
+typedef enum {
+  HTSP_DVR_PLAYCOUNT_RESET = 0,
+  HTSP_DVR_PLAYCOUNT_SET   = 1,
+  HTSP_DVR_PLAYCOUNT_KEEP  = INT32_MAX-1,
+  HTSP_DVR_PLAYCOUNT_INCR  = INT32_MAX
+} dvr_playcount_t;
+
 enum eHTSPEventType
 {
   HTSP_EVENT_NONE = 0,

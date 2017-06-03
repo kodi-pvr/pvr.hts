@@ -203,6 +203,10 @@ void CHTSPVFS::SendFileClose ( void )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
+  /* Don't let Tvheadend increase play count, we will do that with CTvheadend::SetPlayCount */
+  if (m_conn.GetProtocol() >= 27)
+    htsmsg_add_u32(m, "playcount", HTSP_DVR_PLAYCOUNT_KEEP);
+
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs close id=%d", m_fileId);
   
   /* Send */
