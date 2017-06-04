@@ -401,3 +401,13 @@ msgstr ""
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr ""
+
+#empty strings from id 30503 to 30509
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr ""
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr ""

@@ -44,6 +44,7 @@ const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
 const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
 const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
 const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
+const bool        Settings::DEFAULT_DVR_PLAYSTATUS      = true;
 
 void Settings::ReadSettings()
 {
@@ -80,6 +81,9 @@ void Settings::ReadSettings()
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
   SetDvrLifetime(ReadIntSetting("dvr_lifetime", DEFAULT_DVR_LIFETIME));
   SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUBDETECT));
+
+  /* Sever based play status */
+  SetDvrPlayStatus(ReadBoolSetting("dvr_playstatus", DEFAULT_DVR_PLAYSTATUS));
 }
 
 ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
@@ -147,6 +151,9 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetIntSetting(GetDvrLifetime(true), value);
   else if (key == "dvr_dubdetect")
     return SetIntSetting(GetDvrDupdetect(), value);
+  /* Server based play status */
+  else if (key == "dvr_playstatus")
+    return SetBoolSetting(GetDvrPlayStatus(), value);
   else
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());

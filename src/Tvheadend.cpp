@@ -604,7 +604,7 @@ PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
 
 PVR_ERROR CTvheadend::SetPlayCount ( const PVR_RECORDING &rec, int playCount )
 {
-  if (m_conn.GetProtocol() < 27)
+  if (m_conn.GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play count to %i for recording %s", playCount, rec.strRecordingId);
@@ -618,7 +618,7 @@ PVR_ERROR CTvheadend::SetPlayCount ( const PVR_RECORDING &rec, int playCount )
 
 PVR_ERROR CTvheadend::SetPlayPosition ( const PVR_RECORDING &rec, int playPosition )
 {
-  if (m_conn.GetProtocol() < 27)
+  if (m_conn.GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play position to %i for recording %s", playPosition, rec.strRecordingId);
@@ -632,7 +632,7 @@ PVR_ERROR CTvheadend::SetPlayPosition ( const PVR_RECORDING &rec, int playPositi
 
 int CTvheadend::GetPlayPosition ( const PVR_RECORDING &rec )
 {
-  if (m_conn.GetProtocol() < 27)
+  if (m_conn.GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return -1;
 
   const auto &it = m_recordings.find(atoi(rec.strRecordingId));
