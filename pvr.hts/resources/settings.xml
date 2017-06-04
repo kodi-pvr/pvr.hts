@@ -37,5 +37,8 @@
     
     <setting label="30200" type="lsep"/>
     <setting id="trace_debug" type="bool" label="30201" default="false"/>
+    
+    <setting label="30510" type="lsep"/>
+    <setting id="dvr_playstatus" type="bool" label="30511" default="true"/>
   </category>
 </settings>

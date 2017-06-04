@@ -1,3 +1,6 @@
+4.0.14
+- Readded server based play count/position for recordings (HTSP v27 and up)
+
 4.0.13
 - Remove of never used addon interface function
 
