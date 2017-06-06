@@ -70,7 +70,45 @@ msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr ""
 
-#empty strings from id 30202 to 30299
+#empty strings from id 30202 to 30248
+
+msgctxt "#30249"
+msgid "Record new episodes only"
+msgstr ""
+
+msgctxt "#30250"
+msgid "Record any time"
+msgstr ""
+
+msgctxt "#30251"
+msgid "Record daily around this time"
+msgstr ""
+
+msgctxt "#30252"
+msgid "Record weekly around this time"
+msgstr ""
+
+msgctxt "#30253"
+msgid "Record any time on weekdays"
+msgstr ""
+
+msgctxt "#30254"
+msgid "Record any time on weekends"
+msgstr ""
+
+msgctxt "#30255"
+msgid "Delete the complete timer schedule"
+msgstr ""
+
+msgctxt "#30256"
+msgid "Delete this timer only"
+msgstr ""
+
+msgctxt "#30257"
+msgid "This show is already scheduled for recording"
+msgstr ""
+
+#empty strings from id 30258 to 30299
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."

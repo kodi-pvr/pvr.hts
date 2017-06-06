@@ -62,7 +62,6 @@ bool       g_bAsyncEpg           = false;
 CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
 CHelper_libXBMC_codec *CODEC     = NULL;
-PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
 
 /* **************************************************************************
@@ -171,6 +170,55 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
     return ADDON_STATUS_LOST_CONNECTION;
   }
 
+  if (tvh->GetProtocolVersion() >= 13)
+  {
+    XBMC->Log(LOG_DEBUG, "Adding autorec menu hooks");
+
+    PVR_MENUHOOK menuhookEpg;
+    menuhookEpg.category = PVR_MENUHOOK_EPG;
+
+    if (tvh->GetProtocolVersion() >= 20)
+    {
+      menuhookEpg.iHookId = REC_ALL_NEW_EPISODES;
+      menuhookEpg.iLocalizedStringId = 30249;
+      PVR->AddMenuHook(&menuhookEpg);
+    }
+
+    menuhookEpg.iHookId = REC_EVERY_DAY_THIS_TIME;
+    menuhookEpg.iLocalizedStringId = 30251;
+    PVR->AddMenuHook(&menuhookEpg);
+
+    menuhookEpg.iHookId = REC_EVERY_WEEK_THIS_TIME;
+    menuhookEpg.iLocalizedStringId = 30252;
+    PVR->AddMenuHook(&menuhookEpg);
+
+    menuhookEpg.iHookId = REC_WEEKDAYS;
+    menuhookEpg.iLocalizedStringId = 30253;
+    PVR->AddMenuHook(&menuhookEpg);
+
+    menuhookEpg.iHookId = REC_WEEKENDS;
+    menuhookEpg.iLocalizedStringId = 30254;
+    PVR->AddMenuHook(&menuhookEpg);
+
+    menuhookEpg.iHookId = REC_EVERYTIME;
+    menuhookEpg.iLocalizedStringId = 30250;
+    PVR->AddMenuHook(&menuhookEpg);
+
+    PVR_MENUHOOK menuhookTimer;
+    menuhookTimer.category = PVR_MENUHOOK_TIMER;
+    menuhookTimer.iHookId = TIMER_DELETESCHEDULE;
+    menuhookTimer.iLocalizedStringId = 30255;
+    PVR->AddMenuHook(&menuhookTimer);
+
+    menuhookTimer.iHookId = TIMER_DELETEDVRENTRY;
+    menuhookTimer.iLocalizedStringId = 30256;
+    PVR->AddMenuHook(&menuhookTimer);
+  }
+  else
+  {
+    XBMC->Log(LOG_DEBUG, "No autorec menu hooks added, your server is to old");
+  }
+
   m_CurStatus     = ADDON_STATUS_OK;
   return m_CurStatus;
 }
@@ -193,7 +241,6 @@ void ADDON_Destroy()
   SAFE_DELETE(PVR);
   SAFE_DELETE(CODEC);
   SAFE_DELETE(XBMC);
-  SAFE_DELETE(menuHook);
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 
@@ -346,11 +393,9 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
  * GUI hooks
  * *************************************************************************/
 
-PVR_ERROR CallMenuHook
-  (const PVR_MENUHOOK &_unused(menuhook),
-   const PVR_MENUHOOK_DATA &_unused(data))
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &data)
 {
-  return PVR_ERROR_NO_ERROR;
+  return tvh->CallMenuHook(menuhook, data);
 }
 
 /* **************************************************************************

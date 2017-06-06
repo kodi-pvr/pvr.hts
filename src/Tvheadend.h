@@ -65,6 +65,22 @@ extern "C" {
 #define INVALID_SEEKTIME           (-1)
 
 /*
+ * Recording types available through menu hooks
+ */
+#define REC_EVERYTIME              1
+#define REC_EVERY_DAY_THIS_TIME    2
+#define REC_EVERY_WEEK_THIS_TIME   3
+#define REC_WEEKDAYS               4
+#define REC_WEEKENDS               5
+#define REC_ALL_NEW_EPISODES       6
+
+/*
+ * Timer options available through menu hooks
+ */
+#define TIMER_DELETESCHEDULE       7
+#define TIMER_DELETEDVRENTRY       8
+
+/*
  * Log wrappers
  */
 #define tvhdebug(...) tvhlog(ADDON::LOG_DEBUG, ##__VA_ARGS__)
@@ -372,6 +388,14 @@ public:
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   
+  /*
+   * Methods only used by menuhooks
+   */
+  PVR_ERROR CallMenuHook        ( const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item );
+  PVR_ERROR AddAutoRecording    ( uint32_t typeId, const SEvent &event );
+  PVR_ERROR SendScheduleDelete  ( std::string id, const char *method );
+  bool      GetEventFromId      ( uint32_t id, SEvent &evt );
+
 private:
   uint32_t GetNextUnnumberedChannelNumber ( void );
   
@@ -471,6 +495,10 @@ public:
   inline const char *GetServerVersion ( void )
   {
     return m_conn.GetServerVersion();
+  }
+  inline const int GetProtocolVersion ( void )
+  {
+    return m_conn.GetProtocol();
   }
   inline const char *GetServerString  ( void )
   {
