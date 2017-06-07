@@ -1,19 +1,22 @@
+4.0.15
+- Added support for 'default' recording priority setting value
+
 4.0.14
 - Readded server based play count/position for recordings (HTSP v27 and up)
 
 4.0.13
-- Remove of never used addon interface function
+- PVR API: Removed unused addon interface function
 
 4.0.12
-- Update Debian package control
-- PVR addon callback way changes
+- Updated Debian package control
+- PVR API: addon callback changes
 
 4.0.11
-- Removed old no more needed version functions
+- PVR API: Removed obsolete version functions
 
 4.0.10
-- set dependency versions automatic during build
-- removed never used kodi to addon functions
+- set dependency version values automatically during build
+- PVR API: Removed unused addon interface functions
 
 4.0.9
 - fixed: timeshift state and data calculation if demuxer is not active (e.g. when playing a recording)
