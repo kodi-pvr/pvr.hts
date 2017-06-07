@@ -236,7 +236,13 @@ msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr ""
 
-#empty strings from id 30368 to 30372
+#. Recording priority representation
+#: src/Tvheadend.cpp
+msgctxt "#30368"
+msgid "Default"
+msgstr ""
+
+#empty strings from id 30369 to 30372
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp

@@ -35,7 +35,8 @@ typedef enum {
   DVR_PRIO_NORMAL      = 2,
   DVR_PRIO_LOW         = 3,
   DVR_PRIO_UNIMPORTANT = 4,
-  DVR_PRIO_NOT_SET     = 5
+  DVR_PRIO_NOT_SET     = 5,
+  DVR_PRIO_DEFAULT     = 6
 } dvr_prio_t;
 
 typedef enum {
