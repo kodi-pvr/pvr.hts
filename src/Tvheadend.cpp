@@ -703,6 +703,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   static std::vector< std::pair<int, std::string> > priorityValues;
   if (priorityValues.size() == 0)
   {
+    priorityValues.push_back(std::make_pair(DVR_PRIO_DEFAULT,     XBMC->GetLocalizedString(30368)));
     priorityValues.push_back(std::make_pair(DVR_PRIO_UNIMPORTANT, XBMC->GetLocalizedString(30355)));
     priorityValues.push_back(std::make_pair(DVR_PRIO_LOW,         XBMC->GetLocalizedString(30354)));
     priorityValues.push_back(std::make_pair(DVR_PRIO_NORMAL,      XBMC->GetLocalizedString(30353)));
@@ -2075,6 +2076,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
       case DVR_PRIO_NORMAL:
       case DVR_PRIO_LOW:
       case DVR_PRIO_UNIMPORTANT:
+      case DVR_PRIO_DEFAULT:
         rec.SetPriority(priority);
         break;
       default:
