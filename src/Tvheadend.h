@@ -49,6 +49,7 @@
 #include <queue>
 #include <cstdarg>
 #include <stdexcept>
+#include <atomic>
 
 extern "C" {
 #include <sys/types.h>
@@ -74,6 +75,7 @@ extern "C" {
                                            // actual server HTSP version matches (runtime htsp version check).
 #define FAST_RECONNECT_ATTEMPTS     (5)
 #define FAST_RECONNECT_INTERVAL   (500) // ms
+#define SLOW_RECONNECT_INTERVAL  (5000) // ms
 #define UNNUMBERED_CHANNEL      (10000)
 #define INVALID_SEEKTIME           (-1)
 
@@ -262,7 +264,7 @@ public:
   inline time_t GetLastUse() const
   {
     if (m_subscription.IsActive())
-      return m_lastUse;
+      return m_lastUse.load();
     return 0;
   }
 
@@ -273,7 +275,7 @@ public:
   void SetStreamingProfile(const std::string &profile);
 
 private:
-  PLATFORM::CMutex                        m_mutex;
+  mutable PLATFORM::CMutex                m_mutex;
   CHTSPConnection                        &m_conn;
   PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
   ADDON::XbmcStreamProperties             m_streams;
@@ -286,7 +288,7 @@ private:
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
   tvheadend::Subscription                 m_subscription;
-  time_t                                  m_lastUse;
+  std::atomic<time_t>                     m_lastUse;
   
   void         Close0         ( void );
   void         Abort0         ( void );
@@ -302,6 +304,11 @@ private:
   void         Weight         ( tvheadend::eSubscriptionWeight weight );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+
+  /**
+   * Resets the signal and quality info
+   */
+  void ResetStatus();
   
   void ParseMuxPacket           ( htsmsg_t *m );
   void ParseSourceInfo          ( htsmsg_t *m );
@@ -410,12 +417,6 @@ private:
    * @return whether the server supports the specified streaming profile
    */
   bool HasStreamingProfile(const std::string &streamingProfile) const;
-
-  /**
-   * @return the streaming profile to use for new subscriptions, or an
-   *         empty string if no particular profile should be used
-   */
-  std::string GetStreamingProfile() const;
 
   /**
    * The streaming profiles available on the server

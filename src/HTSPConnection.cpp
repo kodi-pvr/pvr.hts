@@ -517,7 +517,11 @@ void CHTSPConnection::Register ( void )
 
 fail:
   if (!m_suspended)
+  {
+    /* Don't immediately reconnect (spare server CPU cycles)*/
+    Sleep(SLOW_RECONNECT_INTERVAL);
     Disconnect();
+  }
 }
 
 /*
@@ -597,10 +601,7 @@ void* CHTSPConnection::Process ( void )
     while (!IsStopped())
     {
       if (!ReadMessage())
-      {
-        Logger::Log(LogLevel::LEVEL_DEBUG, "attempting reconnect");
         break;
-      }
     }
 
     /* Stop connect thread (if not already) */

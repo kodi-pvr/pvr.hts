@@ -34,10 +34,9 @@ using namespace tvheadend::utilities;
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
-    m_subscription(conn),
-    m_seeking(false), m_speedChange(false)
+    m_seeking(false), m_speedChange(false),
+    m_subscription(conn), m_lastUse(0)
 {
-  m_lastUse = 0;
 }
 
 CHTSPDemuxer::~CHTSPDemuxer ()
@@ -53,9 +52,7 @@ void CHTSPDemuxer::Connected ( void )
     m_subscription.SendSubscribe(0, 0, true);
     m_subscription.SendSpeed(0, true);
 
-    /* Reset status */
-    m_signalInfo.Clear();
-    m_sourceInfo.Clear();
+    ResetStatus();
   }
 }
 
@@ -96,14 +93,13 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
   m_subscription.SendSubscribe(channelId, weight);
   
   /* Reset status */
-  m_signalInfo.Clear();
-  m_sourceInfo.Clear();
+  ResetStatus();
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
     m_subscription.SendUnsubscribe();
   else
-    m_lastUse = time(NULL);
+    m_lastUse.store(time(nullptr));
   
   return m_subscription.IsActive();
 }
@@ -118,7 +114,8 @@ void CHTSPDemuxer::Close ( void )
 DemuxPacket *CHTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
-  m_lastUse = time(NULL);
+  m_lastUse.store(time(nullptr));
+
   if (m_pktBuffer.Pop(pkt, 1000)) {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld",
              pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
@@ -246,6 +243,14 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
 {
   m_subscription.SetProfile(profile);
+}
+
+void CHTSPDemuxer::ResetStatus()
+{
+  CLockObject lock(m_mutex);
+
+  m_signalInfo.Clear();
+  m_sourceInfo.Clear();
 }
 
 /* **************************************************************************
@@ -538,9 +543,9 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 {
-  uint32_t u32;
-  if (!htsmsg_get_u32(m, "speed", &u32))
-    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", u32);
+  int32_t s32;
+  if (!htsmsg_get_s32(m, "speed", &s32))
+    Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
   if (m_speedChange) {
     Flush();
     m_speedChange = false;

@@ -1,3 +1,13 @@
+2.2.21
+- fixed: possible empty duplicate detection field when opening a timer rule
+- fixed: possible time offset when tuning a channel with predictive tuning enabled
+- fixed unresponsiveness when wrong credentials are used
+- improve EPG loading performance
+- Fixed a problem with async state handling that could happen when restoring a lost connection to tvheadend.
+- fixed: potential crash in the channel tuning predictor
+- fixed: lifetime 'forever' should be disabled for HTSP v24 and lower 
+- improved: make lifetime settings translatable
+
 2.2.20
 - updated language files from Transifex
 
