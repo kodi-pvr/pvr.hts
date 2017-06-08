@@ -18,6 +18,8 @@ add_definitions(-DUSE_DEMUX)
 # Sources and headers
 set(HTS_SOURCES src/client.h
                 src/client.cpp
+                src/CircBuffer.cpp
+                src/CircBuffer.h
                 src/HTSPConnection.cpp
                 src/HTSPDemuxer.cpp
                 src/HTSPTypes.h

@@ -120,6 +120,10 @@ msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr ""
 
+msgctxt "#30202"
+msgid "Use HTTP for recording"
+msgstr ""
+
 #empty strings from id 30202 to 30299
 
 msgctxt "#30300"

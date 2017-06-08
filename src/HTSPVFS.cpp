@@ -34,15 +34,59 @@ using namespace PLATFORM;
 using namespace tvheadend::utilities;
 
 /*
+* The buffer thread
+*/
+void *CHTSPVFS::Process(void)
+{
+  while (!IsStopped())
+  {
+    while (m_fileId && m_buffer.free() > 0)
+    {
+      if (!SendFileRead())
+        continue;
+
+      {
+        CLockObject lock(m_mutex);
+        // Check if buffer is empty
+        if (m_buffer.avail()) {
+          m_bHasData = true;
+          m_condition.Broadcast();
+        }
+      }
+    }
+
+    {
+      // Take a break, we're either stopped or full
+      CLockObject lock(m_mutex);
+      m_condition.Wait(m_mutex, 1000);
+      if (!m_bHasData)
+        m_currentReadLength = MIN_READ_LENGTH;
+    }
+  }
+  return NULL;
+}
+
+
+/*
 * VFS handler
 */
 CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
-  : m_conn(conn), m_path(""), m_fileId(0), m_offset(0)
+  : m_conn(conn), m_path(""), m_fileId(0), m_offset(0),
+  m_bHasData(false),
+  m_bSeekDone(true),
+  m_currentReadLength(MAX_READ_LENGTH)
 {
+  m_buffer.alloc(MAX_BUFFER_SIZE);
+
+  // Start the buffer thread
+  m_retry_cnt = 0;
+  CreateThread();
 }
 
-CHTSPVFS::~CHTSPVFS ()
+CHTSPVFS::~CHTSPVFS ( void )
 {
+  // Stop the buffer thread
+  StopThread();
 }
 
 void CHTSPVFS::Connected ( void )
@@ -90,22 +134,46 @@ void CHTSPVFS::Close ( void )
   m_offset = 0;
   m_fileId = 0;
   m_path   = "";
+  Reset();
+}
+
+void CHTSPVFS::Reset()
+{
+  CLockObject lock(m_mutex);
+  m_buffer.reset();
+  m_bHasData = false;
+  m_bSeekDone = true;
+  m_retry_cnt = 0;
+  m_currentReadLength = MIN_READ_LENGTH;
+  m_seekCondition.Signal();
 }
 
 ssize_t CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
+  ssize_t ret;
+  CLockObject lock(m_mutex);
   /* Not opened */
   if (!m_fileId)
     return -1;
 
+  m_seekCondition.Wait(m_mutex, m_bSeekDone, 3000);
+
+  /* Signal that we need more data in the buffer. Reset the read length to the
+     requested length so we don't wait unnecessarily long */
+  if (m_buffer.avail() < len)
+  {
+    m_retry_cnt++;
+    m_bHasData = false;
+    m_condition.Broadcast();
+  }
+
+  /* Wait for data */
+  m_condition.Wait(m_mutex, m_bHasData, 3000);
+
   /* Read */
-  ssize_t read = SendFileRead(buf, len);
-
-  /* Update */
-  if (read > 0)
-    m_offset += read;
-
-  return read;
+  ret = m_buffer.read(buf, len);
+  m_offset += ret;
+  return ret;
 }
 
 long long CHTSPVFS::Seek ( long long pos, int whence )
@@ -113,6 +181,7 @@ long long CHTSPVFS::Seek ( long long pos, int whence )
   if (m_fileId == 0)
     return -1;
 
+  m_bSeekDone = false;
   return SendFileSeek(pos, whence);
 }
 
@@ -260,6 +329,7 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", (long long)ret);
     m_offset = ret;
+    Reset();
   }
 
   /* Cleanup */
@@ -268,19 +338,27 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   return ret;
 }
 
-ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
+bool CHTSPVFS::SendFileRead()
 {
   htsmsg_t   *m;
-  const void *buffer;
-  ssize_t read;
+  const void *buf;
+  size_t      len;
 
   /* Build */
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
-  htsmsg_add_s64(m, "size", len);
 
-  Logger::Log(LogLevel::LEVEL_TRACE, "vfs read id=%d size=%d",
-    m_fileId, len);
+  {
+    CLockObject lock(m_mutex);
+    /* Determine read length */
+    m_currentReadLength = (m_currentReadLength > m_buffer.free()) ?
+                            m_buffer.free() : m_currentReadLength;
+    htsmsg_add_s64(m, "size", m_currentReadLength);
+//    printf("%s %lu %u %lu\n", __func__, m_currentReadLength, m_retry_cnt, m_buffer.free());
+  }
+
+  Logger::Log(LogLevel::LEVEL_ERROR, "vfs read id=%d size=%d",
+    m_fileId, m_currentReadLength);
 
   /* Send */
   {
@@ -289,26 +367,37 @@ ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
   }
 
   if (m == NULL)
+    return false;
+
+  /* Process */
+  if (htsmsg_get_bin(m, "data", &buf, &len))
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileRead failed");
-    return -1;
+    htsmsg_destroy(m);
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
+    return false;
   }
 
-  /* Get Data */
-  if (htsmsg_get_bin(m, "data", &buffer, reinterpret_cast<size_t *>(&read)))
-  {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
-    read = -1;
 
   /* Store */
-  }
-  else
+  if (m_buffer.write((unsigned char*)buf, len) != (ssize_t)len)
   {
-    memcpy(buf, buffer, read);
+    htsmsg_destroy(m);
+    Logger::Log(LogLevel::LEVEL_ERROR, "vfs partial buffer write");
+    return false;
   }
 
-  /* Cleanup */
-  htsmsg_destroy(m);
+  {
+    /* Gradually increase read length */
+    CLockObject lock(m_mutex);
 
-  return read;
+    if (MAX_RETRY_CNT < m_retry_cnt) {
+      m_currentReadLength *= 2;
+      m_currentReadLength = (m_currentReadLength < MAX_READ_LENGTH) ?
+                              m_currentReadLength : MAX_READ_LENGTH;
+    }
+  }
+
+
+  htsmsg_destroy(m);
+  return true;
 }

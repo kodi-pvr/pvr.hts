@@ -44,6 +44,7 @@ const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
 const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
 const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
 const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
+const bool        Settings::DEFAULT_HTTP_REC            = false;
 
 void Settings::ReadSettings()
 {
@@ -60,6 +61,9 @@ void Settings::ReadSettings()
 
   /* Debug */
   SetTraceDebug(ReadBoolSetting("trace_debug", DEFAULT_TRACE_DEBUG));
+
+  /* Rec mode */
+  SetHttPlayRec(ReadBoolSetting("http_rec", DEFAULT_HTTP_REC));
 
   /* Data Transfer */
   SetAsyncEpg(ReadBoolSetting("epg_async", DEFAULT_ASYNC_EPG));
@@ -112,6 +116,9 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
   /* Debug */
   else if (key == "trace_debug")
     return SetBoolSetting(GetTraceDebug(), value);
+  /* http rec */
+  else if (key == "http_rec")
+    return SetBoolSetting(GetHttPlayRec(), value);
   /* Data Transfer */
   else if (key == "epg_async")
     return SetBoolSetting(GetAsyncEpg(), value);
