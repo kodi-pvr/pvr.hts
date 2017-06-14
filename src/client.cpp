@@ -180,6 +180,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsRecordingEdl       = true;
   pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
   pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
+  pCapabilities->bSupportsDescrambleInfo     = true;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -308,6 +309,14 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
   return tvh->DemuxCurrentSignal(signalStatus);
+}
+
+PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo)
+{
+  if (!descrambleInfo)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  return tvh->DemuxCurrentDescramble(descrambleInfo);
 }
 
 DemuxPacket* DemuxRead(void)

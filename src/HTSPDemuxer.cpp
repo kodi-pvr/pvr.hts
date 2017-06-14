@@ -247,6 +247,26 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR CHTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
+{
+  CLockObject lock(m_mutex);
+
+  *info = {0};
+
+  info->iPid = m_descrambleInfo.GetPid();
+  info->iCaid = m_descrambleInfo.GetCaid();
+  info->iProvid = m_descrambleInfo.GetProvid();
+  info->iEcmTime = m_descrambleInfo.GetEcmTime();
+  info->iHops = m_descrambleInfo.GetHops();
+
+  strncpy(info->strCardSystem, m_descrambleInfo.GetCardSystem().c_str(), sizeof(info->strCardSystem) - 1);
+  strncpy(info->strReader, m_descrambleInfo.GetReader().c_str(), sizeof(info->strReader) - 1);
+  strncpy(info->strFrom, m_descrambleInfo.GetFrom().c_str(), sizeof(info->strFrom) - 1);
+  strncpy(info->strProtocol, m_descrambleInfo.GetProtocol().c_str(), sizeof(info->strProtocol) - 1);
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 int64_t CHTSPDemuxer::GetTimeshiftTime() const
 {
   CLockObject lock(m_mutex);
@@ -327,6 +347,7 @@ void CHTSPDemuxer::ResetStatus()
 
   m_signalInfo.Clear();
   m_sourceInfo.Clear();
+  m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
 }
 
@@ -760,6 +781,9 @@ void CHTSPDemuxer::ParseDescrambleInfo(htsmsg_t *m)
   reader = htsmsg_get_str(m, "reader");
   from = htsmsg_get_str(m, "from");
   protocol = htsmsg_get_str(m, "protocol");
+
+  /* Reset */
+  m_descrambleInfo.Clear();
 
   /* Store */
   m_descrambleInfo.SetPid(pid);

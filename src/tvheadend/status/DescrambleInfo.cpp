@@ -21,9 +21,33 @@
 
 #include "DescrambleInfo.h"
 
+#include "xbmc_pvr_types.h"
+
 using namespace tvheadend::status;
 
-uint32_t DescrambleInfo::GetPid() const
+DescrambleInfo::DescrambleInfo()
+: m_pid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+  m_caid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+  m_provid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+  m_ecmTime(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+  m_hops(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE)
+{
+}
+
+void DescrambleInfo::Clear()
+{
+  m_pid  = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_caid = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_provid = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_ecmTime = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_hops = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_cardSystem.clear();
+  m_reader.clear();
+  m_from.clear();
+  m_protocol.clear();
+}
+
+int64_t DescrambleInfo::GetPid() const
 {
   return m_pid;
 }
@@ -33,7 +57,7 @@ void DescrambleInfo::SetPid(uint32_t pid)
   m_pid = pid;
 }
 
-uint32_t DescrambleInfo::GetCaid() const
+int64_t DescrambleInfo::GetCaid() const
 {
   return m_caid;
 }
@@ -43,7 +67,7 @@ void DescrambleInfo::SetCaid(uint32_t caid)
   m_caid = caid;
 }
 
-uint32_t DescrambleInfo::GetProvid() const
+int64_t DescrambleInfo::GetProvid() const
 {
   return m_provid;
 }
@@ -53,7 +77,7 @@ void DescrambleInfo::SetProvid(uint32_t provid)
   m_provid = provid;
 }
 
-uint32_t DescrambleInfo::GetEcmTime() const
+int64_t DescrambleInfo::GetEcmTime() const
 {
   return m_ecmTime;
 }
@@ -63,7 +87,7 @@ void DescrambleInfo::SetEcmTime(uint32_t ecmTime)
   m_ecmTime = ecmTime;
 }
 
-uint32_t DescrambleInfo::GetHops() const
+int64_t DescrambleInfo::GetHops() const
 {
   return m_hops;
 }

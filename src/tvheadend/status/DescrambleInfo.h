@@ -36,19 +36,22 @@ namespace tvheadend
     {
     public:
 
-      uint32_t GetPid() const;
+      DescrambleInfo();
+      void Clear();
+
+      int64_t GetPid() const;
       void SetPid(uint32_t pid);
 
-      uint32_t GetCaid() const;
+      int64_t GetCaid() const;
       void SetCaid(uint32_t caid);
 
-      uint32_t GetProvid() const;
+      int64_t GetProvid() const;
       void SetProvid(uint32_t provid);
 
-      uint32_t GetEcmTime() const;
+      int64_t GetEcmTime() const;
       void SetEcmTime(uint32_t ecmTime);
 
-      uint32_t GetHops() const;
+      int64_t GetHops() const;
       void SetHops(uint32_t hops);
 
       std::string GetCardSystem() const;
@@ -64,11 +67,11 @@ namespace tvheadend
       void SetProtocol(const std::string &protocol);
 
     private:
-      uint32_t m_pid;
-      uint32_t m_caid;
-      uint32_t m_provid;
-      uint32_t m_ecmTime;
-      uint32_t m_hops;
+      int64_t m_pid;
+      int64_t m_caid;
+      int64_t m_provid;
+      int64_t m_ecmTime;
+      int64_t m_hops;
       std::string m_cardSystem;
       std::string m_reader;
       std::string m_from;

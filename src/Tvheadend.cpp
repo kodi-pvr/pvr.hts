@@ -2553,6 +2553,11 @@ PVR_ERROR CTvheadend::DemuxCurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return m_dmx_active->CurrentSignal(sig);
 }
 
+PVR_ERROR CTvheadend::DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info)
+{
+  return m_dmx_active->CurrentDescrambleInfo(info);
+}
+
 int64_t CTvheadend::DemuxGetTimeshiftTime() const
 {
   return m_dmx_active->GetTimeshiftTime();

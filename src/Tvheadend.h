@@ -286,6 +286,7 @@ private:
   void         Weight         ( tvheadend::eSubscriptionWeight weight );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+  PVR_ERROR    CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info );
 
   /**
    * Resets the signal and quality info
@@ -550,6 +551,7 @@ public:
   void         DemuxSpeed          ( int speed );
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+  PVR_ERROR    DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info);
   int64_t      DemuxGetTimeshiftTime() const;
   int64_t      DemuxGetTimeshiftBufferStart() const;
   int64_t      DemuxGetTimeshiftBufferEnd() const;
