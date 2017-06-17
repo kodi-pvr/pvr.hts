@@ -1273,8 +1273,8 @@ void CTvheadend::CreateEvent
   epg.iYear               = 0;    /* not supported by tvh */
   epg.strIMDBNumber       = NULL; /* not supported by tvh */
   epg.strIconPath         = event.GetImage().c_str();
-  epg.iGenreType          = event.GetContent() & 0xF0;
-  epg.iGenreSubType       = event.GetContent() & 0x0F;
+  epg.iGenreType          = event.GetGenreType();
+  epg.iGenreSubType       = event.GetGenreSubType();
   epg.strGenreDescription = NULL; /* not supported by tvh */
   epg.firstAired          = event.GetAired();
   epg.iParentalRating     = event.GetAge();
