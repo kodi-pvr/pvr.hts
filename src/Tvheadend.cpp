@@ -442,6 +442,10 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Description */
       strncpy(rec.strPlot, recording.GetDescription().c_str(), sizeof(rec.strPlot) - 1);
 
+      /* Genre */
+      rec.iGenreType = recording.GetGenreType();
+      rec.iGenreSubType = recording.GetGenreSubType();
+
       /* Time/Duration */
       rec.recordingTime = (time_t)recording.GetStart();
       rec.iDuration = static_cast<int>(recording.GetStop() - recording.GetStart());
@@ -1936,7 +1940,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   const char *state, *str;
-  uint32_t id, channel, eventId, retention, removal, priority, enabled, playCount, playPosition;
+  uint32_t id, channel, eventId, retention, removal, priority, enabled, contentType, playCount, playPosition;
   int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
@@ -2126,6 +2130,8 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   // TODO: What?
   else if ((str = htsmsg_get_str(msg, "summary")) != NULL)
     rec.SetDescription(str);
+  if (!htsmsg_get_u32(msg, "contentType", &contentType))
+    rec.SetContentType(contentType);
   if ((str = htsmsg_get_str(msg, "timerecId")) != NULL)
     rec.SetTimerecId(str);
   if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
