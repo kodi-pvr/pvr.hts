@@ -91,6 +91,8 @@ namespace tvheadend
 
       uint32_t GetContent() const { return m_content; }
       void SetContent(uint32_t content) { m_content = content; }
+      uint32_t GetGenreType() const { return m_content & 0xF0; }
+      uint32_t GetGenreSubType() const { return m_content & 0x0F; }
 
       time_t GetStart() const { return m_start; }
       void SetStart(time_t start) { m_start = start; }

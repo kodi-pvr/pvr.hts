@@ -65,7 +65,8 @@ namespace tvheadend
         m_lifetime(0),
         m_priority(50),   // Kodi default - "normal"
         m_playCount(0),
-        m_playPosition(0)
+        m_playPosition(0),
+        m_contentType(0)
       {
       }
 
@@ -91,7 +92,8 @@ namespace tvheadend
                m_lifetime == other.m_lifetime &&
                m_priority == other.m_priority &&
                m_playCount == other.m_playCount &&
-               m_playPosition == other.m_playPosition;
+               m_playPosition == other.m_playPosition &&
+               m_contentType == other.m_contentType;
       }
 
       bool operator!=(const Recording &other) const
@@ -197,6 +199,13 @@ namespace tvheadend
       uint32_t GetPlayPosition() const { return m_playPosition; }
       void SetPlayPosition(uint32_t playPosition) { m_playPosition = playPosition; }
 
+      void SetContentType(uint32_t content) { m_contentType = content; }
+      uint32_t GetContentType() const { return m_contentType; }
+      // tvh returns only the major DVB category for recordings in the
+      // bottom four bits and no sub-category
+      uint32_t GetGenreType() const { return m_contentType * 0x10; }
+      uint32_t GetGenreSubType() const { return 0; }
+
     private:
       uint32_t         m_enabled;
       uint32_t         m_channel;
@@ -219,6 +228,7 @@ namespace tvheadend
       uint32_t         m_priority;
       uint32_t         m_playCount;
       uint32_t         m_playPosition;
+      uint32_t         m_contentType;
     };
   }
 }
