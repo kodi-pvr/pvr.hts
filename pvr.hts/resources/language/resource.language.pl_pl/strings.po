@@ -290,7 +290,7 @@ msgstr "Nieudane dostrajanie"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Przekroczony limit użytkowników"
+msgstr "Przekroczono limit użytkowników"
 
 msgctxt "#30455"
 msgid "No access"

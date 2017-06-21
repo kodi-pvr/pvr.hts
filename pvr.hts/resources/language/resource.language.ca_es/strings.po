@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Ajusts de la connexió"
+msgstr "Opcions de la connexió"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -50,15 +50,15 @@ msgstr "Temps d'expiració de la resposta (segons)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Ajusts avançats"
+msgstr "Opcions avançades"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Ajusts de la transmissió en línia"
+msgstr "Opcions de la transmissió en línia"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Ajusts del temporitzador"
+msgstr "Opcions del temporitzador"
 
 msgctxt "#30050"
 msgid "Auto recordings"
