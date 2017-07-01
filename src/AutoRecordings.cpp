@@ -245,7 +245,8 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
     /* Not sending causes server to set start and startWindow to any time */
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
-      struct tm *tm_start = localtime(&timer.startTime);
+      time_t startTime = timer.startTime;
+      struct tm *tm_start = localtime(&startTime);
       int32_t startWindowBegin = tm_start->tm_hour * 60 + tm_start->tm_min - settings.GetAutorecMaxDiff();
       int32_t startWindowEnd = tm_start->tm_hour * 60 + tm_start->tm_min + settings.GetAutorecMaxDiff();
 
@@ -264,7 +265,8 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
       /* Exact start time (minutes from midnight). */
-      struct tm *tm_start = localtime(&timer.startTime);
+      time_t startTime = timer.startTime;
+      struct tm *tm_start = localtime(&startTime);
       htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
     }
     else
@@ -273,7 +275,8 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
     if (timer.endTime > 0 && !timer.bEndAnyTime)
     {
       /* Exact stop time (minutes from midnight). */
-      struct tm *tm_stop = localtime(&timer.endTime);
+      time_t endTime = timer.endTime;
+      struct tm *tm_stop = localtime(&endTime);
       htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
     }
     else
