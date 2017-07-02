@@ -68,7 +68,7 @@ extern "C" {
  * Configuration defines
  */
 #define HTSP_MIN_SERVER_VERSION       (19) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION           (27) // Client uses HTSP features up to this version. If the respective
+#define HTSP_CLIENT_VERSION           (28) // Client uses HTSP features up to this version. If the respective
                                            // addon feature requires htsp features introduced after
                                            // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                            // actual server HTSP version matches (runtime htsp version check).
@@ -374,9 +374,10 @@ public:
                                 int *num );
   PVR_ERROR DeleteRecording   ( const PVR_RECORDING &rec );
   PVR_ERROR RenameRecording   ( const PVR_RECORDING &rec );
+  PVR_ERROR SetLifetime       (const PVR_RECORDING &rec);
   PVR_ERROR SetPlayCount      ( const PVR_RECORDING &rec, int playcount );
   PVR_ERROR SetPlayPosition   ( const PVR_RECORDING &rec, int playposition );
-  int GetPlayPosition         ( const PVR_RECORDING &rec );
+  int       GetPlayPosition   ( const PVR_RECORDING &rec );
   PVR_ERROR GetTimerTypes     ( PVR_TIMER_TYPE types[], int *size );
   int       GetTimerCount     ( void );
   PVR_ERROR GetTimers         ( ADDON_HANDLE handle );
@@ -387,6 +388,8 @@ public:
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   PVR_ERROR SetEPGTimeFrame   ( int iDays );
+
+  void GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const;
 
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );

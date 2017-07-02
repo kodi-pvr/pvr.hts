@@ -1,6 +1,7 @@
 4.1.0
 - PVR API v5.3.0: Add implementation for GetDescrambleInfo
 - PVR API v5.3.0: Adapt definition of epg based timer rule (Added PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL attribute)
+- PVR API v5.3.0: Add implementation for SetRecordingLifetime and for PVR_ADDON_CAPABILITIES lifetime values
 
 4.0.17
 - Fixed timer/recordings lifetime special values mapping ("until space needed", "forever")
