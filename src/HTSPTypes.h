@@ -82,7 +82,6 @@ typedef enum {
   DVR_RET_1YEAR     = 366,
   DVR_RET_2YEARS    = 731,
   DVR_RET_3YEARS    = 1096,
-  DVR_RET_ONREMOVE  = INT32_MAX-1,  // the server will delete the db entry when the actual recording gets deleted (retention only)
   DVR_RET_SPACE     = INT32_MAX-1,  // the server may delete this recording if space for a new recording is needed (removal only)
   DVR_RET_FOREVER   = INT32_MAX     // the server should never delete this recording or database entry, only the user can do this
 } dvr_retention_t;

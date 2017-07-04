@@ -47,7 +47,7 @@ namespace tvheadend
       int GetDaysOfWeek() const;
       void SetDaysOfWeek(uint32_t daysOfWeek);
 
-      uint32_t GetLifetime() const;
+      int GetLifetime() const;
       void SetLifetime(uint32_t retention);
 
       uint32_t GetPriority() const;

@@ -24,6 +24,7 @@
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
+#include "tvheadend/utilities/LifetimeMapper.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -182,7 +183,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
   }
   else
   {
-    htsmsg_add_u32(m, "retention", timer.iLifetime);          // remove from tvh database
+    htsmsg_add_u32(m, "retention", LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
     htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);  // channelId is unsigned for < htspv25
   }
 

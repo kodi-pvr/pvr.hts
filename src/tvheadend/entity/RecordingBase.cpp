@@ -23,6 +23,8 @@
 
 #include "RecordingBase.h"
 
+#include "../utilities/LifetimeMapper.h"
+
 using namespace tvheadend::entity;
 
 RecordingBase::RecordingBase(const std::string &id /*= ""*/) :
@@ -86,9 +88,9 @@ void RecordingBase::SetDaysOfWeek(uint32_t daysOfWeek)
   m_daysOfWeek = daysOfWeek;
 }
 
-uint32_t RecordingBase::GetLifetime() const
+int RecordingBase::GetLifetime() const
 {
-  return m_lifetime;
+  return utilities::LifetimeMapper::TvhToKodi(m_lifetime);
 }
 
 void RecordingBase::SetLifetime(uint32_t lifetime)
