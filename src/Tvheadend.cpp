@@ -26,6 +26,7 @@
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
+#include "tvheadend/utilities/LifetimeMapper.h"
 
 using namespace std;
 using namespace ADDON;
@@ -672,7 +673,7 @@ struct TimerType : PVR_TIMER_TYPE
     iPreventDuplicateEpisodesSize    = dupEpisodesValues.size();
     iPreventDuplicateEpisodesDefault = Settings::GetInstance().GetDvrDupdetect();
     iLifetimesSize                   = lifetimeValues.size();
-    iLifetimesDefault                = Settings::GetInstance().GetDvrLifetime();
+    iLifetimesDefault                = LifetimeMapper::TvhToKodi(Settings::GetInstance().GetDvrLifetime());
 
     strncpy(strDescription, description.c_str(), sizeof(strDescription) - 1);
 
@@ -737,23 +738,23 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   /* PVR_Timer.iLifetime values and presentation.*/
   std::vector< std::pair<int, std::string> > lifetimeValues;
 
-  lifetimeValues.push_back(std::make_pair(DVR_RET_1DAY,    XBMC->GetLocalizedString(30375)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_3DAY,    XBMC->GetLocalizedString(30376)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_5DAY,    XBMC->GetLocalizedString(30377)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_1WEEK,   XBMC->GetLocalizedString(30378)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_2WEEK,   XBMC->GetLocalizedString(30379)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_3WEEK,   XBMC->GetLocalizedString(30380)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_1MONTH,  XBMC->GetLocalizedString(30381)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_2MONTH,  XBMC->GetLocalizedString(30382)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_3MONTH,  XBMC->GetLocalizedString(30383)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_6MONTH,  XBMC->GetLocalizedString(30384)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_1YEAR,   XBMC->GetLocalizedString(30385)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_2YEARS,  XBMC->GetLocalizedString(30386)));
-  lifetimeValues.push_back(std::make_pair(DVR_RET_3YEARS,  XBMC->GetLocalizedString(30387)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    XBMC->GetLocalizedString(30375)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    XBMC->GetLocalizedString(30376)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    XBMC->GetLocalizedString(30377)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   XBMC->GetLocalizedString(30378)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   XBMC->GetLocalizedString(30379)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   XBMC->GetLocalizedString(30380)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  XBMC->GetLocalizedString(30381)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  XBMC->GetLocalizedString(30382)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  XBMC->GetLocalizedString(30383)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  XBMC->GetLocalizedString(30384)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   XBMC->GetLocalizedString(30385)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  XBMC->GetLocalizedString(30386)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  XBMC->GetLocalizedString(30387)));
   if (m_conn.GetProtocol() >= 25)
   {
-    lifetimeValues.push_back(std::make_pair(DVR_RET_SPACE,   XBMC->GetLocalizedString(30373)));
-    lifetimeValues.push_back(std::make_pair(DVR_RET_FOREVER, XBMC->GetLocalizedString(30374)));
+    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   XBMC->GetLocalizedString(30373)));
+    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), XBMC->GetLocalizedString(30374)));
   }
 
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS
@@ -1067,9 +1068,9 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-      htsmsg_add_u32(m, "removal",   timer.iLifetime);  // remove from disk
+      htsmsg_add_u32(m, "removal",   LifetimeMapper::KodiToTvh(timer.iLifetime));  // remove from disk
     else
-      htsmsg_add_u32(m, "retention", timer.iLifetime);  // remove from tvh database
+      htsmsg_add_u32(m, "retention", LifetimeMapper::KodiToTvh(timer.iLifetime));  // remove from tvh database
 
     htsmsg_add_u32(m, "priority",   timer.iPriority);
 
@@ -1204,9 +1205,9 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
 
     if (m_conn.GetProtocol() >= 25)
-      htsmsg_add_u32(m, "removal",    timer.iLifetime); // remove from disk
+      htsmsg_add_u32(m, "removal",    LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from disk
     else
-      htsmsg_add_u32(m, "retention",  timer.iLifetime); // remove from tvh database
+      htsmsg_add_u32(m, "retention",  LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
 
     htsmsg_add_u32(m, "priority",     timer.iPriority);
 

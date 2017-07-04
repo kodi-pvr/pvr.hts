@@ -24,6 +24,7 @@
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
+#include "tvheadend/utilities/LifetimeMapper.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -170,9 +171,11 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
 
   htsmsg_add_str(m, "name",       timer.strTitle);
   htsmsg_add_str(m, "title",      title);
-  struct tm *tm_start = localtime(&timer.startTime);
+  time_t startTime = timer.startTime;
+  struct tm *tm_start = localtime(&startTime);
   htsmsg_add_u32(m, "start",      tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
-  struct tm *tm_stop = localtime(&timer.endTime);
+  time_t endTime = timer.endTime;
+  struct tm *tm_stop = localtime(&endTime);
   htsmsg_add_u32(m, "stop",       tm_stop->tm_hour  * 60 + tm_stop->tm_min);  // end time in minutes from midnight
 
   if (m_conn.GetProtocol() >= 25)
@@ -182,7 +185,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
   }
   else
   {
-    htsmsg_add_u32(m, "retention", timer.iLifetime);          // remove from tvh database
+    htsmsg_add_u32(m, "retention", LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
     htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);  // channelId is unsigned for < htspv25
   }
 

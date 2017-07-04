@@ -26,6 +26,7 @@
 #include <string>
 #include "xbmc_pvr_types.h"
 #include "Entity.h"
+#include "../utilities/LifetimeMapper.h"
 
 // Timer types
 #define TIMER_ONCE_MANUAL             (PVR_TIMER_TYPE_NONE + 1)
@@ -186,8 +187,7 @@ namespace tvheadend
       const std::string& GetError() const { return m_error; }
       void SetError(const std::string &error) { m_error = error; }
 
-      // Lifetime = the smallest value
-      uint32_t GetLifetime() const { return m_lifetime; }
+      int GetLifetime() const { return utilities::LifetimeMapper::TvhToKodi(m_lifetime); }
       void SetLifetime(uint32_t lifetime) { m_lifetime = lifetime; }
 
       uint32_t GetPriority() const { return m_priority; }
