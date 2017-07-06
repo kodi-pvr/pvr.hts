@@ -184,6 +184,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
   if (tvh->GetProtocol() >= 28)
   {
+    pCapabilities->bSupportsRecordingsRename = true;
+
     pCapabilities->bSupportsRecordingsLifetimeChange = true;
 
     /* PVR_RECORDING.iLifetime values and presentation.*/

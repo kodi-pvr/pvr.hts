@@ -599,6 +599,9 @@ PVR_ERROR CTvheadend::DeleteRecording ( const PVR_RECORDING &rec )
 
 PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
 {
+  if (m_conn.GetProtocol() < 28)
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id",     atoi(rec.strRecordingId));
