@@ -180,7 +180,29 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsRecordingEdl       = true;
   pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
   pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
+  pCapabilities->bSupportsDescrambleInfo     = true;
 
+  if (tvh->GetProtocol() >= 28)
+  {
+    pCapabilities->bSupportsRecordingsRename = true;
+
+    pCapabilities->bSupportsRecordingsLifetimeChange = true;
+
+    /* PVR_RECORDING.iLifetime values and presentation.*/
+    std::vector<std::pair<int, std::string>> lifetimeValues;
+    tvh->GetLivetimeValues(lifetimeValues);
+
+    pCapabilities->iRecordingsLifetimesSize = lifetimeValues.size();
+
+    int i = 0;
+    for (auto it = lifetimeValues.cbegin(); it != lifetimeValues.cend(); ++it, ++i)
+    {
+      pCapabilities->recordingsLifetimeValues[i].iValue = it->first;
+      strncpy(pCapabilities->recordingsLifetimeValues[i].strDescription,
+              it->second.c_str(),
+              sizeof(pCapabilities->recordingsLifetimeValues[i].strDescription) - 1);
+    }
+  }
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -310,6 +332,14 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return tvh->DemuxCurrentSignal(signalStatus);
 }
 
+PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo)
+{
+  if (!descrambleInfo)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  return tvh->DemuxCurrentDescramble(descrambleInfo);
+}
+
 DemuxPacket* DemuxRead(void)
 {
   return tvh->DemuxRead();
@@ -411,6 +441,16 @@ PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording)
 PVR_ERROR DeleteAllRecordingsFromTrash()
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR SetRecordingLifetime(const PVR_RECORDING *recording)
+{
+  if (!recording)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "recording must not be nullptr");
+    return PVR_ERROR_INVALID_PARAMETERS;
+  }
+  return tvh->SetLifetime(*recording);
 }
 
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)

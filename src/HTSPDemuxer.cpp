@@ -247,6 +247,26 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR CHTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
+{
+  CLockObject lock(m_mutex);
+
+  *info = {0};
+
+  info->iPid = m_descrambleInfo.GetPid();
+  info->iCaid = m_descrambleInfo.GetCaid();
+  info->iProvid = m_descrambleInfo.GetProvid();
+  info->iEcmTime = m_descrambleInfo.GetEcmTime();
+  info->iHops = m_descrambleInfo.GetHops();
+
+  strncpy(info->strCardSystem, m_descrambleInfo.GetCardSystem().c_str(), sizeof(info->strCardSystem) - 1);
+  strncpy(info->strReader, m_descrambleInfo.GetReader().c_str(), sizeof(info->strReader) - 1);
+  strncpy(info->strFrom, m_descrambleInfo.GetFrom().c_str(), sizeof(info->strFrom) - 1);
+  strncpy(info->strProtocol, m_descrambleInfo.GetProtocol().c_str(), sizeof(info->strProtocol) - 1);
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 int64_t CHTSPDemuxer::GetTimeshiftTime() const
 {
   CLockObject lock(m_mutex);
@@ -327,6 +347,7 @@ void CHTSPDemuxer::ResetStatus()
 
   m_signalInfo.Clear();
   m_sourceInfo.Clear();
+  m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
 }
 
@@ -349,6 +370,8 @@ bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
     ParseSignalStatus(m);
   else if (!strcmp("timeshiftStatus", method))
     ParseTimeshiftStatus(m);
+  else if (!strcmp("descrambleInfo", method))
+    ParseDescrambleInfo(m);
   else if (!strcmp("subscriptionStart", method))
     ParseSubscriptionStart(m);
   else if (!strcmp("subscriptionStop", method))
@@ -735,4 +758,58 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
     Logger::Log(LogLevel::LEVEL_TRACE, "  end   : %lld", s64);
     m_timeshiftStatus.end = s64;
   }
+}
+
+void CHTSPDemuxer::ParseDescrambleInfo(htsmsg_t *m)
+{
+  uint32_t pid = 0, caid = 0, provid = 0, ecmtime = 0, hops = 0;
+  const char *cardsystem, *reader, *from, *protocol;
+
+  /* Parse mandatory fields */
+  if (htsmsg_get_u32(m, "pid", &pid) ||
+      htsmsg_get_u32(m, "caid", &caid) ||
+      htsmsg_get_u32(m, "provid", &provid) ||
+      htsmsg_get_u32(m, "ecmtime", &ecmtime) ||
+      htsmsg_get_u32(m, "hops", &hops))
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed descrambleInfo, mandatory parameters missing");
+    return;
+  }
+
+  /* Parse optional fields */
+  cardsystem = htsmsg_get_str(m, "cardsystem");
+  reader = htsmsg_get_str(m, "reader");
+  from = htsmsg_get_str(m, "from");
+  protocol = htsmsg_get_str(m, "protocol");
+
+  /* Reset */
+  m_descrambleInfo.Clear();
+
+  /* Store */
+  m_descrambleInfo.SetPid(pid);
+  m_descrambleInfo.SetCaid(caid);
+  m_descrambleInfo.SetProvid(provid);
+  m_descrambleInfo.SetEcmTime(ecmtime);
+  m_descrambleInfo.SetHops(hops);
+
+  if (cardsystem)
+    m_descrambleInfo.SetCardSystem(cardsystem);
+  if (reader)
+    m_descrambleInfo.SetReader(reader);
+  if (from)
+    m_descrambleInfo.SetFrom(from);
+  if (protocol)
+    m_descrambleInfo.SetProtocol(protocol);
+
+  /* Log */
+  Logger::Log(LogLevel::LEVEL_TRACE, "descrambleInfo:");
+  Logger::Log(LogLevel::LEVEL_TRACE, "  pid: %d", pid);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  caid: 0x%X", caid);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  provid: %d", provid);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  ecmtime: %d", ecmtime);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  hops: %d", hops);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  cardsystem: %s", cardsystem);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  reader: %s", reader);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  from: %s", from);
+  Logger::Log(LogLevel::LEVEL_TRACE, "  protocol: %s", protocol);
 }

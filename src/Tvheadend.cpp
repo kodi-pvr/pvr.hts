@@ -599,10 +599,32 @@ PVR_ERROR CTvheadend::DeleteRecording ( const PVR_RECORDING &rec )
 
 PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
 {
+  if (m_conn.GetProtocol() < 28)
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id",     atoi(rec.strRecordingId));
   htsmsg_add_str(m, "title",  rec.strTitle);
+
+  return SendDvrUpdate(m);
+}
+
+PVR_ERROR CTvheadend::SetLifetime ( const PVR_RECORDING &rec )
+{
+  if (m_conn.GetProtocol() < 28)
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
+  Logger::Log(LogLevel::LEVEL_DEBUG, "Setting lifetime to %i for recording %s", rec.iLifetime, rec.strRecordingId);
+
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_u32(m, "id", atoi(rec.strRecordingId));
+
+  if (m_conn.GetProtocol() >= 25)
+    htsmsg_add_u32(m, "removal", LifetimeMapper::KodiToTvh(rec.iLifetime)); // remove from disk
+  else
+    htsmsg_add_u32(m, "retention", LifetimeMapper::KodiToTvh(rec.iLifetime)); // remove from tvh database
 
   return SendDvrUpdate(m);
 }
@@ -702,6 +724,28 @@ struct TimerType : PVR_TIMER_TYPE
 
 } // unnamed namespace
 
+void CTvheadend::GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const
+{
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    XBMC->GetLocalizedString(30375)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    XBMC->GetLocalizedString(30376)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    XBMC->GetLocalizedString(30377)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   XBMC->GetLocalizedString(30378)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   XBMC->GetLocalizedString(30379)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   XBMC->GetLocalizedString(30380)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  XBMC->GetLocalizedString(30381)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  XBMC->GetLocalizedString(30382)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  XBMC->GetLocalizedString(30383)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  XBMC->GetLocalizedString(30384)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   XBMC->GetLocalizedString(30385)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  XBMC->GetLocalizedString(30386)));
+  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  XBMC->GetLocalizedString(30387)));
+  if (m_conn.GetProtocol() >= 25)
+  {
+    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   XBMC->GetLocalizedString(30373)));
+    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), XBMC->GetLocalizedString(30374)));
+  }
+}
+
 PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
 {
   /* PVR_Timer.iPriority values and presentation.*/
@@ -737,25 +781,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
 
   /* PVR_Timer.iLifetime values and presentation.*/
   std::vector< std::pair<int, std::string> > lifetimeValues;
-
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    XBMC->GetLocalizedString(30375)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    XBMC->GetLocalizedString(30376)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    XBMC->GetLocalizedString(30377)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   XBMC->GetLocalizedString(30378)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   XBMC->GetLocalizedString(30379)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   XBMC->GetLocalizedString(30380)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  XBMC->GetLocalizedString(30381)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  XBMC->GetLocalizedString(30382)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  XBMC->GetLocalizedString(30383)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  XBMC->GetLocalizedString(30384)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   XBMC->GetLocalizedString(30385)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  XBMC->GetLocalizedString(30386)));
-  lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  XBMC->GetLocalizedString(30387)));
-  if (m_conn.GetProtocol() >= 25)
-  {
-    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   XBMC->GetLocalizedString(30373)));
-    lifetimeValues.push_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), XBMC->GetLocalizedString(30374)));
-  }
+  GetLivetimeValues(lifetimeValues);
 
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS
     = PVR_TIMER_TYPE_IS_MANUAL           |
@@ -877,7 +903,8 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
       PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
-      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS;
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS  |
+      PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL;
 
   if (m_conn.GetProtocol() >= 20)
   {
@@ -2551,6 +2578,11 @@ PVR_ERROR CTvheadend::DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 PVR_ERROR CTvheadend::DemuxCurrentSignal ( PVR_SIGNAL_STATUS &sig )
 {
   return m_dmx_active->CurrentSignal(sig);
+}
+
+PVR_ERROR CTvheadend::DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info)
+{
+  return m_dmx_active->CurrentDescrambleInfo(info);
 }
 
 int64_t CTvheadend::DemuxGetTimeshiftTime() const

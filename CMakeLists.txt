@@ -56,6 +56,8 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/TimeRecording.cpp)
 
 set(HTS_SOURCES_TVHEADEND_STATUS
+                src/tvheadend/status/DescrambleInfo.h
+                src/tvheadend/status/DescrambleInfo.cpp
                 src/tvheadend/status/Quality.h
                 src/tvheadend/status/QueueStatus.h
                 src/tvheadend/status/SourceInfo.h

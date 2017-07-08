@@ -36,6 +36,7 @@
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Event.h"
 #include "tvheadend/entity/Schedule.h"
+#include "tvheadend/status/DescrambleInfo.h"
 #include "tvheadend/status/Quality.h"
 #include "tvheadend/status/SourceInfo.h"
 #include "tvheadend/status/TimeshiftStatus.h"
@@ -67,7 +68,7 @@ extern "C" {
  * Configuration defines
  */
 #define HTSP_MIN_SERVER_VERSION       (19) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION           (27) // Client uses HTSP features up to this version. If the respective
+#define HTSP_CLIENT_VERSION           (28) // Client uses HTSP features up to this version. If the respective
                                            // addon feature requires htsp features introduced after
                                            // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                            // actual server HTSP version matches (runtime htsp version check).
@@ -267,6 +268,7 @@ private:
   tvheadend::status::SourceInfo           m_sourceInfo;
   tvheadend::status::Quality              m_signalInfo;
   tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
+  tvheadend::status::DescrambleInfo       m_descrambleInfo;
   tvheadend::Subscription                 m_subscription;
   std::atomic<time_t>                     m_lastUse;
   
@@ -284,6 +286,7 @@ private:
   void         Weight         ( tvheadend::eSubscriptionWeight weight );
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+  PVR_ERROR    CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info );
 
   /**
    * Resets the signal and quality info
@@ -299,6 +302,7 @@ private:
   void ParseQueueStatus         ( htsmsg_t *m );
   void ParseSignalStatus        ( htsmsg_t *m );
   void ParseTimeshiftStatus     ( htsmsg_t *m );
+  void ParseDescrambleInfo      ( htsmsg_t *m );
 };
 
 /*
@@ -370,9 +374,10 @@ public:
                                 int *num );
   PVR_ERROR DeleteRecording   ( const PVR_RECORDING &rec );
   PVR_ERROR RenameRecording   ( const PVR_RECORDING &rec );
+  PVR_ERROR SetLifetime       (const PVR_RECORDING &rec);
   PVR_ERROR SetPlayCount      ( const PVR_RECORDING &rec, int playcount );
   PVR_ERROR SetPlayPosition   ( const PVR_RECORDING &rec, int playposition );
-  int GetPlayPosition         ( const PVR_RECORDING &rec );
+  int       GetPlayPosition   ( const PVR_RECORDING &rec );
   PVR_ERROR GetTimerTypes     ( PVR_TIMER_TYPE types[], int *size );
   int       GetTimerCount     ( void );
   PVR_ERROR GetTimers         ( ADDON_HANDLE handle );
@@ -383,6 +388,8 @@ public:
   PVR_ERROR GetEpg            ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   PVR_ERROR SetEPGTimeFrame   ( int iDays );
+
+  void GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const;
 
 private:
   bool      CreateTimer       ( const tvheadend::entity::Recording &tvhTmr, PVR_TIMER &tmr );
@@ -547,6 +554,7 @@ public:
   void         DemuxSpeed          ( int speed );
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
+  PVR_ERROR    DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info);
   int64_t      DemuxGetTimeshiftTime() const;
   int64_t      DemuxGetTimeshiftBufferStart() const;
   int64_t      DemuxGetTimeshiftBufferEnd() const;
