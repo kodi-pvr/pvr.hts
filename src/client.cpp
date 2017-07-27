@@ -317,11 +317,6 @@ void SetSpeed(int speed)
   tvh->DemuxSpeed(speed);
 }
 
-bool SwitchChannel(const PVR_CHANNEL &channel)
-{
-  return tvh->DemuxOpen(channel);
-}
-
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 {
   return tvh->DemuxCurrentStreams(pProperties);

@@ -1,3 +1,6 @@
+4.1.1
+- PVR API v5.4.0: Drop SwitchChannel
+
 4.1.0
 - PVR API v5.3.0: Add implementation for GetDescrambleInfo
 - PVR API v5.3.0: Adapt definition of epg based timer rule (Added PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL attribute)
