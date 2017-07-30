@@ -1,3 +1,6 @@
+4.1.2
+- PVR API v5.5.0: Add series link support
+
 4.1.1
 - PVR API v5.4.0: Drop SwitchChannel
 

@@ -75,7 +75,8 @@ namespace tvheadend
                m_desc == other.m_desc &&
                m_summary == other.m_summary &&
                m_image == other.m_image &&
-               m_recordingId == other.m_recordingId;
+               m_recordingId == other.m_recordingId &&
+               m_seriesLink == other.m_seriesLink;
       }
 
       bool operator!=(const Event &other) const
@@ -137,6 +138,9 @@ namespace tvheadend
       uint32_t GetRecordingId() const { return m_recordingId; }
       void SetRecordingId(uint32_t recordingId) { m_recordingId = recordingId; }
 
+      const std::string& GetSeriesLink() const { return m_seriesLink; }
+      void SetSeriesLink(const std::string &seriesLink) { m_seriesLink = seriesLink; }
+
     private:
       uint32_t    m_next;
       uint32_t    m_channel;
@@ -155,6 +159,7 @@ namespace tvheadend
       std::string m_summary;
       std::string m_image;
       uint32_t    m_recordingId;
+      std::string m_seriesLink;
     };
   }
 }

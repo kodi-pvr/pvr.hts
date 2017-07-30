@@ -847,7 +847,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_IS_READONLY |
       PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -863,7 +863,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_IS_READONLY |
       PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by repeating timer)"
+      XBMC->GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -891,6 +891,44 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       priorityValues,
       /* Values definitions for lifetime. */
       lifetimeValues)));
+
+  if (m_conn.GetProtocol() >= 29)
+  {
+    unsigned int TIMER_REPEATING_SERIESLINK_ATTRIBS
+      = PVR_TIMER_TYPE_IS_REPEATING                |
+        PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE     |
+        PVR_TIMER_TYPE_SUPPORTS_CHANNELS           |
+        PVR_TIMER_TYPE_SUPPORTS_START_TIME         |
+        PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME      |
+        PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS           |
+        PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN   |
+        PVR_TIMER_TYPE_SUPPORTS_PRIORITY           |
+        PVR_TIMER_TYPE_SUPPORTS_LIFETIME           |
+        PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS  |
+        PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL        |
+        PVR_TIMER_TYPE_REQUIRES_EPG_SERIESLINK_ON_CREATE;
+
+    if (!Settings::GetInstance().GetAutorecApproxTime())
+    {
+      /* We need the end time to represent the end of the tvh starting window */
+      TIMER_REPEATING_SERIESLINK_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
+      TIMER_REPEATING_SERIESLINK_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_ANYTIME;
+    }
+
+    timerTypes.push_back(
+      /* Repeating epg based - series link autorec */
+      std::unique_ptr<TimerType>(new TimerType(
+        /* Type id. */
+        TIMER_REPEATING_SERIESLINK,
+        /* Attributes. */
+        TIMER_REPEATING_SERIESLINK_ATTRIBS,
+        /* Description. */
+        XBMC->GetLocalizedString(30369), // "Timer rule (series link)"
+        /* Values definitions for priorities. */
+        priorityValues,
+        /* Values definitions for lifetime. */
+        lifetimeValues)));
+  }
 
   unsigned int TIMER_REPEATING_EPG_ATTRIBS
     = PVR_TIMER_TYPE_IS_REPEATING                |
@@ -1125,7 +1163,8 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     /* time-based repeating timer */
     return m_timeRecordings.SendTimerecAdd(timer);
   }
-  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  else if (timer.iTimerType == TIMER_REPEATING_EPG ||
+           timer.iTimerType == TIMER_REPEATING_SERIESLINK)
   {
     /* EPG-query-based repeating timers */
     return m_autoRecordings.SendAutorecAdd(timer);
@@ -1152,7 +1191,8 @@ PVR_ERROR CTvheadend::DeleteTimer
     /* time-based repeating timer */
     return m_timeRecordings.SendTimerecDelete(timer);
   }
-  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  else if (timer.iTimerType == TIMER_REPEATING_EPG ||
+           timer.iTimerType == TIMER_REPEATING_SERIESLINK)
   {
     /* EPG-query-based repeating timer */
     return m_autoRecordings.SendAutorecDelete(timer);
@@ -1245,7 +1285,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     /* time-based repeating timer */
     return m_timeRecordings.SendTimerecUpdate(timer);
   }
-  else if (timer.iTimerType == TIMER_REPEATING_EPG)
+  else if (timer.iTimerType == TIMER_REPEATING_EPG ||
+           timer.iTimerType == TIMER_REPEATING_SERIESLINK)
   {
     /* EPG-query-based repeating timers */
     return m_autoRecordings.SendAutorecUpdate(timer);
@@ -1313,6 +1354,7 @@ void CTvheadend::CreateEvent
   epg.iEpisodePartNumber  = event.GetPart();
   epg.strEpisodeName      = event.GetSubtitle().c_str();
   epg.iFlags              = EPG_TAG_FLAG_UNDEFINED;
+  epg.strSeriesLink       = event.GetSeriesLink().c_str();
 }
 
 void CTvheadend::TransferEvent
@@ -2301,6 +2343,8 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetEpisode(u32);
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
     evt.SetPart(u32);
+  if ((str = htsmsg_get_str(msg, "serieslinkUri")) != NULL)
+    evt.SetSeriesLink(str);
 
   /* Add optional recording link */
   if (!htsmsg_get_u32(msg, "dvrId", &u32))

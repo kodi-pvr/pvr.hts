@@ -54,6 +54,9 @@ namespace tvheadend
       bool GetFulltext() const;
       void SetFulltext(uint32_t fulltext);
 
+      const std::string& GetSeriesLink() const;
+      void SetSeriesLink(const std::string &seriesLink);
+
     private:
       int32_t  m_startWindowBegin; // Begin of the starting window (minutes from midnight).
       int32_t  m_startWindowEnd;   // End of the starting window (minutes from midnight).
@@ -63,6 +66,7 @@ namespace tvheadend
                               //                                   2 = different subtitle, 3 = different description,
                               //                                   4 = once per week, 5 = once per day).
       uint32_t m_fulltext;    // Fulltext epg search.
+      std::string m_seriesLink; // Series link.
     };
 
     typedef std::map<std::string, AutoRecording> AutoRecordingsMap;
