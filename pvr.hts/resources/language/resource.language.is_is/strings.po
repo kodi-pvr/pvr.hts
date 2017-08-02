@@ -128,6 +128,50 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Taka upp allar þáttaraðir"
 
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Taka upp ef mismunur er á númerum þátta"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Taka upp ef mismunur er á nöfnum þátta"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Taka upp ef mismunur er á lýsingum þátta"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Taka upp mest einu sinni í viku"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Taka upp mest einu sinni á dag"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á númerum þátta"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á nöfnum þátta"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á titli"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á lýsingum þátta"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Einungis þessi regla: Taka upp mest einu sinni í viku"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Einungis þessi regla: Taka upp mest einu sinni á dag"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Þangað til vantar pláss"
@@ -188,6 +232,22 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 ár"
 
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Þangað til vantar pláss (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Að eilífu (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Forspárinnstilling"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Fjöldi áskrifta sem á að nota"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Ekkert laust tengi tiltækt"
@@ -200,6 +260,10 @@ msgctxt "#30452"
 msgid "No signal"
 msgstr "Ekkert merki"
 
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Hámarksfjölda notenda er náð"
+
 msgctxt "#30455"
 msgid "No access"
 msgstr "Enginn aðgangur"
@@ -211,3 +275,7 @@ msgstr "Áskriftarvilla"
 msgctxt "#30500"
 msgid "Streaming profile"
 msgstr "Snið streymis"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Snið sem á að nota (autt = sjálfgefið)"
