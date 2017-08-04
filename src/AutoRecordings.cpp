@@ -100,10 +100,14 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
             tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
     strncpy(tmr.strSummary,
             "", sizeof(tmr.strSummary) - 1);       // n/a for repeating timers
+    strncpy(tmr.strSeriesLink,
+            tit->second.GetSeriesLink().c_str(), sizeof(tmr.strSeriesLink) - 1);
     tmr.state              = tit->second.IsEnabled()
                               ? PVR_TIMER_STATE_SCHEDULED
                               : PVR_TIMER_STATE_DISABLED;
-    tmr.iTimerType         = TIMER_REPEATING_EPG;
+    tmr.iTimerType         = tit->second.GetSeriesLink().empty()
+                              ? TIMER_REPEATING_EPG
+                              : TIMER_REPEATING_SERIESLINK;
     tmr.iPriority          = tit->second.GetPriority();
     tmr.iLifetime          = tit->second.GetLifetime();
     tmr.iMaxRecordings     = 0;                    // not supported by tvh
@@ -118,7 +122,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     tmr.iWeekdays          = tit->second.GetDaysOfWeek();
     tmr.iEpgUid            = PVR_TIMER_NO_EPG_UID; // n/a for repeating timers
     tmr.iMarginStart       = static_cast<unsigned int>(tit->second.GetMarginStart());
-	tmr.iMarginEnd         = static_cast<unsigned int>(tit->second.GetMarginEnd());
+    tmr.iMarginEnd         = static_cast<unsigned int>(tit->second.GetMarginEnd());
     tmr.iGenreType         = 0;                    // not supported by tvh?
     tmr.iGenreSubType      = 0;                    // not supported by tvh?
     tmr.bFullTextEpgSearch = tit->second.GetFulltext();
@@ -282,6 +286,10 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
     else
       htsmsg_add_s32(m, "startWindow", 25 * 60); // -1 or not sending causes server to set start and startWindow to any time
   }
+
+  /* series link */
+  if (timer.iTimerType == TIMER_REPEATING_SERIESLINK)
+    htsmsg_add_str(m, "serieslinkUri", timer.strSeriesLink);
 
   /* Send and Wait */
   {
@@ -495,6 +503,11 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   if (!htsmsg_get_u32(msg, "fulltext", &u32))
   {
     rec.SetFulltext(u32);
+  }
+
+  if ((str = htsmsg_get_str(msg, "serieslinkUri")) != NULL)
+  {
+    rec.SetSeriesLink(str);
   }
 
   return true;

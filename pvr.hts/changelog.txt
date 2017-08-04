@@ -1,3 +1,8 @@
+4.1.2
+- PVR API v5.5.0: Add series link support
+- PVR API v5.5.0: Drop GetChannelSwitchDelay
+- PVR API v5.5.0: Add stub for GetStreamTimes (can be implemented later)
+
 4.1.1
 - PVR API v5.4.0: Drop SwitchChannel
 

@@ -531,8 +531,6 @@ long long LengthRecordedStream(void)
  * Unused Functions
  * *************************************************************************/
 
-unsigned int GetChannelSwitchDelay(void) { return 0; }
-
 /* Channel Management */
 PVR_ERROR OpenDialogChannelScan(void)
 {
@@ -587,5 +585,8 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
 {
   return "";
 }
-
+PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
 } /* extern "C" */

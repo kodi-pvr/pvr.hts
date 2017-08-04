@@ -131,7 +131,7 @@ msgstr ""
 #. Timer type representation
 #: src/Tvheadend.cpp
 msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
+msgid "One Time (Scheduled by timer rule)"
 msgstr ""
 
 #. Recording priority representation
@@ -242,7 +242,13 @@ msgctxt "#30368"
 msgid "Default"
 msgstr ""
 
-#empty strings from id 30369 to 30372
+#. Timer type representation
+#: src/Tvheadend.cpp
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr ""
+
+#empty strings from id 30370 to 30372
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp

@@ -46,7 +46,8 @@ bool AutoRecording::operator==(const AutoRecording &right)
          m_startExtra       == right.m_startExtra       &&
          m_stopExtra        == right.m_stopExtra        &&
          m_dupDetect        == right.m_dupDetect        &&
-         m_fulltext         == right.m_fulltext;
+         m_fulltext         == right.m_fulltext         &&
+         m_seriesLink       == right.m_seriesLink;
 }
 
 bool AutoRecording::operator!=(const AutoRecording &right)
@@ -149,4 +150,14 @@ bool AutoRecording::GetFulltext() const
 void AutoRecording::SetFulltext(uint32_t fulltext)
 {
   m_fulltext = fulltext;
+}
+
+const std::string& AutoRecording::GetSeriesLink() const
+{
+  return m_seriesLink;
+}
+
+void AutoRecording::SetSeriesLink(const std::string &seriesLink)
+{
+  m_seriesLink = seriesLink;
 }
