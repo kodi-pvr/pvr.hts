@@ -536,28 +536,32 @@ PVR_ERROR OpenDialogChannelScan(void)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 PVR_ERROR RenameChannel(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 PVR_ERROR MoveChannel(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_unused(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-/* Timeshift?? - not sure if we can use these? */
 void PauseStream(bool _unused(bPaused))
 {
 }
@@ -568,25 +572,36 @@ int ReadLiveStream
 {
   return 0;
 }
+
 long long SeekLiveStream
   (long long _unused(iPosition), int _unused(iWhence))
 {
   return -1;
 }
+
 long long PositionLiveStream(void)
 {
   return -1;
 }
+
 long long LengthLiveStream(void)
 {
   return -1;
 }
-const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
-{
-  return "";
-}
-PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times)
+
+PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES*)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
+PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsigned int*)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING*, PVR_NAMED_VALUE*, unsigned int*)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
 } /* extern "C" */
