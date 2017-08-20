@@ -50,7 +50,7 @@ namespace tvheadend {
     static const int         DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
     static const int         DEFAULT_APPROX_TIME;     // 0..1 (0 = use a fixed start time, 1 = use an approximate start time for auto recordings)
     static const std::string DEFAULT_STREAMING_PROFILE;
-    static const int         DEFAULT_DVR_PRIO;        // 0..4  (0 = max, 4 = min)
+    static const int         DEFAULT_DVR_PRIO;        // any dvr_prio_t numeric value
     static const int         DEFAULT_DVR_LIFETIME;    // 0..14 (0 = 1 day, 14 = forever)
     static const int         DEFAULT_DVR_DUBDETECT;   // 0..5  (0 = record all, 5 = limit to once a day)
 
