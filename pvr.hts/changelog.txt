@@ -1,7 +1,11 @@
+4.2.0
+- PVR API v5.7.0: Add stubs for IsEPGTagRecordable, IsEPGTagPlayable and GetEPGTagStreamProperties
+- PVR API v5.7.0: Remove EPG_TAG::iChannelNumber, add EPG_TAG::iChannelUniqueId.
+
 4.1.3
 - PVR API v5.6.0: Drop GetLiveStreamURL
 - PVR API v5.6.0: Drop PVR_RECORDING::strStreamURL
-- PVR API v5.6.0: Add implementation for GetChannelStreamProperties and GetRecordingStreamProperties
+- PVR API v5.6.0: Add stubs for GetChannelStreamProperties and GetRecordingStreamProperties
 
 4.1.2
 - PVR API v5.5.0: Add series link support

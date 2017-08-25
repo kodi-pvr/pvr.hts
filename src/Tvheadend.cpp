@@ -1329,8 +1329,8 @@ void CTvheadend::CreateEvent
 {
   memset(&epg, 0, sizeof(EPG_TAG));
   epg.iUniqueBroadcastId  = event.GetId();
+  epg.iUniqueChannelId    = event.GetChannel();
   epg.strTitle            = event.GetTitle().c_str();
-  epg.iChannelNumber      = event.GetChannel();
   epg.startTime           = event.GetStart();
   epg.endTime             = event.GetStop();
   epg.strPlotOutline      = event.GetSummary().c_str();
@@ -1365,7 +1365,7 @@ void CTvheadend::TransferEvent
   CreateEvent(event, tag);
 
   /* Transfer event to Kodi */
-  PVR->EpgEventStateChange(&tag, event.GetChannel(), state);
+  PVR->EpgEventStateChange(&tag, state);
 }
 
 void CTvheadend::TransferEvent
@@ -1379,7 +1379,7 @@ void CTvheadend::TransferEvent
   PVR->TransferEpgEntry(handle, &tag);
 }
 
-PVR_ERROR CTvheadend::GetEpg
+PVR_ERROR CTvheadend::GetEPGForChannel
   ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
 {
   htsmsg_field_t *f;

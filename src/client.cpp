@@ -390,7 +390,7 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 PVR_ERROR GetEPGForChannel
   (ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
-  return tvh->GetEpg(handle, channel, iStart, iEnd);
+  return tvh->GetEPGForChannel(handle, channel, iStart, iEnd);
 }
 
 PVR_ERROR SetEPGTimeFrame(int iDays)
@@ -600,6 +600,21 @@ PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsig
 }
 
 PVR_ERROR GetRecordingStreamProperties(const PVR_RECORDING*, PVR_NAMED_VALUE*, unsigned int*)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR IsEPGTagRecordable(const EPG_TAG*, bool*)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR IsEPGTagPlayable(const EPG_TAG*, bool*)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR GetEPGTagStreamProperties(const EPG_TAG*, PVR_NAMED_VALUE*, unsigned int*)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
