@@ -64,6 +64,22 @@ msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Sjálfvirkar upptökur"
 
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Útreikningur á mörkum upphafstíma"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strangt (upphafstími + lokatími)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Vítt (upphafstími +/- vikmörk)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Hámarksvikmörk upphafstíma (mínútur)"
+
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Sjálfgefinn forgangur"
@@ -248,6 +264,14 @@ msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Fjöldi áskrifta sem á að nota"
 
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Bið áður en ónotaðri áskrift er lokað (sekúndur)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Nota forspárinnstillingu til að hraða skiptingu á milli rása"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Ekkert laust tengi tiltækt"
@@ -259,6 +283,10 @@ msgstr "Rugluð rás"
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Ekkert merki"
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Innstilling mistókst"
 
 msgctxt "#30454"
 msgid "User limit reached"
@@ -279,3 +307,7 @@ msgstr "Snið streymis"
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Snið sem á að nota (autt = sjálfgefið)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streymissniðið %s er ekki tiltækt"

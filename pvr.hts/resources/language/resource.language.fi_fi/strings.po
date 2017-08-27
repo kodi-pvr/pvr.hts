@@ -118,7 +118,7 @@ msgstr "HTSP-versio on yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä j
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by repeating timer)"
-msgstr "Yksittäinen (Ajastettu toistuvalla ajastimella)"
+msgstr "Kerran (luotu ajastussäännön perusteella)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
