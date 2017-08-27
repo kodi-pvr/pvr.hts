@@ -35,3 +35,7 @@ msgstr "सामान्य"
 msgctxt "#30354"
 msgid "Low"
 msgstr "लो"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "डिफ़ॉल्ट"

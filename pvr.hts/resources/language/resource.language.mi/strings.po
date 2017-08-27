@@ -39,3 +39,7 @@ msgstr "Pūnoa"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Hakahaka"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Taunoa"

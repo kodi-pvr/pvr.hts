@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP 版本不匹配（支持：v%d，需要：v%d）。请升级 tvheadend。"
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "单次（由重复定时器计划）"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "重要（最高）"
@@ -163,6 +159,34 @@ msgstr "每周最多录制一次"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "每天最多录制一次"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "此规则：如果剧集号不同，则录制"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "此规则：如果剧集名不同，则录制"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "此规则：如果标题不同，则录制"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "此规则：如果描述不同，则录制"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "此规则：每周最多录制一次"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "此规则：每天最多录制一次"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "默认"
 
 msgctxt "#30373"
 msgid "Until space needed"

@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP inačica se ne podudara (podržana: v%d, potrebna: v%d). Nadogradite tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Jednom (Zakazano ponavljajućim rasporedom)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Značajan (Najviši)"
@@ -163,6 +159,10 @@ msgstr "Snimi najviše jednom tjedno"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi najviše jednom dnevno"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Zadano"
 
 msgctxt "#30373"
 msgid "Until space needed"

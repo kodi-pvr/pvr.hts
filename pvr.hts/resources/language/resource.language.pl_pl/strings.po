@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nieprawidłowa wersja HTSP (obsługiwana: v%d, wymagana: v%d). Proszę zaktualizować program tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Jednorazowo (zaplanowane przez zadanie cykliczne)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Ważna (Najwyższa)"
@@ -163,6 +159,34 @@ msgstr "Nagrywaj maksymalnie raz na tydzień"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Nagrywaj maksymalnie raz na dzień"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Tylko ta reguła: Nagrywaj, gdy różnią się numery odcinków"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Tylko ta reguła: Nagrywaj, gdy różnią się nazwy odcinków"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Tylko ta reguła: Nagrywaj, gdy różnią się tytuły"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Tylko ta reguła: Nagrywaj, gdy różnią się opisy"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Tylko ta reguła: Nagrywaj maksymalnie raz na tydzień"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Tylko ta reguła: Nagrywaj maksymalnie raz na dzień"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Domyślnie"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -266,7 +290,7 @@ msgstr "Nieudane dostrajanie"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Przekroczony limit użytkowników"
+msgstr "Przekroczono limit użytkowników"
 
 msgctxt "#30455"
 msgid "No access"
@@ -286,4 +310,4 @@ msgstr "Używany profil (pusty = domyślny)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Profil transmisji %s niedostępny"
+msgstr "Brak profilu transmisji %s"

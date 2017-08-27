@@ -51,3 +51,7 @@ msgstr "Normal"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Poshtë"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Prezgjedhuar"

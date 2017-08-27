@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade na versão do HTSP (suportado: v%d, necessário: v%d). Atualize o tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Uma vez (agendado por um temporizador recorrente)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (mais alta)"
@@ -163,6 +159,10 @@ msgstr "Gravar, no máximo, uma vez por semana"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Gravar, no máximo, uma vez por dia"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Normal"
 
 msgctxt "#30373"
 msgid "Until space needed"

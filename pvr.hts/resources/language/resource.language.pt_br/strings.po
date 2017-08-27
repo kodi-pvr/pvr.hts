@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade de versão HTSP (suportado: v%d, requerido: v%d). Por favor atualize o tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Uma Vez (Marcado pelo agendamento recorrente)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (mais alto)"
@@ -163,6 +159,34 @@ msgstr "Máximo gravações na semana"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Máximo de gravações por dia"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Esta regra somente: Gravar se o número do episódio difira"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Esta regra somente: Gravar se o nome do episódio difira"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Esta regra somente: Gravar se o título diferir"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Esta regra somente: Gravar se a descrição difira"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Esta regra somente: Gravar máximo uma vez por semana"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Esta regra somente: Gravar máximo uma vez por dia"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Padrão"
 
 msgctxt "#30373"
 msgid "Until space needed"

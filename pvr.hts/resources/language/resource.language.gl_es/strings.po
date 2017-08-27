@@ -76,6 +76,18 @@ msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioridade predefinida"
 
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Tempo de vida predefinido"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Detección de duplicados predefinida"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Predefinicións para novos temporizadores"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
@@ -112,6 +124,10 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Baixa"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Sen importancia (máis baixo)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episodios"
@@ -127,6 +143,42 @@ msgstr "Gravar se o nome do episodio é diferente"
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Gravar se a descrición é diferente"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Gravar unha vez por semana como máximo"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Gravar unha vez ao día como máximo"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Só esta regra: Gravar se o número do capítulo é diferente"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Só esta regra: Gravar se o nome do episodio é diferente"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Só esta regra: Gravar se o título é diferente"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Só esta regra: Gravar se a descrición é diferente"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Só esta regra: Gravar unha vez por semana como máximo"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Só esta regra: Gravar unha vez ao día como máximo"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Predefinida"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -203,6 +255,14 @@ msgstr "Sintonización preditiva"
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
 msgstr "Número de subscricións a empregar"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Atraso para pechar subscrición sen uso (segundos)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Empregar sintonización predictiva para mellorar o troco de canles"
 
 msgctxt "#30450"
 msgid "No free adapter available"

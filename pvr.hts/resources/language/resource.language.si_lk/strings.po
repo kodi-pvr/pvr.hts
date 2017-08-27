@@ -47,3 +47,7 @@ msgstr "සාමාන්‍ය "
 msgctxt "#30354"
 msgid "Low"
 msgstr "අඩු"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "නියත "

@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Ajusts de la connexió"
+msgstr "Opcions de la connexió"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
@@ -50,19 +50,23 @@ msgstr "Temps d'expiració de la resposta (segons)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Ajusts avançats"
+msgstr "Opcions avançades"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Ajusts de la transmissió en línia"
+msgstr "Opcions de la transmissió en línia"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Ajusts del temporitzador"
+msgstr "Opcions del temporitzador"
 
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Enregistraments automàtics"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Inicia el càlcul de la finestra de temps"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -75,6 +79,10 @@ msgstr "Relaxat (hora de començament +/- marge)"
 msgctxt "#30055"
 msgid "Default priority"
 msgstr "Prioritat predeterminada"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Transferència de dades"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -115,6 +123,10 @@ msgstr "No important (el més baix)"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Enregistra tots els episodis"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Per defecte"
 
 msgctxt "#30373"
 msgid "Until space needed"

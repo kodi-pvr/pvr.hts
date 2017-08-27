@@ -51,3 +51,7 @@ msgstr "کم"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "همه قسمت‌ها را ضبط کن"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "پیش فرض"

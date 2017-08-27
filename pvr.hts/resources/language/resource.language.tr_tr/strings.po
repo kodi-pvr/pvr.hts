@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP sürümü uyuşmadı (desteklenen: v%d, gereken: v%d). Lütfen tvheadend'i güncelleyin."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Tek seferlik (Tekrarlanan zamanlayıcı ile planlanmış)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Önemli (En Yüksek)"
@@ -163,6 +159,10 @@ msgstr "Haftada Bir Kez Kaydet"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Günde Bir Kez Kaydet"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Varsayılan"
 
 msgctxt "#30373"
 msgid "Until space needed"

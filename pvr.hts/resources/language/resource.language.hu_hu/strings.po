@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP verzió eltérés (támogatott: v%d, szükséges: v%d). Kérlek frissítsd  a TVHeadend-et."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Egyszeri (ismétlődő időzítő által ütemezve)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Fontos (legmagasabb)"
@@ -163,6 +159,34 @@ msgstr "Hetente max. egyszer rögzítse"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Naponta max. egyszer rögzítse"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Csak ez a szabály: Rögzítse, ha az epizódszám különböző"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Csak ez a szabály: Rögzítse, ha az epizódnév különböző"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Csak ez a szabály: Rögzítse, ha a cím különböző"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Csak ez a szabály: Rögzítse, ha a leírás különböző"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Csak ez a szabály: Hetente legfeljebb egyszer rögzítse"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Csak ez a szabály: Naponta legfeljebb egyszer rögzítse"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Alapértelmezett"
 
 msgctxt "#30373"
 msgid "Until space needed"

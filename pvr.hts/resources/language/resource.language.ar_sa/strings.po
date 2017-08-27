@@ -47,3 +47,7 @@ msgstr "عادي"
 msgctxt "#30354"
 msgid "Low"
 msgstr "الصغرى"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "الافتراضية"

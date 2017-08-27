@@ -22,15 +22,15 @@ msgstr "Verbindingsinstellingen"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend server naam of IP adres"
+msgstr "Tvheadend servernaam of IP-adres"
 
 msgctxt "#30002"
 msgid "HTTP port"
-msgstr "HTTP poort"
+msgstr "HTTP-poort"
 
 msgctxt "#30003"
 msgid "HTSP port"
-msgstr "HTSP poort"
+msgstr "HTSP-poort"
 
 msgctxt "#30004"
 msgid "Username"
@@ -42,19 +42,19 @@ msgstr "Wachtwoord"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Connectie time-out (seconden)"
+msgstr "Verbindingstime-out (seconden)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Antwoord timeout (seconden)"
+msgstr "Antwoordtimeout (seconden)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Geavanceerde Instellingen"
+msgstr "Geavanceerde instellingen"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Streaming instellingen"
+msgstr "Streaminginstellingen"
 
 msgctxt "#30010"
 msgid "Timer settings"
@@ -66,7 +66,7 @@ msgstr "Automatische opnamen"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Start tijd scherm calculatie"
+msgstr "Starttijd schermcalculatie"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -78,19 +78,19 @@ msgstr "Ontspannen (starttijd +/- marge)"
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Maximale starttijd marge (minuten)"
+msgstr "Maximale starttijdmarge (minuten)"
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Standaard prioriteit"
+msgstr "Standaardprioriteit"
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Standaard levensduur"
+msgstr "Standaardlevensduur"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Standaard dubbelingen detectie"
+msgstr "Standaard dubbelendetectie"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
@@ -98,7 +98,7 @@ msgstr "Standaard voor nieuwe opnames"
 
 msgctxt "#30100"
 msgid "Data transfer"
-msgstr "Data overdracht"
+msgstr "Data-overdracht"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -114,11 +114,7 @@ msgstr "Loggen (in detail)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "HTSP versie mismatch (ondersteund: v%d, vereist: v%d). Update A.U.B. de tvheadend."
-
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Eén tijd (geschematiseerd door herhalingstimer)"
+msgstr "HTSP-versieverschil (ondersteund: v%d, vereist: v%d). Update A.U.B. tvheadend."
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -146,7 +142,7 @@ msgstr "Alle afleveringen opnemen"
 
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Opnemen als aflevering nummer afwijkt"
+msgstr "Opnemen als afleveringnummer afwijkt"
 
 msgctxt "#30358"
 msgid "Record if episode name differs"
@@ -164,9 +160,37 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Maximaal één keer per dag opnemen"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Alleen deze regel: Alleen opname bij afwijkende afleveringnummers"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Alleen deze regel: Alleen opname bij afwijkende afleveringsnaam"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Alleen deze regel: Alleen opname bij afwijkende titel"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Alleen deze regel: Alleen opname bij afwijkende omschrijving"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Alleen deze regel: Alleen opname 1x per week"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Alleen deze regel: Alleen opname bij 1x per dag"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Standaard"
+
 msgctxt "#30373"
 msgid "Until space needed"
-msgstr "Tot wanneer ruimte benodigd is."
+msgstr "Tot benodigde ruimte"
 
 msgctxt "#30374"
 msgid "Forever"
@@ -226,7 +250,7 @@ msgstr "3 jaar"
 
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
-msgstr "Totdat ruimte nodig is (tvh 4.1+)"
+msgstr "Tot benodigde ruimte (tvh 4.1+)"
 
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
@@ -238,11 +262,11 @@ msgstr "Voorspellende tuning"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
-msgstr "Nummer van inschrijvingen te gebruiken"
+msgstr "Aantal te gebruiken inschrijvingen"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Ongebruikte inschrijving Sluit vertraging (seconden)"
+msgstr "Ongebruikte inschrijvingssluitvertraging (seconden)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
@@ -278,7 +302,7 @@ msgstr "Inschrijvingsfout"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Streaming profiel"
+msgstr "Streamingprofiel"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -286,4 +310,4 @@ msgstr "Te gebruiken profiel (leeg = standaard)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Streaming profiel %s is niet beschikbaar"
+msgstr "Streamingprofiel %s is niet beschikbaar"

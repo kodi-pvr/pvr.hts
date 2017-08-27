@@ -76,6 +76,10 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Rekam semua episode"
 
+msgctxt "#30368"
+msgid "Default"
+msgstr "Standar"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Sampai ruang yang dibutuhkan"

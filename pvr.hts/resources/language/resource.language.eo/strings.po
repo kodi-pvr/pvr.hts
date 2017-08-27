@@ -35,3 +35,7 @@ msgstr "Normal"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Malnobla"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Default"

@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP weergawe stem nie ooreen (ondersteun: v%d, vereis: v%d). Opdateer asseblief tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Een keer (geskeduleer deur herhalende tydhouer)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Belangrik (hoogste)"
@@ -164,6 +160,10 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Neem maks een keer per dag op"
 
+msgctxt "#30368"
+msgid "Default"
+msgstr "Verstek"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Tot spasie benodig"
@@ -176,17 +176,61 @@ msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dag"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dae"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dae"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 week"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 weke"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 weke"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 maand"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 maande"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 maande"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 maande"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 jaar"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 jare"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 jare"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Totdat spasie benodig (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Vir ewig (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

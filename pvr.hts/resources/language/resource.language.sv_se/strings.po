@@ -42,7 +42,7 @@ msgstr "Lösenord"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Anslutningsavbrott (sekunder)"
+msgstr "Anslutningstimeout (sekunder)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
@@ -54,11 +54,11 @@ msgstr "Avancerade inställningar"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Stream inställningar"
+msgstr "Ströminställningar"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Inställningar för tidtagning"
+msgstr "TimerInställningar"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -82,7 +82,7 @@ msgstr "Maximal marginal för starttid (minuter)"
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Standard-prioritet"
+msgstr "Standardprioritet"
 
 msgctxt "#30056"
 msgid "Default lifetime"
@@ -90,11 +90,11 @@ msgstr "Standardlivstid"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Standard duplikat detektering"
+msgstr "Standard dubblett detektering"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Standard för nya timer"
+msgstr "Standard för nya timers"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -110,15 +110,11 @@ msgstr "Debuggning"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Trace (detaljerad)"
+msgstr "Spåra (detaljerad)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versioner överensstämmer inte (stöds: v%d, krävs: v%d). Vänligen uppdatera tvheadend."
-
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "En gång (schemalagd genom att upprepa timer)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -142,7 +138,7 @@ msgstr "Oviktigt (Lägsta)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Spela in alla episoder"
+msgstr "Spela in alla avsnitt"
 
 msgctxt "#30357"
 msgid "Record if episode number differs"
@@ -163,6 +159,34 @@ msgstr "Spela in max en gång per vecka"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Spela in max en gång per dag"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Endast denna ragel: Spela in om avsnittsnumret skiljer sig"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Endast denna ragel: Spela in om avsnittsnamnet skiljer sig"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Endast denna ragel: Spela in om titel skiljer sig"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Endast denna ragel: Spela in om beskrivning skiljer sig"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Endast denna ragel: Spela in max en gång per vecka"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Endast denna ragel: Spela in max en gång per dag"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Standard"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -230,11 +254,11 @@ msgstr "Tills utrymme behövs (tvh 4.1+)"
 
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
-msgstr "För evigt (tvh 4.1+)"
+msgstr "För alltid (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
-msgstr "Prediktiva stämning"
+msgstr "Förutspå förinställning"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
@@ -242,11 +266,11 @@ msgstr "Antal abonnemang att använda"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Oanvänd abonnemang stäng fördröjning (sekunder)"
+msgstr "Oanvänd abonnemang stängningsfördröjning (sekunder)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Använd automatisk avstämning för att påskynda kanal omkopplare"
+msgstr "Använd automatisk avstämning för att påskynda kanalbyte"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -262,7 +286,7 @@ msgstr "Ingen signal"
 
 msgctxt "#30453"
 msgid "Tuning failed"
-msgstr "Justeringen misslyckades"
+msgstr "Förinställning misslyckades"
 
 msgctxt "#30454"
 msgid "User limit reached"
@@ -278,7 +302,7 @@ msgstr "Prenumerationsfel"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Streaming profil"
+msgstr "Streamingprofil"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -286,4 +310,4 @@ msgstr "Profil att använda (tom = standard)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Streaming profil %s är inte tillänglig"
+msgstr "Streamingprofil %s är inte tillänglig"

@@ -43,3 +43,7 @@ msgstr "መደበኛ "
 msgctxt "#30354"
 msgid "Low"
 msgstr "ዝቅተኛ "
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "ነባር "

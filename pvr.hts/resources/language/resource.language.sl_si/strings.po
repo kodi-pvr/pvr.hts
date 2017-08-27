@@ -76,6 +76,10 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Posnemi vse epizode"
 
+msgctxt "#30368"
+msgid "Default"
+msgstr "Privzeto"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dokler se ne potrebuje prostora"

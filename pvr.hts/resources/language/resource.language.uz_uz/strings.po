@@ -31,3 +31,7 @@ msgstr "Yuqori"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Past"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Andoza"

@@ -100,6 +100,10 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Εγγραφή όλων των επεισοδίων"
 
+msgctxt "#30368"
+msgid "Default"
+msgstr "Προεπιλογή"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Μέχρι να απαιτηθεί χώρος"

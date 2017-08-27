@@ -67,3 +67,7 @@ msgstr "Энгийн"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Бага"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Үндсэн"

@@ -27,3 +27,7 @@ msgstr "کلمه عبور"
 msgctxt "#30353"
 msgid "Normal"
 msgstr "نورمال"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "پیش فرض"

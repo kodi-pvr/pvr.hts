@@ -52,6 +52,10 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Avancerede indstillinger"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Streaming indstillinger"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Indstil Optagelse"
@@ -96,10 +100,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versionen passer ikke (understøttet: v%d, krævet v%d). Opdater venligst tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "One Time (planlagt af gentagelsestimer)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Vigtig (højest)"
@@ -143,6 +143,10 @@ msgstr "Optag maks. en gang per uge"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Optag maks. en gang per dag"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Standard"
 
 msgctxt "#30373"
 msgid "Until space needed"

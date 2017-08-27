@@ -36,6 +36,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Salasõna"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Taimeri seaded"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Silumine"
@@ -51,3 +55,11 @@ msgstr "Normaalne"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Madal"
+
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr "Salvesta kõik episoodid"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Vaikimisi"

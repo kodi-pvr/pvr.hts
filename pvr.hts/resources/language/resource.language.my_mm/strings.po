@@ -35,3 +35,7 @@ msgstr "ပုံမှန်"
 msgctxt "#30354"
 msgid "Low"
 msgstr "အနိမ့်စား"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "မူလအတိုင်း"

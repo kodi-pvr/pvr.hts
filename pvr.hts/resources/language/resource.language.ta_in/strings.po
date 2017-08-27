@@ -55,3 +55,7 @@ msgstr "வழக்கமான"
 msgctxt "#30354"
 msgid "Low"
 msgstr "குறைவு"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "இயல்புநிலை"

@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-Versionskonflikt (unterstützt: v%d, benötigt: v%d). Bitte tvheadend aktualisieren."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Einmalig (Erzeugt von Timer-Regel)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Wichtig (höchste Prio)"
@@ -163,6 +159,34 @@ msgstr "Maximal einmal pro Woche aufnehmen"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Maximal einmal pro Tag aufnehmen"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Nur für diese Regel: Aufnehmen, wenn Episodennummer unterschiedlich ist"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Nur diese Regel: Aufnehmen, wenn Episodenname unterschiedlich ist"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Nur diese Regel: Aufnehmen, wenn Titel unterschiedlich ist"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Nur diese Regel: Aufnehmen, wenn Beschreibung unterschiedlich ist"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Nur diese Regel: Maximal einmal pro Woche aufnehmen"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Nur diese Regel: Maximal einmal pro Tag aufnehmen"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Standard"
 
 msgctxt "#30373"
 msgid "Until space needed"

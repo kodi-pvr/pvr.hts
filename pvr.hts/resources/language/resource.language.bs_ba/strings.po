@@ -39,3 +39,7 @@ msgstr "Normalno"
 msgctxt "#30354"
 msgid "Low"
 msgstr "nizak"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Podrazumjevano"

@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Niynŏleżnŏ wersyjŏ HTSP (ôbsugowanŏ: v%d, fołdrowanŏ: v%d). Zaktualizuj program tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Jedyn rŏz (ôbcyrklowane bez auftrag cykliczne)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Wŏżnŏ (Nŏjzwielgszŏ)"
@@ -163,6 +159,10 @@ msgstr "Nagrowej maksymalnie rŏz na tydziyń"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Nagrowej maksymalnie rŏz na dziyń"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Wychodne"
 
 msgctxt "#30373"
 msgid "Until space needed"

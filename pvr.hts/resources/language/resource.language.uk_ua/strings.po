@@ -59,3 +59,7 @@ msgstr "Мін."
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Записати усі серії"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Як усталено"

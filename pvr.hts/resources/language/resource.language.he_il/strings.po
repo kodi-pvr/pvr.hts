@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). יש לעדכן את שרת Tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "חד פעמי (נוצר ע\"י תזמון חוזר)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "חשובה (גבוהה ביותר)"
@@ -163,6 +159,34 @@ msgstr "הקלטה מקסימלית פעם בשבוע"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "הקלטה מקסימלית פעם ביום"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "כלל זה בלבד: יש להקליט אם מספר הפרק שונה"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "כלל זה בלבד: יש להקליט אם שם הפרק שונה"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "כלל זה בלבד: יש להקליט אם הכותרת שונה"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "כלל זה בלבד: יש להקליט אם התיאור שונה"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "כלל זה בלבד: יש להקליט פעם אחת בשבוע"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "כלל זה בלבד: יש להקליט פעם אחת ביום"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "ברירת מחדל"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -223,6 +247,14 @@ msgstr "שנתיים"
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 שנים"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "עד שנפח האיחסון הנדרש (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "לתמיד (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"

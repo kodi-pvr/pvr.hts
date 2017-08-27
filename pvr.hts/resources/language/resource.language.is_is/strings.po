@@ -16,9 +16,13 @@ msgstr ""
 "Language: is_IS\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Stillingar tengingar"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Nafn eða IP tala Tvheadend"
+msgstr "Nafn eða IP-vistfang Tvheadend"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -48,13 +52,49 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Ítarlegar stillingar"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Stillingar á streymingu"
+
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Stillingar tímaklukku"
+msgstr "Stillingar tímatöku"
 
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Sjálfvirkar upptökur"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Útreikningur á mörkum upphafstíma"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Strangt (upphafstími + lokatími)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Vítt (upphafstími +/- vikmörk)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Hámarksvikmörk upphafstíma (mínútur)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Sjálfgefinn forgangur"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Sjálfgefinn líftími"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Sjálfgefin leit að tvítökum"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Sjálfgefið fyrir nýjar tímatökur"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -76,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP útgáfa ósamhæfð  (samhæfð: v%d, þarfnast: v%d). Uppfærðu tvheadend."
 
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Mikilvægt (hæst)"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "Hæst"
@@ -88,18 +132,182 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "Lægst"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Ekki mikilvægt (lægst)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Taka upp allar þáttaraðir"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Taka upp ef mismunur er á númerum þátta"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Taka upp ef mismunur er á nöfnum þátta"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Taka upp ef mismunur er á lýsingum þátta"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Taka upp mest einu sinni í viku"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Taka upp mest einu sinni á dag"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á númerum þátta"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á nöfnum þátta"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á titli"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Einungis þessi regla: Taka upp ef mismunur er á lýsingum þátta"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Einungis þessi regla: Taka upp mest einu sinni í viku"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Einungis þessi regla: Taka upp mest einu sinni á dag"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Sjálfgefið"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Þangað til vantar pláss"
 
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Að eilífu"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 dag"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dagar"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dagar"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 vika"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 vikur"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 vikur"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mánuður"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 mánuðir"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 mánuðir"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 mánuðir"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 ár"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 ár"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 ár"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Þangað til vantar pláss (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Að eilífu (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Forspárinnstilling"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Fjöldi áskrifta sem á að nota"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Bið áður en ónotaðri áskrift er lokað (sekúndur)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Nota forspárinnstillingu til að hraða skiptingu á milli rása"
+
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr "Ekkert laust tengi tiltækt"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Rugluð rás"
+
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Ekkert merki"
 
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Innstilling mistókst"
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr "Hámarksfjölda notenda er náð"
+
 msgctxt "#30455"
 msgid "No access"
 msgstr "Enginn aðgangur"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Áskriftarvilla"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Snið streymis"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Snið sem á að nota (autt = sjálfgefið)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Streymissniðið %s er ekki tiltækt"

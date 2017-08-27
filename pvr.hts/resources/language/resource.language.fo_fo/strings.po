@@ -35,3 +35,7 @@ msgstr "Vanligt"
 msgctxt "#30354"
 msgid "Low"
 msgstr "Lágt"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Vanligt"

@@ -56,6 +56,10 @@ msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Record all episodes"
 
+msgctxt "#30368"
+msgid "Default"
+msgstr "Default"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Until space needed"

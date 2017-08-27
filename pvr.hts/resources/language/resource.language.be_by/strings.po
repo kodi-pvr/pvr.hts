@@ -55,3 +55,7 @@ msgstr "Нізкая"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Запісваць усе эпізоды"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Default"

@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP 버전 불일치 (지원: v%d, 필요: v%d). tvheadend를 업데이트해 주십시요."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "한 번 (반복 타이머로 예약)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "중요 (높은 순)"
@@ -163,6 +159,10 @@ msgstr "일주일 최대 한번 녹화"
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "하루 최대 한 번 녹화"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "보통"
 
 msgctxt "#30373"
 msgid "Until space needed"

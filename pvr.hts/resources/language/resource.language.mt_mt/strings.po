@@ -71,3 +71,7 @@ msgstr "Filmati/Generi"
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Irrekordja l-episodji kollha"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Difolt"

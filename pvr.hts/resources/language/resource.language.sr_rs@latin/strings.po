@@ -116,10 +116,6 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nepoklapanje HTSP verzije (podržane: v%d, potrebne: v%d). Molimo, ažurirajte tvheadend."
 
-msgctxt "#30350"
-msgid "One Time (Scheduled by repeating timer)"
-msgstr "Jednom (Zakazano od strane ponavljajućeg tajmera)"
-
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Važno (Najviše)"
@@ -164,6 +160,34 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi maksimalno jednom dnevno"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Samo ovo pravilo: Snimaj ako je različit broj epizode"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Samo ovo pravilo: Snimaj ako je različito ime epizode"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Samo ovo pravilo: Snimaj ako je naslov različit"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Samo ovo pravilo: Snimaj ako je opis različit"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Samo ovo pravilo: Snimaj maksimalno jednom nedeljno"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Samo ovo pravilo: Snimaj maksimalno jednom dnevno"
+
+msgctxt "#30368"
+msgid "Default"
+msgstr "Podrazumevana"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dok prostor nije potreban"
@@ -176,17 +200,61 @@ msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dan"
 
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dana"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dana"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 nedelja"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 nedelje"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 nedelje"
 
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 mesec"
 
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meseca"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 meseca"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 meseci"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 godina"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 godine"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 godine"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Dok prostor nije potreban (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Zauvek (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
