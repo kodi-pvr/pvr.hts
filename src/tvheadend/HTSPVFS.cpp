@@ -119,14 +119,6 @@ long long HTSPVFS::Seek ( long long pos, int whence )
   return SendFileSeek(pos, whence);
 }
 
-long long HTSPVFS::Tell ( void )
-{
-  if (m_fileId == 0)
-    return -1;
-
-  return m_offset;
-}
-
 long long HTSPVFS::Size ( void )
 {
   int64_t ret = -1;

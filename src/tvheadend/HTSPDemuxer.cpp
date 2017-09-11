@@ -41,7 +41,8 @@ HTSPDemuxer::HTSPDemuxer ( HTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
     m_seeking(false), m_speedChange(false),
-    m_subscription(conn), m_lastUse(0)
+    m_subscription(conn), m_lastUse(0),
+    m_startTime(0)
 {
 }
 
@@ -106,7 +107,7 @@ bool HTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
     m_subscription.SendUnsubscribe();
   else
     m_lastUse.store(time(nullptr));
-  
+
   return m_subscription.IsActive();
 }
 
@@ -272,28 +273,6 @@ PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
   return PVR_ERROR_NO_ERROR;
 }
 
-int64_t HTSPDemuxer::GetTimeshiftTime() const
-{
-  CLockObject lock(m_mutex);
-  return m_timeshiftStatus.shift;
-}
-
-int64_t HTSPDemuxer::GetTimeshiftBufferStart() const
-{
-  CLockObject lock(m_mutex);
-
-  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
-  return m_timeshiftStatus.end;
-}
-
-int64_t HTSPDemuxer::GetTimeshiftBufferEnd() const
-{
-  CLockObject lock(m_mutex);
-
-  // Note: start/end mismatch is not a bug. tvh uses inversed naming logic here!
-  return m_timeshiftStatus.start;
-}
-
 bool HTSPDemuxer::IsTimeShifting() const
 {
   if (!m_subscription.IsActive())
@@ -307,6 +286,30 @@ bool HTSPDemuxer::IsTimeShifting() const
     return true;
 
   return false;
+}
+
+bool HTSPDemuxer::IsRealTimeStream() const
+{
+  if (!m_subscription.IsActive())
+    return false;
+
+  /* Handle as real time when reading close to the EOF (10 secs) */
+  CLockObject lock(m_mutex);
+  return (m_timeshiftStatus.shift < 10000000);
+}
+
+PVR_ERROR HTSPDemuxer::GetStreamTimes(PVR_STREAM_TIMES *times) const
+{
+  *times = {0};
+
+  CLockObject lock(m_mutex);
+
+  times->startTime = m_startTime;
+  times->ptsStart = 0;
+  times->ptsBegin = static_cast<int64_t>(static_cast<double>(m_timeshiftStatus.start / 1000000)) * DVD_TIME_BASE;
+  times->ptsEnd = static_cast<int64_t>(static_cast<double>(m_timeshiftStatus.end / 1000000)) * DVD_TIME_BASE;
+
+  return PVR_ERROR_NO_ERROR;
 }
 
 uint32_t HTSPDemuxer::GetSubscriptionId() const
@@ -333,19 +336,6 @@ void HTSPDemuxer::SetStreamingProfile(const std::string &profile)
   m_subscription.SetProfile(profile);
 }
 
-bool HTSPDemuxer::IsRealTimeStream() const
-{
-  if (!m_subscription.IsActive())
-    return false;
-
-  /* Avoid using the getters since they lock individually and
-   * we want the calculation to be consistent */
-  CLockObject lock(m_mutex);
-
-  /* Handle as real time when reading close to the EOF (10000000µs - 10s) */
-  return (m_timeshiftStatus.shift < 10000000);
-}
-
 void HTSPDemuxer::ResetStatus()
 {
   CLockObject lock(m_mutex);
@@ -354,6 +344,8 @@ void HTSPDemuxer::ResetStatus()
   m_sourceInfo.Clear();
   m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
+
+  m_startTime = 0;
 }
 
 /* **************************************************************************
@@ -462,7 +454,14 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
 
   /* Store */
   if (!ignore)
+  {
+    if (m_startTime == 0)
+    {
+      // first paket for this subscription
+      m_startTime = time(nullptr);
+    }
     m_pktBuffer.Push(pkt);
+  }
   else
     PVR->FreeDemuxPacket(pkt);
 }

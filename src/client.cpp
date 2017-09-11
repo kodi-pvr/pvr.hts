@@ -262,31 +262,18 @@ bool CanSeekStream(void)
   return tvh->HasCapability("timeshift");
 }
 
+PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times)
+{
+  if (!times)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  // TODO: handle recordings
+  return tvh->DemuxGetStreamTimes(times);
+}
+
 bool IsTimeshifting(void)
 {
   return tvh->DemuxIsTimeShifting();
-}
-
-static time_t ConvertMusecsToTime(int64_t musecs)
-{
-  // tvheadend reports microseconds for timeshifting values,
-  // Kodi expects it to be an absolute UNIX timestamp
-  return time(NULL) - static_cast<time_t>(static_cast<double>(musecs / 1000000));
-}
-
-time_t GetPlayingTime()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftTime());
-}
-
-time_t GetBufferTimeStart()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferStart());
-}
-
-time_t GetBufferTimeEnd()
-{
-  return ConvertMusecsToTime(tvh->DemuxGetTimeshiftBufferEnd());
 }
 
 bool IsRealTimeStream()
@@ -514,11 +501,6 @@ long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
   return tvh->VfsSeek(iPosition, iWhence);
 }
 
-long long PositionRecordedStream(void)
-{
-  return tvh->VfsTell();
-}
-
 long long LengthRecordedStream(void)
 {
   return tvh->VfsSize();
@@ -528,7 +510,6 @@ long long LengthRecordedStream(void)
  * Unused Functions
  * *************************************************************************/
 
-/* Channel Management */
 PVR_ERROR OpenDialogChannelScan(void)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
@@ -540,11 +521,6 @@ PVR_ERROR DeleteChannel(const PVR_CHANNEL&)
 }
 
 PVR_ERROR RenameChannel(const PVR_CHANNEL&)
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-
-PVR_ERROR MoveChannel(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -563,7 +539,6 @@ void PauseStream(bool)
 {
 }
 
-/* Live stream (VFS interface - not relevant) */
 int ReadLiveStream(unsigned char *, unsigned int)
 {
   return 0;
@@ -574,19 +549,9 @@ long long SeekLiveStream(long long, int)
   return -1;
 }
 
-long long PositionLiveStream(void)
-{
-  return -1;
-}
-
 long long LengthLiveStream(void)
 {
   return -1;
-}
-
-PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES*)
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsigned int*)

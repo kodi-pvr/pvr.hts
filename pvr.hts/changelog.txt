@@ -1,3 +1,11 @@
+4.2.9
+- PVR API v5.5.0: Implemented GetStreamTimes
+- PVR API v5.8.0: Dropped GetPlayingTime, GetBufferTimeStart, GetBufferTimeEnd, PositionRecordedStream, PositionLiveStream, MoveChannel
+- PVR API v5.8.0: Added support for PVR_CHANNEL_GROUP_MEMBER::iSubChannelNumber
+
+4.2.8
+- updated language files from Transifex
+
 4.2.7
 - Fixed predictive tuning (was broken with removal of API function 'SwitchChannel')
 - Added support for subchannel numbers (ATSC) to predictive tuning
