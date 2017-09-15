@@ -125,7 +125,7 @@ void CHTSPConnection::Stop()
 std::string CHTSPConnection::GetWebURL ( const char *fmt, ... ) const
 {
   va_list va;
-  const Settings &settings = Settings::GetInstance();
+  const Settings &settings = tvh->GetSettings();
 
   // Generate the authentication string (user:pass@)
   std::string auth = settings.GetUsername();
@@ -150,7 +150,7 @@ bool CHTSPConnection::WaitForConnection ( void )
   if (!m_ready)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().GetConnectTimeout());
+    m_regCond.Wait(m_mutex, m_ready, tvh->GetSettings().GetConnectTimeout());
   }
   return m_ready;
 }
@@ -175,7 +175,7 @@ std::string CHTSPConnection::GetServerVersion ( void ) const
 
 std::string CHTSPConnection::GetServerString ( void ) const
 {
-  const Settings &settings = Settings::GetInstance();
+  const Settings &settings = tvh->GetSettings();
 
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
@@ -183,7 +183,7 @@ std::string CHTSPConnection::GetServerString ( void ) const
 
 bool CHTSPConnection::HasCapability(const std::string &capability) const
 {
-  return std::find(m_capabilities.begin(), m_capabilities.end(), capability) 
+  return std::find(m_capabilities.begin(), m_capabilities.end(), capability)
          != m_capabilities.end();
 }
 
@@ -263,7 +263,7 @@ bool CHTSPConnection::ReadMessage ( void )
   uint8_t *buf;
   uint8_t  lb[4];
   size_t   len, cnt;
-  ssize_t  r; 
+  ssize_t  r;
   uint32_t seq;
   htsmsg_t *msg;
   const char *method;
@@ -274,19 +274,19 @@ bool CHTSPConnection::ReadMessage ( void )
     return false;
   len = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
 
-  /* Read rest of packet */ 
+  /* Read rest of packet */
   buf = (uint8_t*)malloc(len);
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    r = m_socket->Read((char*)buf + cnt, len - cnt, tvh->GetSettings().GetResponseTimeout());
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
                m_socket->GetError().c_str());
       free(buf);
       return false;
-    } 
+    }
     cnt += r;
   }
 
@@ -376,8 +376,8 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
-  
+    iResponseTimeout = tvh->GetSettings().GetResponseTimeout();
+
   uint32_t seq;
 
   /* Add Sequence number */
@@ -434,8 +434,8 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
 htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
-  
+    iResponseTimeout = tvh->GetSettings().GetResponseTimeout();
+
   if (!WaitForConnection())
     return NULL;
   return SendAndWait0(method, msg, iResponseTimeout);
@@ -451,7 +451,7 @@ bool CHTSPConnection::SendHello ( void )
   /* Send and Wait */
   if (!(msg = SendAndWait0("hello", msg)))
     return false;
-  
+
   /* Process */
   const char *webroot;
   const void *chal;
@@ -477,7 +477,7 @@ bool CHTSPConnection::SendHello ( void )
         m_capabilities.push_back(f->hmf_str);
     }
   }
-      
+
   /* Authentication */
   htsmsg_get_bin(msg, "challenge", &chal, &chal_len);
   if (chal && chal_len)
@@ -488,7 +488,7 @@ bool CHTSPConnection::SendHello ( void )
   }
 
   htsmsg_destroy(msg);
- 
+
   return true;
 }
 
@@ -548,8 +548,8 @@ bool CHTSPConnection::SendAuth
  */
 void CHTSPConnection::Register ( void )
 {
-  std::string user = Settings::GetInstance().GetUsername();
-  std::string pass = Settings::GetInstance().GetPassword();
+  std::string user = tvh->GetSettings().GetUsername();
+  std::string pass = tvh->GetSettings().GetPassword();
 
   {
     CLockObject lock(m_mutex);
@@ -573,7 +573,7 @@ void CHTSPConnection::Register ( void )
 
     /* Send Auth */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending auth");
-    
+
     if (!SendAuth(user, pass))
     {
       SetState(PVR_CONNECTION_STATE_ACCESS_DENIED);
@@ -608,7 +608,7 @@ void* CHTSPConnection::Process ( void )
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
-  const Settings &settings = Settings::GetInstance();
+  const Settings &settings = tvh->GetSettings();
 
   while (!IsStopped())
   {

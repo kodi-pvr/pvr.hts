@@ -242,7 +242,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool up
   /*                                                                                        */
   /* bAutorecApproxTime disabled: => start time in kodi = begin of starting window in tvh   */
   /*                              => end time in kodi   = end of starting window in tvh     */
-  const Settings &settings = Settings::GetInstance();
+  const Settings &settings = tvh->GetSettings();
 
   if (settings.GetAutorecApproxTime())
   {

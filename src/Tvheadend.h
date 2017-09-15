@@ -155,7 +155,7 @@ class CHTSPRegister
 public:
   CHTSPRegister ( CHTSPConnection *conn );
   ~CHTSPRegister ();
- 
+
 private:
   CHTSPConnection *m_conn;
   void *Process ( void );
@@ -176,7 +176,7 @@ public:
   void Start       ( void );
   void Stop        ( void );
   void Disconnect  ( void );
-  
+
   bool      SendMessage0    ( const char *method, htsmsg_t *m );
   htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
@@ -188,14 +188,14 @@ public:
   std::string GetServerName    ( void ) const;
   std::string GetServerVersion ( void ) const;
   std::string GetServerString  ( void ) const;
-  
+
   bool        HasCapability(const std::string &capability) const;
 
   inline P8PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
 
   void        OnSleep ( void );
   void        OnWake  ( void );
-  
+
 private:
   void*       Process          ( void );
   void        Register         ( void );
@@ -271,7 +271,7 @@ private:
   tvheadend::status::DescrambleInfo       m_descrambleInfo;
   tvheadend::Subscription                 m_subscription;
   std::atomic<time_t>                     m_lastUse;
-  
+
   void         Close0         ( void );
   void         Abort0         ( void );
   bool         Open           ( uint32_t channelId,
@@ -292,7 +292,7 @@ private:
    * Resets the signal and quality info
    */
   void ResetStatus();
-  
+
   void ParseMuxPacket           ( htsmsg_t *m );
   void ParseSourceInfo          ( htsmsg_t *m );
   void ParseSubscriptionStart   ( htsmsg_t *m );
@@ -308,7 +308,7 @@ private:
 /*
  * HTSP VFS - recordings
  */
-class CHTSPVFS 
+class CHTSPVFS
 {
   friend class CTvheadend;
 
@@ -344,7 +344,7 @@ class CTvheadend
   : public P8PLATFORM::CThread
 {
 public:
-  CTvheadend(PVR_PROPERTIES *pvrProps);
+  CTvheadend(PVR_PROPERTIES *pvrProps, tvheadend::Settings *settings);
   ~CTvheadend();
 
   void Start ( void );
@@ -388,6 +388,11 @@ public:
   PVR_ERROR GetEPGForChannel  ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
                                 time_t start, time_t end );
   PVR_ERROR SetEPGTimeFrame   ( int iDays );
+
+  tvheadend::Settings& GetSettings()
+  {
+    return m_settings;
+  }
 
   void GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const;
 
@@ -440,6 +445,8 @@ private:
   AutoRecordings              m_autoRecordings;
 
   int                         m_epgMaxDays;
+
+  tvheadend::Settings         m_settings;
 
   /*
    * Predictive tuning

@@ -50,6 +50,7 @@ CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
 PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
+tvheadend::Settings              *settings  = NULL;
 
 /* **************************************************************************
  * ADDON setup
@@ -59,7 +60,8 @@ extern "C" {
 
 void ADDON_ReadSettings(void)
 {
-  Settings::GetInstance().ReadSettings();
+  settings = new tvheadend::Settings();
+  settings->ReadSettings();
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -70,7 +72,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   /* Instantiate helpers */
   XBMC  = new CHelper_libXBMC_addon;
   PVR   = new CHelper_libXBMC_pvr;
-  
+
   if (!XBMC->RegisterMe(hdl) ||
       !PVR->RegisterMe(hdl))
   {
@@ -99,7 +101,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     }
 
     /* Don't log trace messages unless told so */
-    if (level == LogLevel::LEVEL_TRACE && !Settings::GetInstance().GetTraceDebug())
+    if (level == LogLevel::LEVEL_TRACE)
       return;
 
     XBMC->Log(addonLevel, "%s", message);
@@ -109,9 +111,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   Logger::Log(LogLevel::LEVEL_INFO, "starting PVR client");
 
-  ADDON_ReadSettings();
+  tvheadend::Settings *set = new tvheadend::Settings();
+  set->ReadSettings();
 
-  tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES *>(props));
+  tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES *>(props), set);
   tvh->Start();
 
   m_CurStatus = ADDON_STATUS_OK;
@@ -138,7 +141,8 @@ ADDON_STATUS ADDON_SetSetting
   (const char *settingName, const void *settingValue)
 {
   CLockObject lock(g_mutex);
-  m_CurStatus = Settings::GetInstance().SetSetting(settingName, settingValue);
+  tvheadend::Settings& settings = tvh->GetSettings();
+  m_CurStatus = settings.SetSetting(settingName, settingValue);
   return m_CurStatus;
 }
 
@@ -178,8 +182,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = true;
   pCapabilities->bSupportsRecordingEdl       = true;
-  pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
-  pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
+  pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 27 && tvh->GetSettings().GetDvrPlayStatus());
+  pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 27 && tvh->GetSettings().GetDvrPlayStatus());
   pCapabilities->bSupportsDescrambleInfo     = true;
 
   if (tvh->GetProtocol() >= 28)
@@ -232,7 +236,7 @@ const char *GetConnectionString(void)
 
 const char *GetBackendHostname(void)
 {
-  return Settings::GetInstance().GetConstCharHostname();
+  return tvh->GetSettings().GetConstCharHostname();
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
@@ -492,7 +496,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 {
   return tvh->UpdateTimer(timer);
 }
- 
+
 /* **************************************************************************
  * Recording VFS
  * *************************************************************************/

@@ -34,6 +34,27 @@ namespace tvheadend {
   class Settings {
   public:
 
+    Settings()
+    : m_strHostname(DEFAULT_HOST),
+      m_iPortHTSP(DEFAULT_HTTP_PORT),
+      m_iPortHTTP(DEFAULT_HTSP_PORT),
+      m_strUsername(DEFAULT_USERNAME),
+      m_strPassword(DEFAULT_PASSWORD),
+      m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
+      m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
+      m_bTraceDebug(DEFAULT_TRACE_DEBUG),
+      m_bAsyncEpg(DEFAULT_ASYNC_EPG),
+      m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
+      m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
+      m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
+      m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
+      m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
+      m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
+      m_iDvrPriority(DEFAULT_DVR_PRIO),
+      m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
+      m_iDvrDupdetect(DEFAULT_DVR_DUBDETECT),
+      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS) {}
+
     // Default values.
     static const std::string DEFAULT_HOST;
     static const int         DEFAULT_HTTP_PORT;
@@ -54,15 +75,6 @@ namespace tvheadend {
     static const int         DEFAULT_DVR_LIFETIME;    // 0..14 (0 = 1 day, 14 = forever)
     static const int         DEFAULT_DVR_DUBDETECT;   // 0..5  (0 = record all, 5 = limit to once a day)
     static const bool        DEFAULT_DVR_PLAYSTATUS;
-
-    /**
-     * Singleton getter for the instance
-     */
-    static Settings& GetInstance()
-    {
-      static Settings settings;
-      return settings;
-    }
 
     /**
      * Read all settings defined in settings.xml
@@ -98,29 +110,8 @@ namespace tvheadend {
     bool        GetDvrPlayStatus() const { return m_bDvrPlayStatus; }
 
   private:
-    Settings()
-    : m_strHostname(DEFAULT_HOST),
-      m_iPortHTSP(DEFAULT_HTTP_PORT),
-      m_iPortHTTP(DEFAULT_HTSP_PORT),
-      m_strUsername(DEFAULT_USERNAME),
-      m_strPassword(DEFAULT_PASSWORD),
-      m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
-      m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
-      m_bTraceDebug(DEFAULT_TRACE_DEBUG),
-      m_bAsyncEpg(DEFAULT_ASYNC_EPG),
-      m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
-      m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
-      m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
-      m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
-      m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
-      m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
-      m_iDvrPriority(DEFAULT_DVR_PRIO),
-      m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
-      m_iDvrDupdetect(DEFAULT_DVR_DUBDETECT),
-      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS) {}
-
-    Settings(Settings const &) = delete;
-    void operator=(Settings const &) = delete;
+    // Settings(Settings const &) = delete;
+    // void operator=(Settings const &) = delete;
 
     /**
      * Setters

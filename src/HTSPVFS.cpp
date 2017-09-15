@@ -206,7 +206,7 @@ void CHTSPVFS::SendFileClose ( void )
 
   /* If setting set, we will increase play count with CTvheadend::SetPlayCount */
   if (m_conn.GetProtocol() >= 27)
-    htsmsg_add_u32(m, "playcount", Settings::GetInstance().GetDvrPlayStatus() ?
+    htsmsg_add_u32(m, "playcount", tvh->GetSettings().GetDvrPlayStatus() ?
         HTSP_DVR_PLAYCOUNT_KEEP : HTSP_DVR_PLAYCOUNT_INCR);
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs close id=%d", m_fileId);
