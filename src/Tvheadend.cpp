@@ -804,6 +804,10 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY          |
       PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
 
+  int dvrPriority = m_settings.GetDvrPriority();
+  int dvrDupDetect = m_settings.GetDvrDupdetect();
+  int dvrLifetime = m_settings.GetDvrLifetime();
+
   if (m_conn.GetProtocol() >= 23)
   {
     TIMER_ONCE_MANUAL_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
@@ -822,9 +826,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       TIMER_ONCE_MANUAL_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -839,9 +843,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       TIMER_ONCE_EPG_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -859,9 +863,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       /* Description. */
       XBMC->GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -878,9 +882,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
       XBMC->GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -904,9 +908,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
       /* Let Kodi generate the description. */
       "",
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -944,9 +948,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         TIMER_REPEATING_SERIESLINK_ATTRIBS,
         /* Description. */
         XBMC->GetLocalizedString(30369), // "Timer rule (series link)"
-        m_settings.GetDvrPriority(),
-        m_settings.GetDvrDupdetect(),
-        m_settings.GetDvrLifetime(),
+        dvrPriority,
+        dvrDupDetect,
+        dvrLifetime,
         /* Values definitions for priorities. */
         priorityValues,
         /* Values definitions for lifetime. */
@@ -989,9 +993,9 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       TIMER_REPEATING_EPG_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
-      m_settings.GetDvrPriority(),
-      m_settings.GetDvrDupdetect(),
-      m_settings.GetDvrLifetime(),
+      dvrPriority,
+      dvrDupDetect,
+      dvrLifetime,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
