@@ -82,6 +82,10 @@ namespace tvheadend {
     void ReadSettings();
 
     /**
+     * Read just the trace debug setting to setup logging when starting
+     */
+    bool ReadTraceDebug();
+    /**
      * Set a value according to key definition in settings.xml
      */
     ADDON_STATUS SetSetting(const std::string &key, const void *value);

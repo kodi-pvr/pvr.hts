@@ -69,6 +69,12 @@ void CTvheadend::Start ( void )
  * Miscellaneous
  * *************************************************************************/
 
+void CTvheadend::SetSettings(tvheadend::Settings *settings)
+{
+  CLockObject lock(m_mutex);
+  m_settings = settings;
+}
+
 PVR_ERROR CTvheadend::GetDriveSpace ( long long *total, long long *used )
 {
   int64_t s64;

@@ -394,6 +394,8 @@ public:
     return m_settings;
   }
 
+  void SetSettings(tvheadend::Settings *settings);
+
   void GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const;
 
 private:

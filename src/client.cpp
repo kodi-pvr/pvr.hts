@@ -50,7 +50,7 @@ CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
 PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
-tvheadend::Settings              *settings  = NULL;
+bool                  traceDebug = false;
 
 /* **************************************************************************
  * ADDON setup
@@ -60,8 +60,12 @@ extern "C" {
 
 void ADDON_ReadSettings(void)
 {
-  settings = new tvheadend::Settings();
-  settings->ReadSettings();
+  //Reading settings doesn't make a whole lot of sense without a tvh object
+  if (tvh != NULL) {
+    tvheadend::Settings& settings = tvh->GetSettings();
+    settings.ReadSettings();
+    tvh->SetSettings(settings);
+  }
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -82,6 +86,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return m_CurStatus;
   }
 
+  tvheadend::Settings *set = new tvheadend::Settings();
+  traceDebug = set->ReadTraceDebug();
+
   /* Configure the logger */
   Logger::GetInstance().SetImplementation([](LogLevel level, const char *message)
   {
@@ -101,18 +108,16 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     }
 
     /* Don't log trace messages unless told so */
-    if (level == LogLevel::LEVEL_TRACE)
+    if (level == LogLevel::LEVEL_TRACE && !traceDebug)
       return;
 
     XBMC->Log(addonLevel, "%s", message);
   });
 
+  set->ReadSettings();
   Logger::GetInstance().SetPrefix("pvr.hts");
 
   Logger::Log(LogLevel::LEVEL_INFO, "starting PVR client");
-
-  tvheadend::Settings *set = new tvheadend::Settings();
-  set->ReadSettings();
 
   tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES *>(props), set);
   tvh->Start();

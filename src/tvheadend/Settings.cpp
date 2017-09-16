@@ -46,6 +46,11 @@ const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 month
 const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
 const bool        Settings::DEFAULT_DVR_PLAYSTATUS      = true;
 
+bool Settings::ReadTraceDebug()
+{
+  return ReadBoolSetting("trace_debug", DEFAULT_TRACE_DEBUG)
+}
+
 void Settings::ReadSettings()
 {
   /* Connection */
@@ -60,7 +65,7 @@ void Settings::ReadSettings()
   SetResponseTimeout(ReadIntSetting("response_timeout", DEFAULT_RESPONSE_TIMEOUT / 1000) * 1000);
 
   /* Debug */
-  SetTraceDebug(ReadBoolSetting("trace_debug", DEFAULT_TRACE_DEBUG));
+  SetTraceDebug(ReadTraceDebug());
 
   /* Data Transfer */
   SetAsyncEpg(ReadBoolSetting("epg_async", DEFAULT_ASYNC_EPG));
