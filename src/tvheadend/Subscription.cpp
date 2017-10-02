@@ -20,6 +20,7 @@
  */
 
 #include "Subscription.h"
+#include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
 #include "../Tvheadend.h"
 
@@ -295,19 +296,19 @@ void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
 void Subscription::ShowStateNotification(void)
 {
   if (GetState() == SUBSCRIPTION_NOFREEADAPTER)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30450));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30450).Get().c_str());
   else if (GetState() == SUBSCRIPTION_SCRAMBLED)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30451));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30451).Get().c_str());
   else if (GetState() == SUBSCRIPTION_NOSIGNAL)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30452));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30452).Get().c_str());
   else if (GetState() == SUBSCRIPTION_TUNINGFAILED)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30453));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30453).Get().c_str());
   else if (GetState() == SUBSCRIPTION_USERLIMIT)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30454));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30454).Get().c_str());
   else if (GetState() == SUBSCRIPTION_NOACCESS)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30455));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30455).Get().c_str());
   else if (GetState() == SUBSCRIPTION_UNKNOWN)
-    XBMC->QueueNotification(ADDON::QUEUE_WARNING, XBMC->GetLocalizedString(30456));
+    XBMC->QueueNotification(ADDON::QUEUE_WARNING, CLocalizedString(30456).Get().c_str());
 }
 
 uint32_t Subscription::GetNextId()
