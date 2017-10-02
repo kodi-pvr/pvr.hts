@@ -564,7 +564,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
       {
         Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
-        m_streams.push_back(stream);
+        m_streams.emplace_back(stream);
       }
       else
       {

@@ -99,7 +99,7 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
     tmr.bFullTextEpgSearch = false;                // n/a for manual timers
     tmr.iParentClientIndex = 0;
 
-    timers.push_back(tmr);
+    timers.emplace_back(tmr);
   }
 }
 

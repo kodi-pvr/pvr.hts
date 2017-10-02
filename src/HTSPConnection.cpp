@@ -474,7 +474,7 @@ bool CHTSPConnection::SendHello ( void )
     HTSMSG_FOREACH(f, cap)
     {
       if (f->hmf_type == HMF_STR)
-        m_capabilities.push_back(f->hmf_str);
+        m_capabilities.emplace_back(f->hmf_str);
     }
   }
       

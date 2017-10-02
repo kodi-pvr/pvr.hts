@@ -1,5 +1,6 @@
 4.2.2
-- Fixed memory leak. Localized strings obtained from Kodi never were freed.
+- fixed: memory leak. Localized strings obtained from Kodi never were freed.
+- optimized container usage: replace push_back by emplace_back to avoid unneeded copies (also fixes a stack overflow in function GetTimerTypes).
 
 4.2.1
 - updated language files from Transifex
