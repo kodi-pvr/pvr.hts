@@ -1,3 +1,10 @@
+4.2.2
+- fixed: memory leak. Localized strings obtained from Kodi never were freed.
+- optimized container usage: replace push_back by emplace_back to avoid unneeded copies (also fixes a stack overflow in function GetTimerTypes).
+
+4.2.1
+- updated language files from Transifex
+
 4.2.0
 - PVR API v5.7.0: Add stubs for IsEPGTagRecordable, IsEPGTagPlayable and GetEPGTagStreamProperties
 - PVR API v5.7.0: Remove EPG_TAG::iChannelNumber, add EPG_TAG::iChannelUniqueId.

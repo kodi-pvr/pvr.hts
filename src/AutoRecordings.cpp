@@ -128,7 +128,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
     tmr.bFullTextEpgSearch = tit->second.GetFulltext();
     tmr.iParentClientIndex = 0;
 
-    timers.push_back(tmr);
+    timers.emplace_back(tmr);
   }
 }
 

@@ -67,6 +67,7 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/Utilities.h
                 src/tvheadend/utilities/Logger.h
                 src/tvheadend/utilities/Logger.cpp
+                src/tvheadend/utilities/LocalizedString.h
                 src/tvheadend/utilities/LifetimeMapper.h
                 src/tvheadend/utilities/AsyncState.cpp
                 src/tvheadend/utilities/AsyncState.h)

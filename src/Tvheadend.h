@@ -457,26 +457,26 @@ private:
    */
   inline void TriggerChannelGroupsUpdate ( void )
   {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
+    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
   }
   inline void TriggerChannelUpdate ( void )
   {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
+    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
   }
   inline void TriggerRecordingUpdate ( void )
   {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
+    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
   }
   inline void TriggerTimerUpdate ( void )
   {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
+    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
   }
   inline void PushEpgEventUpdate ( const tvheadend::entity::Event &epg, EPG_EVENT_STATE state )
   {
     SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
 
     if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
-      m_events.push_back(event);
+      m_events.emplace_back(event);
   }
 
   /*
