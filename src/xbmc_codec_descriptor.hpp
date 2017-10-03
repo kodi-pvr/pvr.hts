@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *      Copyright (C) 2005-2013 Team XBMC
  *      http://xbmc.org
@@ -17,8 +19,6 @@
  *  <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef XBMC_CODEC_DESCRIPTOR_HPP
-#define	XBMC_CODEC_DESCRIPTOR_HPP
 
 #include "kodi/libXBMC_pvr.h"
 
@@ -62,5 +62,3 @@ private:
   xbmc_codec_t m_codec;
   std::string  m_strName;
 };
-
-#endif	/* XBMC_CODEC_DESCRIPTOR_HPP */
