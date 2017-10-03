@@ -32,15 +32,15 @@ namespace tvheadend
     /**
      * Encapsulates an localized string.
      */
-    class CLocalizedString
+    class LocalizedString
     {
     public:
-      explicit CLocalizedString(int stringId)
+      explicit LocalizedString(int stringId)
       : m_localizedString(XBMC->GetLocalizedString(stringId))
       {
       }
 
-      ~CLocalizedString()
+      ~LocalizedString()
       {
         XBMC->FreeString(m_localizedString);
       }
@@ -51,9 +51,9 @@ namespace tvheadend
       }
       
     private:
-      CLocalizedString() = delete;
-      CLocalizedString(const CLocalizedString&) = delete;
-      CLocalizedString &operator =(const CLocalizedString&) = delete;
+      LocalizedString() = delete;
+      LocalizedString(const LocalizedString&) = delete;
+      LocalizedString &operator =(const LocalizedString&) = delete;
 
       char* m_localizedString;
     };

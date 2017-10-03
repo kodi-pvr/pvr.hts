@@ -731,23 +731,23 @@ struct TimerType : PVR_TIMER_TYPE
 
 void CTvheadend::GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const
 {
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    CLocalizedString(30375).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    CLocalizedString(30376).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    CLocalizedString(30377).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   CLocalizedString(30378).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   CLocalizedString(30379).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   CLocalizedString(30380).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  CLocalizedString(30381).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  CLocalizedString(30382).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  CLocalizedString(30383).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  CLocalizedString(30384).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   CLocalizedString(30385).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  CLocalizedString(30386).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  CLocalizedString(30387).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    LocalizedString(30375).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    LocalizedString(30376).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    LocalizedString(30377).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   LocalizedString(30378).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   LocalizedString(30379).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   LocalizedString(30380).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  LocalizedString(30381).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  LocalizedString(30382).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  LocalizedString(30383).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  LocalizedString(30384).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   LocalizedString(30385).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  LocalizedString(30386).Get()));
+  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  LocalizedString(30387).Get()));
   if (m_conn->GetProtocol() >= 25)
   {
-    lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   CLocalizedString(30373).Get()));
-    lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), CLocalizedString(30374).Get()));
+    lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   LocalizedString(30373).Get()));
+    lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), LocalizedString(30374).Get()));
   }
 }
 
@@ -757,31 +757,31 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   static std::vector< std::pair<int, std::string> > priorityValues;
   if (priorityValues.size() == 0)
   {
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_DEFAULT,     CLocalizedString(30368).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_UNIMPORTANT, CLocalizedString(30355).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_LOW,         CLocalizedString(30354).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_NORMAL,      CLocalizedString(30353).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_HIGH,        CLocalizedString(30352).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_IMPORTANT,   CLocalizedString(30351).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_DEFAULT,     LocalizedString(30368).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_UNIMPORTANT, LocalizedString(30355).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_LOW,         LocalizedString(30354).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_NORMAL,      LocalizedString(30353).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_HIGH,        LocalizedString(30352).Get()));
+    priorityValues.emplace_back(std::make_pair(DVR_PRIO_IMPORTANT,   LocalizedString(30351).Get()));
   }
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
   std::vector< std::pair<int, std::string> > deDupValues;
 
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      CLocalizedString(30356).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, CLocalizedString(30357).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       CLocalizedString(30358).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    CLocalizedString(30359).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            CLocalizedString(30360).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             CLocalizedString(30361).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      LocalizedString(30356).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30357).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       LocalizedString(30358).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30359).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            LocalizedString(30360).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             LocalizedString(30361).Get()));
   if (m_conn->GetProtocol() >= 26)
   {
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, CLocalizedString(30362).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       CLocalizedString(30363).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          CLocalizedString(30364).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    CLocalizedString(30365).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            CLocalizedString(30366).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             CLocalizedString(30367).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30362).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       LocalizedString(30363).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          LocalizedString(30364).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30365).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            LocalizedString(30366).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             LocalizedString(30367).Get()));
   }
 
   /* PVR_Timer.iLifetime values and presentation.*/
@@ -852,7 +852,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_IS_READONLY |
       PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      CLocalizedString(30350).Get(), // "One Time (Scheduled by timer rule)"
+      LocalizedString(30350).Get(), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -868,7 +868,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
       PVR_TIMER_TYPE_IS_READONLY |
       PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      CLocalizedString(30350).Get(), // "One Time (Scheduled by timer rule)"
+      LocalizedString(30350).Get(), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -928,7 +928,7 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
         /* Attributes. */
         TIMER_REPEATING_SERIESLINK_ATTRIBS,
         /* Description. */
-        CLocalizedString(30369).Get(), // "Timer rule (series link)"
+        LocalizedString(30369).Get(), // "Timer rule (series link)"
         /* Values definitions for priorities. */
         priorityValues,
         /* Values definitions for lifetime. */
@@ -1729,7 +1729,7 @@ void CTvheadend::SyncCompleted ( void )
   {
     XBMC->QueueNotification(
         QUEUE_ERROR,
-        CLocalizedString(30502).Get().c_str(), streamingProfile.c_str());
+        LocalizedString(30502).Get().c_str(), streamingProfile.c_str());
   }
   else
   {
