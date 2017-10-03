@@ -1182,8 +1182,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   }
 }
 
-PVR_ERROR CTvheadend::DeleteTimer
-  ( const PVR_TIMER &timer, bool _unused(force) )
+PVR_ERROR CTvheadend::DeleteTimer(const PVR_TIMER &timer, bool)
 {
   if ((timer.iTimerType == TIMER_ONCE_MANUAL) ||
       (timer.iTimerType == TIMER_ONCE_EPG))

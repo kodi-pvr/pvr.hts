@@ -60,15 +60,6 @@ extern "C" {
 #include "HTSPMessage.h"
 #include "IHTSPConnectionListener.h"
 
-/*
- * Miscellaneous
- */
-#if defined(__GNUC__)
-#define _unused(x) x __attribute__((unused))
-#else
-#define _unused(x) x
-#endif
-
 #define UNNUMBERED_CHANNEL      (10000)
 #define INVALID_SEEKTIME           (-1)
 #define SPEED_NORMAL             (1000) // x1 playback speed

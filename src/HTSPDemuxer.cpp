@@ -156,8 +156,7 @@ void CHTSPDemuxer::Abort ( void )
   ResetStatus();
 }
 
-bool CHTSPDemuxer::Seek 
-  ( double time, bool _unused(backwards), double *startpts )
+bool CHTSPDemuxer::Seek(double time, bool, double *startpts)
 {
   if (!m_subscription.IsActive())
     return false;
@@ -395,7 +394,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   const void  *bin;
   size_t      binlen;
   DemuxPacket *pkt;
-  char        _unused(type) = 0;
+  char        type = 0;
   int         ignore;
   
   /* Ignore packets while switching channels */
@@ -631,7 +630,7 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseSubscriptionStop ( htsmsg_t *_unused(m) )
+void CHTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 {
 }
 
@@ -660,7 +659,7 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
+void CHTSPDemuxer::ParseQueueStatus (htsmsg_t* m)
 {
   uint32_t u32;
   map<int,int>::const_iterator it;

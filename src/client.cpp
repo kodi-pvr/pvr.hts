@@ -243,9 +243,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
  * GUI hooks
  * *************************************************************************/
 
-PVR_ERROR CallMenuHook
-  (const PVR_MENUHOOK &_unused(menuhook),
-   const PVR_MENUHOOK_DATA &_unused(data))
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK&, const PVR_MENUHOOK_DATA&)
 {
   return PVR_ERROR_NO_ERROR;
 }
@@ -536,44 +534,42 @@ PVR_ERROR OpenDialogChannelScan(void)
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DeleteChannel(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR DeleteChannel(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR RenameChannel(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR RenameChannel(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR MoveChannel(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR MoveChannel(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_unused(channel))
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-void PauseStream(bool _unused(bPaused))
+void PauseStream(bool)
 {
 }
 
 /* Live stream (VFS interface - not relevant) */
-int ReadLiveStream
-  (unsigned char *_unused(pBuffer), unsigned int _unused(iBufferSize))
+int ReadLiveStream(unsigned char *, unsigned int)
 {
   return 0;
 }
 
-long long SeekLiveStream
-  (long long _unused(iPosition), int _unused(iWhence))
+long long SeekLiveStream(long long, int)
 {
   return -1;
 }
