@@ -19,8 +19,9 @@
  *
  */
 
-#include "tvheadend/utilities/Logger.h"
+#include "HTSPConnection.h"
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Logger.h"
 #include "xbmc_codec_descriptor.hpp"
 
 #define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)

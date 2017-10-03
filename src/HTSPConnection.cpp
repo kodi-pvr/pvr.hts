@@ -19,80 +19,109 @@
  *
  */
 
-#include "p8-platform/threads/mutex.h"
+#include "HTSPConnection.h"
+
 #include "p8-platform/util/StringUtils.h"
-#include "p8-platform/sockets/tcp.h"
 
 extern "C" {
 #include "libhts/htsmsg_binary.h"
 #include "libhts/sha1.h"
 }
 
+#include "IHTSPConnectionListener.h"
+#include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
-#include "Tvheadend.h"
 
-using namespace std;
-using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-/*
- * HTSP Response objct
- */
-CHTSPResponse::CHTSPResponse ()
-  : m_flag(false), m_msg(NULL)
-{
-}
+#define FAST_RECONNECT_ATTEMPTS     (5)
+#define FAST_RECONNECT_INTERVAL   (500) // ms
+#define SLOW_RECONNECT_INTERVAL  (5000) // ms
 
-CHTSPResponse::~CHTSPResponse ()
-{
-  if (m_msg) htsmsg_destroy(m_msg);
-  Set(NULL); // ensure signal is sent
-}
-
-void CHTSPResponse::Set ( htsmsg_t *msg )
-{
-  m_msg  = msg;
-  m_flag = true;
-  m_cond.Broadcast();
-}
-
-htsmsg_t *CHTSPResponse::Get ( CMutex &mutex, uint32_t timeout )
-{
-  m_cond.Wait(mutex, m_flag, timeout);
-  htsmsg_t *r = m_msg;
-  m_msg       = NULL;
-  m_flag      = false;
-  return r;
-}
+#define HTSP_MIN_SERVER_VERSION  (19) // Server must support at least this htsp version
+#define HTSP_CLIENT_VERSION      (29) // Client uses HTSP features up to this version. If the respective
+                                      // addon feature requires htsp features introduced after
+                                      // HTSP_MIN_SERVER_VERSION this feature will only be available if the
+                                      // actual server HTSP version matches (runtime htsp version check).
 
 /*
- * Registration thread
+ * HTSP Response handler
  */
-CHTSPRegister::CHTSPRegister ( CHTSPConnection *conn )
+class CHTSPResponse
+{
+public:
+  CHTSPResponse()
+  : m_flag(false), m_msg(nullptr)
+  {
+  }
+
+  ~CHTSPResponse()
+  {
+    if (m_msg)
+      htsmsg_destroy(m_msg);
+
+    Set(nullptr); // ensure signal is sent
+  }
+
+  htsmsg_t *Get(P8PLATFORM::CMutex &mutex, uint32_t timeout)
+  {
+    m_cond.Wait(mutex, m_flag, timeout);
+    htsmsg_t *r = m_msg;
+    m_msg       = NULL;
+    m_flag      = false;
+    return r;
+  }
+
+  void Set(htsmsg_t *msg)
+  {
+    m_msg = msg;
+    m_flag = true;
+    m_cond.Broadcast();
+  }
+
+private:
+  P8PLATFORM::CCondition<volatile bool> m_cond;
+  bool m_flag;
+  htsmsg_t *m_msg;
+};
+
+/*
+ * HTSP Connection registration thread
+ */
+class CHTSPRegister : public P8PLATFORM::CThread
+{
+  friend class CHTSPConnection;
+
+public:
+  CHTSPRegister(CHTSPConnection *conn)
   : m_conn(conn)
-{
-}
+  {
+  }
 
-CHTSPRegister::~CHTSPRegister ()
-{
-  StopThread(0);
-}
+  ~CHTSPRegister() override
+  {
+    StopThread(0);
+  }
 
-void *CHTSPRegister::Process ( void )
-{
-  m_conn->Register();
-  return NULL;
-}
+private:
+  void *Process() override
+  {
+    m_conn->Register();
+    return nullptr;
+  }
+
+  CHTSPConnection *m_conn;
+};
 
 /*
  * HTSP Connection handler
  */
 
-CHTSPConnection::CHTSPConnection ()
-  : m_socket(NULL), m_regThread(this), m_ready(false), m_seq(0),
-    m_serverName(""), m_serverVersion(""), m_htspVersion(0),
+CHTSPConnection::CHTSPConnection (IHTSPConnectionListener& connListener)
+  : m_connListener(connListener), m_socket(NULL), m_regThread(new CHTSPRegister(this)),
+    m_ready(false), m_seq(0), m_serverName(""), m_serverVersion(""), m_htspVersion(0),
     m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false),
     m_state(PVR_CONNECTION_STATE_UNKNOWN)
 {
@@ -103,6 +132,7 @@ CHTSPConnection::~CHTSPConnection()
   StopThread(-1);
   Disconnect();
   StopThread(0);
+  delete m_regThread;
 }
 
 void CHTSPConnection::Start()
@@ -321,7 +351,7 @@ bool CHTSPConnection::ReadMessage ( void )
   Logger::Log(LogLevel::LEVEL_TRACE, "receive message [%s]", method);
 
   /* Pass (if return is true, message is finished) */
-  if (tvh->ProcessMessage(method, msg))
+  if (m_connListener.ProcessMessage(method, msg))
     htsmsg_destroy(msg);
   // TODO: maybe a copy should be made if it needs to be kept?
 
@@ -582,7 +612,7 @@ void CHTSPConnection::Register ( void )
 
     /* Rebuild state */
     Logger::Log(LogLevel::LEVEL_DEBUG, "rebuilding state");
-    if (!tvh->Connected())
+    if (!m_connListener.Connected())
       goto fail;
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "registered");
@@ -624,7 +654,7 @@ void* CHTSPConnection::Process ( void )
       CLockObject lock(m_mutex);
       if (m_socket)
         delete m_socket;
-      tvh->Disconnected();
+      m_connListener.Disconnected();
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready  = false;
       m_seq    = 0;
@@ -673,7 +703,7 @@ void* CHTSPConnection::Process ( void )
     retryAttempt = 0;
 
     /* Start connect thread */
-    m_regThread.CreateThread(true);
+    m_regThread->CreateThread(true);
 
     /* Receive loop */
     while (!IsStopped())
@@ -683,7 +713,7 @@ void* CHTSPConnection::Process ( void )
     }
 
     /* Stop connect thread (if not already) */
-    m_regThread.StopThread(0);
+    m_regThread->StopThread(0);
   }
 
   return NULL;

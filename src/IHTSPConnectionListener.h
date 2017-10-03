@@ -1,8 +1,8 @@
 #pragma once
 
 /*
- *      Copyright (C) 2005-2011 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2017 Team Kodi
+ *      http://kodi.tv
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,19 @@
  *
  */
 
-#include "p8-platform/os.h"
-#include "libXBMC_addon.h"
-#include "libXBMC_pvr.h"
+extern "C" {
+#include "libhts/htsmsg.h"
+}
 
-extern ADDON::CHelper_libXBMC_addon*  XBMC;
-extern CHelper_libXBMC_pvr*           PVR;
+/*
+ * HTSP Connection Listener interface
+ */
+class IHTSPConnectionListener
+{
+public:
+  virtual ~IHTSPConnectionListener() = default;
 
-class CTvheadend;
-extern CTvheadend                *tvh;
+  virtual void Disconnected() = 0;
+  virtual bool Connected() = 0;
+  virtual bool ProcessMessage(const char *method, htsmsg_t *msg) = 0;
+};

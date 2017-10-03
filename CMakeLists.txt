@@ -18,10 +18,13 @@ add_definitions(-DUSE_DEMUX)
 # Sources and headers
 set(HTS_SOURCES src/client.h
                 src/client.cpp
+                src/HTSPConnection.h
                 src/HTSPConnection.cpp
+                src/HTSPMessage.h
                 src/HTSPDemuxer.cpp
                 src/HTSPTypes.h
                 src/HTSPVFS.cpp
+                src/IHTSPConnectionListener.h
                 src/Tvheadend.cpp
                 src/Tvheadend.h
                 src/TimeRecordings.cpp

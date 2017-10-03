@@ -27,7 +27,6 @@
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 
-using namespace std;
 using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;

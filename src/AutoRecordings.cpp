@@ -21,6 +21,7 @@
 
 #include "AutoRecordings.h"
 
+#include "HTSPConnection.h"
 #include "Tvheadend.h"
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Utilities.h"

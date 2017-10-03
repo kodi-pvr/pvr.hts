@@ -19,15 +19,17 @@
  *
  */
 
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/StringUtils.h"
-#include "tvheadend/utilities/Logger.h"
-
 extern "C" {
+#include <sys/types.h>
 #include "libhts/htsmsg_binary.h"
 }
 
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/StringUtils.h"
+
+#include "HTSPConnection.h"
 #include "Tvheadend.h"
+#include "tvheadend/utilities/Logger.h"
 
 using namespace std;
 using namespace P8PLATFORM;

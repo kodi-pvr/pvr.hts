@@ -20,8 +20,10 @@
  */
 
 #include "Subscription.h"
+
 #include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
+#include "../HTSPConnection.h"
 #include "../Tvheadend.h"
 
 using namespace P8PLATFORM;

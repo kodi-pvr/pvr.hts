@@ -21,6 +21,7 @@
 
 #include "TimeRecordings.h"
 
+#include "HTSPConnection.h"
 #include "Tvheadend.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
