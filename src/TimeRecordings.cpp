@@ -22,7 +22,7 @@
 #include "TimeRecordings.h"
 
 #include "HTSPConnection.h"
-#include "Tvheadend.h"
+#include "tvheadend/entity/Recording.h"
 #include "tvheadend/utilities/Utilities.h"
 #include "tvheadend/utilities/Logger.h"
 #include "tvheadend/utilities/LifetimeMapper.h"

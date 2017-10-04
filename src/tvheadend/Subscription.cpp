@@ -24,7 +24,6 @@
 #include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
 #include "../HTSPConnection.h"
-#include "../Tvheadend.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
