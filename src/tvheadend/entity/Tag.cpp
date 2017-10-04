@@ -21,7 +21,6 @@
 
 #include "Tag.h"
 #include "Channel.h"
-#include "../../Tvheadend.h"
 
 using namespace tvheadend::entity;
 
@@ -79,11 +78,10 @@ std::vector<uint32_t>& Tag::GetChannels()
   return m_channels;
 }
 
-bool Tag::ContainsChannelType(channel_type_t eType) const
+bool Tag::ContainsChannelType(channel_type_t eType, const Channels& channels) const
 {
   std::vector<uint32_t>::const_iterator it;
   Channels::const_iterator cit;
-  const Channels& channels = tvh->GetChannels();
 
   for (it = m_channels.begin(); it != m_channels.end(); ++it)
   {
