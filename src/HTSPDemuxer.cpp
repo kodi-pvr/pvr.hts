@@ -19,14 +19,18 @@
  *
  */
 
+#include "HTSPDemuxer.h"
+
 #include "HTSPConnection.h"
-#include "Tvheadend.h"
+#include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 #include "xbmc_codec_descriptor.hpp"
 
 #define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)
 
-using namespace std;
+#define INVALID_SEEKTIME (-1)
+#define SPEED_NORMAL (1000) // x1 playback speed
+
 using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -662,7 +666,7 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 void CHTSPDemuxer::ParseQueueStatus (htsmsg_t* m)
 {
   uint32_t u32;
-  map<int,int>::const_iterator it;
+  std::map<int,int>::const_iterator it;
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
     Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", it->first, it->second);

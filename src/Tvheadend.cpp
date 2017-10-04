@@ -26,8 +26,11 @@
 #include <memory>
 
 #include "HTSPConnection.h"
+#include "HTSPDemuxer.h"
 #include "HTSPMessage.h"
+#include "HTSPVFS.h"
 
+#include "tvheadend/Settings.h"
 #include "tvheadend/utilities/LifetimeMapper.h"
 #include "tvheadend/utilities/LocalizedString.h"
 #include "tvheadend/utilities/Logger.h"
@@ -40,7 +43,7 @@ using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
 CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
-  : m_conn(new CHTSPConnection(*this)), m_streamchange(false), m_vfs(*m_conn),
+  : m_conn(new CHTSPConnection(*this)), m_streamchange(false), m_vfs(new CHTSPVFS(*m_conn)),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays)
 {
@@ -61,6 +64,7 @@ CTvheadend::~CTvheadend()
   m_conn->Stop();
   StopThread();
   delete m_conn;
+  delete m_vfs;
 }
 
 void CTvheadend::Start ( void )
@@ -1476,7 +1480,7 @@ bool CTvheadend::Connected ( void )
   {
     dmx->Connected();
   }
-  m_vfs.Connected();
+  m_vfs->Connected();
   m_timeRecordings.Connected();
   m_autoRecordings.Connected();
 
@@ -1549,6 +1553,40 @@ void CTvheadend::OnSleep()
 void CTvheadend::OnWake()
 {
   m_conn->OnWake();
+}
+
+/* **************************************************************************
+ * VFS
+ * *************************************************************************/
+
+bool CTvheadend::VfsOpen(const PVR_RECORDING &rec)
+{
+  return m_vfs->Open(rec);
+}
+
+void CTvheadend::VfsClose()
+{
+  m_vfs->Close();
+}
+
+ssize_t CTvheadend::VfsRead(unsigned char *buf, unsigned int len)
+{
+  return m_vfs->Read(buf, len);
+}
+
+long long CTvheadend::VfsSeek(long long position, int whence)
+{
+  return m_vfs->Seek(position, whence);
+}
+
+long long CTvheadend::VfsTell()
+{
+  return m_vfs->Tell();
+}
+
+long long CTvheadend::VfsSize()
+{
+  return m_vfs->Size();
 }
 
 /* **************************************************************************

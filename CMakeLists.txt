@@ -20,9 +20,11 @@ set(HTS_SOURCES src/client.h
                 src/client.cpp
                 src/HTSPConnection.h
                 src/HTSPConnection.cpp
-                src/HTSPMessage.h
+                src/HTSPDemuxer.h
                 src/HTSPDemuxer.cpp
+                src/HTSPMessage.h
                 src/HTSPTypes.h
+                src/HTSPVFS.h
                 src/HTSPVFS.cpp
                 src/IHTSPConnectionListener.h
                 src/Tvheadend.cpp

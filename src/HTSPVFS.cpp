@@ -18,6 +18,7 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+#include "HTSPVFS.h"
 
 extern "C" {
 #include <sys/types.h>
@@ -28,10 +29,9 @@ extern "C" {
 #include "p8-platform/util/StringUtils.h"
 
 #include "HTSPConnection.h"
-#include "Tvheadend.h"
+#include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 
-using namespace std;
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
