@@ -88,34 +88,6 @@ private:
 };
 
 /*
- * HTSP Connection registration thread
- */
-class CHTSPRegister : public P8PLATFORM::CThread
-{
-  friend class CHTSPConnection;
-
-public:
-  CHTSPRegister(CHTSPConnection *conn)
-  : m_conn(conn)
-  {
-  }
-
-  ~CHTSPRegister() override
-  {
-    StopThread(0);
-  }
-
-private:
-  void *Process() override
-  {
-    m_conn->Register();
-    return nullptr;
-  }
-
-  CHTSPConnection *m_conn;
-};
-
-/*
  * HTSP Connection handler
  */
 

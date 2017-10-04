@@ -31,15 +31,12 @@ struct PVR_RECORDING;
  */
 class CHTSPVFS
 {
-  friend class CTvheadend;
-
 public:
   CHTSPVFS(CHTSPConnection &conn);
   ~CHTSPVFS();
 
   void Connected();
 
-private:
   bool Open(const PVR_RECORDING &rec);
   void Close();
   ssize_t Read(unsigned char *buf, unsigned int len);
@@ -47,6 +44,7 @@ private:
   long long Tell();
   long long Size();
 
+private:
   bool SendFileOpen(bool force = false);
   void SendFileClose();
   ssize_t SendFileRead(unsigned char *buf, unsigned int len);
@@ -56,5 +54,4 @@ private:
   std::string m_path;
   uint32_t m_fileId;
   int64_t m_offset;
-
 };

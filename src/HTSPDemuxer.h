@@ -49,14 +49,26 @@ class CHTSPConnection;
  */
 class CHTSPDemuxer
 {
-  friend class CTvheadend;
-
 public:
   CHTSPDemuxer(CHTSPConnection &conn);
   ~CHTSPDemuxer();
 
   bool ProcessMessage(const char *method, htsmsg_t *m);
   void Connected();
+
+  bool Open(uint32_t channelId, tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL);
+  void Close();
+  DemuxPacket *Read();
+  void Trim();
+  void Flush();
+  void Abort();
+  bool Seek(double time, bool backwards, double *startpts);
+  void Speed(int speed);
+  void Weight(tvheadend::eSubscriptionWeight weight);
+
+  PVR_ERROR CurrentStreams(PVR_STREAM_PROPERTIES *streams);
+  PVR_ERROR CurrentSignal(PVR_SIGNAL_STATUS &sig);
+  PVR_ERROR CurrentDescrambleInfo(PVR_DESCRAMBLE_INFO *info);
 
   bool IsTimeShifting() const;
   bool IsRealTimeStream() const;
@@ -76,18 +88,6 @@ public:
 private:
   void Close0();
   void Abort0();
-  bool Open(uint32_t channelId, tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL);
-  void Close();
-  DemuxPacket *Read();
-  void Trim();
-  void Flush();
-  void Abort();
-  bool Seek(double time, bool backwards, double *startpts);
-  void Speed(int speed);
-  void Weight(tvheadend::eSubscriptionWeight weight);
-  PVR_ERROR CurrentStreams(PVR_STREAM_PROPERTIES *streams);
-  PVR_ERROR CurrentSignal(PVR_SIGNAL_STATUS &sig);
-  PVR_ERROR CurrentDescrambleInfo(PVR_DESCRAMBLE_INFO *info);
 
   /**
    * Resets the signal and quality info

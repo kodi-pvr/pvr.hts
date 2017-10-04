@@ -46,8 +46,6 @@ typedef std::map<uint32_t, CHTSPResponse*> CHTSPResponseList;
  */
 class CHTSPConnection : public P8PLATFORM::CThread
 {
-  friend class CHTSPRegister;
-
 public:
   CHTSPConnection(IHTSPConnectionListener& connListener);
   ~CHTSPConnection() override;
@@ -86,6 +84,33 @@ private:
 
   void SetState(PVR_CONNECTION_STATE state);
   bool WaitForConnection();
+
+  /*
+   * HTSP Connection registration thread
+   */
+  class CHTSPRegister : public P8PLATFORM::CThread
+  {
+  public:
+    CHTSPRegister(CHTSPConnection *conn)
+    : m_conn(conn)
+    {
+    }
+
+    ~CHTSPRegister() override
+    {
+      StopThread(0);
+    }
+
+  private:
+    // CThread implementation
+    void *Process() override
+    {
+      m_conn->Register();
+      return nullptr;
+    }
+
+    CHTSPConnection *m_conn;
+  };
 
   IHTSPConnectionListener& m_connListener;
   P8PLATFORM::CTcpSocket *m_socket;
