@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Versi HTSP tidak sepadan (disokong: v%d, diperlukan: v%d). Sila kemaskini tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Satu Kali (Dijadual mengikut peraturan pemasa)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Penting (Paling Tinggi)"
@@ -187,6 +191,10 @@ msgstr "Peraturan ini sahaja: Rakam maksimum sekali dalam sehari"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Lalai"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Peraturan pemasa (pautan siri)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Profil yang digunakan (kosong = lalai)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profil penstriman %s tidak tersedia"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Rakaman"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Pelayar berdasarkan status main"

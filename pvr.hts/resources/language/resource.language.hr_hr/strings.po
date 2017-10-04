@@ -287,3 +287,7 @@ msgstr "Profil za korištenje (prazno = zadano)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streaming profil %s nije dostupan"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Snimke"

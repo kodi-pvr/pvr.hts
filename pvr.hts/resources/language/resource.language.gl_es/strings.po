@@ -303,3 +303,7 @@ msgstr "Perfil a empregar (baleiro = predefinido)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "O perfil de transmisión %s non está dispoñible"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Gravacións"

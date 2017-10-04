@@ -311,3 +311,7 @@ msgstr "Профил за коришћење (празно = подразуме�
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Профил стримовања %s није доступан"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Снимци"

@@ -47,3 +47,7 @@ msgstr "ዝቅተኛ "
 msgctxt "#30368"
 msgid "Default"
 msgstr "ነባር "
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "መቅረጫ "

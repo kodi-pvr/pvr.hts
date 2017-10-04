@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nieprawidłowa wersja HTSP (obsługiwana: v%d, wymagana: v%d). Proszę zaktualizować program tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Jednorazowo (reguła harmonogramu)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Ważna (Najwyższa)"
@@ -187,6 +191,10 @@ msgstr "Tylko ta reguła: Nagrywaj maksymalnie raz na dzień"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Domyślnie"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Reguła harmonogramu (wiązanie seryjne)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Używany profil (pusty = domyślny)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Brak profilu transmisji %s"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Nagrania"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Stan odtwarzania na serwerze"

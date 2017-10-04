@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "La versión de HTSP no coincide (soportada: v%d, requerida v%d). Por favor, actualice tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Una Vez (Programado por regla)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (más alto)"
@@ -187,6 +191,10 @@ msgstr "Solo esta regla: Grabar una vez al día máximo"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Por defecto"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Regla Programación (enlace series)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Perfil a usar (vacío = por defecto)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "El perfil de streaming %s no está disponible"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Grabaciones"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Estado de reproducción basado en servidor"

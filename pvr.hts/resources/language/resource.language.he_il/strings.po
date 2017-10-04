@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). יש לעדכן את שרת Tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "חד פעמי (מתוזמן על ידי כלל של שעון העצר)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "חשובה (גבוהה ביותר)"
@@ -187,6 +191,10 @@ msgstr "כלל זה בלבד: יש להקליט פעם אחת ביום"
 msgctxt "#30368"
 msgid "Default"
 msgstr "ברירת מחדל"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "כלל שעון העצר (קישור בסדרה)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "פרופיל לשימוש (ריק = ברירת מחדל)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "פרופיל הזרמה %s אינו זמין"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "הקלטות"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "שרת מבוסס סטטוס משחק"

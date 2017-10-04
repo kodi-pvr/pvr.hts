@@ -287,3 +287,7 @@ msgstr "사용할 프로필 (빈 창 = 기본)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "스트리밍 프로필 %s 사용 불가능"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "녹화"

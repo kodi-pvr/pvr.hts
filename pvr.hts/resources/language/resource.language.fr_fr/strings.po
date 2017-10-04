@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Version HTSP différente (reconnue : v%d, requise : v%d). Merci de mettre à jour tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "À l'heure (selon une règle de programmation)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Important (le plus élevé)"
@@ -187,6 +191,10 @@ msgstr "Cette règle seulement : enregistrer 1x max. par jour"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Prédéfini"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Règle de programmation"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Profil à utiliser (vide = prédéfini)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Le profil %s de diffusion par flux n'est pas disponible."
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Enregistrements"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "État de lecture basé sur le serveur"

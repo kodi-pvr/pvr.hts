@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versioner överensstämmer inte (stöds: v%d, krävs: v%d). Vänligen uppdatera tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "En gång (Schemalagd enligt timerregeln)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Viktigt (Högsta)"
@@ -187,6 +191,10 @@ msgstr "Endast denna ragel: Spela in max en gång per dag"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Standard"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Timerregel (serie länk)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Profil att använda (tom = standard)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streamingprofil %s är inte tillänglig"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Inspelningar"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Serverbaserad spelstatus"

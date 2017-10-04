@@ -287,3 +287,7 @@ msgstr "Kullanılacak profil (boş = varsayılan)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Akış profili %s mevcut değil"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Kayıtlar"

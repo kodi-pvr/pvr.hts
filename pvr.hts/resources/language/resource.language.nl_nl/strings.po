@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versieverschil (ondersteund: v%d, vereist: v%d). Update A.U.B. tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Eén tijd (geschematiseerd door timer regel)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Belangrijk (Hoogste)"
@@ -187,6 +191,10 @@ msgstr "Alleen deze regel: Alleen opname bij 1x per dag"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Standaard"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Timer regel (serie`s link)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Te gebruiken profiel (leeg = standaard)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streamingprofiel %s is niet beschikbaar"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Opnames"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Server gebaseerde afspeel status"

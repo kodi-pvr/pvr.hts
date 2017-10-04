@@ -59,3 +59,7 @@ msgstr "Запісваць усе эпізоды"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Default"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Recordings"

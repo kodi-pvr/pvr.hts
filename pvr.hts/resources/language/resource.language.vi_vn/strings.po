@@ -55,3 +55,7 @@ msgstr "Thấp"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Mặc định"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Các bản ghi"

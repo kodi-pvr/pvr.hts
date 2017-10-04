@@ -75,3 +75,7 @@ msgstr "Por defecto"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Hasta que se necesite el espacio"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Grabaciones"

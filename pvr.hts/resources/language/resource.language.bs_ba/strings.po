@@ -43,3 +43,7 @@ msgstr "nizak"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Podrazumjevano"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Snimci"

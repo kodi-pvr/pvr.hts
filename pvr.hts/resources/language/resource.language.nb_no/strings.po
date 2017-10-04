@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP versjon stemmer ikke (supported: v%d, required: v%d). Venligst oppdater tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Én gang (opprettet av tidsursregel)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Viktig (høyeste)"
@@ -187,6 +191,10 @@ msgstr "Kun denne regelen: Ta opp maks én gang per dag"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Standard"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Tidsbasert regel (serielenke)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Profil som brukes (tom = forvalg)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Strømningsprofilen %s er ikke tilgjengelig"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Opptak"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Tjenerbasert avspillingsstatus"

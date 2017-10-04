@@ -71,3 +71,7 @@ msgstr "Бага"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Үндсэн"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Бичлэгүүд"

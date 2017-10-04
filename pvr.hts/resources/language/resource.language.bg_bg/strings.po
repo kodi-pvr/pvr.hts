@@ -159,3 +159,7 @@ msgstr "Няма достъп"
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Профил в употреба (празен = основен)"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Записи"

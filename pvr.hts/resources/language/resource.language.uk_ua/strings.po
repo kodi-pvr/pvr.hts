@@ -63,3 +63,7 @@ msgstr "Записати усі серії"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Як усталено"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Записи"

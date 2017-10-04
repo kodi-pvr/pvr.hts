@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTPS versija neatitinka (palaikoma: v%d, reikalinga: v%d). Atnaujinkite tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Vieną kartą (suplanuota laikmačio taisyklės)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Svarbus (aukščiausias)"
@@ -187,6 +191,10 @@ msgstr "Tik šiai taisyklei: įrašyti ne daugiau nei kartą per dieną"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Numatytas"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Laikmačio taisyklė (serialo nuoroda)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Profilis, kurį naudoti (tuščia = numatytasis)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Transliacijos profilis %s neprieinamas"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Įrašai"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Serveris paremtas atkūrimo būsena"

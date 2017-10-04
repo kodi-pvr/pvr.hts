@@ -39,3 +39,7 @@ msgstr "အနိမ့်စား"
 msgctxt "#30368"
 msgid "Default"
 msgstr "မူလအတိုင်း"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "အသံသွင်းခြင်း"

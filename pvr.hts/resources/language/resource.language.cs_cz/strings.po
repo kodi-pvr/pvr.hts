@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Neshoda verze HTSP (podporováno: v%d, vyžadováno: v%d). Aktualizujte tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Jednou (Naplánováno pravidlem časovače)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Důležité (Nejvyšší)"
@@ -187,6 +191,10 @@ msgstr "Pouze toto pravidlo: Nahrávat max. jednou denně"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Výchozí"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Pravidlo časovače (odkaz na seriál)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "Použitý profil (prázdný = výchozí)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profil streamování %s není dostupný"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Nahrávky"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Stav přehrávání na základě serveru"

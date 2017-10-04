@@ -311,3 +311,7 @@ msgstr "使用配置（空  =默认）"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "流媒体配置 %s 不可用"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "录像"

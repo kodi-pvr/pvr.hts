@@ -143,3 +143,7 @@ msgstr "Χωρίς σήμα"
 msgctxt "#30455"
 msgid "No access"
 msgstr "Χωρίς πρόσβαση"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Εγγραφές"

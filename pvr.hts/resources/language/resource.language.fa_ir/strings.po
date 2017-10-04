@@ -55,3 +55,7 @@ msgstr "همه قسمت‌ها را ضبط کن"
 msgctxt "#30368"
 msgid "Default"
 msgstr "پیش فرض"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "ضبط شده ها"

@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP版本不匹配 (支援：v%d, 最低：v%d)。請更新電視端程式。"
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "單次 (由定時器規則排程)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "重要 (最高)"
@@ -187,6 +191,10 @@ msgstr "僅限本規則:每天最多錄一次"
 msgctxt "#30368"
 msgid "Default"
 msgstr "預設"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "定時器規則 (同系列的聯結)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -311,3 +319,11 @@ msgstr "欲使用的設定檔 (瘤空 = 預設值)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "串流設定檔 %s 不可用"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "錄影檔"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "伺服器端的播放狀態"

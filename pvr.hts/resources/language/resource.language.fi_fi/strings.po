@@ -106,23 +106,27 @@ msgstr "Epäsynkroninen ohjelmaoppaan lataus"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Virhelokin kirjoitus"
+msgstr "Virheenkorjaus"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Jäljitä (yksityiskohtainen)"
+msgstr "Tallenna yksityiskohtaiset virheenkorjaustiedot"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP-versio on yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Kerran (luotu ajastussäännöllä)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
-msgstr "Tärkeä (Korkein)"
+msgstr "Tärkeä (korkein)"
 
 msgctxt "#30352"
 msgid "High"
-msgstr "Ylin"
+msgstr "Korkea"
 
 msgctxt "#30353"
 msgid "Normal"
@@ -130,11 +134,11 @@ msgstr "Normaali"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "Alin"
+msgstr "Matala"
 
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
-msgstr "Ei-tärkeä (Matalin)"
+msgstr "Ei tärkeä (matalin)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
@@ -142,51 +146,55 @@ msgstr "Tallenna kaikki jaksot"
 
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Tallenna, jos jakson numero on erilainen"
+msgstr "Tallenna, jos on eri jaksonumero"
 
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Tallenna, jos jakson nimi on erilainen"
+msgstr "Tallenna, jos on eri jaksonimi"
 
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Tallenna, jos kuvaus on erilainen"
+msgstr "Tallenna, jos on eri kuvaus"
 
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Tallenna korkeintaan kerran viikossa"
+msgstr "Tallenna enintään kerran viikossa"
 
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Tallenna korkeintaan kerran päivässä"
+msgstr "Tallenna enintään kerran päivässä"
 
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Vain tämä sääntö: Tallenna, jos jakson numero on erilainen"
+msgstr "Vain tämä sääntö: tallenna, jos on eri jaksonumero"
 
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Vain tämä sääntö: Tallenna, jos jakson nimi on erilainen"
+msgstr "Vain tämä sääntö: tallenna, jos on eri jaksonimi"
 
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Vain tämä sääntö: Tallenna, jos ohjelman nimi on erilainen"
+msgstr "Vain tämä sääntö: tallenna, jos on eri nimi"
 
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Vain tämä sääntö: Tallenna, jos kuvaus on erilainen"
+msgstr "Vain tämä sääntö: tallenna, jos on eri kuvaus"
 
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Vain tämä sääntö: Tallenna korkeintaan kerran viikossa"
+msgstr "Vain tämä sääntö: tallenna enintään kerran viikossa"
 
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Vain tämä sääntö: Tallenna korkeintaan kerran päivässä"
+msgstr "Vain tämä sääntö: tallenna enintään kerran päivässä"
 
 msgctxt "#30368"
 msgid "Default"
 msgstr "Oletus"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Ajastussääntö (sarjalinkki)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -262,15 +270,15 @@ msgstr "Ennakoiva viritys"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
-msgstr "Käytettävien tilausten määrä"
+msgstr "Viritettävien kanavien määrä"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Viive tilaamattoman maksukanavan sulkemiselle (sekuntia)"
+msgstr "Viive virityksen poistamiselle (sekuntia)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Käytä ennakoivaa kanavanvaihtoa"
+msgstr "Nopeuta kanavanvaihtoa ennakoivalla virityksellä"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -306,8 +314,16 @@ msgstr "Suoratoistoprofiili"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Käytettävä proffili (tyhjä = oletus)"
+msgstr "Käytettävä profiili (tyhjä = oletus)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Suoratoistoprofiili %s ei ole saatavilla"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Tallenteet"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Palvelinpohjainen katsottujen tallenteiden merkintä"

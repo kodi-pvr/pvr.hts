@@ -287,3 +287,7 @@ msgstr "Использовать профиль (пустой = по-умолч�
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Профиль потока %s не доступен"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Записи"

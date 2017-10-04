@@ -43,3 +43,7 @@ msgstr "Hakahaka"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Taunoa"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Ngā pūhopu"

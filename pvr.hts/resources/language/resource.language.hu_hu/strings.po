@@ -311,3 +311,7 @@ msgstr "Használandó profil (üres = alapértelmezett)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "%s adatfolyam profil nem elérhető"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Felvételek"

@@ -287,3 +287,7 @@ msgstr "Profiel om te gebruik (leeg = verstek)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Stroom profiel %s is nie beskikbaar nie"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Opnames"

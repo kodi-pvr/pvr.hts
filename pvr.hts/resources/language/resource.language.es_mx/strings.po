@@ -311,3 +311,7 @@ msgstr "Perfil a usar (vacío = predeterminado)"
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "El perfil de streaming %s no está disponible"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Grabaciones"

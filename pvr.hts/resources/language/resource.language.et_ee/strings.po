@@ -63,3 +63,7 @@ msgstr "Salvesta kõik episoodid"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Vaikimisi"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Salvestused"

@@ -59,3 +59,7 @@ msgstr "குறைவு"
 msgctxt "#30368"
 msgid "Default"
 msgstr "இயல்புநிலை"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "பதிவகள்"

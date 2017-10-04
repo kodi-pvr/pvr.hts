@@ -55,3 +55,7 @@ msgstr "Poshtë"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Prezgjedhuar"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Rregjistrime"

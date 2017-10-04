@@ -39,3 +39,7 @@ msgstr "Lágt"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Vanligt"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Upptøkur"

@@ -63,3 +63,7 @@ msgstr "Default"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Until space needed"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Recordings"

@@ -75,3 +75,7 @@ msgstr "Irrekordja l-episodji kollha"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Difolt"
+
+msgctxt "#30510"
+msgid "Recordings"
+msgstr "Recordings"
