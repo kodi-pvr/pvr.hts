@@ -19,8 +19,8 @@
  *
  */
 
-#include "utilities/Logger.h"
 #include "../client.h"
+#include "utilities/Logger.h"
 #include "Settings.h"
 
 using namespace tvheadend;

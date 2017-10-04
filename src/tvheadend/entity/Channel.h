@@ -25,7 +25,7 @@
 #include <string>
 #include <map>
 #include "Entity.h"
-#include "../../HTSPTypes.h"
+#include "../HTSPTypes.h"
 
 namespace tvheadend
 {

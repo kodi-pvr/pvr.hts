@@ -25,11 +25,10 @@
 #include <ctime>
 #include <memory>
 
-#include "HTSPConnection.h"
-#include "HTSPDemuxer.h"
-#include "HTSPMessage.h"
-#include "HTSPVFS.h"
-
+#include "tvheadend/HTSPConnection.h"
+#include "tvheadend/HTSPDemuxer.h"
+#include "tvheadend/HTSPMessage.h"
+#include "tvheadend/HTSPVFS.h"
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/LifetimeMapper.h"
 #include "tvheadend/utilities/LocalizedString.h"
@@ -43,13 +42,13 @@ using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
 CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
-  : m_conn(new CHTSPConnection(*this)), m_streamchange(false), m_vfs(new CHTSPVFS(*m_conn)),
+  : m_conn(new HTSPConnection(*this)), m_streamchange(false), m_vfs(new HTSPVFS(*m_conn)),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays)
 {
   for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
   {
-    m_dmx.emplace_back(new CHTSPDemuxer(*m_conn));
+    m_dmx.emplace_back(new HTSPDemuxer(*m_conn));
   }
   m_dmx_active = m_dmx[0];
 }
@@ -1609,13 +1608,13 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
   }
 
   /* Store */
-  m_queue.Push(CHTSPMessage(method, msg));
+  m_queue.Push(HTSPMessage(method, msg));
   return false;
 }
   
 void* CTvheadend::Process ( void )
 {
-  CHTSPMessage msg;
+  HTSPMessage msg;
   const char *method;
 
   while (!IsStopped())
@@ -1745,6 +1744,34 @@ void* CTvheadend::Process ( void )
 
   /* Local */
   return NULL;
+}
+
+void CTvheadend::TriggerChannelGroupsUpdate()
+{
+  m_events.emplace_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
+}
+
+void CTvheadend::TriggerChannelUpdate()
+{
+  m_events.emplace_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
+}
+
+void CTvheadend::TriggerRecordingUpdate()
+{
+  m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
+}
+
+void CTvheadend::TriggerTimerUpdate()
+{
+  m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
+}
+
+void CTvheadend::PushEpgEventUpdate(const Event &epg, EPG_EVENT_STATE state)
+{
+  SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
+
+  if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
+    m_events.emplace_back(event);
 }
 
 void CTvheadend::SyncCompleted ( void )
@@ -2521,7 +2548,7 @@ uint32_t CTvheadend::GetNextUnnumberedChannelNumber()
 
 void CTvheadend::TuneOnOldest( uint32_t channelId )
 {
-  CHTSPDemuxer* oldest = NULL;
+  HTSPDemuxer* oldest = NULL;
 
   for (auto *dmx : m_dmx)
   {
@@ -2557,7 +2584,7 @@ void CTvheadend::PredictiveTune( uint32_t fromChannelId, uint32_t toChannelId )
 
 bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 {
-  CHTSPDemuxer *oldest;
+  HTSPDemuxer *oldest;
   uint32_t prevId;
   bool ret;
 

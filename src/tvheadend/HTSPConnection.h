@@ -35,20 +35,23 @@ extern "C" {
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/threads/threads.h"
 
-class CHTSPRegister;
-class CHTSPResponse;
+namespace tvheadend
+{
+
+class HTSPRegister;
+class HTSPResponse;
 class IHTSPConnectionListener;
 
-typedef std::map<uint32_t, CHTSPResponse*> CHTSPResponseList;
+typedef std::map<uint32_t, HTSPResponse*> HTSPResponseList;
 
 /*
  * HTSP Connection
  */
-class CHTSPConnection : public P8PLATFORM::CThread
+class HTSPConnection : public P8PLATFORM::CThread
 {
 public:
-  CHTSPConnection(IHTSPConnectionListener& connListener);
-  ~CHTSPConnection() override;
+  HTSPConnection(IHTSPConnectionListener& connListener);
+  ~HTSPConnection() override;
 
   void Start();
   void Stop();
@@ -88,15 +91,15 @@ private:
   /*
    * HTSP Connection registration thread
    */
-  class CHTSPRegister : public P8PLATFORM::CThread
+  class HTSPRegister : public P8PLATFORM::CThread
   {
   public:
-    CHTSPRegister(CHTSPConnection *conn)
+    HTSPRegister(HTSPConnection *conn)
     : m_conn(conn)
     {
     }
 
-    ~CHTSPRegister() override
+    ~HTSPRegister() override
     {
       StopThread(0);
     }
@@ -109,13 +112,13 @@ private:
       return nullptr;
     }
 
-    CHTSPConnection *m_conn;
+    HTSPConnection *m_conn;
   };
 
   IHTSPConnectionListener& m_connListener;
   P8PLATFORM::CTcpSocket *m_socket;
   mutable P8PLATFORM::CMutex m_mutex;
-  CHTSPRegister* m_regThread;
+  HTSPRegister* m_regThread;
   P8PLATFORM::CCondition<volatile bool> m_regCond;
   bool m_ready;
   uint32_t m_seq;
@@ -126,9 +129,11 @@ private:
   void* m_challenge;
   int m_challengeLen;
 
-  CHTSPResponseList m_messages;
+  HTSPResponseList m_messages;
   std::vector<std::string> m_capabilities;
 
   bool m_suspended;
   PVR_CONNECTION_STATE m_state;
 };
+
+} // namespace tvheadend

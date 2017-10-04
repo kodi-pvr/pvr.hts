@@ -29,10 +29,10 @@ extern "C"
 #include "libhts/htsmsg.h"
 }
 
-class CHTSPConnection;
-
 namespace tvheadend
 {
+  class HTSPConnection;
+  
   /* streaming uses a weight of 100 by default on the tvh side  */
   /* lowest configurable streaming weight in tvh is 50          */
   /* predictive tuning should be lower to avoid conflicts       */
@@ -65,7 +65,7 @@ namespace tvheadend
   class Subscription
   {
   public:
-    Subscription(CHTSPConnection &conn);
+    Subscription(HTSPConnection &conn);
 
     bool              IsActive() const;
     uint32_t          GetId() const;
@@ -144,7 +144,7 @@ namespace tvheadend
     int32_t           m_speed;
     eSubsriptionState m_state;
     std::string       m_profile;
-    CHTSPConnection   &m_conn;
+    HTSPConnection   &m_conn;
 
     mutable P8PLATFORM::CMutex  m_mutex;
   };

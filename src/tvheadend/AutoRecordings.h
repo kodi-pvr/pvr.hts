@@ -30,14 +30,17 @@ extern "C"
 }
 
 #include "libXBMC_pvr.h"
-#include "tvheadend/entity/AutoRecording.h"
+#include "entity/AutoRecording.h"
 
-class CHTSPConnection;
+namespace tvheadend
+{
+
+class HTSPConnection;
 
 class AutoRecordings
 {
 public:
-  AutoRecordings(CHTSPConnection &conn);
+  AutoRecordings(HTSPConnection &conn);
   ~AutoRecordings();
 
   /* state updates */
@@ -62,6 +65,8 @@ private:
   const std::string GetTimerStringIdFromIntId(unsigned int intId) const;
   PVR_ERROR SendAutorecAddOrUpdate(const PVR_TIMER &timer, bool update);
 
-  CHTSPConnection                      &m_conn;
+  HTSPConnection                      &m_conn;
   tvheadend::entity::AutoRecordingsMap  m_autoRecordings;
 };
+
+} // namespace tvheadend

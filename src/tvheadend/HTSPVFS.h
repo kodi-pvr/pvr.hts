@@ -21,19 +21,43 @@
  *
  */
 
-extern "C" {
-#include "libhts/htsmsg.h"
-}
+#include <string>
+
+struct PVR_RECORDING;
+
+namespace tvheadend
+{
+
+class HTSPConnection;
 
 /*
- * HTSP Connection Listener interface
+ * HTSP VFS - recordings
  */
-class IHTSPConnectionListener
+class HTSPVFS
 {
 public:
-  virtual ~IHTSPConnectionListener() = default;
+  HTSPVFS(HTSPConnection &conn);
+  ~HTSPVFS();
 
-  virtual void Disconnected() = 0;
-  virtual bool Connected() = 0;
-  virtual bool ProcessMessage(const char *method, htsmsg_t *msg) = 0;
+  void Connected();
+
+  bool Open(const PVR_RECORDING &rec);
+  void Close();
+  ssize_t Read(unsigned char *buf, unsigned int len);
+  long long Seek(long long pos, int whence);
+  long long Tell();
+  long long Size();
+
+private:
+  bool SendFileOpen(bool force = false);
+  void SendFileClose();
+  ssize_t SendFileRead(unsigned char *buf, unsigned int len);
+  long long SendFileSeek(int64_t pos, int whence, bool force = false);
+
+  HTSPConnection &m_conn;
+  std::string m_path;
+  uint32_t m_fileId;
+  int64_t m_offset;
 };
+
+} // namespace tvheadend

@@ -23,13 +23,13 @@
 
 #include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
-#include "../HTSPConnection.h"
+#include "HTSPConnection.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-Subscription::Subscription(CHTSPConnection &conn) :
+Subscription::Subscription(HTSPConnection &conn) :
   m_id(0),
   m_channelId(0),
   m_weight(SUBSCRIPTION_WEIGHT_NORMAL),

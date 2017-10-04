@@ -33,36 +33,39 @@ extern "C" {
 #include "p8-platform/util/buffer.h"
 #include "p8-platform/threads/threads.h"
 
-#include "AutoRecordings.h"
-#include "HTSPMessage.h"
-#include "IHTSPConnectionListener.h"
-#include "TimeRecordings.h"
-#include "client.h"
+#include "tvheadend/AutoRecordings.h"
 #include "tvheadend/ChannelTuningPredictor.h"
+#include "tvheadend/HTSPMessage.h"
+#include "tvheadend/IHTSPConnectionListener.h"
 #include "tvheadend/Profile.h"
+#include "tvheadend/TimeRecordings.h"
 #include "tvheadend/entity/Channel.h"
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Schedule.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/utilities/AsyncState.h"
+#include "client.h"
 
 #define UNNUMBERED_CHANNEL (10000)
 
 /*
  * Forward decleration of classes
  */
-class CHTSPConnection;
-class CHTSPDemuxer;
-class CHTSPVFS;
+namespace tvheadend
+{
+class HTSPConnection;
+class HTSPDemuxer;
+class HTSPVFS;
+}
 
 /* Typedefs */
-typedef P8PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
+typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 
 /*
  * Root object for Tvheadend connection
  */
 class CTvheadend
-  : public P8PLATFORM::CThread, public IHTSPConnectionListener
+  : public P8PLATFORM::CThread, public tvheadend::IHTSPConnectionListener
 {
 public:
   CTvheadend(PVR_PROPERTIES *pvrProps);
@@ -145,29 +148,11 @@ private:
   /*
    * Event handling
    */
-  inline void TriggerChannelGroupsUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
-  }
-  inline void TriggerChannelUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
-  }
-  inline void TriggerRecordingUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void TriggerTimerUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void PushEpgEventUpdate ( const tvheadend::entity::Event &epg, EPG_EVENT_STATE state )
-  {
-    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
-
-    if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
-      m_events.emplace_back(event);
-  }
+  void TriggerChannelGroupsUpdate();
+  void TriggerChannelUpdate();
+  void TriggerRecordingUpdate();
+  void TriggerTimerUpdate();
+  void PushEpgEventUpdate(const tvheadend::entity::Event &epg, EPG_EVENT_STATE state);
 
   /*
    * Epg Handling
@@ -243,32 +228,32 @@ public:
   /**
    * The streaming profiles available on the server
    */
-  tvheadend::Profiles         m_profiles;
+  tvheadend::Profiles m_profiles;
 
-  P8PLATFORM::CMutex          m_mutex;
+  P8PLATFORM::CMutex m_mutex;
 
-  CHTSPConnection*            m_conn;
+  tvheadend::HTSPConnection* m_conn;
 
-  std::vector<CHTSPDemuxer*>  m_dmx;
-  CHTSPDemuxer*               m_dmx_active;
-  bool                        m_streamchange;
-  CHTSPVFS*                   m_vfs;
+  std::vector<tvheadend::HTSPDemuxer*> m_dmx;
+  tvheadend::HTSPDemuxer* m_dmx_active;
+  bool m_streamchange;
+  tvheadend::HTSPVFS* m_vfs;
 
-  CHTSPMessageQueue           m_queue;
+  HTSPMessageQueue m_queue;
 
-  tvheadend::entity::Channels   m_channels;
-  tvheadend::entity::Tags       m_tags;
+  tvheadend::entity::Channels m_channels;
+  tvheadend::entity::Tags m_tags;
   tvheadend::entity::Recordings m_recordings;
-  tvheadend::entity::Schedules  m_schedules;
+  tvheadend::entity::Schedules m_schedules;
 
   tvheadend::ChannelTuningPredictor m_channelTuningPredictor;
 
-  SHTSPEventList              m_events;
+  tvheadend::SHTSPEventList m_events;
 
-  tvheadend::utilities::AsyncState  m_asyncState;
+  tvheadend::utilities::AsyncState m_asyncState;
 
-  TimeRecordings              m_timeRecordings;
-  AutoRecordings              m_autoRecordings;
+  tvheadend::TimeRecordings m_timeRecordings;
+  tvheadend::AutoRecordings m_autoRecordings;
 
-  int                         m_epgMaxDays;
+  int m_epgMaxDays;
 };

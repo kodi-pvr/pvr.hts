@@ -27,30 +27,33 @@ extern "C" {
 
 #include <string>
 
+namespace tvheadend
+{
+
 /*
  * HTSP Message
  */
-class CHTSPMessage
+class HTSPMessage
 {
 public:
-  CHTSPMessage(const std::string& method = "", htsmsg_t* msg = nullptr)
+  HTSPMessage(const std::string& method = "", htsmsg_t* msg = nullptr)
   : m_method(method), m_msg(msg)
   {
   }
 
-  CHTSPMessage(const CHTSPMessage& msg)
+  HTSPMessage(const HTSPMessage& msg)
   : m_method(msg.m_method), m_msg(msg.m_msg)
   {
     msg.m_msg = nullptr;
   }
 
-  ~CHTSPMessage()
+  ~HTSPMessage()
   {
     if (m_msg)
       htsmsg_destroy(m_msg);
   }
 
-  CHTSPMessage& operator=(const CHTSPMessage &msg)
+  HTSPMessage& operator=(const HTSPMessage &msg)
   {
     if (this != &msg)
     {
@@ -77,3 +80,5 @@ private:
   std::string m_method;
   mutable htsmsg_t *m_msg;
 };
+
+} // namespace tvheadend

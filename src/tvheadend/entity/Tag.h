@@ -26,7 +26,7 @@
 #include <map>
 #include <vector>
 #include "Entity.h"
-#include "../../HTSPTypes.h"
+#include "../HTSPTypes.h"
 #include "Channel.h"
 
 namespace tvheadend

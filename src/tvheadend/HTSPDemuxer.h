@@ -32,26 +32,30 @@ extern "C" {
 #include "libhts/htsmsg.h"
 }
 
+#include "libXBMC_pvr.h"
+
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/buffer.h"
 
-#include "client.h"
-#include "tvheadend/Subscription.h"
-#include "tvheadend/status/DescrambleInfo.h"
-#include "tvheadend/status/Quality.h"
-#include "tvheadend/status/SourceInfo.h"
-#include "tvheadend/status/TimeshiftStatus.h"
+#include "Subscription.h"
+#include "status/DescrambleInfo.h"
+#include "status/Quality.h"
+#include "status/SourceInfo.h"
+#include "status/TimeshiftStatus.h"
 
-class CHTSPConnection;
+namespace tvheadend
+{
+
+class HTSPConnection;
 
 /*
  * HTSP Demuxer - live streams
  */
-class CHTSPDemuxer
+class HTSPDemuxer
 {
 public:
-  CHTSPDemuxer(CHTSPConnection &conn);
-  ~CHTSPDemuxer();
+  HTSPDemuxer(HTSPConnection &conn);
+  ~HTSPDemuxer();
 
   bool ProcessMessage(const char *method, htsmsg_t *m);
   void Connected();
@@ -106,7 +110,7 @@ private:
   void ParseDescrambleInfo(htsmsg_t *m);
 
   mutable P8PLATFORM::CMutex m_mutex;
-  CHTSPConnection &m_conn;
+  HTSPConnection &m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*> m_pktBuffer;
   std::vector<PVR_STREAM_PROPERTIES::PVR_STREAM> m_streams;
   std::map<int,int> m_streamStat;
@@ -121,3 +125,5 @@ private:
   tvheadend::Subscription m_subscription;
   std::atomic<time_t> m_lastUse;
 };
+
+} // namespace tvheadend

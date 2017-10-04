@@ -22,18 +22,18 @@
 #include "AutoRecordings.h"
 
 #include "HTSPConnection.h"
-#include "tvheadend/Settings.h"
-#include "tvheadend/entity/Recording.h"
-#include "tvheadend/utilities/Utilities.h"
-#include "tvheadend/utilities/Logger.h"
-#include "tvheadend/utilities/LifetimeMapper.h"
+#include "Settings.h"
+#include "entity/Recording.h"
+#include "utilities/Utilities.h"
+#include "utilities/Logger.h"
+#include "utilities/LifetimeMapper.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-AutoRecordings::AutoRecordings(CHTSPConnection &conn) :
+AutoRecordings::AutoRecordings(HTSPConnection &conn) :
   m_conn(conn)
 {
 }

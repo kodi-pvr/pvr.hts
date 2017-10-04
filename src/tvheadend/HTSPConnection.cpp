@@ -28,9 +28,10 @@ extern "C" {
 #include "libhts/sha1.h"
 }
 
+#include "../client.h"
 #include "IHTSPConnectionListener.h"
-#include "tvheadend/Settings.h"
-#include "tvheadend/utilities/Logger.h"
+#include "Settings.h"
+#include "utilities/Logger.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -46,18 +47,21 @@ using namespace tvheadend::utilities;
                                       // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                       // actual server HTSP version matches (runtime htsp version check).
 
+namespace tvheadend
+{
+
 /*
  * HTSP Response handler
  */
-class CHTSPResponse
+class HTSPResponse
 {
 public:
-  CHTSPResponse()
+  HTSPResponse()
   : m_flag(false), m_msg(nullptr)
   {
   }
 
-  ~CHTSPResponse()
+  ~HTSPResponse()
   {
     if (m_msg)
       htsmsg_destroy(m_msg);
@@ -87,19 +91,21 @@ private:
   htsmsg_t *m_msg;
 };
 
+} // namespace tvheadend
+
 /*
  * HTSP Connection handler
  */
 
-CHTSPConnection::CHTSPConnection (IHTSPConnectionListener& connListener)
-  : m_connListener(connListener), m_socket(NULL), m_regThread(new CHTSPRegister(this)),
+HTSPConnection::HTSPConnection (IHTSPConnectionListener& connListener)
+  : m_connListener(connListener), m_socket(NULL), m_regThread(new HTSPRegister(this)),
     m_ready(false), m_seq(0), m_serverName(""), m_serverVersion(""), m_htspVersion(0),
     m_webRoot(""), m_challenge(NULL), m_challengeLen(0), m_suspended(false),
     m_state(PVR_CONNECTION_STATE_UNKNOWN)
 {
 }
 
-CHTSPConnection::~CHTSPConnection()
+HTSPConnection::~HTSPConnection()
 {
   StopThread(-1);
   Disconnect();
@@ -107,14 +113,14 @@ CHTSPConnection::~CHTSPConnection()
   delete m_regThread;
 }
 
-void CHTSPConnection::Start()
+void HTSPConnection::Start()
 {
   // Note: "connecting" must only be set one time, before the very first connection attempt, not on every reconnect.
   SetState(PVR_CONNECTION_STATE_CONNECTING);
   CreateThread();
 }
 
-void CHTSPConnection::Stop()
+void HTSPConnection::Stop()
 {
   StopThread(-1);
   Disconnect();
@@ -124,7 +130,7 @@ void CHTSPConnection::Stop()
  * Info
  */
 
-std::string CHTSPConnection::GetWebURL ( const char *fmt, ... ) const
+std::string HTSPConnection::GetWebURL ( const char *fmt, ... ) const
 {
   va_list va;
   const Settings &settings = Settings::GetInstance();
@@ -147,7 +153,7 @@ std::string CHTSPConnection::GetWebURL ( const char *fmt, ... ) const
   return url;
 }
 
-bool CHTSPConnection::WaitForConnection ( void )
+bool HTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready)
   {
@@ -157,25 +163,25 @@ bool CHTSPConnection::WaitForConnection ( void )
   return m_ready;
 }
 
-int  CHTSPConnection::GetProtocol ( void ) const
+int  HTSPConnection::GetProtocol ( void ) const
 {
   CLockObject lock(m_mutex);
   return m_htspVersion;
 }
 
-std::string CHTSPConnection::GetServerName ( void ) const
+std::string HTSPConnection::GetServerName ( void ) const
 {
   CLockObject lock(m_mutex);
   return m_serverName;
 }
 
-std::string CHTSPConnection::GetServerVersion ( void ) const
+std::string HTSPConnection::GetServerVersion ( void ) const
 {
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
-std::string CHTSPConnection::GetServerString ( void ) const
+std::string HTSPConnection::GetServerString ( void ) const
 {
   const Settings &settings = Settings::GetInstance();
 
@@ -183,13 +189,13 @@ std::string CHTSPConnection::GetServerString ( void ) const
   return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
 }
 
-bool CHTSPConnection::HasCapability(const std::string &capability) const
+bool HTSPConnection::HasCapability(const std::string &capability) const
 {
   return std::find(m_capabilities.begin(), m_capabilities.end(), capability) 
          != m_capabilities.end();
 }
 
-void CHTSPConnection::OnSleep ( void )
+void HTSPConnection::OnSleep ( void )
 {
   CLockObject lock(m_mutex);
 
@@ -199,7 +205,7 @@ void CHTSPConnection::OnSleep ( void )
   m_suspended = true;
 }
 
-void CHTSPConnection::OnWake ( void )
+void HTSPConnection::OnWake ( void )
 {
   CLockObject lock(m_mutex);
 
@@ -209,7 +215,7 @@ void CHTSPConnection::OnWake ( void )
   m_suspended = false;
 }
 
-void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
+void HTSPConnection::SetState ( PVR_CONNECTION_STATE state )
 {
   PVR_CONNECTION_STATE prevState(PVR_CONNECTION_STATE_UNKNOWN);
   PVR_CONNECTION_STATE newState(PVR_CONNECTION_STATE_UNKNOWN);
@@ -241,7 +247,7 @@ void CHTSPConnection::SetState ( PVR_CONNECTION_STATE state )
 /*
  * Close the connection
  */
-void CHTSPConnection::Disconnect ( void )
+void HTSPConnection::Disconnect ( void )
 {
   CLockObject lock(m_mutex);
 
@@ -260,7 +266,7 @@ void CHTSPConnection::Disconnect ( void )
  *
  * Return false if an error occurs and the connection should be terminated
  */
-bool CHTSPConnection::ReadMessage ( void )
+bool HTSPConnection::ReadMessage ( void )
 {
   uint8_t *buf;
   uint8_t  lb[4];
@@ -305,7 +311,7 @@ bool CHTSPConnection::ReadMessage ( void )
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
     CLockObject lock(m_mutex);
-    CHTSPResponseList::iterator it;
+    HTSPResponseList::iterator it;
     if ((it = m_messages.find(seq)) != m_messages.end())
     {
       it->second->Set(msg);
@@ -333,7 +339,7 @@ bool CHTSPConnection::ReadMessage ( void )
 /*
  * Send message to server
  */
-bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
+bool HTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 {
   int     e;
   void   *buf;
@@ -375,7 +381,7 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 /*
  * Send a message and wait for response
  */
-htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
+htsmsg_t *HTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
@@ -383,7 +389,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   uint32_t seq;
 
   /* Add Sequence number */
-  CHTSPResponse resp;
+  HTSPResponse resp;
   seq = ++m_seq;
   htsmsg_add_u32(msg, "seq", seq);
   m_messages[seq] = &resp;
@@ -433,7 +439,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
 /*
  * Send and wait for response
  */
-htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
+htsmsg_t *HTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
@@ -443,7 +449,7 @@ htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int 
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 
-bool CHTSPConnection::SendHello ( void )
+bool HTSPConnection::SendHello ( void )
 {
   /* Build message */
   htsmsg_t *msg = htsmsg_create_map();
@@ -494,7 +500,7 @@ bool CHTSPConnection::SendHello ( void )
   return true;
 }
 
-bool CHTSPConnection::SendAuth
+bool HTSPConnection::SendAuth
   ( const std::string &user, const std::string &pass )
 {
   uint32_t u32;
@@ -548,7 +554,7 @@ bool CHTSPConnection::SendAuth
 /**
  * Register the connection, hello+auth
  */
-void CHTSPConnection::Register ( void )
+void HTSPConnection::Register ( void )
 {
   std::string user = Settings::GetInstance().GetUsername();
   std::string pass = Settings::GetInstance().GetPassword();
@@ -606,7 +612,7 @@ fail:
 /*
  * Main thread loop for connection and rx handling
  */
-void* CHTSPConnection::Process ( void )
+void* HTSPConnection::Process ( void )
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
