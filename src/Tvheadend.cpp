@@ -207,9 +207,7 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
       if (!entry.second.ContainsChannelType(bRadio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV, GetChannels()))
         continue;
 
-      PVR_CHANNEL_GROUP tag;
-      memset(&tag, 0, sizeof(tag));
-
+      PVR_CHANNEL_GROUP tag = { 0 };
       strncpy(tag.strGroupName, entry.second.GetName().c_str(),
               sizeof(tag.strGroupName) - 1);
       tag.bIsRadio = bRadio;
@@ -257,8 +255,7 @@ PVR_ERROR CTvheadend::GetTagMembers
         if (cit != m_channels.cend() && cit->second.GetType() == (group.bIsRadio ?
             CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         {
-          PVR_CHANNEL_GROUP_MEMBER gm;
-          memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+          PVR_CHANNEL_GROUP_MEMBER gm = { 0 };
           strncpy(
             gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
           gm.iChannelUniqueId = cit->second.GetId();
@@ -308,8 +305,7 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
       if (channel.GetType() != (radio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         continue;
 
-      PVR_CHANNEL chn;
-      memset(&chn, 0 , sizeof(PVR_CHANNEL));
+      PVR_CHANNEL chn = { 0 };
 
       chn.iUniqueId         = channel.GetId();
       chn.bIsRadio          = radio;
@@ -424,8 +420,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
         continue;
 
       /* Setup entry */
-      PVR_RECORDING rec;
-      memset(&rec, 0, sizeof(rec));
+      PVR_RECORDING rec = { 0 };
 
       /* Channel icon */
       if ((cit = m_channels.find(recording.GetChannel())) != m_channels.end())
@@ -1015,7 +1010,7 @@ int CTvheadend::GetTimerCount ( void )
 
 bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
 {
-  memset(&tmr, 0, sizeof(tmr));
+  tmr = { 0 };
 
   tmr.iClientIndex       = tvhTmr.GetId();
   tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : PVR_CHANNEL_INVALID_UID;
@@ -1334,7 +1329,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 void CTvheadend::CreateEvent
   ( const Event &event, EPG_TAG &epg )
 {
-  memset(&epg, 0, sizeof(EPG_TAG));
+  epg = { 0 };
   epg.iUniqueBroadcastId  = event.GetId();
   epg.iUniqueChannelId    = event.GetChannel();
   epg.strTitle            = event.GetTitle().c_str();

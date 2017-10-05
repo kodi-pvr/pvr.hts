@@ -231,7 +231,7 @@ PVR_ERROR HTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 {
   CLockObject lock(m_mutex);
   
-  memset(&sig, 0, sizeof(sig));
+  sig = { 0 };
 
   strncpy(sig.strAdapterName,   m_sourceInfo.si_adapter.c_str(),
           sizeof(sig.strAdapterName) - 1);
@@ -256,7 +256,7 @@ PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
 {
   CLockObject lock(m_mutex);
 
-  *info = {0};
+  *info = { 0 };
 
   info->iPid = m_descrambleInfo.GetPid();
   info->iCaid = m_descrambleInfo.GetCaid();
