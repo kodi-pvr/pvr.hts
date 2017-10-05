@@ -22,7 +22,6 @@
 #include "AutoRecording.h"
 
 #include "../Settings.h"
-#include "../../Tvheadend.h"
 
 using namespace tvheadend;
 using namespace tvheadend::entity;

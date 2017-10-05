@@ -1,4 +1,5 @@
 #pragma once
+
 /*
  *      Copyright (C) 2005-2011 Team XBMC
  *      http://www.xbmc.org
@@ -21,12 +22,8 @@
  */
 
 #include "p8-platform/os.h"
-#include "p8-platform/threads/mutex.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 
 extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;
-
-class CTvheadend;
-extern CTvheadend                *tvh;

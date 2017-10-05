@@ -21,9 +21,9 @@
 *
 */
 
-#include "../HTSPTypes.h"
 #include <string>
 
+#include "HTSPTypes.h"
 #include "xbmc_addon_types.h"
 
 namespace tvheadend {

@@ -21,13 +21,18 @@
  *
  */
 
-#include <deque>
 #include <algorithm>
-#include <vector>
+#include <deque>
 #include <map>
 #include <string>
-#include "client.h"
-#include "tvheadend/entity/Event.h"
+#include <vector>
+
+#include "libXBMC_pvr.h"
+
+#include "entity/Event.h"
+
+namespace tvheadend
+{
 
 typedef enum {
   DVR_PRIO_IMPORTANT   = 0,
@@ -141,3 +146,5 @@ struct SHTSPEvent
 };
 
 typedef std::vector<SHTSPEvent> SHTSPEventList;
+
+} // namespace tvheadend

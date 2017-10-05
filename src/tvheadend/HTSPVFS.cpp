@@ -18,18 +18,20 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/StringUtils.h"
-#include "tvheadend/utilities/Logger.h"
+#include "HTSPVFS.h"
 
 extern "C" {
+#include <sys/types.h>
 #include "libhts/htsmsg_binary.h"
 }
 
-#include "Tvheadend.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/StringUtils.h"
 
-using namespace std;
+#include "HTSPConnection.h"
+#include "Settings.h"
+#include "utilities/Logger.h"
+
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
@@ -37,16 +39,16 @@ using namespace tvheadend::utilities;
 /*
 * VFS handler
 */
-CHTSPVFS::CHTSPVFS ( CHTSPConnection &conn )
+HTSPVFS::HTSPVFS ( HTSPConnection &conn )
   : m_conn(conn), m_path(""), m_fileId(0), m_offset(0)
 {
 }
 
-CHTSPVFS::~CHTSPVFS ()
+HTSPVFS::~HTSPVFS ()
 {
 }
 
-void CHTSPVFS::Connected ( void )
+void HTSPVFS::Connected ( void )
 {
   /* Re-open */
   if (m_fileId != 0)
@@ -64,7 +66,7 @@ void CHTSPVFS::Connected ( void )
  * VFS API
  * *************************************************************************/
 
-bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
+bool HTSPVFS::Open ( const PVR_RECORDING &rec )
 {
   /* Close existing */
   Close();
@@ -83,7 +85,7 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
   return true;
 }
 
-void CHTSPVFS::Close ( void )
+void HTSPVFS::Close ( void )
 {
   if (m_fileId != 0)
     SendFileClose();
@@ -93,7 +95,7 @@ void CHTSPVFS::Close ( void )
   m_path   = "";
 }
 
-ssize_t CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
+ssize_t HTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
   /* Not opened */
   if (!m_fileId)
@@ -109,7 +111,7 @@ ssize_t CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
   return read;
 }
 
-long long CHTSPVFS::Seek ( long long pos, int whence )
+long long HTSPVFS::Seek ( long long pos, int whence )
 {
   if (m_fileId == 0)
     return -1;
@@ -117,7 +119,7 @@ long long CHTSPVFS::Seek ( long long pos, int whence )
   return SendFileSeek(pos, whence);
 }
 
-long long CHTSPVFS::Tell ( void )
+long long HTSPVFS::Tell ( void )
 {
   if (m_fileId == 0)
     return -1;
@@ -125,7 +127,7 @@ long long CHTSPVFS::Tell ( void )
   return m_offset;
 }
 
-long long CHTSPVFS::Size ( void )
+long long HTSPVFS::Size ( void )
 {
   int64_t ret = -1;
   htsmsg_t *m;
@@ -160,7 +162,7 @@ long long CHTSPVFS::Size ( void )
  * HTSP Messages
  * *************************************************************************/
 
-bool CHTSPVFS::SendFileOpen ( bool force )
+bool HTSPVFS::SendFileOpen ( bool force )
 {
   htsmsg_t *m;
 
@@ -196,7 +198,7 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   return m_fileId > 0;
 }
 
-void CHTSPVFS::SendFileClose ( void )
+void HTSPVFS::SendFileClose ( void )
 {
   htsmsg_t *m;
 
@@ -221,7 +223,7 @@ void CHTSPVFS::SendFileClose ( void )
     htsmsg_destroy(m);
 }
 
-long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
+long long HTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
 {
   htsmsg_t *m;
   int64_t ret = -1;
@@ -274,7 +276,7 @@ long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   return ret;
 }
 
-ssize_t CHTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
+ssize_t HTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
 {
   htsmsg_t   *m;
   const void *buffer;

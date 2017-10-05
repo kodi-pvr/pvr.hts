@@ -21,41 +21,24 @@
  *
  */
 
-#include <string>
-
-#include "../../client.h"
+extern "C" {
+#include "libhts/htsmsg.h"
+}
 
 namespace tvheadend
 {
-  namespace utilities
-  {
-    /**
-     * Encapsulates an localized string.
-     */
-    class LocalizedString
-    {
-    public:
-      explicit LocalizedString(int stringId)
-      : m_localizedString(XBMC->GetLocalizedString(stringId))
-      {
-      }
 
-      ~LocalizedString()
-      {
-        XBMC->FreeString(m_localizedString);
-      }
+/*
+ * HTSP Connection Listener interface
+ */
+class IHTSPConnectionListener
+{
+public:
+  virtual ~IHTSPConnectionListener() = default;
 
-      std::string Get() const
-      {
-        return m_localizedString ? std::string(m_localizedString) : std::string();
-      }
-      
-    private:
-      LocalizedString() = delete;
-      LocalizedString(const LocalizedString&) = delete;
-      LocalizedString &operator =(const LocalizedString&) = delete;
+  virtual void Disconnected() = 0;
+  virtual bool Connected() = 0;
+  virtual bool ProcessMessage(const char *method, htsmsg_t *msg) = 0;
+};
 
-      char* m_localizedString;
-    };
-  }
-}
+} // namespace tvheadend

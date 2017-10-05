@@ -18,26 +18,31 @@ add_definitions(-DUSE_DEMUX)
 # Sources and headers
 set(HTS_SOURCES src/client.h
                 src/client.cpp
-                src/HTSPConnection.cpp
-                src/HTSPDemuxer.cpp
-                src/HTSPTypes.h
-                src/HTSPVFS.cpp
                 src/Tvheadend.cpp
-                src/Tvheadend.h
-                src/TimeRecordings.cpp
-                src/TimeRecordings.h
-                src/AutoRecordings.cpp
-                src/AutoRecordings.h
-                src/xbmc_codec_descriptor.hpp)
+                src/Tvheadend.h)
 
 set(HTS_SOURCES_TVHEADEND
+                src/tvheadend/AutoRecordings.cpp
+                src/tvheadend/AutoRecordings.h
+                src/tvheadend/ChannelTuningPredictor.h
+                src/tvheadend/ChannelTuningPredictor.cpp
+                src/tvheadend/HTSPConnection.h
+                src/tvheadend/HTSPConnection.cpp
+                src/tvheadend/HTSPDemuxer.h
+                src/tvheadend/HTSPDemuxer.cpp
+                src/tvheadend/HTSPMessage.h
+                src/tvheadend/HTSPTypes.h
+                src/tvheadend/HTSPVFS.h
+                src/tvheadend/HTSPVFS.cpp
+                src/tvheadend/IHTSPConnectionListener.h
                 src/tvheadend/Profile.h
                 src/tvheadend/Settings.cpp
                 src/tvheadend/Settings.h
-                src/tvheadend/ChannelTuningPredictor.h
-                src/tvheadend/ChannelTuningPredictor.cpp
                 src/tvheadend/Subscription.cpp
-                src/tvheadend/Subscription.h)
+                src/tvheadend/Subscription.h
+                src/tvheadend/TimeRecordings.cpp
+                src/tvheadend/TimeRecordings.h
+                src/tvheadend/xbmc_codec_descriptor.hpp)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/AutoRecording.h

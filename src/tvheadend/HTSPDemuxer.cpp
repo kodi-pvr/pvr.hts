@@ -19,19 +19,25 @@
  *
  */
 
-#include "tvheadend/utilities/Logger.h"
-#include "Tvheadend.h"
+#include "HTSPDemuxer.h"
+
+#include "../client.h"
+#include "HTSPConnection.h"
+#include "Settings.h"
+#include "utilities/Logger.h"
 #include "xbmc_codec_descriptor.hpp"
 
 #define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)
 
-using namespace std;
+#define INVALID_SEEKTIME (-1)
+#define SPEED_NORMAL (1000) // x1 playback speed
+
 using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
+HTSPDemuxer::HTSPDemuxer ( HTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
     m_seeking(false), m_speedChange(false),
@@ -39,11 +45,11 @@ CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
 {
 }
 
-CHTSPDemuxer::~CHTSPDemuxer ()
+HTSPDemuxer::~HTSPDemuxer ()
 {
 }
 
-void CHTSPDemuxer::Connected ( void )
+void HTSPDemuxer::Connected ( void )
 {
   /* Re-subscribe */
   if (m_subscription.IsActive())
@@ -60,7 +66,7 @@ void CHTSPDemuxer::Connected ( void )
  * Demuxer API
  * *************************************************************************/
 
-void CHTSPDemuxer::Close0 ( void )
+void HTSPDemuxer::Close0 ( void )
 {
   /* Send unsubscribe */
   if (m_subscription.IsActive())
@@ -71,7 +77,7 @@ void CHTSPDemuxer::Close0 ( void )
   Abort0();
 }
 
-void CHTSPDemuxer::Abort0 ( void )
+void HTSPDemuxer::Abort0 ( void )
 {
   CLockObject lock(m_mutex);
   m_streams.clear();
@@ -81,7 +87,7 @@ void CHTSPDemuxer::Abort0 ( void )
 }
 
 
-bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
+bool HTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
 {
   CLockObject lock(m_conn.Mutex());
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux open");
@@ -104,7 +110,7 @@ bool CHTSPDemuxer::Open ( uint32_t channelId, enum eSubscriptionWeight weight )
   return m_subscription.IsActive();
 }
 
-void CHTSPDemuxer::Close ( void )
+void HTSPDemuxer::Close ( void )
 {
   CLockObject lock(m_conn.Mutex());
   Close0();
@@ -112,7 +118,7 @@ void CHTSPDemuxer::Close ( void )
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
 
-DemuxPacket *CHTSPDemuxer::Read ( void )
+DemuxPacket *HTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
   m_lastUse.store(time(nullptr));
@@ -127,7 +133,7 @@ DemuxPacket *CHTSPDemuxer::Read ( void )
   return PVR->AllocateDemuxPacket(0);
 }
 
-void CHTSPDemuxer::Flush ( void )
+void HTSPDemuxer::Flush ( void )
 {
   DemuxPacket *pkt;
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
@@ -135,7 +141,7 @@ void CHTSPDemuxer::Flush ( void )
     PVR->FreeDemuxPacket(pkt);
 }
 
-void CHTSPDemuxer::Trim ( void )
+void HTSPDemuxer::Trim ( void )
 {
   DemuxPacket *pkt;
 
@@ -147,7 +153,7 @@ void CHTSPDemuxer::Trim ( void )
     PVR->FreeDemuxPacket(pkt);
 }
 
-void CHTSPDemuxer::Abort ( void )
+void HTSPDemuxer::Abort ( void )
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
   CLockObject lock(m_conn.Mutex());
@@ -155,8 +161,7 @@ void CHTSPDemuxer::Abort ( void )
   ResetStatus();
 }
 
-bool CHTSPDemuxer::Seek 
-  ( double time, bool _unused(backwards), double *startpts )
+bool HTSPDemuxer::Seek(double time, bool, double *startpts)
 {
   if (!m_subscription.IsActive())
     return false;
@@ -190,7 +195,7 @@ bool CHTSPDemuxer::Seek
   return true;
 }
 
-void CHTSPDemuxer::Speed ( int speed )
+void HTSPDemuxer::Speed ( int speed )
 {
   CLockObject lock(m_conn.Mutex());
   if (!m_subscription.IsActive())
@@ -202,14 +207,14 @@ void CHTSPDemuxer::Speed ( int speed )
   m_subscription.SendSpeed(speed);
 }
 
-void CHTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
+void HTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
 {
   if (!m_subscription.IsActive() || m_subscription.GetWeight() == static_cast<uint32_t>(weight))
     return;
   m_subscription.SendWeight(static_cast<uint32_t>(weight));
 }
 
-PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *props )
+PVR_ERROR HTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *props )
 {
   CLockObject lock(m_mutex);
 
@@ -222,7 +227,7 @@ PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *props )
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
+PVR_ERROR HTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 {
   CLockObject lock(m_mutex);
   
@@ -247,7 +252,7 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR CHTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
+PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
 {
   CLockObject lock(m_mutex);
 
@@ -267,13 +272,13 @@ PVR_ERROR CHTSPDemuxer::CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info )
   return PVR_ERROR_NO_ERROR;
 }
 
-int64_t CHTSPDemuxer::GetTimeshiftTime() const
+int64_t HTSPDemuxer::GetTimeshiftTime() const
 {
   CLockObject lock(m_mutex);
   return m_timeshiftStatus.shift;
 }
 
-int64_t CHTSPDemuxer::GetTimeshiftBufferStart() const
+int64_t HTSPDemuxer::GetTimeshiftBufferStart() const
 {
   CLockObject lock(m_mutex);
 
@@ -281,7 +286,7 @@ int64_t CHTSPDemuxer::GetTimeshiftBufferStart() const
   return m_timeshiftStatus.end;
 }
 
-int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
+int64_t HTSPDemuxer::GetTimeshiftBufferEnd() const
 {
   CLockObject lock(m_mutex);
 
@@ -289,7 +294,7 @@ int64_t CHTSPDemuxer::GetTimeshiftBufferEnd() const
   return m_timeshiftStatus.start;
 }
 
-bool CHTSPDemuxer::IsTimeShifting() const
+bool HTSPDemuxer::IsTimeShifting() const
 {
   if (!m_subscription.IsActive())
     return false;
@@ -304,31 +309,31 @@ bool CHTSPDemuxer::IsTimeShifting() const
   return false;
 }
 
-uint32_t CHTSPDemuxer::GetSubscriptionId() const
+uint32_t HTSPDemuxer::GetSubscriptionId() const
 {
   return m_subscription.GetId();
 }
 
-uint32_t CHTSPDemuxer::GetChannelId() const
+uint32_t HTSPDemuxer::GetChannelId() const
 {
   if (m_subscription.IsActive())
     return m_subscription.GetChannelId();
   return 0;
 }
 
-time_t CHTSPDemuxer::GetLastUse() const
+time_t HTSPDemuxer::GetLastUse() const
 {
   if (m_subscription.IsActive())
     return m_lastUse.load();
   return 0;
 }
 
-void CHTSPDemuxer::SetStreamingProfile(const std::string &profile)
+void HTSPDemuxer::SetStreamingProfile(const std::string &profile)
 {
   m_subscription.SetProfile(profile);
 }
 
-bool CHTSPDemuxer::IsRealTimeStream() const
+bool HTSPDemuxer::IsRealTimeStream() const
 {
   if (!m_subscription.IsActive())
     return false;
@@ -341,7 +346,7 @@ bool CHTSPDemuxer::IsRealTimeStream() const
   return (m_timeshiftStatus.shift < 10000000);
 }
 
-void CHTSPDemuxer::ResetStatus()
+void HTSPDemuxer::ResetStatus()
 {
   CLockObject lock(m_mutex);
 
@@ -355,7 +360,7 @@ void CHTSPDemuxer::ResetStatus()
  * Parse incoming data
  * *************************************************************************/
 
-bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
+bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
 {
   CLockObject lock(m_mutex);
 
@@ -387,14 +392,14 @@ bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
   return true;
 }
 
-void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
+void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
 {
   uint32_t    idx, u32;
   int64_t     s64;
   const void  *bin;
   size_t      binlen;
   DemuxPacket *pkt;
-  char        _unused(type) = 0;
+  char        type = 0;
   int         ignore;
   
   /* Ignore packets while switching channels */
@@ -463,7 +468,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
     PVR->FreeDemuxPacket(pkt);
 }
 
-void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
+void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 {
   htsmsg_t       *l;
   htsmsg_field_t *f;
@@ -584,7 +589,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
 }
 
-void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
+void HTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
 {
   const char *str;
   
@@ -630,11 +635,11 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseSubscriptionStop ( htsmsg_t *_unused(m) )
+void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 {
 }
 
-void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
+void HTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 {
   CLockObject lock(m_conn.Mutex());
   int64_t s64;
@@ -648,7 +653,7 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   m_seekCond.Broadcast();
 }
 
-void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
+void HTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 {
   int32_t s32;
   if (!htsmsg_get_s32(m, "speed", &s32))
@@ -659,10 +664,10 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
+void HTSPDemuxer::ParseQueueStatus (htsmsg_t* m)
 {
   uint32_t u32;
-  map<int,int>::const_iterator it;
+  std::map<int,int>::const_iterator it;
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
     Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", it->first, it->second);
@@ -682,7 +687,7 @@ void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
     Logger::Log(LogLevel::LEVEL_TRACE, "  Bdrop %d", u32);
 }
 
-void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
+void HTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   const char *str;
@@ -723,7 +728,7 @@ void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
+void HTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   int64_t s64;
@@ -760,7 +765,7 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   }
 }
 
-void CHTSPDemuxer::ParseDescrambleInfo(htsmsg_t *m)
+void HTSPDemuxer::ParseDescrambleInfo(htsmsg_t *m)
 {
   uint32_t pid = 0, caid = 0, provid = 0, ecmtime = 0, hops = 0;
   const char *cardsystem, *reader, *from, *protocol;

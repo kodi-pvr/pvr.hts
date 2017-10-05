@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *      Copyright (C) 2005-2014 Team XBMC
  *      http://www.xbmc.org
@@ -18,9 +20,6 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-
-#ifndef ASYNCSTATE_H
-#define	ASYNCSTATE_H
 
 #include "p8-platform/threads/mutex.h"
 
@@ -82,5 +81,3 @@ namespace tvheadend {
     };
   }
 }
-
-#endif	/* ASYNCSTATE_H */

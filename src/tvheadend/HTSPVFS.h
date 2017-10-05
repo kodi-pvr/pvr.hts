@@ -23,39 +23,41 @@
 
 #include <string>
 
-#include "../../client.h"
+struct PVR_RECORDING;
 
 namespace tvheadend
 {
-  namespace utilities
-  {
-    /**
-     * Encapsulates an localized string.
-     */
-    class LocalizedString
-    {
-    public:
-      explicit LocalizedString(int stringId)
-      : m_localizedString(XBMC->GetLocalizedString(stringId))
-      {
-      }
 
-      ~LocalizedString()
-      {
-        XBMC->FreeString(m_localizedString);
-      }
+class HTSPConnection;
 
-      std::string Get() const
-      {
-        return m_localizedString ? std::string(m_localizedString) : std::string();
-      }
-      
-    private:
-      LocalizedString() = delete;
-      LocalizedString(const LocalizedString&) = delete;
-      LocalizedString &operator =(const LocalizedString&) = delete;
+/*
+ * HTSP VFS - recordings
+ */
+class HTSPVFS
+{
+public:
+  HTSPVFS(HTSPConnection &conn);
+  ~HTSPVFS();
 
-      char* m_localizedString;
-    };
-  }
-}
+  void Connected();
+
+  bool Open(const PVR_RECORDING &rec);
+  void Close();
+  ssize_t Read(unsigned char *buf, unsigned int len);
+  long long Seek(long long pos, int whence);
+  long long Tell();
+  long long Size();
+
+private:
+  bool SendFileOpen(bool force = false);
+  void SendFileClose();
+  ssize_t SendFileRead(unsigned char *buf, unsigned int len);
+  long long SendFileSeek(int64_t pos, int whence, bool force = false);
+
+  HTSPConnection &m_conn;
+  std::string m_path;
+  uint32_t m_fileId;
+  int64_t m_offset;
+};
+
+} // namespace tvheadend

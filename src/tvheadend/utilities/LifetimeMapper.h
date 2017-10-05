@@ -21,7 +21,7 @@
  *
  */
 
-#include "../../HTSPTypes.h"
+#include "../HTSPTypes.h"
 
 namespace tvheadend
 {

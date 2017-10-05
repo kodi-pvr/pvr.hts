@@ -21,337 +21,62 @@
  *
  */
 
-#include "client.h"
-#include "p8-platform/sockets/tcp.h"
-#include "p8-platform/threads/threads.h"
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/buffer.h"
-#include "libXBMC_addon.h"
-#include "tvheadend/Settings.h"
-#include "HTSPTypes.h"
-#include "tvheadend/ChannelTuningPredictor.h"
-#include "tvheadend/Profile.h"
-#include "tvheadend/entity/Tag.h"
-#include "tvheadend/entity/Channel.h"
-#include "tvheadend/entity/Recording.h"
-#include "tvheadend/entity/Event.h"
-#include "tvheadend/entity/Schedule.h"
-#include "tvheadend/status/DescrambleInfo.h"
-#include "tvheadend/status/Quality.h"
-#include "tvheadend/status/SourceInfo.h"
-#include "tvheadend/status/TimeshiftStatus.h"
-#include "tvheadend/utilities/AsyncState.h"
-#include "tvheadend/Subscription.h"
-#include "TimeRecordings.h"
-#include "AutoRecordings.h"
-#include <map>
-#include <queue>
-#include <cstdarg>
-#include <stdexcept>
-#include <atomic>
-
 extern "C" {
 #include <sys/types.h>
 #include "libhts/htsmsg.h"
 }
 
-/*
- * Miscellaneous
- */
-#if defined(__GNUC__)
-#define _unused(x) x __attribute__((unused))
-#else
-#define _unused(x) x
-#endif
+#include <utility>
+#include <string>
+#include <vector>
 
-/*
- * Configuration defines
- */
-#define HTSP_MIN_SERVER_VERSION       (19) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION           (29) // Client uses HTSP features up to this version. If the respective
-                                           // addon feature requires htsp features introduced after
-                                           // HTSP_MIN_SERVER_VERSION this feature will only be available if the
-                                           // actual server HTSP version matches (runtime htsp version check).
-#define FAST_RECONNECT_ATTEMPTS     (5)
-#define FAST_RECONNECT_INTERVAL   (500) // ms
-#define SLOW_RECONNECT_INTERVAL  (5000) // ms
-#define UNNUMBERED_CHANNEL      (10000)
-#define INVALID_SEEKTIME           (-1)
-#define SPEED_NORMAL             (1000) // x1 playback speed
+#include "p8-platform/util/buffer.h"
+#include "p8-platform/threads/threads.h"
+
+#include "tvheadend/AutoRecordings.h"
+#include "tvheadend/ChannelTuningPredictor.h"
+#include "tvheadend/HTSPMessage.h"
+#include "tvheadend/IHTSPConnectionListener.h"
+#include "tvheadend/Profile.h"
+#include "tvheadend/TimeRecordings.h"
+#include "tvheadend/entity/Channel.h"
+#include "tvheadend/entity/Recording.h"
+#include "tvheadend/entity/Schedule.h"
+#include "tvheadend/entity/Tag.h"
+#include "tvheadend/utilities/AsyncState.h"
+#include "client.h"
+
+#define UNNUMBERED_CHANNEL (10000)
 
 /*
  * Forward decleration of classes
  */
-class CHTSPConnection;
-class CHTSPDemuxer;
-class CHTSPVFS;
-class CHTSPResponse;
-class CHTSPMessage;
+namespace tvheadend
+{
+class HTSPConnection;
+class HTSPDemuxer;
+class HTSPVFS;
+}
 
 /* Typedefs */
-typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
-typedef P8PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
-
-/*
- * HTSP Response handler
- */
-class CHTSPResponse
-{
-public:
-  CHTSPResponse();
-  ~CHTSPResponse();
-  htsmsg_t *Get ( P8PLATFORM::CMutex &mutex, uint32_t timeout );
-  void      Set ( htsmsg_t *m );
-private:
-  P8PLATFORM::CCondition<volatile bool> m_cond;
-  bool                                m_flag;
-  htsmsg_t                           *m_msg;
-};
-
-/*
- * HTSP Message
- */
-class CHTSPMessage
-{
-public:
-  CHTSPMessage(std::string method = "", htsmsg_t *msg = NULL)
-    : m_method(method), m_msg(msg)
-  {
-  }
-  CHTSPMessage(const CHTSPMessage& msg)
-    : m_method(msg.m_method), m_msg(msg.m_msg)
-  {
-    msg.m_msg    = NULL;
-  }
-  ~CHTSPMessage()
-  {
-    if (m_msg)
-      htsmsg_destroy(m_msg);
-  }
-  CHTSPMessage& operator=(const CHTSPMessage &msg)
-  {
-    if (this != &msg)
-    {
-      if (m_msg)
-        htsmsg_destroy(m_msg);
-      m_method     = msg.m_method;
-      m_msg        = msg.m_msg;
-      msg.m_msg    = NULL; // ownership is passed
-    }
-    return *this;
-  }
-  std::string      m_method;
-  mutable htsmsg_t *m_msg;
-};
-
-/*
- * HTSP Connection registration thread
- */
-class CHTSPRegister
-  : public P8PLATFORM::CThread
-{
-  friend class CHTSPConnection;
-
-public:
-  CHTSPRegister ( CHTSPConnection *conn );
-  ~CHTSPRegister ();
- 
-private:
-  CHTSPConnection *m_conn;
-  void *Process ( void );
-};
-
-/*
- * HTSP Connection
- */
-class CHTSPConnection
-  : public P8PLATFORM::CThread
-{
-  friend class CHTSPRegister;
-
-public:
-  CHTSPConnection();
-  ~CHTSPConnection();
-
-  void Start       ( void );
-  void Stop        ( void );
-  void Disconnect  ( void );
-  
-  bool      SendMessage0    ( const char *method, htsmsg_t *m );
-  htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
-  htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
-
-  int  GetProtocol             ( void ) const;
-
-  std::string GetWebURL        ( const char *fmt, ... ) const;
-
-  std::string GetServerName    ( void ) const;
-  std::string GetServerVersion ( void ) const;
-  std::string GetServerString  ( void ) const;
-  
-  bool        HasCapability(const std::string &capability) const;
-
-  inline P8PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
-
-  void        OnSleep ( void );
-  void        OnWake  ( void );
-  
-private:
-  void*       Process          ( void );
-  void        Register         ( void );
-  bool        ReadMessage      ( void );
-  bool        SendHello        ( void );
-  bool        SendAuth         ( const std::string &u, const std::string &p );
-
-  void        SetState         ( PVR_CONNECTION_STATE state );
-  bool        WaitForConnection( void );
-
-  P8PLATFORM::CTcpSocket              *m_socket;
-  mutable P8PLATFORM::CMutex          m_mutex;
-  CHTSPRegister                       m_regThread;
-  P8PLATFORM::CCondition<volatile bool> m_regCond;
-  bool                                m_ready;
-  uint32_t                            m_seq;
-  std::string                         m_serverName;
-  std::string                         m_serverVersion;
-  int                                 m_htspVersion;
-  std::string                         m_webRoot;
-  void*                               m_challenge;
-  int                                 m_challengeLen;
-
-  CHTSPResponseList                   m_messages;
-  std::vector<std::string>            m_capabilities;
-
-  bool                                m_suspended;
-  PVR_CONNECTION_STATE                m_state;
-};
-
-/*
- * HTSP Demuxer - live streams
- */
-class CHTSPDemuxer
-{
-  friend class CTvheadend;
-
-public:
-  CHTSPDemuxer( CHTSPConnection &conn );
-  ~CHTSPDemuxer();
-
-  bool   ProcessMessage ( const char *method, htsmsg_t *m );
-  void   Connected      ( void );
-
-  bool IsTimeShifting() const;
-  bool IsRealTimeStream() const;
-  int64_t GetTimeshiftTime() const;
-  int64_t GetTimeshiftBufferStart() const;
-  int64_t GetTimeshiftBufferEnd() const;
-  uint32_t GetSubscriptionId() const;
-  uint32_t GetChannelId() const;
-  time_t GetLastUse() const;
-
-  /**
-   * Tells each demuxer to use the specified profile for new subscriptions
-   * @param profile the profile to use
-   */
-  void SetStreamingProfile(const std::string &profile);
-
-private:
-  mutable P8PLATFORM::CMutex              m_mutex;
-  CHTSPConnection                        &m_conn;
-  P8PLATFORM::SyncedBuffer<DemuxPacket*>  m_pktBuffer;
-  std::vector<PVR_STREAM_PROPERTIES::PVR_STREAM> m_streams;
-  std::map<int,int>                       m_streamStat;
-  int64_t                                 m_seekTime;
-  P8PLATFORM::CCondition<volatile int64_t>  m_seekCond;
-  bool                                    m_seeking;
-  bool                                    m_speedChange;
-  tvheadend::status::SourceInfo           m_sourceInfo;
-  tvheadend::status::Quality              m_signalInfo;
-  tvheadend::status::TimeshiftStatus      m_timeshiftStatus;
-  tvheadend::status::DescrambleInfo       m_descrambleInfo;
-  tvheadend::Subscription                 m_subscription;
-  std::atomic<time_t>                     m_lastUse;
-  
-  void         Close0         ( void );
-  void         Abort0         ( void );
-  bool         Open           ( uint32_t channelId,
-                                tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL );
-  void         Close          ( void );
-  DemuxPacket *Read           ( void );
-  void         Trim           ( void );
-  void         Flush          ( void );
-  void         Abort          ( void );
-  bool         Seek           ( double time, bool backwards, double *startpts );
-  void         Speed          ( int speed );
-  void         Weight         ( tvheadend::eSubscriptionWeight weight );
-  PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
-  PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
-  PVR_ERROR    CurrentDescrambleInfo ( PVR_DESCRAMBLE_INFO *info );
-
-  /**
-   * Resets the signal and quality info
-   */
-  void ResetStatus();
-  
-  void ParseMuxPacket           ( htsmsg_t *m );
-  void ParseSourceInfo          ( htsmsg_t *m );
-  void ParseSubscriptionStart   ( htsmsg_t *m );
-  void ParseSubscriptionStop    ( htsmsg_t *m );
-  void ParseSubscriptionSkip    ( htsmsg_t *m );
-  void ParseSubscriptionSpeed   ( htsmsg_t *m );
-  void ParseQueueStatus         ( htsmsg_t *m );
-  void ParseSignalStatus        ( htsmsg_t *m );
-  void ParseTimeshiftStatus     ( htsmsg_t *m );
-  void ParseDescrambleInfo      ( htsmsg_t *m );
-};
-
-/*
- * HTSP VFS - recordings
- */
-class CHTSPVFS 
-{
-  friend class CTvheadend;
-
-public:
-  CHTSPVFS ( CHTSPConnection &conn );
-  ~CHTSPVFS ();
-
-  void Connected    ( void );
-
-private:
-  CHTSPConnection &m_conn;
-  std::string     m_path;
-  uint32_t        m_fileId;
-  int64_t         m_offset;
-
-  bool      Open   ( const PVR_RECORDING &rec );
-  void      Close  ( void );
-  ssize_t   Read   ( unsigned char *buf, unsigned int len );
-  long long Seek   ( long long pos, int whence );
-  long long Tell   ( void );
-  long long Size   ( void );
-
-  bool      SendFileOpen  ( bool force = false );
-  void      SendFileClose ( void );
-  ssize_t   SendFileRead  ( unsigned char *buf, unsigned int len );
-  long long SendFileSeek  ( int64_t pos, int whence, bool force = false );
-};
+typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 
 /*
  * Root object for Tvheadend connection
  */
 class CTvheadend
-  : public P8PLATFORM::CThread
+  : public P8PLATFORM::CThread, public tvheadend::IHTSPConnectionListener
 {
 public:
   CTvheadend(PVR_PROPERTIES *pvrProps);
-  ~CTvheadend();
+  ~CTvheadend() override;
 
   void Start ( void );
 
-  void Disconnected   ( void );
-  bool Connected      ( void );
-  bool ProcessMessage ( const char *method, htsmsg_t *msg );
+  // IHTSPConnectionListener implementation
+  void Disconnected() override;
+  bool Connected() override;
+  bool ProcessMessage(const char *method, htsmsg_t *msg) override;
 
   const tvheadend::entity::Channels& GetChannels () const
   {
@@ -409,38 +134,6 @@ private:
    */
   bool HasStreamingProfile(const std::string &streamingProfile) const;
 
-  /**
-   * The streaming profiles available on the server
-   */
-  tvheadend::Profiles         m_profiles;
-
-  P8PLATFORM::CMutex            m_mutex;
-
-  CHTSPConnection             m_conn;
-
-  std::vector<CHTSPDemuxer*>  m_dmx;
-  CHTSPDemuxer*               m_dmx_active;
-  bool                        m_streamchange;
-  CHTSPVFS                    m_vfs;
-
-  CHTSPMessageQueue           m_queue;
-
-  tvheadend::entity::Channels   m_channels;
-  tvheadend::entity::Tags       m_tags;
-  tvheadend::entity::Recordings m_recordings;
-  tvheadend::entity::Schedules  m_schedules;
-
-  tvheadend::ChannelTuningPredictor m_channelTuningPredictor;
-
-  SHTSPEventList              m_events;
-
-  tvheadend::utilities::AsyncState  m_asyncState;
-
-  TimeRecordings              m_timeRecordings;
-  AutoRecordings              m_autoRecordings;
-
-  int                         m_epgMaxDays;
-
   /*
    * Predictive tuning
    */
@@ -448,36 +141,18 @@ private:
   void TuneOnOldest           ( uint32_t channelId );
 
   /*
-   * Message processing
+   * Message processing (CThread implementation)
    */
-  void *Process ( void );
+  void *Process() override;
 
   /*
    * Event handling
    */
-  inline void TriggerChannelGroupsUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
-  }
-  inline void TriggerChannelUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
-  }
-  inline void TriggerRecordingUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void TriggerTimerUpdate ( void )
-  {
-    m_events.emplace_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
-  }
-  inline void PushEpgEventUpdate ( const tvheadend::entity::Event &epg, EPG_EVENT_STATE state )
-  {
-    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
-
-    if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
-      m_events.emplace_back(event);
-  }
+  void TriggerChannelGroupsUpdate();
+  void TriggerChannelUpdate();
+  void TriggerRecordingUpdate();
+  void TriggerTimerUpdate();
+  void PushEpgEventUpdate(const tvheadend::entity::Event &epg, EPG_EVENT_STATE state);
 
   /*
    * Epg Handling
@@ -513,34 +188,13 @@ public:
   /*
    * Connection (pass-thru)
    */
-  std::string GetServerName    ( void ) const
-  {
-    return m_conn.GetServerName();
-  }
-  std::string GetServerVersion ( void ) const
-  {
-    return m_conn.GetServerVersion();
-  }
-  std::string GetServerString  ( void ) const
-  {
-    return m_conn.GetServerString();
-  }
-  inline int GetProtocol ( void ) const
-  {
-    return m_conn.GetProtocol();
-  }
-  inline bool HasCapability(const std::string &capability) const
-  {
-    return m_conn.HasCapability(capability);
-  }
-  inline void OnSleep ( void )
-  {
-    m_conn.OnSleep();
-  }
-  inline void OnWake ( void )
-  {
-    m_conn.OnWake();
-  }
+  std::string GetServerName() const;
+  std::string GetServerVersion() const;
+  std::string GetServerString() const;
+  int GetProtocol() const;
+  bool HasCapability(const std::string &capability) const;
+  void OnSleep();
+  void OnWake();
 
   /*
    * Demuxer
@@ -564,28 +218,42 @@ public:
   /*
    * VFS (pass-thru)
    */
-  inline bool         VfsOpen             ( const PVR_RECORDING &rec )
-  {
-    return m_vfs.Open(rec);
-  }
-  inline void         VfsClose            ( void )
-  {
-    m_vfs.Close();
-  }
-  inline ssize_t       VfsRead             ( unsigned char *buf, unsigned int len )
-  {
-    return m_vfs.Read(buf, len);
-  }
-  inline long long    VfsSeek             ( long long position, int whence )
-  {
-    return m_vfs.Seek(position, whence);
-  }
-  inline long long    VfsTell             ( void )
-  {
-    return m_vfs.Tell();
-  }
-  inline long long    VfsSize             ( void )
-  {
-    return m_vfs.Size();
-  }
+  bool VfsOpen(const PVR_RECORDING &rec);
+  void VfsClose();
+  ssize_t VfsRead(unsigned char *buf, unsigned int len);
+  long long VfsSeek(long long position, int whence);
+  long long VfsTell();
+  long long VfsSize();
+
+  /**
+   * The streaming profiles available on the server
+   */
+  tvheadend::Profiles m_profiles;
+
+  P8PLATFORM::CMutex m_mutex;
+
+  tvheadend::HTSPConnection* m_conn;
+
+  std::vector<tvheadend::HTSPDemuxer*> m_dmx;
+  tvheadend::HTSPDemuxer* m_dmx_active;
+  bool m_streamchange;
+  tvheadend::HTSPVFS* m_vfs;
+
+  HTSPMessageQueue m_queue;
+
+  tvheadend::entity::Channels m_channels;
+  tvheadend::entity::Tags m_tags;
+  tvheadend::entity::Recordings m_recordings;
+  tvheadend::entity::Schedules m_schedules;
+
+  tvheadend::ChannelTuningPredictor m_channelTuningPredictor;
+
+  tvheadend::SHTSPEventList m_events;
+
+  tvheadend::utilities::AsyncState m_asyncState;
+
+  tvheadend::TimeRecordings m_timeRecordings;
+  tvheadend::AutoRecordings m_autoRecordings;
+
+  int m_epgMaxDays;
 };
