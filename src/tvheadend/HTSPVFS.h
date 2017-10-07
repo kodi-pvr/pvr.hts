@@ -21,12 +21,9 @@
  *
  */
 
-extern "C"
-{
-#include <sys/types.h>
-}
-
 #include <string>
+
+#include "p8-platform/os.h"
 
 struct PVR_RECORDING;
 
