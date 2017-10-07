@@ -142,7 +142,7 @@ namespace tvheadend {
     void SetDvrPriority(int value) { m_iDvrPriority = value; }
     void SetDvrLifetime(int value) { m_iDvrLifetime = value; }
     void SetDvrDupdetect(int value) { m_iDvrDupdetect = value; }
-    void SetDvrPlayStatus(int value) { m_bDvrPlayStatus = value; }
+    void SetDvrPlayStatus(bool value) { m_bDvrPlayStatus = value; }
 
     /**
      * Read/Set values according to definition in settings.xml
