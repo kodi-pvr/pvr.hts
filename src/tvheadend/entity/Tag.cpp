@@ -20,8 +20,8 @@
  */
 
 #include "Tag.h"
-#include "Channel.h"
 
+using namespace tvheadend;
 using namespace tvheadend::entity;
 
 Tag::Tag() :
