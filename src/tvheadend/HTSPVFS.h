@@ -21,6 +21,11 @@
  *
  */
 
+extern "C"
+{
+#include <sys/types.h>
+}
+
 #include <string>
 
 struct PVR_RECORDING;

@@ -20,8 +20,8 @@
  */
 #include "HTSPVFS.h"
 
-extern "C" {
-#include <sys/types.h>
+extern "C"
+{
 #include "libhts/htsmsg_binary.h"
 }
 
