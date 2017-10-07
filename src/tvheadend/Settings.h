@@ -89,7 +89,7 @@ namespace tvheadend {
     bool        GetAsyncEpg() const { return m_bAsyncEpg; }
     int         GetTotalTuners() const { return m_iTotalTuners; }
     int         GetPreTunerCloseDelay() const { return m_iPreTunerCloseDelay; }
-    bool        GetAutorecApproxTime() const { return m_bAutorecApproxTime; }
+    int         GetAutorecApproxTime() const { return m_iAutorecApproxTime; }
     int         GetAutorecMaxDiff() const { return m_iAutorecMaxDiff; }
     std::string GetStreamingProfile() const { return m_strStreamingProfile; }
     int         GetDvrPriority() const { return m_iDvrPriority; }
@@ -111,7 +111,7 @@ namespace tvheadend {
       m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
       m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
       m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
-      m_bAutorecApproxTime(DEFAULT_APPROX_TIME),
+      m_iAutorecApproxTime(DEFAULT_APPROX_TIME),
       m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
       m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
       m_iDvrPriority(DEFAULT_DVR_PRIO),
@@ -136,7 +136,7 @@ namespace tvheadend {
     void SetAsyncEpg(bool value) { m_bAsyncEpg = value; }
     void SetTotalTuners(int value) { m_iTotalTuners = value; }
     void SetPreTunerCloseDelay(int value) { m_iPreTunerCloseDelay = value; }
-    void SetAutorecApproxTime(bool value) { m_bAutorecApproxTime = value; }
+    void SetAutorecApproxTime(int value) { m_iAutorecApproxTime = value; }
     void SetAutorecMaxDiff(int value) { m_iAutorecMaxDiff = value; }
     void SetStreamingProfile(const std::string &value) { m_strStreamingProfile = value; }
     void SetDvrPriority(int value) { m_iDvrPriority = value; }
@@ -168,7 +168,7 @@ namespace tvheadend {
     bool        m_bPretunerEnabled;
     int         m_iTotalTuners;
     int         m_iPreTunerCloseDelay;
-    bool        m_bAutorecApproxTime;
+    bool        m_iAutorecApproxTime;
     int         m_iAutorecMaxDiff;
     std::string m_strStreamingProfile;
     int         m_iDvrPriority;
