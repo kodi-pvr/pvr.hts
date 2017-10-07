@@ -23,11 +23,11 @@
 
 extern "C"
 {
-#include <sys/types.h>
 #include "libhts/htsmsg_binary.h"
 #include "libhts/sha1.h"
 }
 
+#include "p8-platform/os.h"
 #include "p8-platform/util/StringUtils.h"
 
 #include "../client.h"
