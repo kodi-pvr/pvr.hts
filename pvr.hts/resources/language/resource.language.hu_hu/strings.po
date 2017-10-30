@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP verzió eltérés (támogatott: v%d, szükséges: v%d). Kérlek frissítsd  a TVHeadend-et."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Egyszeri (az időzítő szabály ütemezése szerint)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Fontos (legmagasabb)"
@@ -315,3 +319,7 @@ msgstr "%s adatfolyam profil nem elérhető"
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Felvételek"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Szerver alapú lejátszási állapot"

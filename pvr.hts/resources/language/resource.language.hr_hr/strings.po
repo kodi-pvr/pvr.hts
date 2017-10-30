@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP inačica se ne podudara (podržana: v%d, potrebna: v%d). Nadogradite tvheadend."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Jednom (Zakazano zadanim rasporedom)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Značajan (Najviši)"
@@ -160,9 +164,37 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi najviše jednom dnevno"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Samo ovo pravilo: Snimi ako se broj epizode razlikuje"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Samo ovo pravilo: Snimi ako se naslov epizode razlikuje"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Samo ovo pravilo: Snimi ako se naslov razlikuje"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Samo ovo pravilo: Snimi ako se opis razlikuje"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Samo ovo pravilo: Snimi najviše jednom tjedno"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Samo ovo pravilo: Snimi najviše jednom dnevno"
+
 msgctxt "#30368"
 msgid "Default"
 msgstr "Zadano"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Pravilo zakazanih snimanja  (serijska poveznica)"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -291,3 +323,7 @@ msgstr "Streaming profil %s nije dostupan"
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Snimke"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Status reprodukcije temeljen poslužiteljem"
