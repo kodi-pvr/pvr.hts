@@ -362,8 +362,6 @@ void HTSPDemuxer::ResetStatus()
 
 bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
 {
-  CLockObject lock(m_mutex);
-
   /* Subscription messages */
   if (!strcmp("muxpkt", method))
     ParseMuxPacket(m);
@@ -386,8 +384,7 @@ bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
   else if (!strcmp("subscriptionSpeed", method))
     ParseSubscriptionSpeed(m);
   else
-    Logger::Log(LogLevel::LEVEL_DEBUG, "demux unhandled subscription message [%s]",
-              method);
+    Logger::Log(LogLevel::LEVEL_DEBUG, "demux unhandled subscription message [%s]", method);
 
   return true;
 }
@@ -401,7 +398,9 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   DemuxPacket *pkt;
   char        type = 0;
   int         ignore;
-  
+
+  CLockObject lock(m_mutex);
+
   /* Ignore packets while switching channels */
   if (!m_subscription.IsActive())
   {
@@ -480,6 +479,9 @@ void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed subscriptionStart: 'streams' missing");
     return;
   }
+
+  CLockObject lock(m_mutex);
+
   m_streamStat.clear();
   m_streams.clear();
 
@@ -637,12 +639,15 @@ void HTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
 
 void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 {
+  //CLockObject lock(m_mutex);
 }
 
 void HTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 {
-  CLockObject lock(m_conn.Mutex());
   int64_t s64;
+
+  CLockObject lock(m_conn.Mutex());
+
   if (htsmsg_get_s64(m, "time", &s64)) {
     m_seekTime = INVALID_SEEKTIME;
   } else {
@@ -658,6 +663,9 @@ void HTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   int32_t s32;
   if (!htsmsg_get_s32(m, "speed", &s32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
+
+  CLockObject lock(m_conn.Mutex());
+
   if (m_speedChange) {
     Flush();
     m_speedChange = false;
@@ -668,6 +676,9 @@ void HTSPDemuxer::ParseQueueStatus (htsmsg_t* m)
 {
   uint32_t u32;
   std::map<int,int>::const_iterator it;
+
+  CLockObject lock(m_mutex);
+
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
     Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", it->first, it->second);
@@ -691,6 +702,8 @@ void HTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   const char *str;
+
+  CLockObject lock(m_mutex);
 
   /* Reset */
   m_signalInfo.Clear();
@@ -732,6 +745,8 @@ void HTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   int64_t s64;
+
+  CLockObject lock(m_mutex);
 
   /* Parse */
   Logger::Log(LogLevel::LEVEL_TRACE, "timeshiftStatus:");
@@ -786,6 +801,8 @@ void HTSPDemuxer::ParseDescrambleInfo(htsmsg_t *m)
   reader = htsmsg_get_str(m, "reader");
   from = htsmsg_get_str(m, "from");
   protocol = htsmsg_get_str(m, "protocol");
+
+  CLockObject lock(m_mutex);
 
   /* Reset */
   m_descrambleInfo.Clear();
