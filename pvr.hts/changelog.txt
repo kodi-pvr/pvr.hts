@@ -1,3 +1,15 @@
+4.2.6
+- More code cleanup
+- Fixed deadlock that may have occured when switching channels
+- Added support for new EPG tag attributes: 'credits' (actors, writers, directors), 'categories', 'year' (Thanks to azlm8t for testing and for a fix)
+- Added support for new autorec dedup types: 'max once per month', 'unique episode according to EPG/XMLTV'
+
+4.2.5
+- updated language files from Transifex
+
+4.2.4
+- updated language files from Transifex
+
 4.2.3
 - misc code cleanup
 
