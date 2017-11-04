@@ -775,18 +775,33 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
     { DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30357).Get() },
     { DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       LocalizedString(30358).Get() },
     { DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30359).Get() },
-    { DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            LocalizedString(30360).Get() },
-    { DVR_AUTOREC_RECORD_ONCE_PER_DAY,             LocalizedString(30361).Get() },
   };
+
+  if (m_conn->GetProtocol() >= 27)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_MONTH, LocalizedString(30370).Get()));
+
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK, LocalizedString(30360).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,  LocalizedString(30361).Get()));
+
   if (m_conn->GetProtocol() >= 26)
   {
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30362).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       LocalizedString(30363).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          LocalizedString(30364).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30365).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            LocalizedString(30366).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             LocalizedString(30367).Get()));
   }
+
+  if (m_conn->GetProtocol() >= 27)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_MONTH, LocalizedString(30371).Get()));
+
+  if (m_conn->GetProtocol() >= 26)
+  {
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK, LocalizedString(30366).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,  LocalizedString(30367).Get()));
+  }
+
+  if (m_conn->GetProtocol() >= 31)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_UNIQUE, LocalizedString(30372).Get()));
 
   /* PVR_Timer.iLifetime values and presentation.*/
   std::vector< std::pair<int, std::string> > lifetimeValues;
