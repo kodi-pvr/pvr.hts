@@ -207,9 +207,7 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool bRadio )
       if (!entry.second.ContainsChannelType(bRadio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV, GetChannels()))
         continue;
 
-      PVR_CHANNEL_GROUP tag;
-      memset(&tag, 0, sizeof(tag));
-
+      PVR_CHANNEL_GROUP tag = { 0 };
       strncpy(tag.strGroupName, entry.second.GetName().c_str(),
               sizeof(tag.strGroupName) - 1);
       tag.bIsRadio = bRadio;
@@ -257,8 +255,7 @@ PVR_ERROR CTvheadend::GetTagMembers
         if (cit != m_channels.cend() && cit->second.GetType() == (group.bIsRadio ?
             CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         {
-          PVR_CHANNEL_GROUP_MEMBER gm;
-          memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+          PVR_CHANNEL_GROUP_MEMBER gm = { 0 };
           strncpy(
             gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
           gm.iChannelUniqueId = cit->second.GetId();
@@ -308,8 +305,7 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
       if (channel.GetType() != (radio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_TV))
         continue;
 
-      PVR_CHANNEL chn;
-      memset(&chn, 0 , sizeof(PVR_CHANNEL));
+      PVR_CHANNEL chn = { 0 };
 
       chn.iUniqueId         = channel.GetId();
       chn.bIsRadio          = radio;
@@ -424,8 +420,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
         continue;
 
       /* Setup entry */
-      PVR_RECORDING rec;
-      memset(&rec, 0, sizeof(rec));
+      PVR_RECORDING rec = { 0 };
 
       /* Channel icon */
       if ((cit = m_channels.find(recording.GetChannel())) != m_channels.end())
@@ -734,19 +729,22 @@ struct TimerType : PVR_TIMER_TYPE
 
 void CTvheadend::GetLivetimeValues(std::vector<std::pair<int, std::string>>& lifetimeValues) const
 {
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1DAY),    LocalizedString(30375).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3DAY),    LocalizedString(30376).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_5DAY),    LocalizedString(30377).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),   LocalizedString(30378).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),   LocalizedString(30379).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),   LocalizedString(30380).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1MONTH),  LocalizedString(30381).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2MONTH),  LocalizedString(30382).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3MONTH),  LocalizedString(30383).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_6MONTH),  LocalizedString(30384).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),   LocalizedString(30385).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_2YEARS),  LocalizedString(30386).Get()));
-  lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_3YEARS),  LocalizedString(30387).Get()));
+  lifetimeValues = {
+    { LifetimeMapper::TvhToKodi(DVR_RET_1DAY),   LocalizedString(30375).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_3DAY),   LocalizedString(30376).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_5DAY),   LocalizedString(30377).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_1WEEK),  LocalizedString(30378).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_2WEEK),  LocalizedString(30379).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_3WEEK),  LocalizedString(30380).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_1MONTH), LocalizedString(30381).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_2MONTH), LocalizedString(30382).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_3MONTH), LocalizedString(30383).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_6MONTH), LocalizedString(30384).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_1YEAR),  LocalizedString(30385).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_2YEARS), LocalizedString(30386).Get() },
+    { LifetimeMapper::TvhToKodi(DVR_RET_3YEARS), LocalizedString(30387).Get() },
+  };
+
   if (m_conn->GetProtocol() >= 25)
   {
     lifetimeValues.emplace_back(std::make_pair(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),   LocalizedString(30373).Get()));
@@ -760,32 +758,50 @@ PVR_ERROR CTvheadend::GetTimerTypes ( PVR_TIMER_TYPE types[], int *size )
   static std::vector< std::pair<int, std::string> > priorityValues;
   if (priorityValues.size() == 0)
   {
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_DEFAULT,     LocalizedString(30368).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_UNIMPORTANT, LocalizedString(30355).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_LOW,         LocalizedString(30354).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_NORMAL,      LocalizedString(30353).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_HIGH,        LocalizedString(30352).Get()));
-    priorityValues.emplace_back(std::make_pair(DVR_PRIO_IMPORTANT,   LocalizedString(30351).Get()));
+    priorityValues = {
+      { DVR_PRIO_DEFAULT,     LocalizedString(30368).Get() },
+      { DVR_PRIO_UNIMPORTANT, LocalizedString(30355).Get() },
+      { DVR_PRIO_LOW,         LocalizedString(30354).Get() },
+      { DVR_PRIO_NORMAL,      LocalizedString(30353).Get() },
+      { DVR_PRIO_HIGH,        LocalizedString(30352).Get() },
+      { DVR_PRIO_IMPORTANT,   LocalizedString(30351).Get() },
+    };
   }
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
-  std::vector< std::pair<int, std::string> > deDupValues;
+  std::vector< std::pair<int, std::string> > deDupValues =
+  {
+    { DVR_AUTOREC_RECORD_ALL,                      LocalizedString(30356).Get() },
+    { DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30357).Get() },
+    { DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       LocalizedString(30358).Get() },
+    { DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30359).Get() },
+  };
 
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ALL,                      LocalizedString(30356).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30357).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE,       LocalizedString(30358).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30359).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,            LocalizedString(30360).Get()));
-  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,             LocalizedString(30361).Get()));
+  if (m_conn->GetProtocol() >= 27)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_MONTH, LocalizedString(30370).Get()));
+
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_WEEK, LocalizedString(30360).Get()));
+  deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_ONCE_PER_DAY,  LocalizedString(30361).Get()));
+
   if (m_conn->GetProtocol() >= 26)
   {
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER, LocalizedString(30362).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,       LocalizedString(30363).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,          LocalizedString(30364).Get()));
     deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,    LocalizedString(30365).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,            LocalizedString(30366).Get()));
-    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,             LocalizedString(30367).Get()));
   }
+
+  if (m_conn->GetProtocol() >= 27)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_MONTH, LocalizedString(30371).Get()));
+
+  if (m_conn->GetProtocol() >= 26)
+  {
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK, LocalizedString(30366).Get()));
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,  LocalizedString(30367).Get()));
+  }
+
+  if (m_conn->GetProtocol() >= 31)
+    deDupValues.emplace_back(std::make_pair(DVR_AUTOREC_RECORD_UNIQUE, LocalizedString(30372).Get()));
 
   /* PVR_Timer.iLifetime values and presentation.*/
   std::vector< std::pair<int, std::string> > lifetimeValues;
@@ -1015,7 +1031,7 @@ int CTvheadend::GetTimerCount ( void )
 
 bool CTvheadend::CreateTimer ( const Recording &tvhTmr, PVR_TIMER &tmr )
 {
-  memset(&tmr, 0, sizeof(tmr));
+  tmr = { 0 };
 
   tmr.iClientIndex       = tvhTmr.GetId();
   tmr.iClientChannelUid  = (tvhTmr.GetChannel() > 0) ? tvhTmr.GetChannel() : PVR_CHANNEL_INVALID_UID;
@@ -1334,7 +1350,7 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 void CTvheadend::CreateEvent
   ( const Event &event, EPG_TAG &epg )
 {
-  memset(&epg, 0, sizeof(EPG_TAG));
+  epg = { 0 };
   epg.iUniqueBroadcastId  = event.GetId();
   epg.iUniqueChannelId    = event.GetChannel();
   epg.strTitle            = event.GetTitle().c_str();
@@ -1343,15 +1359,23 @@ void CTvheadend::CreateEvent
   epg.strPlotOutline      = event.GetSummary().c_str();
   epg.strPlot             = event.GetDesc().c_str();
   epg.strOriginalTitle    = NULL; /* not supported by tvh */
-  epg.strCast             = NULL; /* not supported by tvh */
-  epg.strDirector         = NULL; /* not supported by tvh */
-  epg.strWriter           = NULL; /* not supported by tvh */
-  epg.iYear               = 0;    /* not supported by tvh */
+  epg.strCast             = event.GetCast().c_str();
+  epg.strDirector         = event.GetDirectors().c_str();
+  epg.strWriter           = event.GetWriters().c_str();
+  epg.iYear               = event.GetYear();
   epg.strIMDBNumber       = NULL; /* not supported by tvh */
   epg.strIconPath         = event.GetImage().c_str();
   epg.iGenreType          = event.GetGenreType();
   epg.iGenreSubType       = event.GetGenreSubType();
-  epg.strGenreDescription = NULL; /* not supported by tvh */
+  if (epg.iGenreType == 0)
+  {
+    const std::string& categories = event.GetCategories();
+    if (!categories.empty())
+    {
+      epg.iGenreType = EPG_GENRE_USE_STRING;
+      epg.strGenreDescription = categories.c_str();
+    }
+  }
   epg.firstAired          = event.GetAired();
   epg.iParentalRating     = event.GetAge();
   epg.iStarRating         = event.GetStars();
@@ -2448,11 +2472,56 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetPart(u32);
   if ((str = htsmsg_get_str(msg, "serieslinkUri")) != NULL)
     evt.SetSeriesLink(str);
-
-  /* Add optional recording link */
+  if (!htsmsg_get_u32(msg, "copyrightYear", &u32))
+    evt.SetYear(u32);
   if (!htsmsg_get_u32(msg, "dvrId", &u32))
     evt.SetRecordingId(u32);
   
+  htsmsg_t *l;
+  if ((l = htsmsg_get_map(msg, "credits")) != nullptr)
+  {
+    std::vector<std::string> writers;
+    std::vector<std::string> directors;
+    std::vector<std::string> cast;
+
+    htsmsg_field_t *f;
+    HTSMSG_FOREACH(f, l)
+    {
+      if (f->hmf_name == nullptr)
+        continue;
+
+      const char *str = htsmsg_field_get_string(f);
+      if (str == nullptr)
+        continue;
+
+      if (!strcmp(str, "writer"))
+        writers.emplace_back(f->hmf_name);
+      else if (!strcmp(str, "director"))
+        directors.emplace_back(f->hmf_name);
+      else if (!strcmp(str, "actor") || !strcmp(str, "guest") || !strcmp(str, "presenter"))
+        cast.emplace_back(f->hmf_name);
+    }
+
+    evt.SetWriters(writers);
+    evt.SetDirectors(directors);
+    evt.SetCast(cast);
+  }
+
+  if ((l = htsmsg_get_list(msg, "category")) != nullptr)
+  {
+    std::vector<std::string> categories;
+
+    htsmsg_field_t *f;
+    HTSMSG_FOREACH(f, l)
+    {
+      const char *str = f->hmf_str;
+      if (str != nullptr)
+        categories.emplace_back(str);
+    }
+
+    evt.SetCategories(categories);
+  }
+
   return true;
 }
 

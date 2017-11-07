@@ -62,9 +62,7 @@ namespace tvheadend
       int32_t  m_startWindowEnd;   // End of the starting window (minutes from midnight).
       int64_t  m_startExtra;  // Extra start minutes (pre-time).
       int64_t  m_stopExtra;   // Extra stop minutes (post-time).
-      uint32_t m_dupDetect;   // duplicate episode detect (record: 0 = all, 1 = different episode number,
-                              //                                   2 = different subtitle, 3 = different description,
-                              //                                   4 = once per week, 5 = once per day).
+      uint32_t m_dupDetect;   // duplicate episode detect (numeric values: see dvr_autorec_dedup_t).
       uint32_t m_fulltext;    // Fulltext epg search.
       std::string m_seriesLink; // Series link.
     };

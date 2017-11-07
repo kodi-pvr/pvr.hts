@@ -67,8 +67,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER> &timers)
   for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
   {
     /* Setup entry */
-    PVR_TIMER tmr;
-    memset(&tmr, 0, sizeof(tmr));
+    PVR_TIMER tmr = { 0 };
 
     tmr.iClientIndex       = tit->second.GetId();
     tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;

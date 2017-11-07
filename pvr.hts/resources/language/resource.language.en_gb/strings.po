@@ -248,7 +248,23 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr ""
 
-#empty strings from id 30370 to 30372
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+#: src/Tvheadend.cpp
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr ""
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp
