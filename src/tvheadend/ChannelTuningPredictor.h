@@ -38,10 +38,41 @@ namespace tvheadend
     const uint32_t CHANNEL_ID_NONE = -1;
 
     /**
+     * Defines a channel number
+     */
+    class ChannelNumber
+    {
+    public:
+      ChannelNumber()
+      : m_channelNumber(0), m_subchannelNumber(0) {}
+
+      ChannelNumber(uint32_t channelNumber, uint32_t  subchannelNumber)
+      : m_channelNumber(channelNumber), m_subchannelNumber(subchannelNumber) {}
+
+      bool operator ==(const ChannelNumber &right) const
+      {
+        return (m_channelNumber == right.m_channelNumber &&
+                m_subchannelNumber == right.m_subchannelNumber);
+      }
+
+      bool operator <(const ChannelNumber &right) const
+      {
+        if (m_channelNumber == right.m_channelNumber)
+          return m_subchannelNumber < right.m_subchannelNumber;
+
+        return m_channelNumber < right.m_channelNumber;
+      }
+
+    private:
+      uint32_t m_channelNumber;
+      uint32_t m_subchannelNumber;
+    };
+
+    /**
      * Defines a single channel ID/number pair
      */
-    typedef std::pair<uint32_t, uint32_t> ChannelPair;
-    typedef std::set<predictivetune::ChannelPair>::const_iterator ChannelPairIterator;
+    typedef std::pair<uint32_t, ChannelNumber> ChannelPair;
+    typedef std::set<ChannelPair>::const_iterator ChannelPairIterator;
 
     /**
      * Sorter for channel pairs

@@ -1,5 +1,6 @@
 4.2.7
 - Fixed predictive tuning (was broken with removal of API function 'SwitchChannel')
+- Added support for subchannel numbers (ATSC) to predictive tuning
 
 4.2.6
 - More code cleanup
