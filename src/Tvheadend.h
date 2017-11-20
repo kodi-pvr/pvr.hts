@@ -215,6 +215,8 @@ public:
   bool         DemuxIsTimeShifting() const;
   bool         DemuxIsRealTimeStream() const;
 
+  void CloseExpiredSubscriptions();
+
   /*
    * VFS (pass-thru)
    */

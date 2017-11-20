@@ -1635,7 +1635,25 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
   m_queue.Push(HTSPMessage(method, msg));
   return false;
 }
-  
+
+void CTvheadend::CloseExpiredSubscriptions()
+{
+  // predictive tuning active?
+  if (m_dmx.size() > 1)
+  {
+    for (auto *dmx : m_dmx)
+    {
+      if (Settings::GetInstance().GetPreTunerCloseDelay() &&
+          dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(nullptr))
+      {
+        Logger::Log(LogLevel::LEVEL_TRACE, "untuning channel %u on subscription %u",
+                    m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
+        dmx->Close();
+      }
+    }
+  }
+}
+
 void* CTvheadend::Process ( void )
 {
   HTSPMessage msg;
@@ -1645,7 +1663,12 @@ void* CTvheadend::Process ( void )
   {
     /* Check Q */
     // this is a bit horrible, but meh
-    if (!m_queue.Pop(msg, 2000))
+    bool bSuccess = m_queue.Pop(msg, 2000);
+
+    // check for expired predictive tuning subscriptions and close those
+    CloseExpiredSubscriptions();
+
+    if (!bSuccess)
       continue;
     if (!msg.GetMessage())
       continue;
@@ -2736,44 +2759,26 @@ DemuxPacket* CTvheadend::DemuxRead ( void )
     if (dmx == m_dmx_active)
       pkt = dmx->Read();
     else
-    {
-      /* Close "expired" subscriptions */
-      if (dmx->GetChannelId() && Settings::GetInstance().GetPreTunerCloseDelay() &&
-          dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(NULL))
-      {
-        Logger::Log(LogLevel::LEVEL_TRACE, "untuning channel %u on subscription %u",
-                 m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
-        dmx->Close();
-      }
-      else
-        dmx->Trim();
-    }
+      dmx->Trim();
   }
   return pkt;
 }
 
 void CTvheadend::DemuxClose ( void )
 {
-  for (auto *dmx : m_dmx)
-  {
-    dmx->Close();
-  }
+  // If predictive tuning is active, demuxers will be closed automatically once they are expired.
+  if (m_dmx.size() == 1)
+    m_dmx_active->Close();
 }
 
 void CTvheadend::DemuxFlush ( void )
 {
-  for (auto *dmx : m_dmx)
-  {
-    dmx->Flush();
-  }
+  m_dmx_active->Flush();
 }
 
 void CTvheadend::DemuxAbort ( void )
 {
-  for (auto *dmx : m_dmx)
-  {
-    dmx->Abort();
-  }
+  m_dmx_active->Abort();
 }
 
 bool CTvheadend::DemuxSeek ( double time, bool backward, double *startpts )

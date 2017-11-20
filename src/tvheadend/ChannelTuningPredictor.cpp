@@ -47,7 +47,7 @@ void ChannelTuningPredictor::RemoveChannel(uint32_t channelId)
 
 ChannelPair ChannelTuningPredictor::MakeChannelPair(const entity::Channel &channel)
 {
-  return ChannelPair(channel.GetId(), channel.GetNum());
+  return ChannelPair(channel.GetId(), ChannelNumber(channel.GetNum(), channel.GetNumMinor()));
 }
 
 ChannelPairIterator ChannelTuningPredictor::GetIterator(uint32_t channelId) const
@@ -68,7 +68,7 @@ uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint3
   auto toIt = GetIterator(tuningTo);
 
   /* Determine the respective channel numbers as well as the first channel */
-  uint32_t firstNum = m_channels.cbegin()->second;
+  const ChannelNumber& firstNum = m_channels.cbegin()->second;
 
   /* Create an iterator for the predicted channel. If prediction succeeds,
    * it will point at the channel we should tune to */
