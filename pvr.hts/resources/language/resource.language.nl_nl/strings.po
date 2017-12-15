@@ -326,4 +326,4 @@ msgstr "Opnames"
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Server gebaseerde afspeel status"
+msgstr "Servergebaseerde afspeelstatus"

@@ -22,7 +22,7 @@ msgstr "Paramètres de connexion"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Nom d'hôte ou adresse IP de Tvheadend "
+msgstr "Nom d’hôte ou adresse IP de Tvheadend "
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -34,7 +34,7 @@ msgstr "Port HTSP"
 
 msgctxt "#30004"
 msgid "Username"
-msgstr "Nom d'utilisateur"
+msgstr "Nom d’utilisateur"
 
 msgctxt "#30005"
 msgid "Password"
@@ -66,7 +66,7 @@ msgstr "Enregistrements automatiques"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Calcul de la fenêtre d'heure de début"
+msgstr "Calcul de la fenêtre d’heure de début"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -78,7 +78,7 @@ msgstr "Tolérant (heure de début +/- marge)"
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Marge maximale d'heure de début (minutes)"
+msgstr "Marge maximale d’heure de début (minutes)"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -102,7 +102,7 @@ msgstr "Transfert de données"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Transfert asynchrone de l'ÉGP"
+msgstr "Transfert asynchrone de l’ÉGP"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -115,6 +115,10 @@ msgstr "Trace (détaillée)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Mauvaise version HTSP (prise en charge : v%d, exigée : v%d). Veuillez mettre tvheadend à jour."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Une fois (planifiée par une règle de minuterie)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -142,11 +146,11 @@ msgstr "Enregistrer tous les épisodes"
 
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Enregistrer si le numéro d'épisode diffère"
+msgstr "Enregistrer si le numéro d’épisode diffère"
 
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Enregistrer si le nom de l'épisode diffère"
+msgstr "Enregistrer si le nom de l’épisode diffère"
 
 msgctxt "#30359"
 msgid "Record if description differs"
@@ -162,11 +166,11 @@ msgstr "Enregistrer au plus une fois par jour"
 
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Cette règle seulement : enregistrer si le numéro d'épisode diffère"
+msgstr "Cette règle seulement : enregistrer si le numéro d’épisode diffère"
 
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Cette règle seulement : enregistrer si le nom de l'épisode diffère"
+msgstr "Cette règle seulement : enregistrer si le nom de l’épisode diffère"
 
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
@@ -188,9 +192,13 @@ msgctxt "#30368"
 msgid "Default"
 msgstr "Valeur par défaut"
 
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Règle de minuterie (lien de série)"
+
 msgctxt "#30373"
 msgid "Until space needed"
-msgstr "Jusqu'à ce que l'espace soit requis"
+msgstr "Jusqu’à ce que l’espace soit requis"
 
 msgctxt "#30374"
 msgid "Forever"
@@ -250,7 +258,7 @@ msgstr "3 ans"
 
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
-msgstr "Jusqu'à ce que l'espace soit requis (tvh 4.1+)"
+msgstr "Jusqu’à ce que l’espace soit requis (tvh 4.1+)"
 
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
@@ -262,11 +270,11 @@ msgstr "Syntonisation prévisionnelle"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
-msgstr "Nombre d'abonnements à utiliser"
+msgstr "Nombre d’abonnements à utiliser"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Délai de fermeture d'un abonnement non utilisé (secondes)"
+msgstr "Délai de fermeture d’un abonnement non utilisé (secondes)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
@@ -290,7 +298,7 @@ msgstr "Échec de syntonisation"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Limite de l'utilisateur atteinte"
+msgstr "Limite de l’utilisateur atteinte"
 
 msgctxt "#30455"
 msgid "No access"
@@ -298,7 +306,7 @@ msgstr "Aucun accès"
 
 msgctxt "#30456"
 msgid "Subscription error"
-msgstr "Erreur d'abonnement"
+msgstr "Erreur d’abonnement"
 
 msgctxt "#30500"
 msgid "Streaming profile"
@@ -310,8 +318,12 @@ msgstr "Profil à utiliser (vide = valeur par défaut)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Le profil de diffusion en continu %s n'est pas disponible"
+msgstr "Le profil de diffusion en continu %s n’est pas disponible"
 
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Enregistrements"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "État de lecture d’après le serveur"

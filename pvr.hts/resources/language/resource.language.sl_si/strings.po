@@ -16,6 +16,10 @@ msgstr ""
 "Language: sl_SI\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Nastavitve povezave"
+
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Ime gostitelja ali IP strežnika Tvheadend"
@@ -40,9 +44,29 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Prekinitev povezave (sekunde)"
 
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "Časovni rok odgovora (v sekundah)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "Napredne nastavitve"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Nastavitve pretakanja"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Nastavitve časovnika"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Samodejno snemanje"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Privzeta prioriteta"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -83,6 +107,74 @@ msgstr "Privzeto"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dokler se ne potrebuje prostora"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "za vedno"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 dan"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 dni"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dni"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 teden"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 tedna"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 tedne"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 mesec"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 meseca"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 mesece"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 mesecev"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 leto"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 leti"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 leta"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "Ni signala"
+
+msgctxt "#30455"
+msgid "No access"
+msgstr "Ni dostopa"
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Napaka naročnine"
 
 msgctxt "#30510"
 msgid "Recordings"

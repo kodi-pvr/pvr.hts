@@ -274,11 +274,11 @@ msgstr "Anzahl zu verwendender Subscriptions"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Verzögerung für Schließen nicht benutzter Subscriptions (Sekunden)"
+msgstr "Schließen unbenutzter Subscriptions nach: (Sekunden)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Voraussagendes Tuning zum Beschleunigen von Kanalwechseln verwenden"
+msgstr "Kanalwechsel beschleunigen (Predictive Tuning)"
 
 msgctxt "#30450"
 msgid "No free adapter available"

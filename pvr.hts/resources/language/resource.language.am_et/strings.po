@@ -32,6 +32,10 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "የመግቢያ ቃል"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "ሰአት ማሰናጃ"
+
 msgctxt "#30352"
 msgid "High"
 msgstr "ከፍተኛ "

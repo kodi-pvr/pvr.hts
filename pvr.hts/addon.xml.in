@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="4.2.7"
+  version="4.2.8"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -83,7 +83,7 @@
     <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend'i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend-asiakasohjelma. Tukee suorien tv-lähetysten ja tallennusten katsomista, ohjelmaopasta ja ohjelmien ajastamista.</description>
-    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct &amp; les enregistrements, le GÉP et minuteries.</description>
+    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et minuteries.</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
@@ -101,7 +101,7 @@
     <description lang="ms_MY">Bahagian hadapan Tvheadend; menyokong penstriman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="mt_MT">Faċċata ta' TVheadend; jiflaħ għal streaming ta' TV Lajv u rekordings, EPG, Arloġġi</description>
     <description lang="nb_NO">Tvheadend-grenseflate; støtte for visning av direkte-TV og opptak, EPG, tidsur</description>
-    <description lang="nl_NL">Tvheadend frontend; ondersteuning van streaming, Live-TV &amp; opnames, EPG, Timers</description>
+    <description lang="nl_NL">Tvheadend frontend. Ondersteuning van streaming, Live-TV &amp; opnames, EPG, Timers</description>
     <description lang="pl_PL">Klient telewizji dla Tvheadend obsługuje transmisję kanałów radiowych i telewizyjnych, nagrywanie i harmonogram nagrań oraz funkcje przewodnika telewizyjnego.</description>
     <description lang="pt_BR">Tvheadend; suporta streaming de TV Ao Vivo e Gravada, EPG, Agendamentos</description>
     <description lang="pt_PT">Interface Tvheadend. Suporta transmissão e gravação de TV em direto, EPG e temporizadores.</description>
