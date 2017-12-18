@@ -12,7 +12,7 @@ When building the addon you have to use the correct branch depending on which ve
 For example, if you're building the `Jarvis` branch of Kodi you should checkout the `Jarvis` branch of this repository. 
 Also make sure you follow this README from the branch in question.
 
-### Linux
+### Linux for developers
 
 The following instructions assume you will have built Kodi already in the `kodi-build` directory 
 suggested by the README.
@@ -25,6 +25,18 @@ suggested by the README.
 
 The addon files will be placed in `../../xbmc/kodi-build/addons` so if you build Kodi from source and run it directly 
 the addon will be available as a system addon.
+
+### Linux for regular users
+
+The following instructions assume you will have installed Kodi already in either /usr or /usr/local
+
+1. `git clone https://github.com/kodi-pvr/pvr.hts.git`
+2. `cd pvr.hts`
+3. `mkdir build && cd build`
+4. `cmake ..`
+5. `make`
+6. `make install`
+
 
 ##### Useful links
 
