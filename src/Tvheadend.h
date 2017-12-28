@@ -209,11 +209,9 @@ public:
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
   PVR_ERROR    DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info);
-  int64_t      DemuxGetTimeshiftTime() const;
-  int64_t      DemuxGetTimeshiftBufferStart() const;
-  int64_t      DemuxGetTimeshiftBufferEnd() const;
   bool         DemuxIsTimeShifting() const;
   bool         DemuxIsRealTimeStream() const;
+  PVR_ERROR    DemuxGetStreamTimes(PVR_STREAM_TIMES *times) const;
 
   void CloseExpiredSubscriptions();
 
@@ -224,7 +222,6 @@ public:
   void VfsClose();
   ssize_t VfsRead(unsigned char *buf, unsigned int len);
   long long VfsSeek(long long position, int whence);
-  long long VfsTell();
   long long VfsSize();
 
   /**
@@ -258,4 +255,6 @@ public:
   tvheadend::AutoRecordings m_autoRecordings;
 
   int m_epgMaxDays;
+
+  bool m_playingLiveStream;
 };

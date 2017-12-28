@@ -76,9 +76,8 @@ public:
 
   bool IsTimeShifting() const;
   bool IsRealTimeStream() const;
-  int64_t GetTimeshiftTime() const;
-  int64_t GetTimeshiftBufferStart() const;
-  int64_t GetTimeshiftBufferEnd() const;
+  PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times) const;
+
   uint32_t GetSubscriptionId() const;
   uint32_t GetChannelId() const;
   time_t GetLastUse() const;
@@ -124,6 +123,7 @@ private:
   tvheadend::status::DescrambleInfo m_descrambleInfo;
   tvheadend::Subscription m_subscription;
   std::atomic<time_t> m_lastUse;
+  std::atomic<time_t> m_startTime;
 };
 
 } // namespace tvheadend

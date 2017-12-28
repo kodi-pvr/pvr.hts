@@ -47,7 +47,6 @@ public:
   void Close();
   ssize_t Read(unsigned char *buf, unsigned int len);
   long long Seek(long long pos, int whence);
-  long long Tell();
   long long Size();
 
 private:

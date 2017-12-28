@@ -44,7 +44,8 @@ using namespace tvheadend::utilities;
 CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
   : m_conn(new HTSPConnection(*this)), m_streamchange(false), m_vfs(new HTSPVFS(*m_conn)),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
-    m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays)
+    m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays),
+    m_playingLiveStream(false)
 {
   for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
   {
@@ -260,6 +261,7 @@ PVR_ERROR CTvheadend::GetTagMembers
             gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
           gm.iChannelUniqueId = cit->second.GetId();
           gm.iChannelNumber = cit->second.GetNum();
+          gm.iSubChannelNumber = cit->second.GetNumMinor();
           gms.emplace_back(gm);
         }
       }
@@ -1602,11 +1604,6 @@ long long CTvheadend::VfsSeek(long long position, int whence)
   return m_vfs->Seek(position, whence);
 }
 
-long long CTvheadend::VfsTell()
-{
-  return m_vfs->Tell();
-}
-
 long long CTvheadend::VfsSize()
 {
   return m_vfs->Size();
@@ -2678,16 +2675,15 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 {
   HTSPDemuxer *oldest;
   uint32_t prevId;
-  bool ret;
 
   oldest = m_dmx[0];
 
   if (m_dmx.size() == 1)
   {
     /* speedup things if we don't use predictive tuning */
-    ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_SERVERCONF);
+    m_playingLiveStream = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_SERVERCONF);
     m_dmx_active = oldest;
-    return ret;
+    return m_playingLiveStream;
   }
 
   /* If we have a lingering subscription for the target channel
@@ -2713,6 +2709,7 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
       PredictiveTune(prevId, chn.iUniqueId);
       m_streamchange = true;
+      m_playingLiveStream = true;
       return true;
     }
     if (dmx->GetLastUse() < oldest->GetLastUse())
@@ -2731,11 +2728,12 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
   if (m_dmx_active->IsTimeShifting())
     m_dmx_active->Close();
 
-  ret = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
+  m_playingLiveStream = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
-  if (ret)
+  if (m_playingLiveStream)
     PredictiveTune(prevId, chn.iUniqueId);
-  return ret;
+
+  return m_playingLiveStream;
 }
 
 DemuxPacket* CTvheadend::DemuxRead ( void )
@@ -2769,6 +2767,8 @@ void CTvheadend::DemuxClose ( void )
   // If predictive tuning is active, demuxers will be closed automatically once they are expired.
   if (m_dmx.size() == 1)
     m_dmx_active->Close();
+
+  m_playingLiveStream = false;
 }
 
 void CTvheadend::DemuxFlush ( void )
@@ -2806,21 +2806,6 @@ PVR_ERROR CTvheadend::DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info)
   return m_dmx_active->CurrentDescrambleInfo(info);
 }
 
-int64_t CTvheadend::DemuxGetTimeshiftTime() const
-{
-  return m_dmx_active->GetTimeshiftTime();
-}
-
-int64_t CTvheadend::DemuxGetTimeshiftBufferStart() const
-{
-  return m_dmx_active->GetTimeshiftBufferStart();
-}
-
-int64_t CTvheadend::DemuxGetTimeshiftBufferEnd() const
-{
-  return m_dmx_active->GetTimeshiftBufferEnd();
-}
-
 bool CTvheadend::DemuxIsTimeShifting() const
 {
   return m_dmx_active->IsTimeShifting();
@@ -2829,5 +2814,14 @@ bool CTvheadend::DemuxIsTimeShifting() const
 bool CTvheadend::DemuxIsRealTimeStream() const
 {
   return m_dmx_active->IsRealTimeStream();
+}
+
+PVR_ERROR CTvheadend::DemuxGetStreamTimes(PVR_STREAM_TIMES *times) const
+{
+  if (m_playingLiveStream)
+    return m_dmx_active->GetStreamTimes(times);
+
+  // TODO: Implement GetStreamTimes for recordings.
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
