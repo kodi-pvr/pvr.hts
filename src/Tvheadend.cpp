@@ -2176,6 +2176,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   rec.SetId(id);
   rec.SetDirty(false);
 
+  // Set the time the recording was scheduled to start. This may differ from the actual start.
   if (!htsmsg_get_s64(msg, "start", &start))
     rec.SetStart(start);
   else if (bAdd)
@@ -2184,6 +2185,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
+  // Set the time the recording was scheduled to stop. This may differ from the actual stop.
   if (!htsmsg_get_s64(msg, "stop", &stop))
     rec.SetStop(stop);
   else if (bAdd)
@@ -2209,20 +2211,26 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     }
   }
 
-  /* Channel type fallback (in case channel was deleted) */
-  if (!rec.GetChannelType() && m_conn->GetProtocol() >= 25)
+  htsmsg_t *files, *streams;
+  if ((files = htsmsg_get_list(msg, "files")) != NULL)
   {
-    htsmsg_t *files, *streams;
-    if ((files = htsmsg_get_list(msg, "files")) != NULL)
+    htsmsg_field_t *file, *stream;
+    uint32_t u32;
+    int64_t s64;
+    bool needChannelType = !rec.GetChannelType() && m_conn->GetProtocol() >= 25;
+    bool hasAudio = false;
+    bool hasVideo = false;
+
+    start = 0;
+    stop = 0;
+
+    HTSMSG_FOREACH(file, files) // Loop through all files
     {
-      htsmsg_field_t *file, *stream;
-      uint32_t hasAudio = 0, hasVideo = 0, u32;
+      if (file->hmf_type != HMF_MAP)
+        continue;
 
-      HTSMSG_FOREACH(file, files) // Loop through all files
+      if (needChannelType && !(hasAudio && hasVideo))
       {
-        if (file->hmf_type != HMF_MAP)
-          continue;
-
         if ((streams = htsmsg_get_list(&file->hmf_msg, "info")) != NULL)
         {
           HTSMSG_FOREACH(stream, streams) // Loop through all streams
@@ -2231,17 +2239,28 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
               continue;
 
             if (!htsmsg_get_u32(&stream->hmf_msg, "audio_type", &u32)) // Only present for audio streams
-              hasAudio = 1;
+              hasAudio = true;
             if (!htsmsg_get_u32(&stream->hmf_msg, "aspect_num", &u32)) // Only present for video streams
-              hasVideo = 1;
-            if (hasAudio && hasVideo) // No need to parse the rest
-              break;
+              hasVideo = true;
           }
         }
       }
-      rec.SetChannelType(hasVideo ? CHANNEL_TYPE_TV :
-          (hasAudio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_OTHER));
+
+      if (!htsmsg_get_s64(&file->hmf_msg, "start", &s64) && (start == 0 || start > s64))
+        start = s64;
+
+      if (!htsmsg_get_s64(&file->hmf_msg, "stop", &s64) && stop < s64)
+        stop = s64;
     }
+
+    // Set the times the recording actually started/stopped. They may differ from the scheduled start/stop.
+    rec.SetFilesStart(start);
+    rec.SetFilesStop(stop);
+
+    /* Channel type fallback (in case channel was deleted) */
+    if (needChannelType)
+      rec.SetChannelType(hasVideo ? CHANNEL_TYPE_TV :
+                         (hasAudio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_OTHER));
   }
 
   /* Channel name fallback (in case channel was deleted) */

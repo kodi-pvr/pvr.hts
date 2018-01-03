@@ -63,6 +63,8 @@ namespace tvheadend
         m_stop(0),
         m_startExtra(0),
         m_stopExtra(0),
+        m_filesStart(0),
+        m_filesStop(0),
         m_state(PVR_TIMER_STATE_ERROR),
         m_lifetime(0),
         m_priority(50),   // Kodi default - "normal"
@@ -84,6 +86,8 @@ namespace tvheadend
                m_stop == other.m_stop &&
                m_startExtra == other.m_startExtra &&
                m_stopExtra == other.m_stopExtra &&
+               m_filesStart == other.m_filesStart &&
+               m_filesStop == other.m_filesStop &&
                m_title == other.m_title &&
                m_path == other.m_path &&
                m_description == other.m_description &&
@@ -164,6 +168,12 @@ namespace tvheadend
       int64_t GetStopExtra() const { return m_stopExtra; }
       void SetStopExtra(int64_t stopExtra) { m_stopExtra = stopExtra; }
 
+      int64_t GetFilesStart() const { return m_filesStart; }
+      void SetFilesStart(int64_t start) { m_filesStart = start; }
+
+      int64_t GetFilesStop() const { return m_filesStop; }
+      void SetFilesStop(int64_t stop) { m_filesStop = stop; }
+
       const std::string& GetTitle() const { return m_title; }
       void SetTitle(const std::string &title) { m_title = title; }
 
@@ -217,6 +227,8 @@ namespace tvheadend
       int64_t          m_stop;
       int64_t          m_startExtra;
       int64_t          m_stopExtra;
+      int64_t          m_filesStart;
+      int64_t          m_filesStop;
       std::string      m_title;
       std::string      m_subtitle;
       std::string      m_path;

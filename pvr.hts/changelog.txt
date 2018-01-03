@@ -1,5 +1,8 @@
+4.2.10
+- PVR API v5.5.0: Implemented GetStreamTimes for recordings
+
 4.2.9
-- PVR API v5.5.0: Implemented GetStreamTimes
+- PVR API v5.5.0: Implemented GetStreamTimes for TV/radio streams
 - PVR API v5.8.0: Dropped GetPlayingTime, GetBufferTimeStart, GetBufferTimeEnd, PositionRecordedStream, PositionLiveStream, MoveChannel
 - PVR API v5.8.0: Added support for PVR_CHANNEL_GROUP_MEMBER::iSubChannelNumber
 
