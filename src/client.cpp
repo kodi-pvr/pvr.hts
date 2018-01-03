@@ -267,8 +267,7 @@ PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times)
   if (!times)
     return PVR_ERROR_INVALID_PARAMETERS;
 
-  // TODO: handle recordings
-  return tvh->DemuxGetStreamTimes(times);
+  return tvh->GetStreamTimes(times);
 }
 
 bool IsTimeshifting(void)

@@ -45,7 +45,7 @@ CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
   : m_conn(new HTSPConnection(*this)), m_streamchange(false), m_vfs(new HTSPVFS(*m_conn)),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays),
-    m_playingLiveStream(false)
+    m_playingLiveStream(false), m_playingRecording(nullptr)
 {
   for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
   {
@@ -1586,12 +1586,27 @@ void CTvheadend::OnWake()
 
 bool CTvheadend::VfsOpen(const PVR_RECORDING &rec)
 {
-  return m_vfs->Open(rec);
+  bool ret = m_vfs->Open(rec);
+
+  if (ret)
+  {
+    const auto &it = m_recordings.find(atoi(rec.strRecordingId));
+    if (it != m_recordings.end())
+    {
+      CLockObject lock(m_mutex);
+      m_playingRecording = &(it->second);
+    }
+  }
+
+  return ret;
 }
 
 void CTvheadend::VfsClose()
 {
   m_vfs->Close();
+
+  CLockObject lock(m_mutex);
+  m_playingRecording = nullptr;
 }
 
 ssize_t CTvheadend::VfsRead(unsigned char *buf, unsigned int len)
@@ -1881,10 +1896,24 @@ void CTvheadend::SyncDvrCompleted ( void )
     return;
 
   /* Recordings */
-  utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
   {
-    return entry.second.IsDirty();
-  });
+    CLockObject lock(m_mutex);
+
+    // save id of currently playing recording, if any
+    uint32_t id = m_playingRecording ? m_playingRecording->GetId() : 0;
+
+    utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
+    {
+      return entry.second.IsDirty();
+    });
+
+    if (m_playingRecording)
+    {
+      const auto &it = m_recordings.find(id);
+      if (it == m_recordings.end())
+        m_playingRecording = nullptr;
+    }
+  }
 
   /* Time-based repeating timers */
   m_timeRecordings.SyncDvrCompleted();
@@ -2170,11 +2199,18 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  /* Get entry */
+  /* Get/create entry */
   Recording &rec = m_recordings[id];
   Recording comparison = rec;
   rec.SetId(id);
   rec.SetDirty(false);
+
+  {
+    CLockObject lock(m_mutex);
+
+    if (m_playingRecording && m_playingRecording->GetId() == id)
+      m_playingRecording = &rec;
+  }
 
   // Set the time the recording was scheduled to start. This may differ from the actual start.
   if (!htsmsg_get_s64(msg, "start", &start))
@@ -2436,7 +2472,14 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   Logger::Log(LogLevel::LEVEL_DEBUG, "delete recording %u", u32);
   
   /* Erase */
-  m_recordings.erase(u32);
+  {
+    CLockObject lock(m_mutex);
+
+    if (m_playingRecording && m_playingRecording->GetId() == u32)
+      m_playingRecording = nullptr;
+
+    m_recordings.erase(u32);
+  }
 
   /* Update */
   TriggerTimerUpdate();
@@ -2835,12 +2878,49 @@ bool CTvheadend::DemuxIsRealTimeStream() const
   return m_dmx_active->IsRealTimeStream();
 }
 
-PVR_ERROR CTvheadend::DemuxGetStreamTimes(PVR_STREAM_TIMES *times) const
+PVR_ERROR CTvheadend::GetStreamTimes(PVR_STREAM_TIMES *times)
 {
   if (m_playingLiveStream)
+  {
     return m_dmx_active->GetStreamTimes(times);
+  }
 
-  // TODO: Implement GetStreamTimes for recordings.
-  return PVR_ERROR_NOT_IMPLEMENTED;
+  CLockObject lock(m_mutex);
+
+  if (m_playingRecording)
+  {
+    *times = {0};
+
+    if (m_playingRecording->GetState() == PVR_TIMER_STATE_RECORDING)
+    {
+      if (m_playingRecording->GetFilesStart() > 0)
+      {
+        times->ptsEnd = (std::time(nullptr) - m_playingRecording->GetFilesStart()) * DVD_TIME_BASE;
+      }
+      else
+      {
+        // Older tvh versions do not expose real recording start/stop time.
+        // Remark: Following calculation does not always work. Returned end time might be to large, as the
+        // recording might actually have started later than scheduled start time (server came up too late etc).
+        times->ptsEnd = (m_playingRecording->GetStartExtra() * 60
+                         + std::time(nullptr) - m_playingRecording->GetStart()) * DVD_TIME_BASE;
+      }
+    }
+    else
+    {
+      if (m_playingRecording->GetFilesStart() > 0 && m_playingRecording->GetFilesStop() > 0)
+      {
+        times->ptsEnd = (m_playingRecording->GetFilesStop() - m_playingRecording->GetFilesStart()) * DVD_TIME_BASE;
+      }
+      else
+      {
+        // Older tvh versions do not expose real recording start/stop time.
+        // Remark: Kodi is handling finished recording's times very well on its own - in difference to
+        // in-progress recording's times. Returning not implemented will make Kodi handle the stream times.
+        return PVR_ERROR_NOT_IMPLEMENTED;
+      }
+    }
+    return PVR_ERROR_NO_ERROR;
+  }
+  return PVR_ERROR_INVALID_PARAMETERS;
 }
-
