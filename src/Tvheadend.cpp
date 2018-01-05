@@ -667,6 +667,8 @@ int CTvheadend::GetPlayPosition ( const PVR_RECORDING &rec )
   if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return -1;
 
+  CLockObject lock(m_mutex);
+
   const auto &it = m_recordings.find(atoi(rec.strRecordingId));
   if (it != m_recordings.end() && it->second.IsRecording())
   {
@@ -1226,6 +1228,8 @@ PVR_ERROR CTvheadend::DeleteTimer(const PVR_TIMER &timer, bool)
            (timer.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
     /* Read-only timer created by autorec or timerec */
+    CLockObject lock(m_mutex);
+
     const auto &it = m_recordings.find(timer.iClientIndex);
     if (it != m_recordings.end() && it->second.IsRecording())
     {
@@ -1264,6 +1268,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     }
     else
     {
+      CLockObject lock(m_mutex);
+
       const auto &it = m_recordings.find(timer.iClientIndex);
       if (it == m_recordings.end())
       {
@@ -1322,6 +1328,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     if (m_conn->GetProtocol() >= 23)
     {
       /* Read-only timer created by autorec or timerec */
+      CLockObject lock(m_mutex);
+
       const auto &it = m_recordings.find(timer.iClientIndex);
       if (it != m_recordings.end() &&
           (it->second.IsEnabled() == (timer.state == PVR_TIMER_STATE_DISABLED)))
@@ -1514,10 +1522,15 @@ bool CTvheadend::Connected ( void )
     entry.second.SetDirty(true);
   for (auto &entry : m_tags)
     entry.second.SetDirty(true);
-  for (auto &entry : m_recordings)
-    entry.second.SetDirty(true);
   for (auto &entry : m_schedules)
     entry.second.SetDirty(true);
+
+  {
+    CLockObject lock(m_mutex);
+
+    for (auto &entry : m_recordings)
+      entry.second.SetDirty(true);
+  }
 
   /* Request Async data, first is channels */
   m_asyncState.SetState(ASYNC_CHN);
@@ -1590,10 +1603,11 @@ bool CTvheadend::VfsOpen(const PVR_RECORDING &rec)
 
   if (ret)
   {
+    CLockObject lock(m_mutex);
+
     const auto &it = m_recordings.find(atoi(rec.strRecordingId));
     if (it != m_recordings.end())
     {
-      CLockObject lock(m_mutex);
       m_playingRecording = &(it->second);
     }
   }
