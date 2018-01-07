@@ -211,7 +211,6 @@ public:
   PVR_ERROR    DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info);
   bool         DemuxIsTimeShifting() const;
   bool         DemuxIsRealTimeStream() const;
-  PVR_ERROR    DemuxGetStreamTimes(PVR_STREAM_TIMES *times) const;
 
   void CloseExpiredSubscriptions();
 
@@ -223,6 +222,11 @@ public:
   ssize_t VfsRead(unsigned char *buf, unsigned int len);
   long long VfsSeek(long long position, int whence);
   long long VfsSize();
+
+  /*
+   * stream times (live streams and recordings)
+   */
+  PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES *times);
 
   /**
    * The streaming profiles available on the server
@@ -257,4 +261,6 @@ public:
   int m_epgMaxDays;
 
   bool m_playingLiveStream;
+  tvheadend::entity::Recording* m_playingRecording;
+
 };

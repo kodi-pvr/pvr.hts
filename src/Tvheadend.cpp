@@ -45,7 +45,7 @@ CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
   : m_conn(new HTSPConnection(*this)), m_streamchange(false), m_vfs(new HTSPVFS(*m_conn)),
     m_queue((size_t)-1), m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn), m_autoRecordings(*m_conn), m_epgMaxDays(pvrProps->iEpgMaxDays),
-    m_playingLiveStream(false)
+    m_playingLiveStream(false), m_playingRecording(nullptr)
 {
   for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
   {
@@ -667,6 +667,8 @@ int CTvheadend::GetPlayPosition ( const PVR_RECORDING &rec )
   if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return -1;
 
+  CLockObject lock(m_mutex);
+
   const auto &it = m_recordings.find(atoi(rec.strRecordingId));
   if (it != m_recordings.end() && it->second.IsRecording())
   {
@@ -1226,6 +1228,8 @@ PVR_ERROR CTvheadend::DeleteTimer(const PVR_TIMER &timer, bool)
            (timer.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
     /* Read-only timer created by autorec or timerec */
+    CLockObject lock(m_mutex);
+
     const auto &it = m_recordings.find(timer.iClientIndex);
     if (it != m_recordings.end() && it->second.IsRecording())
     {
@@ -1264,6 +1268,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     }
     else
     {
+      CLockObject lock(m_mutex);
+
       const auto &it = m_recordings.find(timer.iClientIndex);
       if (it == m_recordings.end())
       {
@@ -1322,6 +1328,8 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
     if (m_conn->GetProtocol() >= 23)
     {
       /* Read-only timer created by autorec or timerec */
+      CLockObject lock(m_mutex);
+
       const auto &it = m_recordings.find(timer.iClientIndex);
       if (it != m_recordings.end() &&
           (it->second.IsEnabled() == (timer.state == PVR_TIMER_STATE_DISABLED)))
@@ -1514,10 +1522,15 @@ bool CTvheadend::Connected ( void )
     entry.second.SetDirty(true);
   for (auto &entry : m_tags)
     entry.second.SetDirty(true);
-  for (auto &entry : m_recordings)
-    entry.second.SetDirty(true);
   for (auto &entry : m_schedules)
     entry.second.SetDirty(true);
+
+  {
+    CLockObject lock(m_mutex);
+
+    for (auto &entry : m_recordings)
+      entry.second.SetDirty(true);
+  }
 
   /* Request Async data, first is channels */
   m_asyncState.SetState(ASYNC_CHN);
@@ -1586,12 +1599,28 @@ void CTvheadend::OnWake()
 
 bool CTvheadend::VfsOpen(const PVR_RECORDING &rec)
 {
-  return m_vfs->Open(rec);
+  bool ret = m_vfs->Open(rec);
+
+  if (ret)
+  {
+    CLockObject lock(m_mutex);
+
+    const auto &it = m_recordings.find(atoi(rec.strRecordingId));
+    if (it != m_recordings.end())
+    {
+      m_playingRecording = &(it->second);
+    }
+  }
+
+  return ret;
 }
 
 void CTvheadend::VfsClose()
 {
   m_vfs->Close();
+
+  CLockObject lock(m_mutex);
+  m_playingRecording = nullptr;
 }
 
 ssize_t CTvheadend::VfsRead(unsigned char *buf, unsigned int len)
@@ -1641,10 +1670,9 @@ void CTvheadend::CloseExpiredSubscriptions()
     for (auto *dmx : m_dmx)
     {
       if (Settings::GetInstance().GetPreTunerCloseDelay() &&
-          dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < time(nullptr))
+          dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < std::time(nullptr))
       {
-        Logger::Log(LogLevel::LEVEL_TRACE, "untuning channel %u on subscription %u",
-                    m_channels[dmx->GetChannelId()].GetNum(), dmx->GetSubscriptionId());
+        Logger::Log(LogLevel::LEVEL_TRACE, "closing expired subscription %u", dmx->GetSubscriptionId());
         dmx->Close();
       }
     }
@@ -1881,10 +1909,24 @@ void CTvheadend::SyncDvrCompleted ( void )
     return;
 
   /* Recordings */
-  utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
   {
-    return entry.second.IsDirty();
-  });
+    CLockObject lock(m_mutex);
+
+    // save id of currently playing recording, if any
+    uint32_t id = m_playingRecording ? m_playingRecording->GetId() : 0;
+
+    utilities::erase_if(m_recordings, [](const RecordingMapEntry &entry)
+    {
+      return entry.second.IsDirty();
+    });
+
+    if (m_playingRecording)
+    {
+      const auto &it = m_recordings.find(id);
+      if (it == m_recordings.end())
+        m_playingRecording = nullptr;
+    }
+  }
 
   /* Time-based repeating timers */
   m_timeRecordings.SyncDvrCompleted();
@@ -2170,12 +2212,20 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
-  /* Get entry */
+  /* Get/create entry */
   Recording &rec = m_recordings[id];
   Recording comparison = rec;
   rec.SetId(id);
   rec.SetDirty(false);
 
+  {
+    CLockObject lock(m_mutex);
+
+    if (m_playingRecording && m_playingRecording->GetId() == id)
+      m_playingRecording = &rec;
+  }
+
+  // Set the time the recording was scheduled to start. This may differ from the actual start.
   if (!htsmsg_get_s64(msg, "start", &start))
     rec.SetStart(start);
   else if (bAdd)
@@ -2184,6 +2234,7 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
+  // Set the time the recording was scheduled to stop. This may differ from the actual stop.
   if (!htsmsg_get_s64(msg, "stop", &stop))
     rec.SetStop(stop);
   else if (bAdd)
@@ -2209,20 +2260,26 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     }
   }
 
-  /* Channel type fallback (in case channel was deleted) */
-  if (!rec.GetChannelType() && m_conn->GetProtocol() >= 25)
+  htsmsg_t *files, *streams;
+  if ((files = htsmsg_get_list(msg, "files")) != NULL)
   {
-    htsmsg_t *files, *streams;
-    if ((files = htsmsg_get_list(msg, "files")) != NULL)
+    htsmsg_field_t *file, *stream;
+    uint32_t u32;
+    int64_t s64;
+    bool needChannelType = !rec.GetChannelType() && m_conn->GetProtocol() >= 25;
+    bool hasAudio = false;
+    bool hasVideo = false;
+
+    start = 0;
+    stop = 0;
+
+    HTSMSG_FOREACH(file, files) // Loop through all files
     {
-      htsmsg_field_t *file, *stream;
-      uint32_t hasAudio = 0, hasVideo = 0, u32;
+      if (file->hmf_type != HMF_MAP)
+        continue;
 
-      HTSMSG_FOREACH(file, files) // Loop through all files
+      if (needChannelType && !(hasAudio && hasVideo))
       {
-        if (file->hmf_type != HMF_MAP)
-          continue;
-
         if ((streams = htsmsg_get_list(&file->hmf_msg, "info")) != NULL)
         {
           HTSMSG_FOREACH(stream, streams) // Loop through all streams
@@ -2231,17 +2288,28 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
               continue;
 
             if (!htsmsg_get_u32(&stream->hmf_msg, "audio_type", &u32)) // Only present for audio streams
-              hasAudio = 1;
+              hasAudio = true;
             if (!htsmsg_get_u32(&stream->hmf_msg, "aspect_num", &u32)) // Only present for video streams
-              hasVideo = 1;
-            if (hasAudio && hasVideo) // No need to parse the rest
-              break;
+              hasVideo = true;
           }
         }
       }
-      rec.SetChannelType(hasVideo ? CHANNEL_TYPE_TV :
-          (hasAudio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_OTHER));
+
+      if (!htsmsg_get_s64(&file->hmf_msg, "start", &s64) && (start == 0 || start > s64))
+        start = s64;
+
+      if (!htsmsg_get_s64(&file->hmf_msg, "stop", &s64) && stop < s64)
+        stop = s64;
     }
+
+    // Set the times the recording actually started/stopped. They may differ from the scheduled start/stop.
+    rec.SetFilesStart(start);
+    rec.SetFilesStop(stop);
+
+    /* Channel type fallback (in case channel was deleted) */
+    if (needChannelType)
+      rec.SetChannelType(hasVideo ? CHANNEL_TYPE_TV :
+                         (hasAudio ? CHANNEL_TYPE_RADIO : CHANNEL_TYPE_OTHER));
   }
 
   /* Channel name fallback (in case channel was deleted) */
@@ -2417,7 +2485,14 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   Logger::Log(LogLevel::LEVEL_DEBUG, "delete recording %u", u32);
   
   /* Erase */
-  m_recordings.erase(u32);
+  {
+    CLockObject lock(m_mutex);
+
+    if (m_playingRecording && m_playingRecording->GetId() == u32)
+      m_playingRecording = nullptr;
+
+    m_recordings.erase(u32);
+  }
 
   /* Update */
   TriggerTimerUpdate();
@@ -2816,12 +2891,49 @@ bool CTvheadend::DemuxIsRealTimeStream() const
   return m_dmx_active->IsRealTimeStream();
 }
 
-PVR_ERROR CTvheadend::DemuxGetStreamTimes(PVR_STREAM_TIMES *times) const
+PVR_ERROR CTvheadend::GetStreamTimes(PVR_STREAM_TIMES *times)
 {
   if (m_playingLiveStream)
+  {
     return m_dmx_active->GetStreamTimes(times);
+  }
 
-  // TODO: Implement GetStreamTimes for recordings.
-  return PVR_ERROR_NOT_IMPLEMENTED;
+  CLockObject lock(m_mutex);
+
+  if (m_playingRecording)
+  {
+    *times = {0};
+
+    if (m_playingRecording->GetState() == PVR_TIMER_STATE_RECORDING)
+    {
+      if (m_playingRecording->GetFilesStart() > 0)
+      {
+        times->ptsEnd = (std::time(nullptr) - m_playingRecording->GetFilesStart()) * DVD_TIME_BASE;
+      }
+      else
+      {
+        // Older tvh versions do not expose real recording start/stop time.
+        // Remark: Following calculation does not always work. Returned end time might be to large, as the
+        // recording might actually have started later than scheduled start time (server came up too late etc).
+        times->ptsEnd = (m_playingRecording->GetStartExtra() * 60
+                         + std::time(nullptr) - m_playingRecording->GetStart()) * DVD_TIME_BASE;
+      }
+    }
+    else
+    {
+      if (m_playingRecording->GetFilesStart() > 0 && m_playingRecording->GetFilesStop() > 0)
+      {
+        times->ptsEnd = (m_playingRecording->GetFilesStop() - m_playingRecording->GetFilesStart()) * DVD_TIME_BASE;
+      }
+      else
+      {
+        // Older tvh versions do not expose real recording start/stop time.
+        // Remark: Kodi is handling finished recording's times very well on its own - in difference to
+        // in-progress recording's times. Returning not implemented will make Kodi handle the stream times.
+        return PVR_ERROR_NOT_IMPLEMENTED;
+      }
+    }
+    return PVR_ERROR_NO_ERROR;
+  }
+  return PVR_ERROR_INVALID_PARAMETERS;
 }
-
