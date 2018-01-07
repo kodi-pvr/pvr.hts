@@ -126,6 +126,7 @@ ADDON_STATUS ADDON_GetStatus()
 void ADDON_Destroy()
 {
   CLockObject lock(g_mutex);
+  tvh->Stop();
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
   SAFE_DELETE(XBMC);
@@ -143,14 +144,12 @@ ADDON_STATUS ADDON_SetSetting
 
 void OnSystemSleep()
 {
-  if (tvh)
-    tvh->OnSleep();
+  tvh->OnSleep();
 }
 
 void OnSystemWake()
 {
-  if (tvh)
-    tvh->OnWake();
+  tvh->OnWake();
 }
 
 void OnPowerSavingActivated()

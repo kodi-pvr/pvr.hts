@@ -72,6 +72,7 @@ public:
   ~CTvheadend() override;
 
   void Start ( void );
+  void Stop ( void );
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
