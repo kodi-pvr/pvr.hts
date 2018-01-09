@@ -1,3 +1,6 @@
+4.2.11
+- Fixed crashes on addon destruction
+
 4.2.10
 - PVR API v5.5.0: Implemented GetStreamTimes for recordings
 

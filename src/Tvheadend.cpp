@@ -57,12 +57,8 @@ CTvheadend::CTvheadend(PVR_PROPERTIES *pvrProps)
 CTvheadend::~CTvheadend()
 {
   for (auto *dmx : m_dmx)
-  {
     delete dmx;
-  }
 
-  m_conn->Stop();
-  StopThread();
   delete m_conn;
   delete m_vfs;
 }
@@ -71,6 +67,15 @@ void CTvheadend::Start ( void )
 {
   CreateThread();
   m_conn->Start();
+}
+
+void CTvheadend::Stop ( void )
+{
+  for (auto *dmx : m_dmx)
+    dmx->Close();
+
+  m_conn->Stop();
+  StopThread(0);
 }
 
 /* **************************************************************************
@@ -1690,13 +1695,15 @@ void* CTvheadend::Process ( void )
     // this is a bit horrible, but meh
     bool bSuccess = m_queue.Pop(msg, 2000);
 
+    if (IsStopped())
+      continue;
+
     // check for expired predictive tuning subscriptions and close those
     CloseExpiredSubscriptions();
 
-    if (!bSuccess)
+    if (!bSuccess || !msg.GetMessage())
       continue;
-    if (!msg.GetMessage())
-      continue;
+
     method = msg.GetMethod().c_str();
 
     SHTSPEventList eventsCopy;
@@ -1786,6 +1793,9 @@ void* CTvheadend::Process ( void )
     /* Manual delete rather than waiting */
     msg.ClearMessage();
 
+    if (IsStopped())
+      continue;
+
     /* Process events
      * Note: due to potential deadly embrace this must be done without the
      *       m_mutex held!
@@ -1814,8 +1824,7 @@ void* CTvheadend::Process ( void )
     }
   }
 
-  /* Local */
-  return NULL;
+  return nullptr;
 }
 
 void CTvheadend::TriggerChannelGroupsUpdate()
