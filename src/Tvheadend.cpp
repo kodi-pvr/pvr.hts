@@ -457,10 +457,26 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       rec.iGenreType = recording.GetGenreType();
       rec.iGenreSubType = recording.GetGenreSubType();
 
-      /* Time/Duration */
-      rec.recordingTime = static_cast<time_t>(recording.GetStart() - recording.GetStartExtra() * 60);
-      rec.iDuration = static_cast<int>(recording.GetStop() - recording.GetStart() +
-                                       recording.GetStartExtra() * 60 + recording.GetStopExtra() * 60);
+      /* Time/Duration (prefer real start/stop time over scheduled start/stop time if possible.) */
+      int64_t start;
+      int64_t stop;
+      if (recording.GetFilesStart() > 0)
+      {
+        start = recording.GetFilesStart();
+
+        if (recording.GetFilesStop() > 0) // finished / in progress?
+          stop = recording.GetFilesStop();
+        else
+          stop = recording.GetStop() + recording.GetStopExtra() * 60;
+      }
+      else
+      {
+        start = recording.GetStart() - recording.GetStartExtra() * 60;
+        stop = recording.GetStop() + recording.GetStopExtra() * 60;
+      }
+
+      rec.recordingTime = static_cast<time_t>(start);
+      rec.iDuration = static_cast<int>(stop - start);
 
       /* Priority */
       rec.iPriority = recording.GetPriority();
