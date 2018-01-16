@@ -1,3 +1,8 @@
+4.2.12
+- Recordings: Use real start time and duration if available.
+- Recordings: Add support for season and episode number (tvh4.3+).
+- New addon logo.
+
 4.2.11
 - Fixed crashes on addon destruction
 

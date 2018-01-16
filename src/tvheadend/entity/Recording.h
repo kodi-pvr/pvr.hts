@@ -70,7 +70,10 @@ namespace tvheadend
         m_priority(50),   // Kodi default - "normal"
         m_playCount(0),
         m_playPosition(0),
-        m_contentType(0)
+        m_contentType(0),
+        m_season(0),
+        m_episode(0),
+        m_part(0)
       {
       }
 
@@ -99,7 +102,10 @@ namespace tvheadend
                m_priority == other.m_priority &&
                m_playCount == other.m_playCount &&
                m_playPosition == other.m_playPosition &&
-               m_contentType == other.m_contentType;
+               m_contentType == other.m_contentType &&
+               m_season == other.m_season &&
+               m_episode == other.m_episode &&
+               m_part == other.m_part;
       }
 
       bool operator!=(const Recording &other) const
@@ -217,6 +223,15 @@ namespace tvheadend
       uint32_t GetGenreType() const { return m_contentType * 0x10; }
       uint32_t GetGenreSubType() const { return 0; }
 
+      uint32_t GetSeason() const { return m_season; }
+      void SetSeason(uint32_t season) { m_season = season; }
+
+      uint32_t GetEpisode() const { return m_episode; }
+      void SetEpisode(uint32_t episode) { m_episode = episode; }
+
+      uint32_t GetPart() const { return m_part; }
+      void SetPart(uint32_t part) { m_part = part; }
+
     private:
       uint32_t         m_enabled;
       uint32_t         m_channel;
@@ -242,6 +257,9 @@ namespace tvheadend
       uint32_t         m_playCount;
       uint32_t         m_playPosition;
       uint32_t         m_contentType;
+      uint32_t         m_season;
+      uint32_t         m_episode;
+      uint32_t         m_part;
     };
   }
 }

@@ -450,6 +450,10 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       /* Subtitle */
       strncpy(rec.strEpisodeName, recording.GetSubtitle().c_str(), sizeof(rec.strEpisodeName) - 1);
 
+      /* season/episode (tvh 4.3+) */
+      rec.iSeriesNumber = recording.GetSeason();
+      rec.iEpisodeNumber = recording.GetEpisode();
+
       /* Description */
       strncpy(rec.strPlot, recording.GetDescription().c_str(), sizeof(rec.strPlot) - 1);
 
@@ -457,9 +461,26 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       rec.iGenreType = recording.GetGenreType();
       rec.iGenreSubType = recording.GetGenreSubType();
 
-      /* Time/Duration */
-      rec.recordingTime = (time_t)recording.GetStart();
-      rec.iDuration = static_cast<int>(recording.GetStop() - recording.GetStart());
+      /* Time/Duration (prefer real start/stop time over scheduled start/stop time if possible.) */
+      int64_t start;
+      int64_t stop;
+      if (recording.GetFilesStart() > 0)
+      {
+        start = recording.GetFilesStart();
+
+        if (recording.GetFilesStop() > 0) // finished / in progress?
+          stop = recording.GetFilesStop();
+        else
+          stop = recording.GetStop() + recording.GetStopExtra() * 60;
+      }
+      else
+      {
+        start = recording.GetStart() - recording.GetStartExtra() * 60;
+        stop = recording.GetStop() + recording.GetStopExtra() * 60;
+      }
+
+      rec.recordingTime = static_cast<time_t>(start);
+      rec.iDuration = static_cast<int>(stop - start);
 
       /* Priority */
       rec.iPriority = recording.GetPriority();
@@ -2208,7 +2229,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
 void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
 {
   const char *state, *str;
-  uint32_t id, channel, eventId, retention, removal, priority, enabled, contentType, playCount, playPosition;
+  uint32_t id, channel, eventId, retention, removal, priority, enabled, contentType, playCount, playPosition, season, episode, part;
   int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
@@ -2463,6 +2484,14 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     if (!htsmsg_get_u32(msg, "playposition", &playPosition))
       rec.SetPlayPosition(playPosition);
   }
+
+  /* season/episode/part */
+  if (!htsmsg_get_u32(msg, "seasonNumber", &season))
+    rec.SetSeason(season);
+  if (!htsmsg_get_u32(msg, "episodeNumber", &episode))
+    rec.SetEpisode(episode);
+  if (!htsmsg_get_u32(msg, "partNumber", &part))
+    rec.SetPart(part);
 
   /* Update */
   if (rec != comparison)
