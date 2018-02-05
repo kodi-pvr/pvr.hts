@@ -196,6 +196,18 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Timerregel (serie länk)"
 
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Spela in max en gång per månad"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Endast denna regel: Spela in max en gång per månad"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Spela in om unik episod enligt EPG/XMLTV"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Tills utrymme krävs"

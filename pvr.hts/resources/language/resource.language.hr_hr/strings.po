@@ -196,6 +196,18 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Pravilo zakazanih snimanja  (serijska poveznica)"
 
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Snimi najviše jednom mjesečno"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Samo za ovo pravilo: Snimi najviše jednom mjesečno"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Snimi ako je epizoda jedinstvena prema EPG/XMLTV vodiču"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dok ima slobodnog prostora"

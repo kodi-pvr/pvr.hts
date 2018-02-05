@@ -116,6 +116,10 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "La versione di HTSP non corrisponde (supportata: v%d, necessaria: v&d). Aggiorna tvheadend, per favore."
 
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Una volta (Pianificato da timer)"
+
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (Maggiore)"
@@ -187,6 +191,22 @@ msgstr "Solo questa regola: Registra al massimo una volta al giorno"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Predefinito"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Regola timer (serie collegate)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Registra al massimo una volta al mese"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Solo questa regola: Registra al massimo una volta al mese"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Registra se unico episodio in base a EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -315,3 +335,7 @@ msgstr "Profilo di streaming %s non disponibile"
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Registrazioni"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Stato di riproduzione basato su server"

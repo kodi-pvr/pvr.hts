@@ -16,6 +16,18 @@ msgstr ""
 "Language: eu_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "Konexio-ezarpenak"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "HTTP ataka"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "HTSP ataka"
+
 msgctxt "#30004"
 msgid "Username"
 msgstr "Erabiltzailea"

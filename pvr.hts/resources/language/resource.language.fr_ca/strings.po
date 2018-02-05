@@ -196,6 +196,18 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Règle de minuterie (lien de série)"
 
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Enregistrer au plus une fois par mois"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Cette règle seulement : enregistrer au plus une fois par mois"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Enregistrer si l’épisode est unique d’après le GÉP ou XMLTV"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Jusqu’à ce que l’espace soit requis"

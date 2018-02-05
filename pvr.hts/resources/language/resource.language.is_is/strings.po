@@ -196,6 +196,18 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Tímatökuregla (tengt við raðir)"
 
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Taka upp mest einu sinni á mánuði"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Einungis þessi regla: Taka upp mest einu sinni á mánuði"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Taka upp ef er einstakur þáttur miðað við EPG/XMLTV"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Þangað til vantar pláss"

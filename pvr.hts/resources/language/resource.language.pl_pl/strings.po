@@ -196,6 +196,10 @@ msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Reguła harmonogramu (wiązanie seryjne)"
 
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Nagrywaj maksimum raz na miesiąc"
+
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Do zakończenia programu"
