@@ -1,3 +1,6 @@
+4.2.14
+- PVR API 5.9.0 changes implemented
+
 4.2.12
 - Recordings: Use real start time and duration if available.
 - Recordings: Add support for season and episode number (tvh4.3+).
