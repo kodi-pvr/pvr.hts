@@ -16,6 +16,10 @@ msgstr ""
 "Language: am_ET\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr "ግንኙነት ማሰናጃ"
+
 msgctxt "#30002"
 msgid "HTTP port"
 msgstr "HTTP port"
@@ -26,15 +30,39 @@ msgstr "HTSP port"
 
 msgctxt "#30004"
 msgid "Username"
-msgstr "የተጠቃሚ ስም "
+msgstr "የ ተጠቃሚ ስም "
 
 msgctxt "#30005"
 msgid "Password"
-msgstr "የመግቢያ ቃል"
+msgstr "የ መግቢያ ቃል"
+
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "ግንኙነት ጊዜው አልፏል (ሰከንዶች)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "የረቀቀ ማሰናጃ"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "ማስተላለፊያ ማሰናጃ"
 
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "ሰአት ማሰናጃ"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "በራሱ መቅረጫ "
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "ነባር ቅድሚያ"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "ዳታ ማስተላለፊያ "
 
 msgctxt "#30352"
 msgid "High"
@@ -51,6 +79,70 @@ msgstr "ዝቅተኛ "
 msgctxt "#30368"
 msgid "Default"
 msgstr "ነባር "
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "ለ ሁልጊዜ"
+
+msgctxt "#30375"
+msgid "1 day"
+msgstr "1 ቀን"
+
+msgctxt "#30376"
+msgid "3 days"
+msgstr "3 ቀኖች"
+
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 ቀኖች"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 ሳምንት"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 ሳምንቶች"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 ሳምንቶች"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 ወር"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 ወሮች"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 ወሮች"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 ወሮች"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 አመት"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 አመቶች"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 አመቶች"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "ለ ሁልጊዜ (tvh 4.1+)"
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr "ምንም ምልክት የለም"
 
 msgctxt "#30510"
 msgid "Recordings"

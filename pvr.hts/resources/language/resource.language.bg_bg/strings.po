@@ -22,7 +22,7 @@ msgstr "Настройки на връзката"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend хост или IP адрес"
+msgstr "Име на хост или IP адрес на Tvheadend"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -52,9 +52,53 @@ msgctxt "#30008"
 msgid "Advanced settings"
 msgstr "Допълнителни настройки"
 
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "Настройки за поточно излъчване"
+
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Настройки на брояча"
+msgstr "Настройки на броячите"
+
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Автоматични записи"
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr "Изчисление на времето за запис"
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr "Строго (време за начало + време за край)"
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr "Нестрого (начално време +/- излишък)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr "Макс. време на излишък в началото (мин)"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "Стандартен приоритет"
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Стандартен срок за съхранение"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Стандартно разпознаване на еднаквите"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Стандартни настройки за новите броячи"
+
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr "Пренос на данни"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
@@ -68,29 +112,105 @@ msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr "Проследяване (подробно)"
 
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr "Несъответствие във версиите на HTSP (поддържана версия:%d, нужна версия: %d). Моля, обновете „tvheadend“."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Еднократен (насрочено чрез правило на брояч)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "Важен (най-високо)"
+
 msgctxt "#30352"
 msgid "High"
-msgstr "Високо"
+msgstr "Висок"
 
 msgctxt "#30353"
 msgid "Normal"
-msgstr "Нормално"
+msgstr "Нормален"
 
 msgctxt "#30354"
 msgid "Low"
-msgstr "Ниско"
+msgstr "Нисъ"
+
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "Маловажен (най-нисък)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Запиши всички епизоди"
+msgstr "Запис на всички епизоди"
+
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr "Запис само, ако номерът на епизода е различен"
+
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr "Запис само, ако името на епизода е различно"
+
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr "Запис само, ако описанието е различно"
+
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr "Записване най-много веднъж в седмицата"
+
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr "Записване най-много веднъж през деня"
+
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Само за това правило: Запис само, ако номерът на епизода е различен"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Само за това правило: Запис само, ако името на епизода е различно"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Само за това правило: Запис само, ако заглавието е различно"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Само за това правило: Запис само, ако описанието е различно"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Само за това правило: Записване най-много веднъж в седмицата"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Само за това правило: Записване най-много веднъж през деня"
 
 msgctxt "#30368"
 msgid "Default"
-msgstr "Стандартна"
+msgstr "Стандартен"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Записване най-много веднъж в месеца"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Само за това правило: Записване най-много веднъж в месеца"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Запис само, ако епизодът е уникален според справочника или XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Докато няма недостиг на място"
+
+msgctxt "#30374"
+msgid "Forever"
+msgstr "Завинаги"
 
 msgctxt "#30375"
 msgid "1 day"
@@ -140,26 +260,78 @@ msgctxt "#30386"
 msgid "2 years"
 msgstr "2 години"
 
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 години"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Докато няма недостиг на място (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Завинаги (tvh 4.1+)"
+
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr "Предварително настройване"
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr "Брой използвани абонаменти"
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr "Забавяне при затваряне на неизползван абонамент (секунди)"
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr "Използване на предварително настройване на честотата за по-бърза смяна на каналите"
+
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr "Няма свободен адаптор"
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr "Кодиран канал"
 
 msgctxt "#30452"
 msgid "No signal"
 msgstr "Няма сигнал"
 
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr "Настройването беше неуспешно"
+
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Достигнат е лимита на потребители"
+msgstr "Достигнато е ограничението за брой потребители"
 
 msgctxt "#30455"
 msgid "No access"
 msgstr "Няма достъп"
 
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr "Грешка в абонамента"
+
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Профил за поточно излъчване"
+
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Профил в употреба (празен = основен)"
+msgstr "Използван профил (празен = стандартният)"
+
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr "Профилът за поточно излъчване „%s“ не е наличен"
 
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Записи"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Състояние на възпроизвеждане според сървъра"

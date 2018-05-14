@@ -50,7 +50,7 @@ msgstr "Válasz időkorlát (másodpercben)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Haladó beállítások"
+msgstr "Speciális beállítások"
 
 msgctxt "#30009"
 msgid "Streaming settings"
@@ -158,11 +158,11 @@ msgstr "Rögzítse, ha a leírás különbözik"
 
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Hetente max. egyszer rögzítse"
+msgstr "Rögzítés legfeljebb hetente egyszer"
 
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Naponta max. egyszer rögzítse"
+msgstr "Rögzítés legfeljebb naponta egyszer"
 
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
@@ -191,6 +191,22 @@ msgstr "Csak ez a szabály: Naponta legfeljebb egyszer rögzítse"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Alapértelmezett"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Időzítési szabály (sorozat hivatkozás)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Rögzítés legfeljebb havonta egyszer"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Csak ez a szabály: Havonta legfeljebb egyszer rögzítse"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Rögzítés akkor, ha az EPG/XMLTC szerint egyedi epizód"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -322,4 +338,4 @@ msgstr "Felvételek"
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Szerver alapú lejátszási állapot"
+msgstr "Kiszolgáló alapú lejátszási állapot"

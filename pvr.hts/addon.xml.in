@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="4.2.14"
+  version="4.2.15"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -11,7 +11,7 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="af_ZA">Kodi se voorprogram vir Tvheadend</summary>
     <summary lang="be_BY">Kodi's frontend for Tvheadend</summary>
-    <summary lang="bg_BG">Kodi клиент за Tvheadend</summary>
+    <summary lang="bg_BG">Клиент за „Tvheadend“</summary>
     <summary lang="ca_ES">Frontal de Kodi per a Tvheadend</summary>
     <summary lang="cs_CZ">Rozhraní Kodi pro Tvheadend</summary>
     <summary lang="cy_GB">Blaen Kodi ar gyfer Tvheadend</summary>
@@ -67,7 +67,7 @@
     <summary lang="zh_TW">Kodi的Tvheadend前端介面</summary>
     <description lang="af_ZA">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="be_BY">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
-    <description lang="bg_BG">Tvheadend клиент. Поддържа поточна телевизия, записване, електронен програмен справочник и броячи.</description>
+    <description lang="bg_BG">Клиент за „Tvheadend“. Поддържа телевизия на живо, записване, електронен програмен справочник и броячи.</description>
     <description lang="ca_ES">Frontal de Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, guia electrònica de programació (EPG), temporitzadors</description>
     <description lang="cs_CZ">Rozhraní Tvheadend; podporuje streamování živého vysílání a nahrávání, televizní program, časovače.</description>
     <description lang="cy_GB">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
