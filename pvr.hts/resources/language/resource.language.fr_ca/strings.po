@@ -126,7 +126,7 @@ msgstr "Importante (la plus élevée)"
 
 msgctxt "#30352"
 msgid "High"
-msgstr "Haute"
+msgstr "Élevée"
 
 msgctxt "#30353"
 msgid "Normal"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="4.2.15"
+  version="4.2.16"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -83,7 +83,7 @@
     <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend'i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend-asiakasohjelma. Tukee suorien tv-lähetysten ja tallennusten katsomista, ohjelmaopasta ja ohjelmien ajastamista.</description>
-    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et minuteries.</description>
+    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
@@ -140,7 +140,7 @@
     <disclaimer lang="et_EE">See on ebastabiilne tarkvara! Autorid ei ole kuidagi moodi vastutavad nurjunud salvestiste, ebaõige aegrelee, raisatud tundide ega muude soovimatute asjade eest.</disclaimer>
     <disclaimer lang="eu_ES">Software hau beta bertsioan dago! Egilea ez da arduratzen grabaketa erroretaz, kronometro erroreak, hordu galduak edo beste edozein ondorio ezerosotaz</disclaimer>
     <disclaimer lang="fi_FI">Tämä on epävakaa ohjelma! Sen tekijät eivät ole millään muotoa vastuussa epäonnistuneista tallennuksista, virheellisistä ajastuksista, haaskatusta ajasta, verenpaineen noususta tai mistään muusta epäsuotuisasta vaikutuksesta.</disclaimer>
-    <disclaimer lang="fr_CA">Ce logiciel est instable! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
+    <disclaimer lang="fr_CA">Ce logiciel est instable ! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
     <disclaimer lang="fr_FR">Logiciel en cours d'élaboration ! Les auteurs ne sont en aucun cas responsables de l'échec des enregistrements, programmations défectueuses, temps perdu ou autres effets indésirables.</disclaimer>
     <disclaimer lang="gl_ES">Este é software non estable, os autores non se fan responsábeis dos erros na gravacións, temporizadores incorrectos, e outros efectos non desexados.</disclaimer>
     <disclaimer lang="he_IL">זוהי איננה הרחבה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל תופעה לא רצויה אחרת.</disclaimer>
