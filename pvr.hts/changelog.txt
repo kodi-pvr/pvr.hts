@@ -1,3 +1,12 @@
+4.2.17
+- Fix predictive tuning (do not close subscriptions that never were active).
+
+4.2.16
+- updated language files from Transifex
+
+4.2.15
+- updated language files from Transifex
+
 4.2.14
 - PVR API 5.9.0 changes implemented
 

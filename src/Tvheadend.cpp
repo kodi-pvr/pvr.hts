@@ -1696,6 +1696,7 @@ void CTvheadend::CloseExpiredSubscriptions()
     for (auto *dmx : m_dmx)
     {
       if (Settings::GetInstance().GetPreTunerCloseDelay() &&
+          dmx->GetLastUse() > 0 &&
           dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < std::time(nullptr))
       {
         Logger::Log(LogLevel::LEVEL_TRACE, "closing expired subscription %u", dmx->GetSubscriptionId());
