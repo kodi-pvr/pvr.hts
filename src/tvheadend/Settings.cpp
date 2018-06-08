@@ -45,6 +45,7 @@ const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
 const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
 const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
 const bool        Settings::DEFAULT_DVR_PLAYSTATUS      = true;
+const int         Settings::DEFAULT_STREAM_CHUNKSIZE    = 64; // KB
 
 void Settings::ReadSettings()
 {
@@ -84,6 +85,9 @@ void Settings::ReadSettings()
 
   /* Sever based play status */
   SetDvrPlayStatus(ReadBoolSetting("dvr_playstatus", DEFAULT_DVR_PLAYSTATUS));
+
+  /* Stream read chunk size */
+  SetStreamReadChunkSizeKB(ReadIntSetting("stream_readchunksize", DEFAULT_STREAM_CHUNKSIZE));
 }
 
 ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
@@ -154,6 +158,8 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
   /* Server based play status */
   else if (key == "dvr_playstatus")
     return SetBoolSetting(GetDvrPlayStatus(), value);
+  else if (key == "stream_readchunksize")
+    return SetIntSetting(GetStreamReadChunkSize(), value);
   else
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());

@@ -251,6 +251,15 @@ PVR_ERROR CallMenuHook(const PVR_MENUHOOK&, const PVR_MENUHOOK_DATA&)
  * Demuxer
  * *************************************************************************/
 
+PVR_ERROR GetStreamReadChunkSize(int* chunksize)
+{
+  if (!chunksize)
+    return PVR_ERROR_INVALID_PARAMETERS;
+
+  *chunksize = Settings::GetInstance().GetStreamReadChunkSize() * 1024;
+  return PVR_ERROR_NO_ERROR;
+}
+
 bool CanPauseStream(void)
 {
   return tvh->HasCapability("timeshift");
