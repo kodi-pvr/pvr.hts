@@ -430,6 +430,14 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr ""
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr ""
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr ""
+
 #empty strings from id 30503 to 30509
 
 msgctxt "#30510"

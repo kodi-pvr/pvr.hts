@@ -54,6 +54,7 @@ namespace tvheadend {
     static const int         DEFAULT_DVR_LIFETIME;    // 0..14 (0 = 1 day, 14 = forever)
     static const int         DEFAULT_DVR_DUBDETECT;   // 0..5  (0 = record all, 5 = limit to once a day)
     static const bool        DEFAULT_DVR_PLAYSTATUS;
+    static const int         DEFAULT_STREAM_CHUNKSIZE; // KB
 
     /**
      * Singleton getter for the instance
@@ -96,6 +97,7 @@ namespace tvheadend {
     int         GetDvrDupdetect() const { return m_iDvrDupdetect; }
     int         GetDvrLifetime(bool asEnum = false) const;
     bool        GetDvrPlayStatus() const { return m_bDvrPlayStatus; }
+    int         GetStreamReadChunkSize() const { return m_iStreamReadChunkSizeKB; }
 
   private:
     Settings()
@@ -117,7 +119,8 @@ namespace tvheadend {
       m_iDvrPriority(DEFAULT_DVR_PRIO),
       m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
       m_iDvrDupdetect(DEFAULT_DVR_DUBDETECT),
-      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS) {}
+      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
+      m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE) {}
 
     Settings(Settings const &) = delete;
     void operator=(Settings const &) = delete;
@@ -143,6 +146,7 @@ namespace tvheadend {
     void SetDvrLifetime(int value) { m_iDvrLifetime = value; }
     void SetDvrDupdetect(int value) { m_iDvrDupdetect = value; }
     void SetDvrPlayStatus(bool value) { m_bDvrPlayStatus = value; }
+    void SetStreamReadChunkSizeKB(int value) { m_iStreamReadChunkSizeKB = value; }
 
     /**
      * Read/Set values according to definition in settings.xml
@@ -175,6 +179,7 @@ namespace tvheadend {
     int         m_iDvrLifetime;
     int         m_iDvrDupdetect;
     bool        m_bDvrPlayStatus;
+    int         m_iStreamReadChunkSizeKB;
   };
 
 }
