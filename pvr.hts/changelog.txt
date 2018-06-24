@@ -1,3 +1,6 @@
+4.3.1
+- Add stub for "subscriptionGrace" HTSP method.
+
 4.3.0
 - PVR Addon API 5.10.0: Implemented recording stream read chunk size as addon setting.
 

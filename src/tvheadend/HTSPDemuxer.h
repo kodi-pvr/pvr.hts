@@ -103,6 +103,7 @@ private:
   void ParseSubscriptionStop(htsmsg_t *m);
   void ParseSubscriptionSkip(htsmsg_t *m);
   void ParseSubscriptionSpeed(htsmsg_t *m);
+  void ParseSubscriptionGrace(htsmsg_t *m);
   void ParseQueueStatus(htsmsg_t *m);
   void ParseSignalStatus(htsmsg_t *m);
   void ParseTimeshiftStatus(htsmsg_t *m);

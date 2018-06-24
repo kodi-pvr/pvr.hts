@@ -375,6 +375,8 @@ bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
     ParseSubscriptionSkip(m);
   else if (!strcmp("subscriptionSpeed", method))
     ParseSubscriptionSpeed(m);
+  else if (!strcmp("subscriptionGrace", method))
+    ParseSubscriptionGrace(m);
   else
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux unhandled subscription message [%s]", method);
 
@@ -669,6 +671,10 @@ void HTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
     Flush();
     m_speedChange = false;
   }
+}
+
+void HTSPDemuxer::ParseSubscriptionGrace ( htsmsg_t *m )
+{
 }
 
 void HTSPDemuxer::ParseQueueStatus (htsmsg_t* m)
