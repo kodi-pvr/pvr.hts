@@ -216,6 +216,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "El perfil de la transmissió en línia %s no està disponible"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Transferència de dades"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Enregistraments"

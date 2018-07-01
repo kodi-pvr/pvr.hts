@@ -312,6 +312,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "El perfil de streaming %s no está disponible"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Transferencia de datos"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Grabaciones"

@@ -332,6 +332,14 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profil streamovania %s nie je k dispozícii"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Prenos údajov"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Veľkosť chunku pre čítanie streamu u nahrávok (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Nahrávky"

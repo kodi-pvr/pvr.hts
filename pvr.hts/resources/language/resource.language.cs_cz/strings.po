@@ -332,6 +332,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profil streamování %s není dostupný"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Přenos dat"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Nahrávky"

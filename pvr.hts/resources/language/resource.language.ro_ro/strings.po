@@ -312,6 +312,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profilul pentru difuzarea în flux %s nu este disponibil"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Transfer de date"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Înregistrări"

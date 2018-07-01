@@ -332,6 +332,14 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Transliacijos profilis %s neprieinamas"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Duomenų perkėlimas"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Srauto skaitymo dalies dydis įrašams (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Įrašai"

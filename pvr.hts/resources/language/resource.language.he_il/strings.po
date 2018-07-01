@@ -320,6 +320,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "פרופיל הזרמה %s אינו זמין"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "העברת נתונים"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "הקלטות"

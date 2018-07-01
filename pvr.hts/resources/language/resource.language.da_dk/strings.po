@@ -208,6 +208,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streamingprofilen %s er ikke tilgængelig"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Dataoverførsel"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Optagelser"

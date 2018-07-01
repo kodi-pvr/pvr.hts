@@ -288,6 +288,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "스트리밍 프로필 %s 사용 불가능"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "데이터 전송"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "녹화"

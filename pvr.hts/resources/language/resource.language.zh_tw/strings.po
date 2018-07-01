@@ -320,6 +320,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "串流設定檔 %s 不可用"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "資料傳輸"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "錄影檔"

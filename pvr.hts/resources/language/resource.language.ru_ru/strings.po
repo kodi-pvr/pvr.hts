@@ -288,6 +288,10 @@ msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Профиль потока %s не доступен"
 
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr "Передача данных"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Записи"
