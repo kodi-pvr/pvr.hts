@@ -438,7 +438,7 @@ msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
 msgstr ""
 
-#empty strings from id 30503 to 30509
+#empty strings from id 30505 to 30509
 
 msgctxt "#30510"
 msgid "Recordings"
