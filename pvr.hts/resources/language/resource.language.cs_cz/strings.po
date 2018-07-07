@@ -118,7 +118,7 @@ msgstr "Neshoda verze HTSP (podporováno: v%d, vyžadováno: v%d). Aktualizujte 
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "Jednorázově (Naplánováno pravidlem časovače)"
+msgstr "Jednou (Naplánováno pravidlem časovače)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -335,6 +335,10 @@ msgstr "Profil streamování %s není dostupný"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Přenos dat"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Velikost bloku dat čtení streamu pro nahrávání (KB)"
 
 msgctxt "#30510"
 msgid "Recordings"

@@ -338,7 +338,7 @@ msgstr "Transfert de données"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "Taille des blocs (KB) transmis lors de la lecture des enregistrements"
+msgstr "Taille des blocs de flux de lecture des enregistrements (ko)"
 
 msgctxt "#30510"
 msgid "Recordings"
