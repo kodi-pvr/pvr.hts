@@ -2243,6 +2243,13 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     return;
   }
 
+  /* Ignore duplicates */
+  uint32_t dup = 0;
+  if (Settings::GetInstance().GetIgnoreDuplicateSchedules() &&
+      !htsmsg_get_u32(msg, "duplicate", &dup) &&
+      dup == 1)
+    return;
+
   /* Get/create entry */
   Recording &rec = m_recordings[id];
   Recording comparison = rec;
