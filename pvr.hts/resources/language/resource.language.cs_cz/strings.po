@@ -118,7 +118,7 @@ msgstr "Neshoda verze HTSP (podporováno: v%d, vyžadováno: v%d). Aktualizujte 
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "Jednou (Naplánováno pravidlem časovače)"
+msgstr "Jednou (naplánováno pravidlem časovače)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -138,7 +138,7 @@ msgstr "Nízká"
 
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
-msgstr "Nedůležité (Nejnižší)"
+msgstr "Nedůležité (nejnižší)"
 
 msgctxt "#30356"
 msgid "Record all episodes"
@@ -330,7 +330,7 @@ msgstr "Použitý profil (prázdný = výchozí)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Profil streamování %s není dostupný"
+msgstr "Profil proudového vysílání %s není dostupný"
 
 msgctxt "#30503"
 msgid "Data transfer"

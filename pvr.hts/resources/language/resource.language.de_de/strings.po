@@ -274,7 +274,7 @@ msgstr "Bis Platz benötigt wird (tvh 4.1+)"
 
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
-msgstr "Ungebrenzt (tvh 4.1+)"
+msgstr "Unbegrenzt (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -335,6 +335,10 @@ msgstr "Streaming-Profil %s ist nicht verfügbar"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Datenübertragung"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Blockgröße beim Lesen von Aufnahme-Streams (KB)"
 
 msgctxt "#30510"
 msgid "Recordings"
