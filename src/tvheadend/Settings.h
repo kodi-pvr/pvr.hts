@@ -52,9 +52,10 @@ namespace tvheadend {
     static const std::string DEFAULT_STREAMING_PROFILE;
     static const int         DEFAULT_DVR_PRIO;        // any dvr_prio_t numeric value
     static const int         DEFAULT_DVR_LIFETIME;    // 0..14 (0 = 1 day, 14 = forever)
-    static const int         DEFAULT_DVR_DUBDETECT;   // 0..5  (0 = record all, 5 = limit to once a day)
+    static const int         DEFAULT_DVR_DUPDETECT;   // 0..5  (0 = record all, 5 = limit to once a day)
     static const bool        DEFAULT_DVR_PLAYSTATUS;
     static const int         DEFAULT_STREAM_CHUNKSIZE; // KB
+    static const bool        DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES;
 
     /**
      * Singleton getter for the instance
@@ -98,6 +99,7 @@ namespace tvheadend {
     int         GetDvrLifetime(bool asEnum = false) const;
     bool        GetDvrPlayStatus() const { return m_bDvrPlayStatus; }
     int         GetStreamReadChunkSize() const { return m_iStreamReadChunkSizeKB; }
+    bool        GetIgnoreDuplicateSchedules() const { return m_bIgnoreDuplicateSchedules; }
 
   private:
     Settings()
@@ -118,9 +120,10 @@ namespace tvheadend {
       m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
       m_iDvrPriority(DEFAULT_DVR_PRIO),
       m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
-      m_iDvrDupdetect(DEFAULT_DVR_DUBDETECT),
+      m_iDvrDupdetect(DEFAULT_DVR_DUPDETECT),
       m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
-      m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE) {}
+      m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
+      m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES) {}
 
     Settings(Settings const &) = delete;
     void operator=(Settings const &) = delete;
@@ -147,6 +150,7 @@ namespace tvheadend {
     void SetDvrDupdetect(int value) { m_iDvrDupdetect = value; }
     void SetDvrPlayStatus(bool value) { m_bDvrPlayStatus = value; }
     void SetStreamReadChunkSizeKB(int value) { m_iStreamReadChunkSizeKB = value; }
+    void SetIgnoreDuplicateSchedules(bool value) { m_bIgnoreDuplicateSchedules = value; }
 
     /**
      * Read/Set values according to definition in settings.xml
@@ -180,6 +184,7 @@ namespace tvheadend {
     int         m_iDvrDupdetect;
     bool        m_bDvrPlayStatus;
     int         m_iStreamReadChunkSizeKB;
+    bool        m_bIgnoreDuplicateSchedules;
   };
 
 }

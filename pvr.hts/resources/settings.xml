@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
   <category label="30000">
-	<setting id="host" type="text" label="30001" default="127.0.0.1" />
-	<setting id="http_port" type="number" option="int" label="30002" default="9981" />
-	<setting id="htsp_port" type="number" option="int" label="30003" default="9982" />
-	<setting id="user" type="text" label="30004" default="" />
-	<setting id="pass" type="text" label="30005" option="hidden" enable="!eq(-1,)" default="" />
-	<setting id="connect_timeout" type="slider" option="int" range="1,60" label="30006" default="10" />
-	<setting id="response_timeout" type="slider" option="int" range="1,60" label="30007" default="5" />
+    <setting id="host" type="text" label="30001" default="127.0.0.1" />
+    <setting id="http_port" type="number" option="int" label="30002" default="9981" />
+    <setting id="htsp_port" type="number" option="int" label="30003" default="9982" />
+    <setting id="user" type="text" label="30004" default="" />
+    <setting id="pass" type="text" label="30005" option="hidden" enable="!eq(-1,)" default="" />
+    <setting id="connect_timeout" type="slider" option="int" range="1,60" label="30006" default="10" />
+    <setting id="response_timeout" type="slider" option="int" range="1,60" label="30007" default="5" />
   </category>
-  
+
   <category label="30009">
     <setting label="30500" type="lsep"/>
     <setting id="streaming_profile" type="text" label="30501" default="" />
@@ -22,18 +22,21 @@
     <setting label="30503" type="lsep"/>
     <setting id="stream_readchunksize" type="slider" option="int" range="4,4,128" label="30504" default="64" />
   </category>
-  
+
   <category label="30010">
     <setting label="30050" type="lsep"/>
     <setting id="autorec_approxtime" type="enum" label="30051" lvalues="30052|30053" default="0"/>
     <setting id="autorec_maxdiff" enable="eq(-1,1)"  type="slider" option="int" range="0,5,120" label="30054" default="15" />
     
+    <setting label="30059" type="lsep"/>
+    <setting id="dvr_ignore_duplicates" type="bool" label="30060" default="true" />
+
     <setting label="30058" type="lsep"/>
     <setting id="dvr_priority" type="enum" label="30055" lvalues="30351|30352|30353|30354|30355" default="2"/>
     <setting id="dvr_lifetime" type="enum" label="30056" lvalues="30375|30376|30377|30378|30379|30380|30381|30382|30383|30384|30385|30386|30387|30388|30389" default="8"/>
     <setting id="dvr_dubdetect" type="enum" label="30057" lvalues="30356|30357|30358|30359|30360|30361" default="0"/>
   </category>
-  
+
   <category label="30008">
     <setting label="30100" type="lsep"/>
     <setting id="epg_async" type="bool" label="30101" default="false"/>

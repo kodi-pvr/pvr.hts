@@ -43,9 +43,10 @@ const int         Settings::DEFAULT_APPROX_TIME         = 0;  // don't use an ap
 const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
 const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
 const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
-const int         Settings::DEFAULT_DVR_DUBDETECT       = DVR_AUTOREC_RECORD_ALL;
+const int         Settings::DEFAULT_DVR_DUPDETECT       = DVR_AUTOREC_RECORD_ALL;
 const bool        Settings::DEFAULT_DVR_PLAYSTATUS      = true;
 const int         Settings::DEFAULT_STREAM_CHUNKSIZE    = 64; // KB
+const bool        Settings::DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
 
 void Settings::ReadSettings()
 {
@@ -81,13 +82,16 @@ void Settings::ReadSettings()
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
   SetDvrLifetime(ReadIntSetting("dvr_lifetime", DEFAULT_DVR_LIFETIME));
-  SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUBDETECT));
+  SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUPDETECT));
 
   /* Sever based play status */
   SetDvrPlayStatus(ReadBoolSetting("dvr_playstatus", DEFAULT_DVR_PLAYSTATUS));
 
   /* Stream read chunk size */
   SetStreamReadChunkSizeKB(ReadIntSetting("stream_readchunksize", DEFAULT_STREAM_CHUNKSIZE));
+
+  /* Scheduled recordings */
+  SetIgnoreDuplicateSchedules(ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
 }
 
 ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
@@ -160,6 +164,8 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetBoolSetting(GetDvrPlayStatus(), value);
   else if (key == "stream_readchunksize")
     return SetIntSetting(GetStreamReadChunkSize(), value);
+  else if (key == "dvr_ignore_duplicates")
+    return SetBoolSetting(GetIgnoreDuplicateSchedules(), value);
   else
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());

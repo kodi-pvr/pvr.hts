@@ -1,3 +1,16 @@
+4.3.4
+- Add stub for "subscriptionGrace" HTSP method.
+- Add setting to ignore duplicate scheduled recordings (tvh4.3+)
+
+4.3.3
+- updated language files from Transifex
+
+4.3.2
+- updated language files from Transifex
+
+4.3.1
+- updated language files from Transifex
+
 4.3.0
 - PVR Addon API 5.10.0: Implemented recording stream read chunk size as addon setting.
 
