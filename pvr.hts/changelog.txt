@@ -1,5 +1,6 @@
 4.3.5
-- demuxer fixes
+- demuxer: fix begin/end pts precision
+- predictive tuning: do not close paused subscriptions
 
 4.3.4
 - Add stub for "subscriptionGrace" HTSP method.
