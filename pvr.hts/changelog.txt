@@ -1,3 +1,6 @@
+4.3.5
+- demuxer fixes
+
 4.3.4
 - Add stub for "subscriptionGrace" HTSP method.
 - Add setting to ignore duplicate scheduled recordings (tvh4.3+)

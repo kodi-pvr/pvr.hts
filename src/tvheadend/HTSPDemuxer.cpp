@@ -27,7 +27,7 @@
 #include "utilities/Logger.h"
 #include "xbmc_codec_descriptor.hpp"
 
-#define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)
+#define TVH_TO_DVD_TIME(x) (static_cast<double>(x) * DVD_TIME_BASE / 1000000.0f)
 
 #define INVALID_SEEKTIME (-1)
 #define SPEED_NORMAL (1000) // x1 playback speed
@@ -306,8 +306,8 @@ PVR_ERROR HTSPDemuxer::GetStreamTimes(PVR_STREAM_TIMES *times) const
 
   times->startTime = m_startTime;
   times->ptsStart = 0;
-  times->ptsBegin = static_cast<int64_t>(static_cast<double>(m_timeshiftStatus.start / 1000000)) * DVD_TIME_BASE;
-  times->ptsEnd = static_cast<int64_t>(static_cast<double>(m_timeshiftStatus.end / 1000000)) * DVD_TIME_BASE;
+  times->ptsBegin = TVH_TO_DVD_TIME(m_timeshiftStatus.start);
+  times->ptsEnd = TVH_TO_DVD_TIME(m_timeshiftStatus.end);
 
   return PVR_ERROR_NO_ERROR;
 }
