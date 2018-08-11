@@ -1693,14 +1693,21 @@ void CTvheadend::CloseExpiredSubscriptions()
   // predictive tuning active?
   if (m_dmx.size() > 1)
   {
-    for (auto *dmx : m_dmx)
+    int closeDelay = Settings::GetInstance().GetPreTunerCloseDelay();
+    if (closeDelay > 0)
     {
-      if (Settings::GetInstance().GetPreTunerCloseDelay() &&
-          dmx->GetLastUse() > 0 &&
-          dmx->GetLastUse() + Settings::GetInstance().GetPreTunerCloseDelay() < std::time(nullptr))
+      for (auto *dmx : m_dmx)
       {
-        Logger::Log(LogLevel::LEVEL_TRACE, "closing expired subscription %u", dmx->GetSubscriptionId());
-        dmx->Close();
+        // ignore paused subscriptions
+        if (dmx->IsTimeShifting())
+          continue;
+
+        time_t lastUse = dmx->GetLastUse();
+        if (lastUse > 0 && lastUse + closeDelay < std::time(nullptr))
+        {
+          Logger::Log(LogLevel::LEVEL_TRACE, "closing expired subscription %u", dmx->GetSubscriptionId());
+          dmx->Close();
+        }
       }
     }
   }
