@@ -50,7 +50,7 @@ msgstr "Tempo limite para resposta (segundos)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Ajustes Avançados"
+msgstr "Ajustes avançados"
 
 msgctxt "#30009"
 msgid "Streaming settings"

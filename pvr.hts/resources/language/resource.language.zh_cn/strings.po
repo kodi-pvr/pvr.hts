@@ -336,6 +336,10 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "数据传输"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "录制过程中媒体流读取空间设置(KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "录像"
