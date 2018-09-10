@@ -93,9 +93,10 @@ private:
   void Abort0();
 
   /**
-   * Resets the signal and quality info
+   * Resets the signal, quality, timeshift info and optionally the starttime
+   * @param resetStartTime if true, startTime will be reset
    */
-  void ResetStatus();
+  void ResetStatus(bool resetStartTime = true);
 
   void ParseMuxPacket(htsmsg_t *m);
   void ParseSourceInfo(htsmsg_t *m);

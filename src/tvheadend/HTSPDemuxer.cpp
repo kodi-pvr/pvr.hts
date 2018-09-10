@@ -59,7 +59,7 @@ void HTSPDemuxer::Connected ( void )
     m_subscription.SendSubscribe(0, 0, true);
     m_subscription.SendSpeed(0, true);
 
-    ResetStatus();
+    ResetStatus(false);
   }
 }
 
@@ -336,7 +336,7 @@ void HTSPDemuxer::SetStreamingProfile(const std::string &profile)
   m_subscription.SetProfile(profile);
 }
 
-void HTSPDemuxer::ResetStatus()
+void HTSPDemuxer::ResetStatus(bool resetStartTime /* = true */)
 {
   CLockObject lock(m_mutex);
 
@@ -345,7 +345,8 @@ void HTSPDemuxer::ResetStatus()
   m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
 
-  m_startTime = 0;
+  if (resetStartTime)
+    m_startTime = 0;
 }
 
 /* **************************************************************************
