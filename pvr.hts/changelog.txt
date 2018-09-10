@@ -1,3 +1,9 @@
+4.3.7
+- Fixed an edge case where wrong times were displayed in Kodi video/audio OSD
+
+4.3.6
+- updated language files from Transifex
+
 4.3.5
 - demuxer: fix begin/end pts precision
 - predictive tuning: do not close paused subscriptions
