@@ -440,6 +440,10 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
       strncpy(rec.strChannelName, recording.GetChannelName().c_str(),
               sizeof(rec.strChannelName) - 1);
 
+      /* Thumbnail image */
+      strncpy(rec.strThumbnailPath, recording.GetImage().c_str(),
+              sizeof(rec.strThumbnailPath) - 1);
+
       /* ID */
       snprintf(buf, sizeof(buf), "%i", recording.GetId());
       strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId) - 1);
@@ -2466,6 +2470,8 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     rec.SetTimerecId(str);
   if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
     rec.SetAutorecId(str);
+  if ((str = htsmsg_get_str(msg, "image")) != NULL)
+    rec.SetImage(str);
 
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)

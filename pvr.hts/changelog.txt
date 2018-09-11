@@ -1,3 +1,6 @@
+4.3.8
+- Add support for thumbnail image for recordings if supplied by tvheadend (tvh4.3+).
+
 4.3.7
 - Fixed an edge case where wrong times were displayed in Kodi video/audio OSD
 
