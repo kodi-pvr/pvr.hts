@@ -179,6 +179,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsRecordingPlayCount = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
   pCapabilities->bSupportsLastPlayedPosition = (tvh->GetProtocol() >= 27 && Settings::GetInstance().GetDvrPlayStatus());
   pCapabilities->bSupportsDescrambleInfo     = true;
+  pCapabilities->bSupportsAsyncEPGTransfer   = Settings::GetInstance().GetAsyncEpg();
 
   if (tvh->GetProtocol() >= 28)
   {

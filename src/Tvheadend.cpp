@@ -1458,55 +1458,47 @@ PVR_ERROR CTvheadend::GetEPGForChannel
   Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
            (long long)start, (long long)end);
 
+  /* Build message */
+  htsmsg_t *msg = htsmsg_create_map();
+  htsmsg_add_u32(msg, "channelId", chn.iUniqueId);
+  htsmsg_add_s64(msg, "maxTime",   end);
 
-  /* Note: Nothing to do if "async epg transfer" is enabled as all changes are pushed live to Kodi, then. */
-  if (!Settings::GetInstance().GetAsyncEpg())
+  /* Send and Wait */
   {
-    /* Build message */
-    htsmsg_t *msg = htsmsg_create_map();
-    htsmsg_add_u32(msg, "channelId", chn.iUniqueId);
-    htsmsg_add_s64(msg, "maxTime",   end);
+    CLockObject lock(m_conn->Mutex());
 
-    /* Send and Wait */
-    {
-      CLockObject lock(m_conn->Mutex());
-      
-      if ((msg = m_conn->SendAndWait0("getEvents", msg)) == NULL)
-        return PVR_ERROR_SERVER_ERROR;
-    }
-
-    /* Process */
-    htsmsg_t *l;
-
-    if (!(l = htsmsg_get_list(msg, "events")))
-    {
-      htsmsg_destroy(msg);
-      Logger::Log(LogLevel::LEVEL_ERROR, "malformed getEvents response: 'events' missing");
+    if ((msg = m_conn->SendAndWait0("getEvents", msg)) == NULL)
       return PVR_ERROR_SERVER_ERROR;
-    }
+  }
 
-    int n = 0;
+  /* Process */
+  htsmsg_t *l;
 
-    HTSMSG_FOREACH(f, l)
+  if (!(l = htsmsg_get_list(msg, "events")))
+  {
+    htsmsg_destroy(msg);
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed getEvents response: 'events' missing");
+    return PVR_ERROR_SERVER_ERROR;
+  }
+
+  int n = 0;
+
+  HTSMSG_FOREACH(f, l)
+  {
+    Event event;
+    if (f->hmf_type == HMF_MAP)
     {
-      Event event;
-      if (f->hmf_type == HMF_MAP)
+      if (ParseEvent(&f->hmf_msg, true, event))
       {
-        if (ParseEvent(&f->hmf_msg, true, event))
-        {
-          /* Callback. */
-          TransferEvent(handle, event);
-          ++n;
-        }
+        /* Callback. */
+        TransferEvent(handle, event);
+        ++n;
       }
     }
-    htsmsg_destroy(msg);
-    Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d events %d", chn.iUniqueId, n);
   }
-  else
-  {
-    Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d ignored", chn.iUniqueId);
-  }
+  htsmsg_destroy(msg);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d events %d", chn.iUniqueId, n);
+
   return PVR_ERROR_NO_ERROR;
 }
 
