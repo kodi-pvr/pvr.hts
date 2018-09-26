@@ -1,3 +1,6 @@
+4.3.10
+- Add support for fanart image for recordings if supplied by tvheadend (tvh4.3+).
+
 4.3.9
 - PVR Addon API 5.10.2: Implemented support for PVR_ADDON_CAPABILITIES.bSupportsAsyncEPGTransfer
 
