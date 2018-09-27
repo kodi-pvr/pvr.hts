@@ -95,6 +95,7 @@ namespace tvheadend
                m_path == other.m_path &&
                m_description == other.m_description &&
                m_image == other.m_image &&
+               m_fanartImage == other.m_fanartImage &&
                m_timerecId == other.m_timerecId &&
                m_autorecId == other.m_autorecId &&
                m_state == other.m_state &&
@@ -196,6 +197,9 @@ namespace tvheadend
       const std::string& GetImage() const { return m_image; }
       void SetImage(const std::string &image) { m_image = image; }
 
+      const std::string& GetFanartImage() const { return m_fanartImage; }
+      void SetFanartImage(const std::string &image) { m_fanartImage = image; }
+
       const std::string& GetTimerecId() const { return m_timerecId; }
       void SetTimerecId(const std::string &autorecId) { m_timerecId = autorecId; }
 
@@ -253,6 +257,7 @@ namespace tvheadend
       std::string      m_path;
       std::string      m_description;
       std::string      m_image;
+      std::string      m_fanartImage;
       std::string      m_timerecId;
       std::string      m_autorecId;
       PVR_TIMER_STATE  m_state;
