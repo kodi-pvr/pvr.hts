@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Sjálfgefið fyrir nýjar tímatökur"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Áætlaðar upptökur"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Hunsa tvítekningar (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Gagnaflutningur"
@@ -335,6 +343,10 @@ msgstr "Streymissniðið %s er ekki tiltækt"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Gagnaflutningur"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Stærð lesbúts streymis í upptökum (KB)"
 
 msgctxt "#30510"
 msgid "Recordings"

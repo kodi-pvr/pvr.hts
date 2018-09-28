@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Numatytieji parametrai naujiems laikmačiams"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Suplanuoti įrašymai"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignoruoti dublikatus (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Duomenų perkėlimas"

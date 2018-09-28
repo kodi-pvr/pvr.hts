@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Defaults for new timers"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Scheduled recordings"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignore duplicates (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Data transfer"

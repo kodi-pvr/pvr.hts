@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Výchozí hodnoty pro nové časovače"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Naplánovaná nahrávání"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorovat duplicity (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Přenos dat"

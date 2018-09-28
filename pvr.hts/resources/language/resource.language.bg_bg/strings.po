@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Стандартни настройки за новите броячи"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Планирани записи"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Пренебрегване на еднаквите (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Пренос на данни"
