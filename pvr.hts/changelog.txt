@@ -1,5 +1,6 @@
 4.4.0
 - Add support for Radio Data System (RDS)
+- Enable async EPG data transfer by default
 
 4.3.11
 - updated language files from Transifex

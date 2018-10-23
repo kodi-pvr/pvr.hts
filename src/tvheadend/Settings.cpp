@@ -34,7 +34,7 @@ const std::string Settings::DEFAULT_PASSWORD            = "";
 const int         Settings::DEFAULT_CONNECT_TIMEOUT     = 10000; // millisecs
 const int         Settings::DEFAULT_RESPONSE_TIMEOUT    = 5000;  // millisecs
 const bool        Settings::DEFAULT_TRACE_DEBUG         = false;
-const bool        Settings::DEFAULT_ASYNC_EPG           = false;
+const bool        Settings::DEFAULT_ASYNC_EPG           = true;
 const bool        Settings::DEFAULT_PRETUNER_ENABLED    = false;
 const int         Settings::DEFAULT_TOTAL_TUNERS        = 1;  // total tuners > 1 => predictive tuning active
 const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
