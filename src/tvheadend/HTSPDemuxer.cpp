@@ -32,6 +32,12 @@
 #define INVALID_SEEKTIME (-1)
 #define SPEED_NORMAL (1000) // x1 playback speed
 
+// Not all streams reported to Kodi are directly from tvh, some are created by pvr.hts.
+// We need a unique stream index for every stream - tvh-supplied and pvr.hts-created.
+// Easiest way is to add a fixed offset to all stream indexes delivered by tvh and to
+// use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
+static const int TVH_STREAM_INDEX_OFFSET = 1000;
+
 using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -384,6 +390,39 @@ bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
   return true;
 }
 
+void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
+{
+  const uint8_t* data = static_cast<const uint8_t*>(bin);
+  const size_t offset = binlen - 1;
+
+  static const uint8_t RDS_IDENTIFIER = 0xFD;
+
+  if (data[offset] == RDS_IDENTIFIER)
+  {
+    // RDS data present, obtain length.
+    uint8_t rdslen = data[offset - 1];
+    if (rdslen > 0)
+    {
+      DemuxPacket* pkt = PVR->AllocateDemuxPacket(rdslen);
+      if (!pkt)
+        return;
+
+      uint8_t* rdsdata = new uint8_t[rdslen];
+
+      // Reassemble UECP block. mpeg stream contains data in reverse order!
+      for (int i = offset - 2, j = 0; i > 3 && i > offset - 2 - rdslen; i--, j++)
+        rdsdata[j] = data[i];
+
+      memcpy(pkt->pData, rdsdata, rdslen);
+      pkt->iSize = rdslen;
+      pkt->iStreamId = idx - TVH_STREAM_INDEX_OFFSET;
+
+      m_pktBuffer.Push(pkt);
+      delete [] rdsdata;
+    }
+  }
+}
+
 void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
 {
   uint32_t    idx, u32;
@@ -410,6 +449,8 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed muxpkt: 'stream'/'payload' missing");
     return;
   }
+
+  idx += TVH_STREAM_INDEX_OFFSET;
 
   /* Drop packets for unknown streams */
   if (m_streamStat.find(idx) == m_streamStat.end())
@@ -464,18 +505,111 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
       m_startTime = time(nullptr);
     }
     m_pktBuffer.Push(pkt);
+
+    // Process RDS data, if present.
+    ProcessRDS(idx, bin, binlen);
   }
   else
     PVR->FreeDemuxPacket(pkt);
 }
 
+bool HTSPDemuxer::AddStream(const char* type, uint32_t idx, htsmsg_field_t *f)
+{
+  CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
+  xbmc_codec_t codec = codecDescriptor.Codec();
+
+  if (codec.codec_type == XBMC_CODEC_TYPE_UNKNOWN)
+    return false;
+
+  m_streamStat[idx] = 0;
+
+  PVR_STREAM_PROPERTIES::PVR_STREAM stream = {};
+  stream.iCodecType = codec.codec_type;
+  stream.iCodecId = codec.codec_id;
+  stream.iPID = idx;
+
+  /* Subtitle ID */
+  if ((stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
+      !strcmp("DVBSUB", type))
+  {
+    uint32_t composition_id = 0, ancillary_id = 0;
+    htsmsg_get_u32(&f->hmf_msg, "composition_id", &composition_id);
+    htsmsg_get_u32(&f->hmf_msg, "ancillary_id"  , &ancillary_id);
+    stream.iSubtitleInfo = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+  }
+
+  /* Language */
+  if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
+      stream.iCodecType == XBMC_CODEC_TYPE_AUDIO ||
+      stream.iCodecType == XBMC_CODEC_TYPE_RDS)
+  {
+    const char *language;
+    if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
+      strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
+  }
+
+  /* Audio data */
+  if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
+  {
+    stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
+    stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
+  }
+
+  /* RDS data */
+  if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO &&
+      !strcmp("MPEG2AUDIO", type))
+  {
+    // Add RDS stream for the mpeg2 audio stream. It can contain embedded RDS data.
+    if (!AddStream("rds", idx - TVH_STREAM_INDEX_OFFSET, f))
+      return false;
+  }
+
+  /* Video */
+  if (stream.iCodecType == XBMC_CODEC_TYPE_VIDEO)
+  {
+    stream.iWidth  = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
+    stream.iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
+
+    /* Ignore this message if the stream details haven't been determined
+       yet, a new message will be sent once they have. This is fixed in
+       some versions of tvheadend and is here for backward compatibility. */
+    if (stream.iWidth == 0 || stream.iHeight == 0)
+    {
+      Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring subscriptionStart, stream details missing");
+      return false;
+    }
+
+    /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
+    stream.fAspect = 0.0f;
+
+    uint32_t duration;
+    if ((duration = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
+    {
+      stream.iFPSScale = duration;
+      stream.iFPSRate  = DVD_TIME_BASE;
+    }
+  }
+
+  /* We can only use PVR_STREAM_MAX_STREAMS streams */
+  if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
+  {
+    Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
+    m_streams.emplace_back(stream);
+    return true;
+  }
+  else
+  {
+    Logger::Log(LogLevel::LEVEL_INFO, "Maximum stream limit reached ignoring id: %d, type %s, codec: %u", idx, type,
+                stream.iCodecId);
+    return false;
+  }
+}
+
 void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 {
-  htsmsg_t       *l;
-  htsmsg_field_t *f;
-  DemuxPacket    *pkt;
-
   /* Validate */
+  htsmsg_t* l;
+
   if ((l = htsmsg_get_list(m, "streams")) == NULL)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed subscriptionStart: 'streams' missing");
@@ -490,102 +624,28 @@ void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 
   /* Process each */
+  htsmsg_field_t* f;
   HTSMSG_FOREACH(f, l)
   {
-    uint32_t   idx, u32;
-    const char *type;
-
     if (f->hmf_type != HMF_MAP)
       continue;
+
+    const char *type;
     if ((type = htsmsg_get_str(&f->hmf_msg, "type")) == NULL)
       continue;
+
+    uint32_t idx;
     if (htsmsg_get_u32(&f->hmf_msg, "index", &idx))
       continue;
 
-    /* Find stream */
-    m_streamStat[idx] = 0;
-    PVR_STREAM_PROPERTIES::PVR_STREAM stream = {};
-
-    Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
-    
-    CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
-    xbmc_codec_t codec = codecDescriptor.Codec();
-
-    if (codec.codec_type != XBMC_CODEC_TYPE_UNKNOWN)
-    {
-      stream.iCodecType = codec.codec_type;
-      stream.iCodecId   = codec.codec_id;
-      stream.iPID       = idx;
-
-      /* Subtitle ID */
-      if ((stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE) &&
-          !strcmp("DVBSUB", type))
-      {
-        uint32_t composition_id = 0, ancillary_id = 0;
-        htsmsg_get_u32(&f->hmf_msg, "composition_id", &composition_id);
-        htsmsg_get_u32(&f->hmf_msg, "ancillary_id"  , &ancillary_id);
-        stream.iSubtitleInfo = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
-      }
-
-      /* Language */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
-          stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
-      {
-        const char *language;
-        
-        if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
-      }
-
-      /* Audio data */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
-      {
-        stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
-        stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
-      }
-
-      /* Video */
-      if (stream.iCodecType == XBMC_CODEC_TYPE_VIDEO)
-      {
-        stream.iWidth  = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
-        stream.iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
-        
-        /* Ignore this message if the stream details haven't been determined 
-           yet, a new message will be sent once they have. This is fixed in 
-           some versions of tvheadend and is here for backward compatibility. */
-        if (stream.iWidth == 0 || stream.iHeight == 0)
-        {
-          Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring subscriptionStart, stream details missing");
-          return;
-        }
-        
-        /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
-        stream.fAspect = 0.0f;
-        
-        if ((u32 = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
-        {
-          stream.iFPSScale = u32;
-          stream.iFPSRate  = DVD_TIME_BASE;
-        }
-      }
-
-      /* We can only use PVR_STREAM_MAX_STREAMS streams */
-      if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
-      {
-        Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
-        m_streams.emplace_back(stream);
-      }
-      else
-      {
-        Logger::Log(LogLevel::LEVEL_INFO, "Maximum stream limit reached ignoring id: %d, type %s, codec: %u", idx, type,
-                    stream.iCodecId);
-      }
-    }
+    idx += TVH_STREAM_INDEX_OFFSET;
+    AddStream(type, idx, f);
   }
 
   /* Update streams */
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
-  pkt = PVR->AllocateDemuxPacket(0);
+
+  DemuxPacket* pkt = PVR->AllocateDemuxPacket(0);
   pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
   m_pktBuffer.Push(pkt);
 

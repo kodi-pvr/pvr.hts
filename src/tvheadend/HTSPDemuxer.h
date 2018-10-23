@@ -110,6 +110,10 @@ private:
   void ParseTimeshiftStatus(htsmsg_t *m);
   void ParseDescrambleInfo(htsmsg_t *m);
 
+  bool AddStream(const char* type, uint32_t idx, htsmsg_field_t *f);
+
+  void ProcessRDS(uint32_t idx, const void* bin, size_t binlen);
+
   mutable P8PLATFORM::CMutex m_mutex;
   HTSPConnection &m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*> m_pktBuffer;
