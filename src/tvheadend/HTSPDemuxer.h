@@ -110,8 +110,8 @@ private:
   void ParseTimeshiftStatus(htsmsg_t *m);
   void ParseDescrambleInfo(htsmsg_t *m);
 
-  bool AddStream(const char* type, uint32_t idx, htsmsg_field_t *f);
-
+  bool AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t *f);
+  bool AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx);
   void ProcessRDS(uint32_t idx, const void* bin, size_t binlen);
 
   mutable P8PLATFORM::CMutex m_mutex;

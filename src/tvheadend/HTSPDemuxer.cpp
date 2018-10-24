@@ -403,6 +403,21 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
     uint8_t rdslen = data[offset - 1];
     if (rdslen > 0)
     {
+      const uint32_t rdsIdx = idx - TVH_STREAM_INDEX_OFFSET;
+      if (m_streamStat.find(rdsIdx) == m_streamStat.end())
+      {
+        // No RDS stream yet. Create and announce it.
+        if (!AddRDSStream(idx, rdsIdx))
+          return;
+
+        // Update streams.
+        Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
+
+        DemuxPacket* pktSpecial = PVR->AllocateDemuxPacket(0);
+        pktSpecial->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+        m_pktBuffer.Push(pktSpecial);
+      }
+
       DemuxPacket* pkt = PVR->AllocateDemuxPacket(rdslen);
       if (!pkt)
         return;
@@ -415,7 +430,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
       memcpy(pkt->pData, rdsdata, rdslen);
       pkt->iSize = rdslen;
-      pkt->iStreamId = idx - TVH_STREAM_INDEX_OFFSET;
+      pkt->iStreamId = rdsIdx;
 
       m_pktBuffer.Push(pkt);
       delete [] rdsdata;
@@ -513,10 +528,50 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
     PVR->FreeDemuxPacket(pkt);
 }
 
-bool HTSPDemuxer::AddStream(const char* type, uint32_t idx, htsmsg_field_t *f)
+bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
 {
-  CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
-  xbmc_codec_t codec = codecDescriptor.Codec();
+  for (const auto& stream : m_streams)
+  {
+    if (stream.iPID != audioIdx)
+      continue;
+
+    // Found the stream with the embedded RDS data. Create corresponding RDS stream.
+    const CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName("rds");
+    const xbmc_codec_t codec = codecDescriptor.Codec();
+
+    if (codec.codec_type == XBMC_CODEC_TYPE_UNKNOWN)
+      return false;
+
+    m_streamStat[rdsIdx] = 0;
+
+    PVR_STREAM_PROPERTIES::PVR_STREAM rdsStream = {};
+    rdsStream.iCodecType = codec.codec_type;
+    rdsStream.iCodecId = codec.codec_id;
+    rdsStream.iPID = rdsIdx;
+    strncpy(rdsStream.strLanguage, stream.strLanguage, sizeof(rdsStream.strLanguage) - 1);
+
+    // We can only use PVR_STREAM_MAX_STREAMS streams
+    if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
+    {
+      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type rds, codec: %u", rdsIdx, rdsStream.iCodecId);
+      m_streams.emplace_back(rdsStream);
+      return true;
+    }
+    else
+    {
+      Logger::Log(LogLevel::LEVEL_INFO, "Maximum stream limit reached ignoring id: %d, type rds, codec: %u",
+                  rdsIdx, rdsStream.iCodecId);
+      return false;
+    }
+  }
+  // stream with embedded RDS data not found
+  return false;
+}
+
+bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t *f)
+{
+  const CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
+  const xbmc_codec_t codec = codecDescriptor.Codec();
 
   if (codec.codec_type == XBMC_CODEC_TYPE_UNKNOWN)
     return false;
@@ -553,15 +608,6 @@ bool HTSPDemuxer::AddStream(const char* type, uint32_t idx, htsmsg_field_t *f)
   {
     stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
     stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
-  }
-
-  /* RDS data */
-  if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO &&
-      !strcmp("MPEG2AUDIO", type))
-  {
-    // Add RDS stream for the mpeg2 audio stream. It can contain embedded RDS data.
-    if (!AddStream("rds", idx - TVH_STREAM_INDEX_OFFSET, f))
-      return false;
   }
 
   /* Video */
@@ -639,7 +685,7 @@ void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       continue;
 
     idx += TVH_STREAM_INDEX_OFFSET;
-    AddStream(type, idx, f);
+    AddTVHStream(idx, type, f);
   }
 
   /* Update streams */
