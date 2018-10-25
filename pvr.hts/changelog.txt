@@ -1,3 +1,6 @@
+4.4.1
+- Fix creation of RDS streams. Must only be done if audio stream actually contains RDS data.
+
 4.4.0
 - Add support for Radio Data System (RDS)
 - Enable async EPG data transfer by default
