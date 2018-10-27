@@ -130,6 +130,7 @@ private:
   tvheadend::Subscription m_subscription;
   std::atomic<time_t> m_lastUse;
   std::atomic<time_t> m_startTime;
+  uint32_t m_rdsIdx;
 };
 
 } // namespace tvheadend

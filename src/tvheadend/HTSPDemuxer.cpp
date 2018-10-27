@@ -48,7 +48,7 @@ HTSPDemuxer::HTSPDemuxer ( HTSPConnection &conn )
     m_seekTime(INVALID_SEEKTIME),
     m_seeking(false), m_speedChange(false),
     m_subscription(conn), m_lastUse(0),
-    m_startTime(0)
+    m_startTime(0), m_rdsIdx(0)
 {
 }
 
@@ -89,6 +89,7 @@ void HTSPDemuxer::Abort0 ( void )
   CLockObject lock(m_mutex);
   m_streams.clear();
   m_streamStat.clear();
+  m_rdsIdx = 0;
   m_seeking = false;
   m_speedChange = false;
 }
@@ -392,6 +393,9 @@ bool HTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
 
 void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 {
+  if (idx != m_rdsIdx)
+    return;
+
   const uint8_t* data = static_cast<const uint8_t*>(bin);
   const size_t offset = binlen - 1;
 
@@ -553,7 +557,7 @@ bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
     // We can only use PVR_STREAM_MAX_STREAMS streams
     if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
     {
-      Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type rds, codec: %u", rdsIdx, rdsStream.iCodecId);
+      Logger::Log(LogLevel::LEVEL_DEBUG, "Adding rds stream. id: %d", rdsIdx);
       m_streams.emplace_back(rdsStream);
       return true;
     }
@@ -608,6 +612,13 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t *f
   {
     stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
     stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
+
+    if (strcmp("MPEG2AUDIO", type) == 0)
+    {
+      // mpeg2 audio streams may contain embedded RDS data.
+      // We will find out when the first stream packet arrives.
+      m_rdsIdx = idx;
+    }
   }
 
   /* Video */
@@ -666,6 +677,7 @@ void HTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 
   m_streamStat.clear();
   m_streams.clear();
+  m_rdsIdx = 0;
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 
