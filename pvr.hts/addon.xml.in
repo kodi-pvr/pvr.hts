@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="4.4.2"
+  version="4.4.3"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -112,7 +112,7 @@
     <description lang="sq_AL">Tvheadend frotnend përkrahën transmetimin e Live TV'së, EPG'së dhe "timer'ë"</description>
     <description lang="sr_RS">Tvheadend интерфејс; подржава стримовање ТВ Уживо &amp; Снимака, EPG, Тајмере</description>
     <description lang="sr_RS@latin">Tvheadend interfejs; podržava strimovanje TV Uživo &amp; Snimaka, EPG, Tajmere</description>
-    <description lang="sv_SE">Tvheadend frontend; stödjer strömning av direktsänd TV &amp; inspelningar, EPG, Timers</description>
+    <description lang="sv_SE">Tvheadend frontend; stödjer strömning av Live-tv &amp; inspelningar, EPG, Timers</description>
     <description lang="szl">Frontend Tvheadend; podpiyrŏ strumiyniowaniy TV, nagrań, EPG i minutnikōw</description>
     <description lang="te_IN">Tvheadend ఫ్రంటెండ్; Live TV &amp; రికార్డింగ్స్, EPG, టైమర్లు , స్ట్రీమింగ్ మద్దతు కలదు</description>
     <description lang="tg_TJ">Интерфейси Tvheadend; дастгирии ҷараёни Сабтҳо, Вақтсанҷҳо, Live TV ва EPG</description>

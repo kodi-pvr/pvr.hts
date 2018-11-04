@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
@@ -126,7 +126,7 @@ msgstr "Version HTSP différente (reconnue : v%d, requise : v%d). Merci de met
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "À l'heure (selon une règle de programmation)"
+msgstr "Une fois (planifiée par une règle de programmation)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"

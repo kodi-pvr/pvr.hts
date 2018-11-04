@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
@@ -95,6 +95,14 @@ msgstr "Détection des doublons par défaut"
 msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Valeurs par défaut des nouvelles minuteries"
+
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Enregistrements planifiés"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorer les doublons (tvh 4.3+)"
 
 msgctxt "#30100"
 msgid "Data transfer"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Verstek vir nuwe tydhouers"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Geskeduleerde opnames"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignoreer duplikate (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Data oordrag"
@@ -115,6 +123,10 @@ msgstr "Spoor na (gedetailleerd)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP weergawe stem nie ooreen (ondersteun: v%d, vereis: v%d). Opdateer asseblief tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Een keer (Geskeduleer deur tydhouer reël)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -160,9 +172,49 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Neem maks een keer per dag op"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Net hierdie reël: Neem op as episode nommer verskil"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Net hierdie reël: Neem op as episode naam verskil"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Net hierdie reël: Neem op as titel verskil"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Net hierdie reël: Neem op as beskrywing verskil"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Net hierdie reël: Neem maks een keer per week op"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Net hierdie reël: Neem maks een keer per dag op"
+
 msgctxt "#30368"
 msgid "Default"
 msgstr "Verstek"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Tydhouer reël (reeks skakel)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Neem maks een keer per maand op"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Net hierdie reël: Neem maks een keer per maand op"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Neem op as unieke episode volgens EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -292,6 +344,14 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Data oordrag"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Stroom lees stuk grootte vir opnames (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Opnames"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Bediener gebaseerde speel status"
