@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "新定时器默认值"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "预约录像"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "忽略重复（tvh 4.3+）"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "数据传输"
@@ -338,7 +346,7 @@ msgstr "数据传输"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "录制过程中媒体流读取空间设置(KB)"
+msgstr "录制过程中媒体流读取块大小（KB）"
 
 msgctxt "#30510"
 msgid "Recordings"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="4.4.3"
+  version="4.4.4"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -27,7 +27,7 @@
     <summary lang="es_MX">El frontend de Kodi para Tvheadend</summary>
     <summary lang="et_EE">Kodi liides Tvheadend'ile</summary>
     <summary lang="fi_FI">Kodin Tvheadend-asiakasohjelma</summary>
-    <summary lang="fr_CA">Frontal Kodi pour Tvheadend</summary>
+    <summary lang="fr_CA">Frontale Kodi pour Tvheadend</summary>
     <summary lang="fr_FR">Interface logicielle pour Tvheadend</summary>
     <summary lang="gl_ES">Interface do Kodi para Tvheadend</summary>
     <summary lang="he_IL">לקוח טלוויזיה חיה עבור Tvheadend</summary>
@@ -83,7 +83,7 @@
     <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend'i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend-asiakasohjelma. Tukee suorien tv-lähetysten ja tallennusten katsomista, ohjelmaopasta ja ohjelmien ajastamista.</description>
-    <description lang="fr_CA">Frontal pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries</description>
+    <description lang="fr_CA">Frontale pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
@@ -112,7 +112,7 @@
     <description lang="sq_AL">Tvheadend frotnend përkrahën transmetimin e Live TV'së, EPG'së dhe "timer'ë"</description>
     <description lang="sr_RS">Tvheadend интерфејс; подржава стримовање ТВ Уживо &amp; Снимака, EPG, Тајмере</description>
     <description lang="sr_RS@latin">Tvheadend interfejs; podržava strimovanje TV Uživo &amp; Snimaka, EPG, Tajmere</description>
-    <description lang="sv_SE">Tvheadend frontend; stödjer strömning av Live-tv &amp; inspelningar, EPG, Timers</description>
+    <description lang="sv_SE">Tvheadend frontend; stödjer strömning av Live-TV &amp; inspelningar, EPG, Timers</description>
     <description lang="szl">Frontend Tvheadend; podpiyrŏ strumiyniowaniy TV, nagrań, EPG i minutnikōw</description>
     <description lang="te_IN">Tvheadend ఫ్రంటెండ్; Live TV &amp; రికార్డింగ్స్, EPG, టైమర్లు , స్ట్రీమింగ్ మద్దతు కలదు</description>
     <description lang="tg_TJ">Интерфейси Tvheadend; дастгирии ҷараёни Сабтҳо, Вақтсанҷҳо, Live TV ва EPG</description>
