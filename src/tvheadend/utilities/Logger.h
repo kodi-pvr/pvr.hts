@@ -80,8 +80,6 @@ namespace tvheadend
       void SetPrefix(const std::string &prefix);
 
     private:
-      static const unsigned int MESSAGE_BUFFER_SIZE = 16384;
-
       Logger();
 
       /**
