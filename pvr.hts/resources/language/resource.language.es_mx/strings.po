@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Predeterminados para nuevos temporizadores"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Grabaciones programadas"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignora duplicados (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
@@ -187,6 +195,14 @@ msgstr "Esta regla sólo: Graba máximo una vez por día"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Por defecto"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Graba máximo una vez por mes"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Esta regla solo: Graba máximo una ver por mes"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -319,3 +335,7 @@ msgstr "Transferencia de datos"
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Grabaciones"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Servidor basado en el estado de reproducción"
