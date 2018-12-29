@@ -44,7 +44,7 @@ using namespace tvheadend::utilities;
 #define SLOW_RECONNECT_INTERVAL  (5000) // ms
 
 #define HTSP_MIN_SERVER_VERSION  (19) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION      (29) // Client uses HTSP features up to this version. If the respective
+#define HTSP_CLIENT_VERSION      (34) // Client uses HTSP features up to this version. If the respective
                                       // addon feature requires htsp features introduced after
                                       // HTSP_MIN_SERVER_VERSION this feature will only be available if the
                                       // actual server HTSP version matches (runtime htsp version check).
