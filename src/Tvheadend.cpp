@@ -2467,9 +2467,9 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   if ((str = htsmsg_get_str(msg, "autorecId")) != NULL)
     rec.SetAutorecId(str);
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
-    rec.SetImage(str);
+    rec.SetImage(GetImageURL(str));
   if ((str = htsmsg_get_str(msg, "fanartImage")) != NULL)
-    rec.SetFanartImage(str);
+    rec.SetFanartImage(GetImageURL(str));
 
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)
@@ -2605,7 +2605,7 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
     evt.SetDesc(str);
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
-    evt.SetImage(str);
+    evt.SetImage(GetImageURL(str));
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
     evt.SetNext(u32);
   if (!htsmsg_get_u32(msg, "contentType", &u32))

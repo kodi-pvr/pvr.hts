@@ -429,7 +429,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
       uint8_t* rdsdata = new uint8_t[rdslen];
 
       // Reassemble UECP block. mpeg stream contains data in reverse order!
-      for (int i = offset - 2, j = 0; i > 3 && i > offset - 2 - rdslen; i--, j++)
+      for (size_t i = offset - 2, j = 0; i > 3 && i > offset - 2 - rdslen; i--, j++)
         rdsdata[j] = data[i];
 
       memcpy(pkt->pData, rdsdata, rdslen);
