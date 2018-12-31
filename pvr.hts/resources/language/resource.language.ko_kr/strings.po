@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "새 타이머의 기본 설정"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "예약된 녹화"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "중복 무시 (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "데이터 전송"
@@ -115,6 +123,10 @@ msgstr "추적 (상세)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP 버전 불일치 (지원: v%d, 필요: v%d). tvheadend를 업데이트해 주십시요."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "한 번 (타이머 규정으로 예약)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -160,9 +172,49 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "하루 최대 한 번 녹화"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "이 규정만: 에피소드 번호가 다르면 녹화"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "이 규정만: 에피소드 이름이 다르면 녹화"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "이 규정만: 제목이 다르면 녹화"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "이 규정만: 설명이 다르면 녹화"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "이 규정만: 최대 주별 한 번만 녹화"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "이 규정만: 최대 하루에 한 번만 녹화"
+
 msgctxt "#30368"
 msgid "Default"
 msgstr "보통"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "타이머 규정 (시리즈 링크)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "최대 월별 한 번만 녹화"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "이 규정만: 최대 월별 한 번만 녹화"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "EPG/XMLTV에 따라 유일한 에피소드라면 녹화"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -292,6 +344,14 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "데이터 전송"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "녹화의 스트림 읽기 청크 사이즈 (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "녹화"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "서버 기반의 재생 상태"
