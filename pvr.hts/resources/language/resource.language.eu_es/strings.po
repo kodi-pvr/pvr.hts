@@ -44,6 +44,10 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Programazio ezarpenak"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "Audio grabazioak"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "Arazketa"
