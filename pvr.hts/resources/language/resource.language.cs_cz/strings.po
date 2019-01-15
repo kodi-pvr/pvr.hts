@@ -54,7 +54,7 @@ msgstr "Rozšířená nastavení"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Nastavení proudového vysílání"
+msgstr "Nastavení streamování"
 
 msgctxt "#30010"
 msgid "Timer settings"
@@ -62,7 +62,7 @@ msgstr "Nastavení časovače"
 
 msgctxt "#30050"
 msgid "Auto recordings"
-msgstr "Automatické nahrávky"
+msgstr "Automatické nahrávání"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
@@ -210,7 +210,7 @@ msgstr "Nahrát max. jednou za měsíc"
 
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Pouze toto pravidlo: Nahrávat nejvýše 1x za měsíc"
+msgstr "Pouze toto pravidlo: Nahrát nejvýše 1x za měsíc"
 
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
@@ -302,7 +302,7 @@ msgstr "Použít prediktivní ladění pro zrychlení přepínání kanálů"
 
 msgctxt "#30450"
 msgid "No free adapter available"
-msgstr "Není k dispozici žádný volný adaptér"
+msgstr "Není dostupný žádný volný adaptér"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
@@ -338,7 +338,7 @@ msgstr "Použitý profil (prázdný = výchozí)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Profil proudového vysílání %s není dostupný"
+msgstr "Profil streamování %s není dostupný"
 
 msgctxt "#30503"
 msgid "Data transfer"
@@ -346,7 +346,7 @@ msgstr "Přenos dat"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "Velikost bloku dat čtení streamu pro nahrávání (KB)"
+msgstr "Velikost bloku dat čtení streamu pro nahrávání (kB)"
 
 msgctxt "#30510"
 msgid "Recordings"
