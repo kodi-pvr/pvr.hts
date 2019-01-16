@@ -20,7 +20,7 @@
     <setting id="pretuner_closedelay" enable="eq(-2,true)" type="slider" option="int" range="5,5,60" label="30402" default="10" />
 
     <setting label="30503" type="lsep"/>
-    <setting id="stream_readchunksize" type="slider" option="int" range="4,4,128" label="30504" default="64" />
+    <setting id="stream_readchunksize" type="slider" option="int" range="4,4,512" label="30504" default="64" />
   </category>
 
   <category label="30010">
