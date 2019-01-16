@@ -1,3 +1,12 @@
+4.4.11
+- increase the maximum stream chunk size to 512 KB
+
+4.4.10
+- updated language files from Transifex
+
+4.4.9
+- Fix a link in the README
+
 4.4.7
 - Add support for recent tvheadend 4.3 image URL changes (HTSP v34)
 
