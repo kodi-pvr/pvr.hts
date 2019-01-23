@@ -2457,7 +2457,6 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
     rec.SetPath(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
     rec.SetDescription(str);
-  // TODO: What?
   else if ((str = htsmsg_get_str(msg, "summary")) != NULL)
     rec.SetDescription(str);
   if (!htsmsg_get_u32(msg, "contentType", &contentType))
@@ -2604,6 +2603,13 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetSummary(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
     evt.SetDesc(str);
+  if (evt.GetDesc().empty() && m_conn->GetProtocol() >= 32)
+  {
+    // If no description is available, use summary as description. This was done by tvh prior to htsp version 32.
+    evt.SetDesc(evt.GetSummary());
+    // No duplicate description/summary
+    evt.SetSummary("");
+  }
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
     evt.SetImage(GetImageURL(str));
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
