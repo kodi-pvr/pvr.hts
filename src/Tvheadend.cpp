@@ -2603,13 +2603,6 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetSummary(str);
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
     evt.SetDesc(str);
-  if (evt.GetDesc().empty() && m_conn->GetProtocol() >= 32)
-  {
-    // If no description is available, use summary as description. This was done by tvh prior to htsp version 32.
-    evt.SetDesc(evt.GetSummary());
-    // No duplicate description/summary
-    evt.SetSummary("");
-  }
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
     evt.SetImage(GetImageURL(str));
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
@@ -2634,6 +2627,27 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, bool bAdd, Event &evt )
     evt.SetYear(u32);
   if (!htsmsg_get_u32(msg, "dvrId", &u32))
     evt.SetRecordingId(u32);
+
+  if (m_conn->GetProtocol() >= 32) {
+    if (evt.GetDesc().empty()) {
+      /* 
+        Due to changes in HTSP v32, if the description is empty, try
+        to use the summary as the description. If the summary is empty, 
+        try to use the subtitle as the description. Also clear the
+        respective entries to avoid duplicate information being displayed.
+
+        This was done by TVHeadend prior to HTSP v32.
+      */
+      if (!evt.GetSummary().empty()) {
+        evt.SetDesc(evt.GetSummary());
+        evt.SetSummary("");
+      }
+      else if (!evt.GetSubtitle().empty()) {
+        evt.SetDesc(evt.GetSubtitle());
+        evt.SetSubtitle("");
+      }
+    }
+  }
   
   htsmsg_t *l;
   if ((l = htsmsg_get_map(msg, "credits")) != nullptr)
