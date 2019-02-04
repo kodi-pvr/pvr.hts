@@ -2470,6 +2470,20 @@ void CTvheadend::ParseRecordingAddOrUpdate ( htsmsg_t *msg, bool bAdd )
   if ((str = htsmsg_get_str(msg, "fanartImage")) != NULL)
     rec.SetFanartImage(GetImageURL(str));
 
+  if (m_conn->GetProtocol() >= 32) {
+    if (rec.GetDescription().empty() && !rec.GetSubtitle().empty()) {
+      /* 
+        Due to changes in HTSP v32, if the description is empty, try
+        to use the subtitle as the description. Clear the subtitle
+        afterwards to avoid duplicate information being displayed.
+
+        This was done by TVHeadend prior to HTSP v32.
+      */
+      rec.SetDescription(rec.GetSubtitle());
+      rec.SetSubtitle("");
+    }
+  }
+
   /* Error */
   if ((str = htsmsg_get_str(msg, "error")) != NULL)
   {
