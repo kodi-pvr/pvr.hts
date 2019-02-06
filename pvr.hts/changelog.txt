@@ -1,3 +1,6 @@
+4.4.13
+- Fixed missing description in EPG and DVR tags.
+
 4.4.12
 - Fixed missing summary in EPG tags.
 
