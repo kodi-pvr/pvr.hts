@@ -297,12 +297,7 @@ bool HTSPDemuxer::IsTimeShifting() const
 
 bool HTSPDemuxer::IsRealTimeStream() const
 {
-  if (!m_subscription.IsActive())
-    return false;
-
-  /* Handle as real time when reading close to the EOF (10 secs) */
-  CLockObject lock(m_mutex);
-  return (m_timeshiftStatus.shift < 10000000);
+  return m_subscription.IsActive();
 }
 
 PVR_ERROR HTSPDemuxer::GetStreamTimes(PVR_STREAM_TIMES *times) const
