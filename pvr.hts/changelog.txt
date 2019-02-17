@@ -1,3 +1,6 @@
+4.4.14
+- Fix HTSPDemuxer::IsRealTimeStream to always return true if subscription is active.
+
 4.4.13
 - Fixed missing description in EPG and DVR tags.
 
