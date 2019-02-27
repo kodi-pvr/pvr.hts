@@ -1,3 +1,6 @@
+4.4.15
+- Fix/improve HTSPDemuxer timeshift support
+
 4.4.14
 - Fix HTSPDemuxer::IsRealTimeStream to always return true if subscription is active.
 

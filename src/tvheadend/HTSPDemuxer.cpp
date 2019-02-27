@@ -46,7 +46,7 @@ using namespace tvheadend::utilities;
 HTSPDemuxer::HTSPDemuxer ( HTSPConnection &conn )
   : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME),
-    m_seeking(false), m_speedChange(false),
+    m_seeking(false),
     m_subscription(conn), m_lastUse(0),
     m_startTime(0), m_rdsIdx(0)
 {
@@ -91,7 +91,6 @@ void HTSPDemuxer::Abort0 ( void )
   m_streamStat.clear();
   m_rdsIdx = 0;
   m_seeking = false;
-  m_speedChange = false;
 }
 
 
@@ -131,7 +130,7 @@ DemuxPacket *HTSPDemuxer::Read ( void )
   DemuxPacket *pkt = NULL;
   m_lastUse.store(time(nullptr));
 
-  if (m_pktBuffer.Pop(pkt, 1000)) {
+  if (m_pktBuffer.Pop(pkt, 100)) {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld",
              pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
     return pkt;
@@ -208,11 +207,12 @@ void HTSPDemuxer::Speed ( int speed )
   CLockObject lock(m_conn.Mutex());
   if (!m_subscription.IsActive())
     return;
-  if (speed != m_subscription.GetSpeed() && (speed < 0 || speed >= 4000)) {
-    m_speedChange = true;
-    Flush();
-  }
-  m_subscription.SendSpeed(speed);
+
+  if (speed != 0)
+    speed = 1000;
+
+  if (speed != m_subscription.GetSpeed())
+    m_subscription.SendSpeed(speed);
 }
 
 void HTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
@@ -504,7 +504,7 @@ void HTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   if (!type)
     type = '_';
 
-  ignore = m_seeking || m_speedChange;
+  ignore = m_seeking;
 
   Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld%s",
            idx, pkt->iStreamId, type, pkt->pts, (long long)binlen,
@@ -778,13 +778,6 @@ void HTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   int32_t s32;
   if (!htsmsg_get_s32(m, "speed", &s32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
-
-  CLockObject lock(m_conn.Mutex());
-
-  if (m_speedChange) {
-    Flush();
-    m_speedChange = false;
-  }
 }
 
 void HTSPDemuxer::ParseSubscriptionGrace ( htsmsg_t *m )
