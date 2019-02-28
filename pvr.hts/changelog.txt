@@ -1,3 +1,6 @@
+4.4.16
+- Fix auto close of timeshifted subscriptions if predictive tuning is activated
+
 4.4.15
 - Fix/improve HTSPDemuxer timeshift support
 

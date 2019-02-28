@@ -333,6 +333,13 @@ time_t HTSPDemuxer::GetLastUse() const
   return 0;
 }
 
+bool HTSPDemuxer::IsPaused() const
+{
+  if (m_subscription.IsActive())
+    return m_subscription.GetSpeed() == 0;
+  return false;
+}
+
 void HTSPDemuxer::SetStreamingProfile(const std::string &profile)
 {
   m_subscription.SetProfile(profile);

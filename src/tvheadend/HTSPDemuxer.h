@@ -81,6 +81,7 @@ public:
   uint32_t GetSubscriptionId() const;
   uint32_t GetChannelId() const;
   time_t GetLastUse() const;
+  bool IsPaused() const;
 
   /**
    * Tells each demuxer to use the specified profile for new subscriptions
