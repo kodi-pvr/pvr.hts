@@ -1698,8 +1698,8 @@ void CTvheadend::CloseExpiredSubscriptions()
     {
       for (auto *dmx : m_dmx)
       {
-        // ignore paused subscriptions
-        if (dmx->IsTimeShifting())
+        // do not close the running subscription if it is currently paused
+        if (m_playingLiveStream && dmx == m_dmx_active && dmx->IsPaused())
           continue;
 
         time_t lastUse = dmx->GetLastUse();
@@ -2865,10 +2865,6 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
       m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
       prevId = m_dmx_active->GetChannelId();
 
-      /* Don't keep a timeshifting demux active */
-      if (m_dmx_active->IsTimeShifting())
-        m_dmx_active->Close();
-
       /* Promote the lingering subscription to the active one */
       dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
       m_dmx_active = dmx;
@@ -2889,10 +2885,6 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
 
   prevId = m_dmx_active->GetChannelId();
   m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
-
-  /* Don't keep a timeshifting demux active */
-  if (m_dmx_active->IsTimeShifting())
-    m_dmx_active->Close();
 
   m_playingLiveStream = oldest->Open(chn.iUniqueId, SUBSCRIPTION_WEIGHT_NORMAL);
   m_dmx_active = oldest;
