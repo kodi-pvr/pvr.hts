@@ -1,5 +1,6 @@
 4.4.16
 - Fix auto close of timeshifted subscriptions if predictive tuning is activated
+- Increase packet queuedepth size for subscriptions to workaround timeshift stuttering problems
 
 4.4.15
 - Fix/improve HTSPDemuxer timeshift support

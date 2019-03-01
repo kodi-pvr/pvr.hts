@@ -60,7 +60,7 @@ namespace tvheadend
     SUBSCRIPTION_PREPOSTTUNING                  = 10, /* used for pre and posttuning subscriptions (we do not care what the actual state is) */
   };
 
-  static const int PACKET_QUEUE_DEPTH = 2000000;
+  static const int PACKET_QUEUE_DEPTH = 10000000;
 
   class Subscription
   {
