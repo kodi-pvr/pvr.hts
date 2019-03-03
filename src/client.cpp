@@ -314,6 +314,11 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
   return tvh->DemuxCurrentStreams(pProperties);
 }
 
+void FillBuffer(bool mode)
+{
+  tvh->DemuxFillBuffer(mode);
+}
+
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
   return tvh->DemuxCurrentSignal(signalStatus);

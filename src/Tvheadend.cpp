@@ -2949,6 +2949,11 @@ void CTvheadend::DemuxSpeed ( int speed )
   m_dmx_active->Speed(speed);
 }
 
+void CTvheadend::DemuxFillBuffer ( bool mode )
+{
+  m_dmx_active->FillBuffer(mode);
+}
+
 PVR_ERROR CTvheadend::DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 {
   return m_dmx_active->CurrentStreams(streams);
