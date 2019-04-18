@@ -1423,7 +1423,6 @@ void CTvheadend::CreateEvent
   epg.firstAired          = event.GetAired();
   epg.iParentalRating     = event.GetAge();
   epg.iStarRating         = event.GetStars();
-  epg.bNotify             = false; /* not supported by tvh */
   epg.iSeriesNumber       = event.GetSeason();
   epg.iEpisodeNumber      = event.GetEpisode();
   epg.iEpisodePartNumber  = event.GetPart();
@@ -1455,16 +1454,16 @@ void CTvheadend::TransferEvent
 }
 
 PVR_ERROR CTvheadend::GetEPGForChannel
-  ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
+  ( ADDON_HANDLE handle, int iChannelUid, time_t start, time_t end )
 {
   htsmsg_field_t *f;
 
-  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %ld stop %ld", chn.iUniqueId,
+  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %ld stop %ld", iChannelUid,
            (long long)start, (long long)end);
 
   /* Build message */
   htsmsg_t *msg = htsmsg_create_map();
-  htsmsg_add_u32(msg, "channelId", chn.iUniqueId);
+  htsmsg_add_u32(msg, "channelId", iChannelUid);
   htsmsg_add_s64(msg, "maxTime",   end);
 
   /* Send and Wait */
@@ -1501,7 +1500,7 @@ PVR_ERROR CTvheadend::GetEPGForChannel
     }
   }
   htsmsg_destroy(msg);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d events %d", chn.iUniqueId, n);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d events %d", iChannelUid, n);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -2961,6 +2960,11 @@ bool CTvheadend::DemuxSeek ( double time, bool backward, double *startpts )
 void CTvheadend::DemuxSpeed ( int speed )
 {
   m_dmx_active->Speed(speed);
+}
+
+void CTvheadend::DemuxFillBuffer ( bool mode )
+{
+  m_dmx_active->FillBuffer(mode);
 }
 
 PVR_ERROR CTvheadend::DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )

@@ -111,7 +111,7 @@ public:
   PVR_ERROR DeleteTimer       ( const PVR_TIMER &tmr, bool force );
   PVR_ERROR UpdateTimer       ( const PVR_TIMER &tmr );
 
-  PVR_ERROR GetEPGForChannel  ( ADDON_HANDLE handle, const PVR_CHANNEL &chn,
+  PVR_ERROR GetEPGForChannel  ( ADDON_HANDLE handle, int iChannelUid,
                                 time_t start, time_t end );
   PVR_ERROR SetEPGTimeFrame   ( int iDays );
 
@@ -212,6 +212,7 @@ public:
   void         DemuxAbort          ( void );
   bool         DemuxSeek           ( double time, bool backward, double *startpts );
   void         DemuxSpeed          ( int speed );
+  void         DemuxFillBuffer     ( bool mode );
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig );
   PVR_ERROR    DemuxCurrentDescramble( PVR_DESCRAMBLE_INFO *info);

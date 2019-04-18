@@ -68,6 +68,7 @@ public:
   void Abort();
   bool Seek(double time, bool backwards, double *startpts);
   void Speed(int speed);
+  void FillBuffer(bool mode);
   void Weight(tvheadend::eSubscriptionWeight weight);
 
   PVR_ERROR CurrentStreams(PVR_STREAM_PROPERTIES *streams);
@@ -131,6 +132,8 @@ private:
   std::atomic<time_t> m_lastUse;
   std::atomic<time_t> m_startTime;
   uint32_t m_rdsIdx;
+  int32_t m_requestedSpeed = 1000;
+  int32_t m_actualSpeed = 1000;
 };
 
 } // namespace tvheadend
