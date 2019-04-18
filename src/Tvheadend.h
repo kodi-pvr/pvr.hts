@@ -185,6 +185,11 @@ private:
   void ParseEventDelete          ( htsmsg_t *m );
   bool ParseEvent                ( htsmsg_t *msg, bool bAdd, tvheadend::entity::Event &evt );
 
+  /*
+   * VFS
+   */
+  bool VfsIsActiveRecording() const { return m_playingRecording && m_playingRecording->GetState() == PVR_TIMER_STATE_RECORDING; }
+
 public:
   /*
    * Connection (pass-thru)
@@ -223,6 +228,8 @@ public:
   ssize_t VfsRead(unsigned char *buf, unsigned int len);
   long long VfsSeek(long long position, int whence);
   long long VfsSize();
+  void VfsPauseStream(bool paused);
+  bool VfsIsRealTimeStream();
 
   /*
    * stream times (live streams and recordings)
