@@ -286,7 +286,10 @@ bool IsTimeshifting(void)
 
 bool IsRealTimeStream()
 {
-  return tvh->DemuxIsRealTimeStream();
+  if (tvh->m_playingRecording)
+    return tvh->VfsIsRealTimeStream();
+  else
+    return tvh->DemuxIsRealTimeStream();
 }
 
 bool OpenLiveStream(const PVR_CHANNEL &channel)
@@ -307,6 +310,12 @@ bool SeekTime(double time,bool backward,double *startpts)
 void SetSpeed(int speed)
 {
   tvh->DemuxSpeed(speed);
+}
+
+void PauseStream(bool paused)
+{
+  if (tvh->m_playingRecording)
+    tvh->VfsPauseStream(paused);
 }
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
@@ -541,10 +550,6 @@ PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL&)
 PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL&)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
-}
-
-void PauseStream(bool)
-{
 }
 
 int ReadLiveStream(unsigned char *, unsigned int)

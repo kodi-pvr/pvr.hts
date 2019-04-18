@@ -1651,17 +1651,31 @@ void CTvheadend::VfsClose()
 
 ssize_t CTvheadend::VfsRead(unsigned char *buf, unsigned int len)
 {
-  return m_vfs->Read(buf, len);
+  return m_vfs->Read(buf, len, VfsIsActiveRecording());
 }
 
 long long CTvheadend::VfsSeek(long long position, int whence)
 {
-  return m_vfs->Seek(position, whence);
+  return m_vfs->Seek(position, whence, VfsIsActiveRecording());
 }
 
 long long CTvheadend::VfsSize()
 {
   return m_vfs->Size();
+}
+
+void CTvheadend::VfsPauseStream(bool paused)
+{
+  if (VfsIsActiveRecording())
+    m_vfs->PauseStream(paused);
+}
+
+bool CTvheadend::VfsIsRealTimeStream()
+{
+  if (VfsIsActiveRecording())
+    return m_vfs->IsRealTimeStream();
+  else
+    return false;
 }
 
 /* **************************************************************************
