@@ -211,8 +211,28 @@ void HTSPDemuxer::Speed ( int speed )
   if (speed != 0)
     speed = 1000;
 
-  if (speed != m_subscription.GetSpeed())
+  if ((speed != m_requestedSpeed || speed == 0) && m_actualSpeed == m_subscription.GetSpeed())
+  {
     m_subscription.SendSpeed(speed);
+  }
+
+  m_requestedSpeed = speed;
+}
+
+void HTSPDemuxer::FillBuffer ( bool mode )
+{
+  CLockObject lock(m_conn.Mutex());
+  if (!m_subscription.IsActive())
+    return;
+
+  int speed = (!mode || IsRealTimeStream()) ? 1000 : 4000;
+
+  if (speed != m_requestedSpeed && m_actualSpeed == m_subscription.GetSpeed())
+  {
+    m_subscription.SendSpeed(speed);
+  }
+
+  m_requestedSpeed = speed;
 }
 
 void HTSPDemuxer::Weight ( enum eSubscriptionWeight weight )
@@ -297,7 +317,12 @@ bool HTSPDemuxer::IsTimeShifting() const
 
 bool HTSPDemuxer::IsRealTimeStream() const
 {
-  return m_subscription.IsActive();
+  if (!m_subscription.IsActive())
+    return false;
+
+  /* Handle as real time when reading close to the EOF (10 secs) */
+  CLockObject lock(m_mutex);
+  return (m_timeshiftStatus.shift < 10000000);
 }
 
 PVR_ERROR HTSPDemuxer::GetStreamTimes(PVR_STREAM_TIMES *times) const
@@ -785,6 +810,10 @@ void HTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
   int32_t s32;
   if (!htsmsg_get_s32(m, "speed", &s32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
+
+
+  CLockObject lock(m_conn.Mutex());
+  m_actualSpeed = s32 * 10;
 }
 
 void HTSPDemuxer::ParseSubscriptionGrace ( htsmsg_t *m )

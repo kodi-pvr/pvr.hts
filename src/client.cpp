@@ -323,6 +323,11 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
   return tvh->DemuxCurrentStreams(pProperties);
 }
 
+void FillBuffer(bool mode)
+{
+  tvh->DemuxFillBuffer(mode);
+}
+
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
   return tvh->DemuxCurrentSignal(signalStatus);
@@ -389,9 +394,9 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
  * *************************************************************************/
 
 PVR_ERROR GetEPGForChannel
-  (ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
+  (ADDON_HANDLE handle, int iChannelUid, time_t iStart, time_t iEnd)
 {
-  return tvh->GetEPGForChannel(handle, channel, iStart, iEnd);
+  return tvh->GetEPGForChannel(handle, iChannelUid, iStart, iEnd);
 }
 
 PVR_ERROR SetEPGTimeFrame(int iDays)

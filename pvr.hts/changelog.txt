@@ -1,3 +1,6 @@
+5.0.0
+- PVR API v6.0.0 changes implemented
+
 4.4.17
 - Fix playback when skipping an in progress recording to real-time.
 
