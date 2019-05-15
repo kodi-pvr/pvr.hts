@@ -1,3 +1,7 @@
+5.0.1
+- Predictive tuning: Fix unability to retune to a channel that was closed immediately before.
+- Stream properties: Set video stream aspect ratio.
+
 5.0.0
 - PVR API v6.0.0 changes implemented
 
