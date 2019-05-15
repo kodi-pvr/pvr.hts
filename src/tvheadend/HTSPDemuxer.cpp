@@ -663,8 +663,13 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t *f
       return false;
     }
 
-    /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
-    stream.fAspect = 0.0f;
+    uint32_t aspect_num = htsmsg_get_u32_or_default(&f->hmf_msg, "aspect_num", 0);
+    uint32_t aspect_den = htsmsg_get_u32_or_default(&f->hmf_msg, "aspect_den", 0);
+    if (aspect_num > 0 && aspect_den > 0)
+      stream.fAspect = static_cast<float>(aspect_num) / static_cast<float>(aspect_den);
+    else
+      stream.fAspect = 0.0f;
+
 
     uint32_t duration;
     if ((duration = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
