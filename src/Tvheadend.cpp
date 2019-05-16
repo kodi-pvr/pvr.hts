@@ -2869,24 +2869,29 @@ bool CTvheadend::DemuxOpen( const PVR_CHANNEL &chn )
    * we reuse that subscription */
   for (auto *dmx : m_dmx)
   {
-    if (dmx != m_dmx_active && dmx->GetChannelId() == chn.iUniqueId)
+    if (dmx->GetChannelId() == chn.iUniqueId)
     {
       Logger::Log(LogLevel::LEVEL_TRACE, "retuning channel %u on subscription %u",
                m_channels[chn.iUniqueId].GetNum(), dmx->GetSubscriptionId());
 
-      /* Lower the priority on the current subscrption */
-      m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
-      prevId = m_dmx_active->GetChannelId();
+      if (dmx != m_dmx_active)
+      {
+        /* Lower the priority on the current subscrption */
+        m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
+        prevId = m_dmx_active->GetChannelId();
 
-      /* Promote the lingering subscription to the active one */
-      dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
-      m_dmx_active = dmx;
+        /* Promote the lingering subscription to the active one */
+        dmx->Weight(SUBSCRIPTION_WEIGHT_NORMAL);
+        m_dmx_active = dmx;
 
-      PredictiveTune(prevId, chn.iUniqueId);
-      m_streamchange = true;
+        PredictiveTune(prevId, chn.iUniqueId);
+        m_streamchange = true;
+      }
+
       m_playingLiveStream = true;
       return true;
     }
+
     if (dmx->GetLastUse() < oldest->GetLastUse())
       oldest = dmx;
   }
@@ -2949,7 +2954,9 @@ void CTvheadend::DemuxFlush ( void )
 
 void CTvheadend::DemuxAbort ( void )
 {
-  m_dmx_active->Abort();
+  // If predictive tuning is active, demuxers will be closed/aborted automatically once they are expired.
+  if (m_dmx.size() == 1)
+    m_dmx_active->Abort();
 }
 
 bool CTvheadend::DemuxSeek ( double time, bool backward, double *startpts )
