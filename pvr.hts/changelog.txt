@@ -1,3 +1,6 @@
+5.1.0
+- kodi.binary.global.gui bump to 5.14.0
+
 5.0.1
 - Predictive tuning: Fix unability to retune to a channel that was closed immediately before.
 
