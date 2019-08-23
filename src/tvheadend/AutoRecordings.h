@@ -29,7 +29,7 @@ extern "C"
 #include "libhts/htsmsg.h"
 }
 
-#include "libXBMC_pvr.h"
+#include "kodi/libXBMC_pvr.h"
 #include "entity/AutoRecording.h"
 
 namespace tvheadend

@@ -21,7 +21,7 @@
 
 #include "DescrambleInfo.h"
 
-#include "xbmc_pvr_types.h"
+#include "kodi/xbmc_pvr_types.h"
 
 using namespace tvheadend::status;
 
