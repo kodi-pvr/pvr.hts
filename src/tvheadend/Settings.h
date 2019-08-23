@@ -24,7 +24,7 @@
 #include <string>
 
 #include "HTSPTypes.h"
-#include "xbmc_addon_types.h"
+#include "kodi/xbmc_addon_types.h"
 
 namespace tvheadend {
 

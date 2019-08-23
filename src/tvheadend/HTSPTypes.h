@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-#include "libXBMC_pvr.h"
+#include "kodi/libXBMC_pvr.h"
 
 #include "entity/Event.h"
 
