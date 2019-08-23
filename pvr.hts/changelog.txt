@@ -1,3 +1,8 @@
+5.1.1
+- Update build system version and cleanup
+- Change kodi header include way
+- Update Travis and AppVeyor test build systems
+
 5.1.0
 - kodi.binary.global.gui bump to 5.14.0
 
