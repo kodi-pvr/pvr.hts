@@ -40,13 +40,45 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "パスワード"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr "接続が時間切れ (秒)"
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr "レスポンスのタイムアウト (秒)"
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr "詳細設定"
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr "ストリーミングの設定"
+
 msgctxt "#30010"
 msgid "Timer settings"
 msgstr "タイマーの設定"
 
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr "自動録画"
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr "デフォルトの優先度"
+
 msgctxt "#30200"
 msgid "Debugging"
 msgstr "デバッグ"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "トレース(詳細)"
+
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr "重要(最高)"
 
 msgctxt "#30352"
 msgid "High"
@@ -60,6 +92,10 @@ msgctxt "#30354"
 msgid "Low"
 msgstr "低"
 
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr "重要でない(最低)"
+
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "すべての回を録画する"
@@ -71,6 +107,18 @@ msgstr "デフォルト"
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "容量がいっぱいになるまで"
+
+msgctxt "#30378"
+msgid "1 week"
+msgstr "一週間"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "一か月"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "一年"
 
 msgctxt "#30510"
 msgid "Recordings"

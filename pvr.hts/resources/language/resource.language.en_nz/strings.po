@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Defaults for new timers"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Scheduled recordings"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignore duplicates (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Data transfer"
@@ -115,6 +123,10 @@ msgstr "Trace (detailed)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "One Time (Scheduled by timer rule)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -187,6 +199,22 @@ msgstr "This rule only: Record max once per day"
 msgctxt "#30368"
 msgid "Default"
 msgstr "Default"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Timer rule (series link)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Record max once per month"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "This rule only: Record max once per month"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Record if unique episode according EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -316,6 +344,14 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Data transfer"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Stream read chunk size for recordings (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Recordings"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Server based play status"

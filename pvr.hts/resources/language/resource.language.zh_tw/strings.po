@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "新設計時器的預設值"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "預定錄製"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "忽略重複項目 (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "資料傳輸"
@@ -195,6 +203,18 @@ msgstr "預設"
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "定時器規則 (同系列的聯結)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "每月最多記錄一次"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "僅此規則: 每月最多記錄一次"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "根據獨特情節錄製 EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -323,6 +343,10 @@ msgstr "串流設定檔 %s 不可用"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "資料傳輸"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "用於錄製的串流讀取部分大小（KB）"
 
 msgctxt "#30510"
 msgid "Recordings"

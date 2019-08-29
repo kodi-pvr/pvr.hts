@@ -84,6 +84,26 @@ msgctxt "#30055"
 msgid "Default priority"
 msgstr "Standardprioritet"
 
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr "Levetid"
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr "Dubletregistrering"
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr "Standarder for nye timere"
+
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Planlagte optagelser"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorer dubletter (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Dataoverførsel"
@@ -152,6 +172,10 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Optag maks. en gang per dag"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Kun denne regel: Optag hvis episodenummeret er et andet"
+
 msgctxt "#30368"
 msgid "Default"
 msgstr "Standard"
@@ -172,6 +196,10 @@ msgctxt "#30376"
 msgid "3 days"
 msgstr "3 dage"
 
+msgctxt "#30377"
+msgid "5 days"
+msgstr "5 dage"
+
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 uge"
@@ -184,6 +212,22 @@ msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 uger"
 
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 måned"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 måneder"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 måneder"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 måneder"
+
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 år"
@@ -195,6 +239,14 @@ msgstr "2 år"
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 år"
+
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr "Indtil pladsen skal bruges (tvh 4.1+)"
+
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr "Altid (tvh 4.1+)"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -240,6 +292,14 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Abonnementsfejl"
 
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr "Udsendelsesprofil"
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr "Profil at anvende (tom = standard)"
+
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streamingprofilen %s er ikke tilgængelig"
@@ -251,3 +311,7 @@ msgstr "Dataoverførsel"
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Optagelser"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Serverbaseret afspilningsstatus"

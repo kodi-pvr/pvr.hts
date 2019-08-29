@@ -54,7 +54,7 @@ msgstr "Napredne postavke"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Postavke stremanja"
+msgstr "Postavke strujanja"
 
 msgctxt "#30010"
 msgid "Timer settings"
@@ -330,7 +330,7 @@ msgstr "Greška pretplate"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Profil streamanja"
+msgstr "Profil strujanja"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -338,7 +338,7 @@ msgstr "Profil za korištenje (prazno = zadano)"
 
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Streaming profil %s nije dostupan"
+msgstr "Profil strujanja %s nije dostupan"
 
 msgctxt "#30503"
 msgid "Data transfer"

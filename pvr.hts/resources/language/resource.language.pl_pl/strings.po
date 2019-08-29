@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Domyślne dla nowych zadań"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Zaplanowane nagrania"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorowanie duplikatów (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transfer danych"
@@ -199,6 +207,14 @@ msgstr "Reguła harmonogramu (wiązanie seryjne)"
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr "Nagrywaj maksimum raz na miesiąc"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Tylko ta reguła: Nagrywaj maksymalnie raz na miesiąc"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Nagrywaj jeśli unikalny odcinek wg EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -327,6 +343,10 @@ msgstr "Brak profilu transmisji %s"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Transfer danych"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Rozmiar odczytywanej porcji strumienia dla nagrań (KB)"
 
 msgctxt "#30510"
 msgid "Recordings"

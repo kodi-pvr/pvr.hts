@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Padrão para novos temporizadores"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Gravações agendadas"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorar duplicados (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferência de dados"
@@ -115,6 +123,10 @@ msgstr "Rastreio (detalhado)"
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Incompatibilidade na versão do HTSP (suportado: v%d, necessário: v%d). Atualize o tvheadend."
+
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr "Uma vez (agendado por um temporizador recorrente)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
@@ -160,9 +172,49 @@ msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Gravar, no máximo, uma vez por dia"
 
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr "Esta regra apenas: Gravar se o número do episódio for diferente"
+
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr "Esta regra apenas: Gravar se o nome do episódio for diferente"
+
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr "Esta regra apenas: Gravar se o título for diferente"
+
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr "Esta regra apenas: Gravar se a descrição for diferente"
+
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr "Esta regra apenas: Gravar no máximo uma vez por semana"
+
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr "Esta regra apenas: Gravar no máximo uma vez por dia"
+
 msgctxt "#30368"
 msgid "Default"
 msgstr "Normal"
+
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr "Regras de temporização (ligação a série)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "Gravar no máximo uma vez por mês"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "Esta regra apenas: Gravar no máximo uma vez por mês"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "Gravar se for um episódio único de acordo com o EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -292,6 +344,14 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Transferência de dados"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Tamanho do pacote de leitura para gravações (KB)"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Gravações"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr "Estado de reprodução baseado no servidor"

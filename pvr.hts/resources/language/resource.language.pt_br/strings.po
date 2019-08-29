@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Padrão para novos agendamentos"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "Gravações agendadas"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "Ignorar duplicatas (tvh 4.3+)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferência de Dados"
@@ -335,6 +343,10 @@ msgstr "Perfil streaming %s não está disponível"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Transferência de Dados"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "Fluxo de leitura do tamanho do bloco para gravações (KB)"
 
 msgctxt "#30510"
 msgid "Recordings"

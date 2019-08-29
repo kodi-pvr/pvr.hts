@@ -72,6 +72,46 @@ msgctxt "#30368"
 msgid "Default"
 msgstr "Үндсэн"
 
+msgctxt "#30378"
+msgid "1 week"
+msgstr "1 долоо хоног"
+
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr "2 долоо хоног"
+
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr "3 долоо хоног"
+
+msgctxt "#30381"
+msgid "1 month"
+msgstr "1 сар"
+
+msgctxt "#30382"
+msgid "2 months"
+msgstr "2 сар"
+
+msgctxt "#30383"
+msgid "3 months"
+msgstr "3 сар"
+
+msgctxt "#30384"
+msgid "6 months"
+msgstr "6 сар"
+
+msgctxt "#30385"
+msgid "1 year"
+msgstr "1 жил"
+
+msgctxt "#30386"
+msgid "2 years"
+msgstr "2 жил"
+
+msgctxt "#30387"
+msgid "3 years"
+msgstr "3 жил"
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Бичлэгүүд"
