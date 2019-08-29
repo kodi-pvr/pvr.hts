@@ -5,7 +5,7 @@ init:
 - ps: $timestamp = $env:appveyor_repo_commit_timestamp.SubString(0,10)
 - ps: Update-AppveyorBuild -Version ("{0}-{1}-{2}" -f $env:appveyor_repo_branch, $commit, $timestamp)
 
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 shallow_clone: true
 
@@ -15,13 +15,16 @@ environment:
   app_id: pvr.hts
 
   matrix:
-    - GENERATOR: "Visual Studio 14"
+    - GENERATOR: "Visual Studio 15"
       CONFIG: Release
-    - GENERATOR: "Visual Studio 14 Win64"
+    - GENERATOR: "Visual Studio 15 Win64"
       CONFIG: Release
-    - GENERATOR: "Visual Studio 14 Win64"
+    - GENERATOR: "Visual Studio 15 Win64"
       CONFIG: Release
-      WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.16299.0"
+      WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.17763.0"
+    - GENERATOR: "Visual Studio 15 ARM"
+      CONFIG: Release
+      WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.17763.0"
 
 build_script:
   - cd ..
