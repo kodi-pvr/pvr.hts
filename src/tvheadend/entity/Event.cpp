@@ -22,7 +22,7 @@
 #include "Event.h"
 
 #include "p8-platform/util/StringUtils.h"
-#include "xbmc_epg_types.h"
+#include "kodi/xbmc_epg_types.h"
 
 using namespace tvheadend::entity;
 

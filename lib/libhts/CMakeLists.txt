@@ -1,8 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
 PROJECT(hts)
-
-ENABLE_LANGUAGE(C)
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 SET(SOURCES htsbuf.c
             htsmsg_binary.c
