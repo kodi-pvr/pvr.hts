@@ -1,3 +1,6 @@
+5.2.0
+- Update: Recompile for 6.1.0 PVR Addon API compatibility
+
 5.1.1
 - Update build system version and cleanup
 - Change kodi header include way
