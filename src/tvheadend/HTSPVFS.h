@@ -21,9 +21,9 @@
  *
  */
 
-#include <string>
-
 #include "p8-platform/os.h"
+
+#include <string>
 
 struct PVR_RECORDING;
 
@@ -38,14 +38,14 @@ class HTSPConnection;
 class HTSPVFS
 {
 public:
-  HTSPVFS(HTSPConnection &conn);
+  HTSPVFS(HTSPConnection& conn);
   ~HTSPVFS();
 
   void Connected();
 
-  bool Open(const PVR_RECORDING &rec);
+  bool Open(const PVR_RECORDING& rec);
   void Close();
-  ssize_t Read(unsigned char *buf, unsigned int len, bool inprogress);
+  ssize_t Read(unsigned char* buf, unsigned int len, bool inprogress);
   long long Seek(long long pos, int whence, bool inprogress);
   long long Size();
   void PauseStream(bool paused);
@@ -54,10 +54,10 @@ public:
 private:
   bool SendFileOpen(bool force = false);
   void SendFileClose();
-  ssize_t SendFileRead(unsigned char *buf, unsigned int len);
+  ssize_t SendFileRead(unsigned char* buf, unsigned int len);
   long long SendFileSeek(int64_t pos, int whence, bool force = false);
 
-  HTSPConnection &m_conn;
+  HTSPConnection& m_conn;
   std::string m_path;
   uint32_t m_fileId;
   int64_t m_offset;

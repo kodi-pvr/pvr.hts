@@ -21,27 +21,27 @@
 
 #include "Event.h"
 
-#include "p8-platform/util/StringUtils.h"
 #include "kodi/xbmc_epg_types.h"
+#include "p8-platform/util/StringUtils.h"
 
 using namespace tvheadend::entity;
 
-void Event::SetWriters(const std::vector<std::string> &writers)
+void Event::SetWriters(const std::vector<std::string>& writers)
 {
   m_writers = StringUtils::Join(writers, EPG_STRING_TOKEN_SEPARATOR);
 }
 
-void Event::SetDirectors(const std::vector<std::string> &directors)
+void Event::SetDirectors(const std::vector<std::string>& directors)
 {
   m_directors = StringUtils::Join(directors, EPG_STRING_TOKEN_SEPARATOR);
 }
 
-void Event::SetCast(const std::vector<std::string> &cast)
+void Event::SetCast(const std::vector<std::string>& cast)
 {
   m_cast = StringUtils::Join(cast, EPG_STRING_TOKEN_SEPARATOR);
 }
 
-void Event::SetCategories(const std::vector<std::string> &categories)
+void Event::SetCategories(const std::vector<std::string>& categories)
 {
   m_categories = StringUtils::Join(categories, EPG_STRING_TOKEN_SEPARATOR);
 }

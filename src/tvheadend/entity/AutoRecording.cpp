@@ -26,8 +26,8 @@
 using namespace tvheadend;
 using namespace tvheadend::entity;
 
-AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
-    RecordingBase(id),
+AutoRecording::AutoRecording(const std::string& id /*= ""*/)
+  : RecordingBase(id),
     m_startWindowBegin(0),
     m_startWindowEnd(0),
     m_startExtra(0),
@@ -37,19 +37,15 @@ AutoRecording::AutoRecording(const std::string &id /*= ""*/) :
 {
 }
 
-bool AutoRecording::operator==(const AutoRecording &right)
+bool AutoRecording::operator==(const AutoRecording& right)
 {
-  return RecordingBase::operator==(right)     &&
-         m_startWindowBegin == right.m_startWindowBegin &&
-         m_startWindowEnd   == right.m_startWindowEnd   &&
-         m_startExtra       == right.m_startExtra       &&
-         m_stopExtra        == right.m_stopExtra        &&
-         m_dupDetect        == right.m_dupDetect        &&
-         m_fulltext         == right.m_fulltext         &&
-         m_seriesLink       == right.m_seriesLink;
+  return RecordingBase::operator==(right) && m_startWindowBegin == right.m_startWindowBegin &&
+         m_startWindowEnd == right.m_startWindowEnd && m_startExtra == right.m_startExtra &&
+         m_stopExtra == right.m_stopExtra && m_dupDetect == right.m_dupDetect &&
+         m_fulltext == right.m_fulltext && m_seriesLink == right.m_seriesLink;
 }
 
-bool AutoRecording::operator!=(const AutoRecording &right)
+bool AutoRecording::operator!=(const AutoRecording& right)
 {
   return !(*this == right);
 }
@@ -156,7 +152,7 @@ const std::string& AutoRecording::GetSeriesLink() const
   return m_seriesLink;
 }
 
-void AutoRecording::SetSeriesLink(const std::string &seriesLink)
+void AutoRecording::SetSeriesLink(const std::string& seriesLink)
 {
   m_seriesLink = seriesLink;
 }

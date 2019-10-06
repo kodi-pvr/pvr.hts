@@ -24,14 +24,15 @@
 using namespace tvheadend::utilities;
 using namespace P8PLATFORM;
 
-struct Param {
+struct Param
+{
   eAsyncState state;
-  AsyncState *self;
+  AsyncState* self;
 };
 
 AsyncState::AsyncState(int timeout)
 {
-  m_state   = ASYNC_NONE;
+  m_state = ASYNC_NONE;
   m_timeout = timeout;
 }
 
@@ -48,9 +49,9 @@ void AsyncState::SetState(eAsyncState state)
   m_condition.Broadcast();
 }
 
-bool AsyncState::PredicateCallback ( void *p )
+bool AsyncState::PredicateCallback(void* p)
 {
-  Param *param = (Param*)p;
+  Param* param = (Param*)p;
   return param->self->m_state >= param->state;
 }
 
@@ -58,7 +59,7 @@ bool AsyncState::WaitForState(eAsyncState state)
 {
   Param p;
   p.state = state;
-  p.self  = this;
+  p.self = this;
 
   CLockObject lock(m_mutex);
   return m_condition.Wait(m_mutex, AsyncState::PredicateCallback, (void*)&p, m_timeout);

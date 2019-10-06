@@ -31,13 +31,11 @@ class CodecDescriptor
 public:
   CodecDescriptor(void)
   {
-    m_codec.codec_id   = XBMC_INVALID_CODEC_ID;
+    m_codec.codec_id = XBMC_INVALID_CODEC_ID;
     m_codec.codec_type = XBMC_CODEC_TYPE_UNKNOWN;
   }
 
-  CodecDescriptor(xbmc_codec_t codec, const char* name) :
-    m_codec(codec),
-    m_strName(name) {}
+  CodecDescriptor(xbmc_codec_t codec, const char* name) : m_codec(codec), m_strName(name) {}
   virtual ~CodecDescriptor(void) {}
 
   xbmc_codec_t Codec(void) const { return m_codec; }
@@ -60,5 +58,5 @@ public:
 
 private:
   xbmc_codec_t m_codec;
-  std::string  m_strName;
+  std::string m_strName;
 };

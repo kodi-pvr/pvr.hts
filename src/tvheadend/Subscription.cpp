@@ -21,21 +21,21 @@
 
 #include "Subscription.h"
 
+#include "HTSPConnection.h"
 #include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
-#include "HTSPConnection.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-Subscription::Subscription(HTSPConnection &conn) :
-  m_id(0),
-  m_channelId(0),
-  m_weight(SUBSCRIPTION_WEIGHT_NORMAL),
-  m_speed(1000),
-  m_state(SUBSCRIPTION_STOPPED),
-  m_conn(conn)
+Subscription::Subscription(HTSPConnection& conn)
+  : m_id(0),
+    m_channelId(0),
+    m_weight(SUBSCRIPTION_WEIGHT_NORMAL),
+    m_speed(1000),
+    m_state(SUBSCRIPTION_STOPPED),
+    m_conn(conn)
 {
 }
 
@@ -111,7 +111,7 @@ std::string Subscription::GetProfile() const
   return m_profile;
 }
 
-void Subscription::SetProfile(const std::string &profile)
+void Subscription::SetProfile(const std::string& profile)
 {
   CLockObject lock(m_mutex);
   m_profile = profile;
@@ -129,19 +129,19 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   }
 
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_s32(m, "channelId",       GetChannelId());
-  htsmsg_add_u32(m, "subscriptionId",  GetId());
-  htsmsg_add_u32(m, "weight",          GetWeight());
+  htsmsg_t* m = htsmsg_create_map();
+  htsmsg_add_s32(m, "channelId", GetChannelId());
+  htsmsg_add_u32(m, "subscriptionId", GetId());
+  htsmsg_add_u32(m, "weight", GetWeight());
   htsmsg_add_u32(m, "timeshiftPeriod", static_cast<uint32_t>(~0));
-  htsmsg_add_u32(m, "normts",          1);
-  htsmsg_add_u32(m, "queueDepth",      PACKET_QUEUE_DEPTH);
+  htsmsg_add_u32(m, "normts", 1);
+  htsmsg_add_u32(m, "queueDepth", PACKET_QUEUE_DEPTH);
 
   /* Use the specified profile if it has been set */
   if (!GetProfile().empty())
     htsmsg_add_str(m, "profile", GetProfile().c_str());
 
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %d",    GetChannelId());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %d", GetChannelId());
 
   /* Send and Wait for response */
   if (restart)
@@ -154,14 +154,16 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   htsmsg_destroy(m);
 
   SetState(SUBSCRIPTION_STARTING);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(), GetId());
+  Logger::Log(LogLevel::LEVEL_DEBUG,
+              "demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(),
+              GetId());
 }
 
 void Subscription::SendUnsubscribe(void)
 {
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId",   GetId());
+  htsmsg_t* m = htsmsg_create_map();
+  htsmsg_add_u32(m, "subscriptionId", GetId());
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux unsubscribe from %d", GetChannelId());
 
   /* Mark subscription as inactive immediately in case this command fails */
@@ -172,17 +174,19 @@ void Subscription::SendUnsubscribe(void)
     return;
 
   htsmsg_destroy(m);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux successfully unsubscribed from channel id %d, subscription id %d", GetChannelId(), GetId());
+  Logger::Log(LogLevel::LEVEL_DEBUG,
+              "demux successfully unsubscribed from channel id %d, subscription id %d",
+              GetChannelId(), GetId());
 }
 
 bool Subscription::SendSeek(double time)
 {
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
-  htsmsg_add_s64(m, "time",           static_cast<int64_t>(time * 1000LL));
-  htsmsg_add_u32(m, "absolute",       1);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %d",      time);
+  htsmsg_add_s64(m, "time", static_cast<int64_t>(time * 1000LL));
+  htsmsg_add_u32(m, "absolute", 1);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %d", time);
 
   /* Send and Wait */
   {
@@ -205,10 +209,11 @@ void Subscription::SendSpeed(int32_t speed, bool restart)
     SetSpeed(speed);
 
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
-  htsmsg_add_s32(m, "speed",          GetSpeed() / 10); // Kodi uses values an order of magnitude larger than tvheadend
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send speed %d",     GetSpeed() / 10);
+  htsmsg_add_s32(m, "speed",
+                 GetSpeed() / 10); // Kodi uses values an order of magnitude larger than tvheadend
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send speed %d", GetSpeed() / 10);
 
   if (restart)
     m = m_conn.SendAndWait0("subscriptionSpeed", m);
@@ -224,10 +229,10 @@ void Subscription::SendWeight(uint32_t weight)
   SetWeight(weight);
 
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
-  htsmsg_add_s32(m, "weight",         GetWeight());
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send weight %u",    GetWeight());
+  htsmsg_add_s32(m, "weight", GetWeight());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send weight %u", GetWeight());
 
   /* Send and Wait */
   {
@@ -238,7 +243,7 @@ void Subscription::SendWeight(uint32_t weight)
     htsmsg_destroy(m);
 }
 
-void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
+void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
 {
   /* Not for preTuning and postTuning subscriptions */
   if (GetWeight() == static_cast<uint32_t>(SUBSCRIPTION_WEIGHT_PRETUNING) ||
@@ -248,12 +253,12 @@ void Subscription::ParseSubscriptionStatus ( htsmsg_t *m )
     return;
   }
 
-  const char *status = htsmsg_get_str(m, "status");
+  const char* status = htsmsg_get_str(m, "status");
 
   /* 'subscriptionErrors' was added in htsp v20, use 'status' for older backends */
   if (m_conn.GetProtocol() >= 20)
   {
-    const char *error = htsmsg_get_str(m, "subscriptionError");
+    const char* error = htsmsg_get_str(m, "subscriptionError");
 
     /* This field is absent when everything is fine */
     if (error != NULL)

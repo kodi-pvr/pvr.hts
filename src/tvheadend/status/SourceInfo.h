@@ -25,49 +25,49 @@
 
 namespace tvheadend
 {
-  namespace status
-  {
-    /**
+namespace status
+{
+/**
      * Represents information about the current service
      */
-    struct SourceInfo
-    {
-      /**
+struct SourceInfo
+{
+  /**
        * The current adapter used
        */
-      std::string si_adapter;
+  std::string si_adapter;
 
-      /**
+  /**
        * The network
        */
-      std::string si_network;
+  std::string si_network;
 
-      /**
+  /**
        * The mux
        */
-      std::string si_mux;
+  std::string si_mux;
 
-      /**
+  /**
        * The service provider
        */
-      std::string si_provider;
+  std::string si_provider;
 
-      /**
+  /**
        * The service name
        */
-      std::string si_service;
+  std::string si_service;
 
-      /**
+  /**
        * Clears the current status
        */
-      void Clear()
-      {
-        si_adapter.clear();
-        si_network.clear();
-        si_mux.clear();
-        si_provider.clear();
-        si_service.clear();
-      }
-    };
+  void Clear()
+  {
+    si_adapter.clear();
+    si_network.clear();
+    si_mux.clear();
+    si_provider.clear();
+    si_service.clear();
   }
-}
+};
+} // namespace status
+} // namespace tvheadend

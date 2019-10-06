@@ -25,12 +25,12 @@
 #include <string>
 #include <vector>
 
-extern "C" {
+extern "C"
+{
 #include "libhts/htsmsg.h"
 }
 
 #include "kodi/libXBMC_pvr.h"
-
 #include "p8-platform/sockets/tcp.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/threads/threads.h"
@@ -57,19 +57,19 @@ public:
   void Stop();
   void Disconnect();
 
-  bool SendMessage0(const char *method, htsmsg_t *m);
-  htsmsg_t *SendAndWait0(const char *method, htsmsg_t *m, int iResponseTimeout = -1);
-  htsmsg_t *SendAndWait(const char *method, htsmsg_t *m, int iResponseTimeout = -1);
+  bool SendMessage0(const char* method, htsmsg_t* m);
+  htsmsg_t* SendAndWait0(const char* method, htsmsg_t* m, int iResponseTimeout = -1);
+  htsmsg_t* SendAndWait(const char* method, htsmsg_t* m, int iResponseTimeout = -1);
 
   int GetProtocol() const;
 
-  std::string GetWebURL(const char *fmt, ...) const;
+  std::string GetWebURL(const char* fmt, ...) const;
 
   std::string GetServerName() const;
   std::string GetServerVersion() const;
   std::string GetServerString() const;
 
-  bool HasCapability(const std::string &capability) const;
+  bool HasCapability(const std::string& capability) const;
 
   inline P8PLATFORM::CMutex& Mutex() { return m_mutex; }
 
@@ -83,7 +83,7 @@ private:
   void Register();
   bool ReadMessage();
   bool SendHello();
-  bool SendAuth(const std::string &u, const std::string &p);
+  bool SendAuth(const std::string& u, const std::string& p);
 
   void SetState(PVR_CONNECTION_STATE state);
   bool WaitForConnection();
@@ -94,29 +94,23 @@ private:
   class HTSPRegister : public P8PLATFORM::CThread
   {
   public:
-    HTSPRegister(HTSPConnection *conn)
-    : m_conn(conn)
-    {
-    }
+    HTSPRegister(HTSPConnection* conn) : m_conn(conn) {}
 
-    ~HTSPRegister() override
-    {
-      StopThread(0);
-    }
+    ~HTSPRegister() override { StopThread(0); }
 
   private:
     // CThread implementation
-    void *Process() override
+    void* Process() override
     {
       m_conn->Register();
       return nullptr;
     }
 
-    HTSPConnection *m_conn;
+    HTSPConnection* m_conn;
   };
 
   IHTSPConnectionListener& m_connListener;
-  P8PLATFORM::CTcpSocket *m_socket;
+  P8PLATFORM::CTcpSocket* m_socket;
   mutable P8PLATFORM::CMutex m_mutex;
   HTSPRegister* m_regThread;
   P8PLATFORM::CCondition<volatile bool> m_regCond;

@@ -21,9 +21,9 @@
  *
  */
 
-#include "p8-platform/os.h"
 #include "kodi/libXBMC_addon.h"
 #include "kodi/libXBMC_pvr.h"
+#include "p8-platform/os.h"
 
-extern ADDON::CHelper_libXBMC_addon*  XBMC;
-extern CHelper_libXBMC_pvr*           PVR;
+extern ADDON::CHelper_libXBMC_addon* XBMC;
+extern CHelper_libXBMC_pvr* PVR;

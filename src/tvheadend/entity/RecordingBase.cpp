@@ -19,41 +19,29 @@
  *
  */
 
-#include <algorithm>
-
 #include "RecordingBase.h"
 
 #include "../utilities/LifetimeMapper.h"
 
+#include <algorithm>
+
 using namespace tvheadend::entity;
 
-RecordingBase::RecordingBase(const std::string &id /*= ""*/) :
-    m_sid(id),
-    m_enabled(0),
-    m_daysOfWeek(0),
-    m_lifetime(0),
-    m_priority(0),
-    m_channel(0)
+RecordingBase::RecordingBase(const std::string& id /*= ""*/)
+  : m_sid(id), m_enabled(0), m_daysOfWeek(0), m_lifetime(0), m_priority(0), m_channel(0)
 {
   m_id = GetNextIntId();
 }
 
-bool RecordingBase::operator==(const RecordingBase &right)
+bool RecordingBase::operator==(const RecordingBase& right)
 {
-  return m_id          == right.m_id          &&
-         m_enabled     == right.m_enabled     &&
-         m_daysOfWeek  == right.m_daysOfWeek  &&
-         m_lifetime    == right.m_lifetime    &&
-         m_priority    == right.m_priority    &&
-         m_title       == right.m_title       &&
-         m_name        == right.m_name        &&
-         m_directory   == right.m_directory   &&
-         m_owner       == right.m_owner       &&
-         m_creator     == right.m_creator     &&
-         m_channel     == right.m_channel;
+  return m_id == right.m_id && m_enabled == right.m_enabled && m_daysOfWeek == right.m_daysOfWeek &&
+         m_lifetime == right.m_lifetime && m_priority == right.m_priority &&
+         m_title == right.m_title && m_name == right.m_name && m_directory == right.m_directory &&
+         m_owner == right.m_owner && m_creator == right.m_creator && m_channel == right.m_channel;
 }
 
-bool RecordingBase::operator!=(const RecordingBase &right)
+bool RecordingBase::operator!=(const RecordingBase& right)
 {
   return !(*this == right);
 }
@@ -63,7 +51,7 @@ std::string RecordingBase::GetStringId() const
   return m_sid;
 }
 
-void RecordingBase::SetStringId(const std::string &id)
+void RecordingBase::SetStringId(const std::string& id)
 {
   m_sid = id;
 }
@@ -113,7 +101,7 @@ const std::string& RecordingBase::GetTitle() const
   return m_title;
 }
 
-void RecordingBase::SetTitle(const std::string &title)
+void RecordingBase::SetTitle(const std::string& title)
 {
   m_title = title;
 }
@@ -123,7 +111,7 @@ const std::string& RecordingBase::GetName() const
   return m_name;
 }
 
-void RecordingBase::SetName(const std::string &name)
+void RecordingBase::SetName(const std::string& name)
 {
   m_name = name;
 }
@@ -133,17 +121,17 @@ const std::string& RecordingBase::GetDirectory() const
   return m_directory;
 }
 
-void RecordingBase::SetDirectory(const std::string &directory)
+void RecordingBase::SetDirectory(const std::string& directory)
 {
   m_directory = directory;
 }
 
-void RecordingBase::SetOwner(const std::string &owner)
+void RecordingBase::SetOwner(const std::string& owner)
 {
   m_owner = owner;
 }
 
-void RecordingBase::SetCreator(const std::string &creator)
+void RecordingBase::SetCreator(const std::string& creator)
 {
   m_creator = creator;
 }
@@ -165,11 +153,11 @@ time_t RecordingBase::LocaltimeToUTC(int32_t lctime)
 
   /* complete lctime with current year, month, day, ... */
   time_t t = time(NULL);
-  struct tm *tm_time = localtime(&t);
+  struct tm* tm_time = localtime(&t);
 
-  tm_time->tm_hour  = lctime / 60;
-  tm_time->tm_min   = lctime % 60;
-  tm_time->tm_sec   = 0;
+  tm_time->tm_hour = lctime / 60;
+  tm_time->tm_min = lctime % 60;
+  tm_time->tm_sec = 0;
 
   return mktime(tm_time);
 }

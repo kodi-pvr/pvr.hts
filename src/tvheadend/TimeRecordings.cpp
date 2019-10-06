@@ -23,17 +23,16 @@
 
 #include "HTSPConnection.h"
 #include "entity/Recording.h"
-#include "utilities/Utilities.h"
-#include "utilities/Logger.h"
 #include "utilities/LifetimeMapper.h"
+#include "utilities/Logger.h"
+#include "utilities/Utilities.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-TimeRecordings::TimeRecordings(HTSPConnection &conn) :
-  m_conn(conn)
+TimeRecordings::TimeRecordings(HTSPConnection& conn) : m_conn(conn)
 {
 }
 
@@ -50,10 +49,8 @@ void TimeRecordings::Connected()
 
 void TimeRecordings::SyncDvrCompleted()
 {
-  utilities::erase_if(m_timeRecordings, [](const TimeRecordingMapEntry &entry)
-  {
-    return entry.second.IsDirty();
-  });
+  utilities::erase_if(m_timeRecordings,
+                      [](const TimeRecordingMapEntry& entry) { return entry.second.IsDirty(); });
 }
 
 int TimeRecordings::GetTimerecTimerCount() const
@@ -61,56 +58,54 @@ int TimeRecordings::GetTimerecTimerCount() const
   return m_timeRecordings.size();
 }
 
-void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER> &timers)
+void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER>& timers)
 {
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
     /* Setup entry */
-    PVR_TIMER tmr = { 0 };
+    PVR_TIMER tmr = {0};
 
-    tmr.iClientIndex       = tit->second.GetId();
-    tmr.iClientChannelUid  = (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
-    tmr.startTime          = tit->second.GetStart();
-    tmr.endTime            = tit->second.GetStop();
-    strncpy(tmr.strTitle,
-            tit->second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    strncpy(tmr.strEpgSearchString,
-          "", sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
-    strncpy(tmr.strDirectory,
-            tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    tmr.iClientIndex = tit->second.GetId();
+    tmr.iClientChannelUid =
+        (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
+    tmr.startTime = tit->second.GetStart();
+    tmr.endTime = tit->second.GetStop();
+    strncpy(tmr.strTitle, tit->second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+    strncpy(tmr.strEpgSearchString, "",
+            sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
+    strncpy(tmr.strDirectory, tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
     strncpy(tmr.strSummary, "",
-            sizeof(tmr.strSummary) - 1);           // n/a for repeating timers
-    tmr.state              = tit->second.IsEnabled()
-                              ? PVR_TIMER_STATE_SCHEDULED
-                              : PVR_TIMER_STATE_DISABLED;
-    tmr.iTimerType         = TIMER_REPEATING_MANUAL;
-    tmr.iPriority          = tit->second.GetPriority();
-    tmr.iLifetime          = tit->second.GetLifetime();
-    tmr.iMaxRecordings     = 0;                    // not supported by tvh
-    tmr.iRecordingGroup    = 0;                    // not supported by tvh
-    tmr.iPreventDuplicateEpisodes = 0;             // n/a for manual timers
-    tmr.firstDay           = 0;                    // not supported by tvh
-    tmr.iWeekdays          = tit->second.GetDaysOfWeek();
-    tmr.iEpgUid            = PVR_TIMER_NO_EPG_UID; // n/a for manual timers
-    tmr.iMarginStart       = 0;                    // n/a for manual timers
-    tmr.iMarginEnd         = 0;                    // n/a for manual timers
-    tmr.iGenreType         = 0;                    // not supported by tvh?
-    tmr.iGenreSubType      = 0;                    // not supported by tvh?
-    tmr.bFullTextEpgSearch = false;                // n/a for manual timers
+            sizeof(tmr.strSummary) - 1); // n/a for repeating timers
+    tmr.state = tit->second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
+    tmr.iTimerType = TIMER_REPEATING_MANUAL;
+    tmr.iPriority = tit->second.GetPriority();
+    tmr.iLifetime = tit->second.GetLifetime();
+    tmr.iMaxRecordings = 0; // not supported by tvh
+    tmr.iRecordingGroup = 0; // not supported by tvh
+    tmr.iPreventDuplicateEpisodes = 0; // n/a for manual timers
+    tmr.firstDay = 0; // not supported by tvh
+    tmr.iWeekdays = tit->second.GetDaysOfWeek();
+    tmr.iEpgUid = PVR_TIMER_NO_EPG_UID; // n/a for manual timers
+    tmr.iMarginStart = 0; // n/a for manual timers
+    tmr.iMarginEnd = 0; // n/a for manual timers
+    tmr.iGenreType = 0; // not supported by tvh?
+    tmr.iGenreSubType = 0; // not supported by tvh?
+    tmr.bFullTextEpgSearch = false; // n/a for manual timers
     tmr.iParentClientIndex = 0;
 
     timers.emplace_back(tmr);
   }
 }
 
-const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string &strId) const
+const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string& strId) const
 {
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
     if (tit->second.GetStringId() == strId)
       return tit->second.GetId();
   }
-  Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain int id for string id %s", strId.c_str());
+  Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain int id for string id %s",
+              strId.c_str());
   return 0;
 }
 
@@ -119,19 +114,19 @@ const std::string TimeRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
   for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
   {
     if (tit->second.GetId() == intId)
-      return  tit->second.GetStringId();
+      return tit->second.GetStringId();
   }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
   return "";
 }
 
-PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER &timer)
+PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER& timer)
 {
   return SendTimerecAddOrUpdate(timer, false);
 }
 
-PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER &timer)
+PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER& timer)
 {
   if (m_conn.GetProtocol() >= 25)
     return SendTimerecAddOrUpdate(timer, true);
@@ -145,13 +140,13 @@ PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER &timer)
   return error;
 }
 
-PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool update)
+PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool update)
 {
   uint32_t u32;
   const std::string method = update ? "updateTimerecEntry" : "addTimerecEntry";
 
   /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
 
   if (update)
   {
@@ -162,36 +157,40 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
       return PVR_ERROR_FAILED;
     }
 
-    htsmsg_add_str(m, "id",       strId.c_str());            // Autorec DVR Entry ID (string!)
+    htsmsg_add_str(m, "id", strId.c_str()); // Autorec DVR Entry ID (string!)
   }
 
-  char title[PVR_ADDON_NAME_STRING_LENGTH+6];
-  const char *titleExt = "%F-%R"; // timerec title should contain the pattern (e.g. %F-%R) for the generated recording files. Scary...
+  char title[PVR_ADDON_NAME_STRING_LENGTH + 6];
+  const char* titleExt =
+      "%F-%R"; // timerec title should contain the pattern (e.g. %F-%R) for the generated recording files. Scary...
   snprintf(title, sizeof(title), "%s-%s", timer.strTitle, titleExt);
 
-  htsmsg_add_str(m, "name",       timer.strTitle);
-  htsmsg_add_str(m, "title",      title);
+  htsmsg_add_str(m, "name", timer.strTitle);
+  htsmsg_add_str(m, "title", title);
   time_t startTime = timer.startTime;
-  struct tm *tm_start = localtime(&startTime);
-  htsmsg_add_u32(m, "start",      tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
+  struct tm* tm_start = localtime(&startTime);
+  htsmsg_add_u32(m, "start",
+                 tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
   time_t endTime = timer.endTime;
-  struct tm *tm_stop = localtime(&endTime);
-  htsmsg_add_u32(m, "stop",       tm_stop->tm_hour  * 60 + tm_stop->tm_min);  // end time in minutes from midnight
+  struct tm* tm_stop = localtime(&endTime);
+  htsmsg_add_u32(m, "stop",
+                 tm_stop->tm_hour * 60 + tm_stop->tm_min); // end time in minutes from midnight
 
   if (m_conn.GetProtocol() >= 25)
   {
-    htsmsg_add_u32(m, "removal",   timer.iLifetime);          // remove from disk
-    htsmsg_add_s64(m, "channelId", timer.iClientChannelUid);  // channelId is signed for >= htspv25
+    htsmsg_add_u32(m, "removal", timer.iLifetime); // remove from disk
+    htsmsg_add_s64(m, "channelId", timer.iClientChannelUid); // channelId is signed for >= htspv25
   }
   else
   {
-    htsmsg_add_u32(m, "retention", LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
-    htsmsg_add_u32(m, "channelId", timer.iClientChannelUid);  // channelId is unsigned for < htspv25
+    htsmsg_add_u32(m, "retention",
+                   LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
+    htsmsg_add_u32(m, "channelId", timer.iClientChannelUid); // channelId is unsigned for < htspv25
   }
 
   htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
-  htsmsg_add_u32(m, "priority",   timer.iPriority);
-  htsmsg_add_u32(m, "enabled",    timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+  htsmsg_add_u32(m, "priority", timer.iPriority);
+  htsmsg_add_u32(m, "enabled", timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
@@ -219,7 +218,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER &timer, bool up
   return u32 == 1 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
+PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
 {
   uint32_t u32;
 
@@ -227,7 +226,7 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
   if (strId.empty())
     return PVR_ERROR_FAILED;
 
-  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_str(m, "id", strId.c_str()); // Timerec DVR Entry ID (string!)
 
   /* Send and Wait */
@@ -249,21 +248,22 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER &timer)
   return u32 == 1 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
+bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  const char *str;
+  const char* str;
   uint32_t u32;
   int32_t s32;
 
   /* Validate/set mandatory fields */
   if ((str = htsmsg_get_str(msg, "id")) == NULL)
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
+    Logger::Log(LogLevel::LEVEL_ERROR,
+                "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
     return false;
   }
 
   /* Locate/create entry */
-  TimeRecording &rec = m_timeRecordings[std::string(str)];
+  TimeRecording& rec = m_timeRecordings[std::string(str)];
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 
@@ -386,9 +386,9 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t *msg, bool bAdd)
   return true;
 }
 
-bool TimeRecordings::ParseTimerecDelete(htsmsg_t *msg)
+bool TimeRecordings::ParseTimerecDelete(htsmsg_t* msg)
 {
-  const char *id;
+  const char* id;
 
   /* Validate/set mandatory fields */
   if ((id = htsmsg_get_str(msg, "id")) == NULL)

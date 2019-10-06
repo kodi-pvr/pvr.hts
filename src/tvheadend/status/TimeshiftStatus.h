@@ -23,52 +23,50 @@
 
 namespace tvheadend
 {
-  namespace status
-  {
-    /**
+namespace status
+{
+/**
      * Represents the current timeshift status
      */
-    struct TimeshiftStatus
-    {
+struct TimeshiftStatus
+{
 
-      /**
+  /**
        * Whether the buffer is full or not
        */
-      bool full;
+  bool full;
 
-      /**
+  /**
        * Current position relative to live
        */
-      int64_t shift;
+  int64_t shift;
 
-      /**
+  /**
        * PTS of the first frame in the buffer
        */
-      int64_t start;
+  int64_t start;
 
-      /**
+  /**
        * PTS of the last frame in the buffer
        */
-      int64_t end;
+  int64_t end;
 
-      /**
+  /**
        * Constructor
        */
-      TimeshiftStatus()
-      {
-        Clear();
-      }
+  TimeshiftStatus() { Clear(); }
 
-      /**
+  /**
        * Clears the current status
        */
-      void Clear()
-      {
-        full = false;
-        shift = 0;
-        start = 0;;
-        end = 0;
-      }
-    };
+  void Clear()
+  {
+    full = false;
+    shift = 0;
+    start = 0;
+    ;
+    end = 0;
   }
-}
+};
+} // namespace status
+} // namespace tvheadend

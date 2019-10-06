@@ -21,41 +21,35 @@
  *
  */
 
-#include <string>
-
 #include "../../client.h"
+
+#include <string>
 
 namespace tvheadend
 {
-  namespace utilities
-  {
-    /**
+namespace utilities
+{
+/**
      * Encapsulates an localized string.
      */
-    class LocalizedString
-    {
-    public:
-      explicit LocalizedString(int stringId)
-      : m_localizedString(XBMC->GetLocalizedString(stringId))
-      {
-      }
+class LocalizedString
+{
+public:
+  explicit LocalizedString(int stringId) : m_localizedString(XBMC->GetLocalizedString(stringId)) {}
 
-      ~LocalizedString()
-      {
-        XBMC->FreeString(m_localizedString);
-      }
+  ~LocalizedString() { XBMC->FreeString(m_localizedString); }
 
-      std::string Get() const
-      {
-        return m_localizedString ? std::string(m_localizedString) : std::string();
-      }
-      
-    private:
-      LocalizedString() = delete;
-      LocalizedString(const LocalizedString&) = delete;
-      LocalizedString &operator =(const LocalizedString&) = delete;
-
-      char* m_localizedString;
-    };
+  std::string Get() const
+  {
+    return m_localizedString ? std::string(m_localizedString) : std::string();
   }
-}
+
+private:
+  LocalizedString() = delete;
+  LocalizedString(const LocalizedString&) = delete;
+  LocalizedString& operator=(const LocalizedString&) = delete;
+
+  char* m_localizedString;
+};
+} // namespace utilities
+} // namespace tvheadend
