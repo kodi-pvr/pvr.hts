@@ -21,7 +21,8 @@
  *
  */
 
-extern "C" {
+extern "C"
+{
 #include "libhts/htsmsg.h"
 }
 
@@ -38,7 +39,7 @@ public:
 
   virtual void Disconnected() = 0;
   virtual bool Connected() = 0;
-  virtual bool ProcessMessage(const char *method, htsmsg_t *msg) = 0;
+  virtual bool ProcessMessage(const char* method, htsmsg_t* msg) = 0;
 };
 
 } // namespace tvheadend

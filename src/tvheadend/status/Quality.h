@@ -25,61 +25,55 @@
 
 namespace tvheadend
 {
-  namespace status
-  {
-    /**
+namespace status
+{
+/**
      * Represents the current signal quality
      */
-    struct Quality
-    {
+struct Quality
+{
 
-      /**
+  /**
        * Frontend status
        */
-      std::string fe_status;
+  std::string fe_status;
 
-      /**
+  /**
        * Signal to noise ratio
        */
-      uint32_t fe_snr;
+  uint32_t fe_snr;
 
-      /**
+  /**
        * Signal status percentage
        */
-      uint32_t fe_signal;
+  uint32_t fe_signal;
 
-      /**
+  /**
        * Bit error rate
        */
-      uint32_t fe_ber;
+  uint32_t fe_ber;
 
-      /**
+  /**
        * Uncorrected blocks
        */
-      uint32_t fe_unc;
+  uint32_t fe_unc;
 
-      /**
+  /**
        * Constructor
        */
-      Quality() :
-          fe_snr(0),
-          fe_signal(0),
-          fe_ber(0),
-          fe_unc(0)
-      {
-      }
+  Quality() : fe_snr(0), fe_signal(0), fe_ber(0), fe_unc(0) {}
 
-      /**
+  /**
        * Clears the current status
        */
-      void Clear()
-      {
-        fe_status.clear();
-        fe_snr = 0;
-        fe_signal = 0;
-        fe_ber = 0;
-        fe_unc = 0;
-      }
-    };
+  void Clear()
+  {
+    fe_status.clear();
+    fe_snr = 0;
+    fe_signal = 0;
+    fe_ber = 0;
+    fe_unc = 0;
   }
-}
+};
+} // namespace status
+} // namespace tvheadend

@@ -27,40 +27,39 @@
 namespace tvheadend
 {
 
-  class Profile;
-  typedef std::vector<Profile> Profiles;
+class Profile;
+typedef std::vector<Profile> Profiles;
 
-  /**
+/**
    * Represents a single streaming profile
    */
-  class Profile
-  {
-  public:
+class Profile
+{
+public:
+  std::string GetUuid() const { return m_uuid; }
+  void SetUuid(const std::string& uuid) { m_uuid = uuid; }
 
-    std::string GetUuid() const { return m_uuid; }
-    void SetUuid(const std::string &uuid) { m_uuid = uuid; }
+  std::string GetName() const { return m_name; }
+  void SetName(const std::string& name) { m_name = name; }
 
-    std::string GetName() const { return m_name; }
-    void SetName(const std::string &name) { m_name = name; }
+  std::string GetComment() const { return m_comment; }
+  void SetComment(const std::string& comment) { m_comment = comment; }
 
-    std::string GetComment() const { return m_comment; }
-    void SetComment(const std::string &comment) { m_comment = comment; }
-
-  private:
-    /*
+private:
+  /*
      * The profile UUID
      */
-    std::string m_uuid;
+  std::string m_uuid;
 
-    /**
+  /**
      * The profile name
      */
-    std::string m_name;
+  std::string m_name;
 
-    /**
+  /**
      * The profile comment
      */
-    std::string m_comment;
-  };
+  std::string m_comment;
+};
 
-}
+} // namespace tvheadend

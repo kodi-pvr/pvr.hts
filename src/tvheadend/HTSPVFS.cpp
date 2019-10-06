@@ -24,16 +24,15 @@ extern "C"
 {
 #include "libhts/htsmsg_binary.h"
 }
-#include <ctime>
-#include <chrono>
-#include <thread>
-
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/StringUtils.h"
-
 #include "HTSPConnection.h"
 #include "Settings.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/StringUtils.h"
 #include "utilities/Logger.h"
+
+#include <chrono>
+#include <ctime>
+#include <thread>
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -42,17 +41,23 @@ using namespace tvheadend::utilities;
 /*
 * VFS handler
 */
-HTSPVFS::HTSPVFS ( HTSPConnection &conn )
-  : m_conn(conn), m_path(""), m_fileId(0), m_offset(0),
-    m_eofOffsetSecs(-1), m_pauseTime(0), m_paused(false), m_isRealTimeStream(false)
+HTSPVFS::HTSPVFS(HTSPConnection& conn)
+  : m_conn(conn),
+    m_path(""),
+    m_fileId(0),
+    m_offset(0),
+    m_eofOffsetSecs(-1),
+    m_pauseTime(0),
+    m_paused(false),
+    m_isRealTimeStream(false)
 {
 }
 
-HTSPVFS::~HTSPVFS ()
+HTSPVFS::~HTSPVFS()
 {
 }
 
-void HTSPVFS::Connected ( void )
+void HTSPVFS::Connected(void)
 {
   /* Re-open */
   if (m_fileId != 0)
@@ -70,7 +75,7 @@ void HTSPVFS::Connected ( void )
  * VFS API
  * *************************************************************************/
 
-bool HTSPVFS::Open ( const PVR_RECORDING &rec )
+bool HTSPVFS::Open(const PVR_RECORDING& rec)
 {
   /* Close existing */
   Close();
@@ -90,21 +95,21 @@ bool HTSPVFS::Open ( const PVR_RECORDING &rec )
   return true;
 }
 
-void HTSPVFS::Close ( void )
+void HTSPVFS::Close(void)
 {
   if (m_fileId != 0)
     SendFileClose();
 
   m_offset = 0;
   m_fileId = 0;
-  m_path   = "";
+  m_path = "";
   m_eofOffsetSecs = -1;
   m_pauseTime = 0;
   m_paused = false;
   m_isRealTimeStream = false;
 }
 
-ssize_t HTSPVFS::Read ( unsigned char *buf, unsigned int len, bool inprogress )
+ssize_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
 {
   /* Not opened */
   if (!m_fileId)
@@ -130,7 +135,7 @@ ssize_t HTSPVFS::Read ( unsigned char *buf, unsigned int len, bool inprogress )
   return read;
 }
 
-long long HTSPVFS::Seek ( long long pos, int whence, bool inprogress )
+long long HTSPVFS::Seek(long long pos, int whence, bool inprogress)
 {
   if (m_fileId == 0)
     return -1;
@@ -152,8 +157,10 @@ long long HTSPVFS::Seek ( long long pos, int whence, bool inprogress )
       m_eofOffsetSecs = (fileSize - m_offset) > 0 ? (fileSize - m_offset) / bitrate : 0;
 
     /* only set m_isRealTimeStream within last 10 secs of an inprogress recording */
-    m_isRealTimeStream = (m_eofOffsetSecs >=0 && m_eofOffsetSecs < 10);
-    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek inprogress recording m_eofOffsetSecs=%lld m_isRealTimeStream=%d", static_cast<long long>(m_eofOffsetSecs), m_isRealTimeStream);
+    m_isRealTimeStream = (m_eofOffsetSecs >= 0 && m_eofOffsetSecs < 10);
+    Logger::Log(LogLevel::LEVEL_TRACE,
+                "vfs seek inprogress recording m_eofOffsetSecs=%lld m_isRealTimeStream=%d",
+                static_cast<long long>(m_eofOffsetSecs), m_isRealTimeStream);
 
     /* if we've seeked whilst paused then update m_pauseTime
        this is so we correctly recalculate m_eofOffsetSecs when returning to normal playback */
@@ -164,17 +171,17 @@ long long HTSPVFS::Seek ( long long pos, int whence, bool inprogress )
   return ret;
 }
 
-long long HTSPVFS::Size ( void )
+long long HTSPVFS::Size(void)
 {
   int64_t ret = -1;
-  htsmsg_t *m;
-  
+  htsmsg_t* m;
+
   /* Build */
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat id=%d", m_fileId);
-  
+
   /* Send */
   {
     CLockObject lock(m_conn.Mutex());
@@ -195,7 +202,7 @@ long long HTSPVFS::Size ( void )
   return ret;
 }
 
-void HTSPVFS::PauseStream ( bool paused )
+void HTSPVFS::PauseStream(bool paused)
 {
   m_paused = paused;
 
@@ -209,14 +216,16 @@ void HTSPVFS::PauseStream ( bool paused )
     {
       /* correct m_eofOffsetSecs based on how long we've been paused */
       m_eofOffsetSecs += (std::time(nullptr) - m_pauseTime);
-      m_isRealTimeStream = (m_eofOffsetSecs >=0 && m_eofOffsetSecs < 10);
-      Logger::Log(LogLevel::LEVEL_TRACE, "vfs unpause inprogress recording m_eofOffsetSecs=%lld m_isRealTimeStream=%d", static_cast<long long>(m_eofOffsetSecs), m_isRealTimeStream);
+      m_isRealTimeStream = (m_eofOffsetSecs >= 0 && m_eofOffsetSecs < 10);
+      Logger::Log(LogLevel::LEVEL_TRACE,
+                  "vfs unpause inprogress recording m_eofOffsetSecs=%lld m_isRealTimeStream=%d",
+                  static_cast<long long>(m_eofOffsetSecs), m_isRealTimeStream);
     }
     m_pauseTime = 0;
   }
 }
 
-bool HTSPVFS::IsRealTimeStream ( void )
+bool HTSPVFS::IsRealTimeStream(void)
 {
   return m_isRealTimeStream;
 }
@@ -225,9 +234,9 @@ bool HTSPVFS::IsRealTimeStream ( void )
  * HTSP Messages
  * *************************************************************************/
 
-bool HTSPVFS::SendFileOpen ( bool force )
+bool HTSPVFS::SendFileOpen(bool force)
 {
-  htsmsg_t *m;
+  htsmsg_t* m;
 
   /* Build Message */
   m = htsmsg_create_map();
@@ -261,9 +270,9 @@ bool HTSPVFS::SendFileOpen ( bool force )
   return m_fileId > 0;
 }
 
-void HTSPVFS::SendFileClose ( void )
+void HTSPVFS::SendFileClose(void)
 {
-  htsmsg_t *m;
+  htsmsg_t* m;
 
   /* Build */
   m = htsmsg_create_map();
@@ -271,11 +280,12 @@ void HTSPVFS::SendFileClose ( void )
 
   /* If setting set, we will increase play count with CTvheadend::SetPlayCount */
   if (m_conn.GetProtocol() >= 27)
-    htsmsg_add_u32(m, "playcount", Settings::GetInstance().GetDvrPlayStatus() ?
-        HTSP_DVR_PLAYCOUNT_KEEP : HTSP_DVR_PLAYCOUNT_INCR);
+    htsmsg_add_u32(m, "playcount",
+                   Settings::GetInstance().GetDvrPlayStatus() ? HTSP_DVR_PLAYCOUNT_KEEP
+                                                              : HTSP_DVR_PLAYCOUNT_INCR);
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs close id=%d", m_fileId);
-  
+
   /* Send */
   {
     CLockObject lock(m_conn.Mutex());
@@ -286,22 +296,22 @@ void HTSPVFS::SendFileClose ( void )
     htsmsg_destroy(m);
 }
 
-long long HTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
+long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 {
-  htsmsg_t *m;
+  htsmsg_t* m;
   int64_t ret = -1;
 
   /* Build Message */
   m = htsmsg_create_map();
-  htsmsg_add_u32(m, "id",     m_fileId);
+  htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "offset", pos);
   if (whence == SEEK_CUR)
     htsmsg_add_str(m, "whence", "SEEK_CUR");
   else if (whence == SEEK_END)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
-  Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek id=%d whence=%d pos=%lld",
-           m_fileId, whence, (long long)pos);
+  Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek id=%d whence=%d pos=%lld", m_fileId, whence,
+              (long long)pos);
 
   /* Send */
   {
@@ -325,7 +335,7 @@ long long HTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
     ret = -1;
     Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileSeek response: 'offset' missing'");
 
-  /* Update */
+    /* Update */
   }
   else
   {
@@ -339,10 +349,10 @@ long long HTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   return ret;
 }
 
-ssize_t HTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
+ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 {
-  htsmsg_t   *m;
-  const void *buffer;
+  htsmsg_t* m;
+  const void* buffer;
   size_t read;
 
   /* Build */
@@ -350,8 +360,7 @@ ssize_t HTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "size", len);
 
-  Logger::Log(LogLevel::LEVEL_TRACE, "vfs read id=%d size=%d",
-    m_fileId, len);
+  Logger::Log(LogLevel::LEVEL_TRACE, "vfs read id=%d size=%d", m_fileId, len);
 
   /* Send */
   {
@@ -370,7 +379,7 @@ ssize_t HTSPVFS::SendFileRead(unsigned char *buf, unsigned int len)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
     return -1;
-  /* Store */
+    /* Store */
   }
   else
   {

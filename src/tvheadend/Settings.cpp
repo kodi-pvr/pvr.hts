@@ -19,34 +19,37 @@
  *
  */
 
+#include "Settings.h"
+
 #include "../client.h"
 #include "utilities/Logger.h"
-#include "Settings.h"
 
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-const std::string Settings::DEFAULT_HOST                = "127.0.0.1";
-const int         Settings::DEFAULT_HTTP_PORT           = 9981;
-const int         Settings::DEFAULT_HTSP_PORT           = 9982;
-const std::string Settings::DEFAULT_USERNAME            = "";
-const std::string Settings::DEFAULT_PASSWORD            = "";
-const int         Settings::DEFAULT_CONNECT_TIMEOUT     = 10000; // millisecs
-const int         Settings::DEFAULT_RESPONSE_TIMEOUT    = 5000;  // millisecs
-const bool        Settings::DEFAULT_TRACE_DEBUG         = false;
-const bool        Settings::DEFAULT_ASYNC_EPG           = true;
-const bool        Settings::DEFAULT_PRETUNER_ENABLED    = false;
-const int         Settings::DEFAULT_TOTAL_TUNERS        = 1;  // total tuners > 1 => predictive tuning active
-const int         Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
-const int         Settings::DEFAULT_AUTOREC_MAXDIFF     = 15; // mins. Maximum difference between real and approximate start time for auto recordings
-const int         Settings::DEFAULT_APPROX_TIME         = 0;  // don't use an approximate start time, use a fixed time instead for auto recordings
-const std::string Settings::DEFAULT_STREAMING_PROFILE   = "";
-const int         Settings::DEFAULT_DVR_PRIO            = DVR_PRIO_NORMAL;
-const int         Settings::DEFAULT_DVR_LIFETIME        = 8; // enum 8 = 3 months
-const int         Settings::DEFAULT_DVR_DUPDETECT       = DVR_AUTOREC_RECORD_ALL;
-const bool        Settings::DEFAULT_DVR_PLAYSTATUS      = true;
-const int         Settings::DEFAULT_STREAM_CHUNKSIZE    = 64; // KB
-const bool        Settings::DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
+const std::string Settings::DEFAULT_HOST = "127.0.0.1";
+const int Settings::DEFAULT_HTTP_PORT = 9981;
+const int Settings::DEFAULT_HTSP_PORT = 9982;
+const std::string Settings::DEFAULT_USERNAME = "";
+const std::string Settings::DEFAULT_PASSWORD = "";
+const int Settings::DEFAULT_CONNECT_TIMEOUT = 10000; // millisecs
+const int Settings::DEFAULT_RESPONSE_TIMEOUT = 5000; // millisecs
+const bool Settings::DEFAULT_TRACE_DEBUG = false;
+const bool Settings::DEFAULT_ASYNC_EPG = true;
+const bool Settings::DEFAULT_PRETUNER_ENABLED = false;
+const int Settings::DEFAULT_TOTAL_TUNERS = 1; // total tuners > 1 => predictive tuning active
+const int Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
+const int Settings::DEFAULT_AUTOREC_MAXDIFF =
+    15; // mins. Maximum difference between real and approximate start time for auto recordings
+const int Settings::DEFAULT_APPROX_TIME =
+    0; // don't use an approximate start time, use a fixed time instead for auto recordings
+const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
+const int Settings::DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
+const int Settings::DEFAULT_DVR_LIFETIME = 8; // enum 8 = 3 months
+const int Settings::DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
+const bool Settings::DEFAULT_DVR_PLAYSTATUS = true;
+const int Settings::DEFAULT_STREAM_CHUNKSIZE = 64; // KB
+const bool Settings::DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
 
 void Settings::ReadSettings()
 {
@@ -70,7 +73,8 @@ void Settings::ReadSettings()
   /* Predictive Tuning */
   m_bPretunerEnabled = ReadBoolSetting("pretuner_enabled", DEFAULT_PRETUNER_ENABLED);
   SetTotalTuners(m_bPretunerEnabled ? ReadIntSetting("total_tuners", DEFAULT_TOTAL_TUNERS) : 1);
-  SetPreTunerCloseDelay(m_bPretunerEnabled ? ReadIntSetting("pretuner_closedelay", DEFAULT_PRETUNER_CLOSEDELAY) : 0);
+  SetPreTunerCloseDelay(
+      m_bPretunerEnabled ? ReadIntSetting("pretuner_closedelay", DEFAULT_PRETUNER_CLOSEDELAY) : 0);
 
   /* Auto recordings */
   SetAutorecApproxTime(ReadIntSetting("autorec_approxtime", DEFAULT_APPROX_TIME));
@@ -91,10 +95,11 @@ void Settings::ReadSettings()
   SetStreamReadChunkSizeKB(ReadIntSetting("stream_readchunksize", DEFAULT_STREAM_CHUNKSIZE));
 
   /* Scheduled recordings */
-  SetIgnoreDuplicateSchedules(ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
+  SetIgnoreDuplicateSchedules(
+      ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
 }
 
-ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
+ADDON_STATUS Settings::SetSetting(const std::string& key, const void* value)
 {
   /* Connection */
   if (key == "host")
@@ -109,17 +114,17 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
     return SetStringSetting(GetPassword(), value);
   else if (key == "connect_timeout")
   {
-    if (GetConnectTimeout() == (*(reinterpret_cast<const int *>(value)) * 1000))
+    if (GetConnectTimeout() == (*(reinterpret_cast<const int*>(value)) * 1000))
       return ADDON_STATUS_OK;
     else
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (key == "response_timeout")
   {
-    if (GetResponseTimeout() == (*(reinterpret_cast<const int *>(value)) * 1000))
+    if (GetResponseTimeout() == (*(reinterpret_cast<const int*>(value)) * 1000))
       return ADDON_STATUS_OK;
     else
-     return ADDON_STATUS_NEED_RESTART;
+      return ADDON_STATUS_NEED_RESTART;
   }
   /* Debug */
   else if (key == "trace_debug")
@@ -173,7 +178,7 @@ ADDON_STATUS Settings::SetSetting(const std::string &key, const void *value)
   }
 }
 
-std::string Settings::ReadStringSetting(const std::string &key, const std::string &def)
+std::string Settings::ReadStringSetting(const std::string& key, const std::string& def)
 {
   char value[1024];
   if (XBMC->GetSetting(key.c_str(), value))
@@ -182,7 +187,7 @@ std::string Settings::ReadStringSetting(const std::string &key, const std::strin
   return def;
 }
 
-int Settings::ReadIntSetting(const std::string &key, int def)
+int Settings::ReadIntSetting(const std::string& key, int def)
 {
   int value;
   if (XBMC->GetSetting(key.c_str(), &value))
@@ -191,7 +196,7 @@ int Settings::ReadIntSetting(const std::string &key, int def)
   return def;
 }
 
-bool Settings::ReadBoolSetting(const std::string &key, bool def)
+bool Settings::ReadBoolSetting(const std::string& key, bool def)
 {
   bool value;
   if (XBMC->GetSetting(key.c_str(), &value))
@@ -200,25 +205,25 @@ bool Settings::ReadBoolSetting(const std::string &key, bool def)
   return def;
 }
 
-ADDON_STATUS Settings::SetStringSetting(const std::string &oldValue, const void *newValue)
+ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue, const void* newValue)
 {
-  if (oldValue == std::string(reinterpret_cast<const char *>(newValue)))
+  if (oldValue == std::string(reinterpret_cast<const char*>(newValue)))
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetIntSetting(int oldValue, const void *newValue)
+ADDON_STATUS Settings::SetIntSetting(int oldValue, const void* newValue)
 {
-  if (oldValue == *(reinterpret_cast<const int *>(newValue)))
+  if (oldValue == *(reinterpret_cast<const int*>(newValue)))
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const void *newValue)
+ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const void* newValue)
 {
-  if (oldValue == *(reinterpret_cast<const bool *>(newValue)))
+  if (oldValue == *(reinterpret_cast<const bool*>(newValue)))
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;

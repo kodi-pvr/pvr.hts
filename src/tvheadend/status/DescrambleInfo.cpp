@@ -26,17 +26,17 @@
 using namespace tvheadend::status;
 
 DescrambleInfo::DescrambleInfo()
-: m_pid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
-  m_caid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
-  m_provid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
-  m_ecmTime(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
-  m_hops(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE)
+  : m_pid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+    m_caid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+    m_provid(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+    m_ecmTime(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE),
+    m_hops(PVR_DESCRAMBLE_INFO_NOT_AVAILABLE)
 {
 }
 
 void DescrambleInfo::Clear()
 {
-  m_pid  = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
+  m_pid = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
   m_caid = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
   m_provid = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
   m_ecmTime = PVR_DESCRAMBLE_INFO_NOT_AVAILABLE;
@@ -102,7 +102,7 @@ std::string DescrambleInfo::GetCardSystem() const
   return m_cardSystem;
 }
 
-void DescrambleInfo::SetCardSystem(const std::string &cardSystem)
+void DescrambleInfo::SetCardSystem(const std::string& cardSystem)
 {
   m_cardSystem = cardSystem;
 }
@@ -112,7 +112,7 @@ std::string DescrambleInfo::GetReader() const
   return m_reader;
 }
 
-void DescrambleInfo::SetReader(const std::string &reader)
+void DescrambleInfo::SetReader(const std::string& reader)
 {
   m_reader = reader;
 }
@@ -122,7 +122,7 @@ std::string DescrambleInfo::GetFrom() const
   return m_from;
 }
 
-void DescrambleInfo::SetFrom(const std::string &from)
+void DescrambleInfo::SetFrom(const std::string& from)
 {
   m_from = from;
 }
@@ -132,7 +132,7 @@ std::string DescrambleInfo::GetProtocol() const
   return m_protocol;
 }
 
-void DescrambleInfo::SetProtocol(const std::string &protocol)
+void DescrambleInfo::SetProtocol(const std::string& protocol)
 {
   m_protocol = protocol;
 }

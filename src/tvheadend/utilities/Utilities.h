@@ -23,23 +23,23 @@
 
 namespace tvheadend
 {
-  namespace utilities
-  {
+namespace utilities
+{
 
-    /**
+/**
      * std::remove_if() for maps. Borrowed from:
      * http://stackoverflow.com/questions/800955/remove-if-equivalent-for-stdmap
      */
-    template< typename ContainerT, typename PredicateT >
-    void erase_if(ContainerT& items, const PredicateT& predicate)
-    {
-      for (auto it = items.begin(); it != items.end();)
-      {
-        if (predicate(*it))
-          it = items.erase(it);
-        else
-          ++it;
-      }
-    };
+template<typename ContainerT, typename PredicateT>
+void erase_if(ContainerT& items, const PredicateT& predicate)
+{
+  for (auto it = items.begin(); it != items.end();)
+  {
+    if (predicate(*it))
+      it = items.erase(it);
+    else
+      ++it;
   }
-}
+};
+} // namespace utilities
+} // namespace tvheadend

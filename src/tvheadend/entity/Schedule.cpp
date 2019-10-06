@@ -30,7 +30,7 @@ void Schedule::SetDirty(bool dirty)
   if (dirty)
   {
     // Mark all events as dirty too
-    for (auto &entry : m_events)
+    for (auto& entry : m_events)
       entry.second.SetDirty(dirty);
   }
 }

@@ -24,21 +24,17 @@
 using namespace tvheadend;
 using namespace tvheadend::entity;
 
-Tag::Tag() :
-m_index(0)
+Tag::Tag() : m_index(0)
 {
 }
 
-bool Tag::operator==(const Tag &right)
+bool Tag::operator==(const Tag& right)
 {
-  return m_id == right.m_id &&
-    m_index == right.m_index &&
-    m_name == right.m_name &&
-    m_icon == right.m_icon &&
-    m_channels == right.m_channels;
+  return m_id == right.m_id && m_index == right.m_index && m_name == right.m_name &&
+         m_icon == right.m_icon && m_channels == right.m_channels;
 }
 
-bool Tag::operator!=(const Tag &right)
+bool Tag::operator!=(const Tag& right)
 {
   return !(*this == right);
 }

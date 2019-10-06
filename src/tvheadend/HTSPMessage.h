@@ -21,7 +21,8 @@
  *
  */
 
-extern "C" {
+extern "C"
+{
 #include "libhts/htsmsg.h"
 }
 
@@ -37,12 +38,11 @@ class HTSPMessage
 {
 public:
   HTSPMessage(const std::string& method = "", htsmsg_t* msg = nullptr)
-  : m_method(method), m_msg(msg)
+    : m_method(method), m_msg(msg)
   {
   }
 
-  HTSPMessage(const HTSPMessage& msg)
-  : m_method(msg.m_method), m_msg(msg.m_msg)
+  HTSPMessage(const HTSPMessage& msg) : m_method(msg.m_method), m_msg(msg.m_msg)
   {
     msg.m_msg = nullptr;
   }
@@ -53,7 +53,7 @@ public:
       htsmsg_destroy(m_msg);
   }
 
-  HTSPMessage& operator=(const HTSPMessage &msg)
+  HTSPMessage& operator=(const HTSPMessage& msg)
   {
     if (this != &msg)
     {
@@ -78,7 +78,7 @@ public:
 
 private:
   std::string m_method;
-  mutable htsmsg_t *m_msg;
+  mutable htsmsg_t* m_msg;
 };
 
 } // namespace tvheadend

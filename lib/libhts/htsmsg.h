@@ -21,6 +21,7 @@
 #define HTSMSG_H_
 
 #include <inttypes.h>
+#include <stddef.h>
 #include "htsq.h"
 
 #define HTSMSG_ERR_FIELD_NOT_FOUND       -1

@@ -20,18 +20,19 @@
  */
 
 #include "ChannelTuningPredictor.h"
+
 #include <algorithm>
 
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::predictivetune;
 
-void ChannelTuningPredictor::AddChannel(const Channel &channel)
+void ChannelTuningPredictor::AddChannel(const Channel& channel)
 {
   m_channels.insert(MakeChannelPair(channel));
 }
 
-void ChannelTuningPredictor::UpdateChannel(const Channel &oldChannel, const Channel &newChannel)
+void ChannelTuningPredictor::UpdateChannel(const Channel& oldChannel, const Channel& newChannel)
 {
   m_channels.erase(MakeChannelPair(oldChannel));
   m_channels.insert(MakeChannelPair(newChannel));
@@ -45,7 +46,7 @@ void ChannelTuningPredictor::RemoveChannel(uint32_t channelId)
     m_channels.erase(it);
 }
 
-ChannelPair ChannelTuningPredictor::MakeChannelPair(const entity::Channel &channel)
+ChannelPair ChannelTuningPredictor::MakeChannelPair(const entity::Channel& channel)
 {
   return ChannelPair(channel.GetId(), ChannelNumber(channel.GetNum(), channel.GetNumMinor()));
 }
@@ -53,13 +54,8 @@ ChannelPair ChannelTuningPredictor::MakeChannelPair(const entity::Channel &chann
 ChannelPairIterator ChannelTuningPredictor::GetIterator(uint32_t channelId) const
 {
   return std::find_if(
-      m_channels.cbegin(),
-      m_channels.cend(),
-      [channelId](const ChannelPair &channel)
-      {
-        return channel.first == channelId;
-      }
-  );
+      m_channels.cbegin(), m_channels.cend(),
+      [channelId](const ChannelPair& channel) { return channel.first == channelId; });
 }
 
 uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint32_t tuningTo) const
@@ -74,11 +70,13 @@ uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint3
    * it will point at the channel we should tune to */
   std::set<ChannelPair>::iterator predictedIt = m_channels.cend();
 
-  if (fromIt == m_channels.cend() || std::next(fromIt, 1) == toIt || toIt->second == firstNum) {
+  if (fromIt == m_channels.cend() || std::next(fromIt, 1) == toIt || toIt->second == firstNum)
+  {
     /* Tuning up or if we're tuning the first channel */
     predictedIt = ++toIt;
   }
-  else if (std::prev(fromIt, 1) == toIt) {
+  else if (std::prev(fromIt, 1) == toIt)
+  {
     /* Tuning down */
     predictedIt = --toIt;
   }
