@@ -204,7 +204,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
     m = m_conn.SendAndWait(method.c_str(), m);
   }
 
-  if (m == NULL)
+  if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
@@ -235,7 +235,7 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
     m = m_conn.SendAndWait("deleteTimerecEntry", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
@@ -255,7 +255,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   int32_t s32;
 
   /* Validate/set mandatory fields */
-  if ((str = htsmsg_get_str(msg, "id")) == NULL)
+  if ((str = htsmsg_get_str(msg, "id")) == nullptr)
   {
     Logger::Log(LogLevel::LEVEL_ERROR,
                 "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
@@ -345,27 +345,27 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Add optional fields */
-  if ((str = htsmsg_get_str(msg, "title")) != NULL)
+  if ((str = htsmsg_get_str(msg, "title")) != nullptr)
   {
     rec.SetTitle(str);
   }
 
-  if ((str = htsmsg_get_str(msg, "name")) != NULL)
+  if ((str = htsmsg_get_str(msg, "name")) != nullptr)
   {
     rec.SetName(str);
   }
 
-  if ((str = htsmsg_get_str(msg, "directory")) != NULL)
+  if ((str = htsmsg_get_str(msg, "directory")) != nullptr)
   {
     rec.SetDirectory(str);
   }
 
-  if ((str = htsmsg_get_str(msg, "owner")) != NULL)
+  if ((str = htsmsg_get_str(msg, "owner")) != nullptr)
   {
     rec.SetOwner(str);
   }
 
-  if ((str = htsmsg_get_str(msg, "creator")) != NULL)
+  if ((str = htsmsg_get_str(msg, "creator")) != nullptr)
   {
     rec.SetCreator(str);
   }
@@ -391,7 +391,7 @@ bool TimeRecordings::ParseTimerecDelete(htsmsg_t* msg)
   const char* id;
 
   /* Validate/set mandatory fields */
-  if ((id = htsmsg_get_str(msg, "id")) == NULL)
+  if ((id = htsmsg_get_str(msg, "id")) == nullptr)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryDelete: 'id' missing");
     return false;

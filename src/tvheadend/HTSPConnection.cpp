@@ -72,7 +72,7 @@ public:
   {
     m_cond.Wait(mutex, m_flag, timeout);
     htsmsg_t* r = m_msg;
-    m_msg = NULL;
+    m_msg = nullptr;
     m_flag = false;
     return r;
   }
@@ -98,7 +98,7 @@ private:
 
 HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
   : m_connListener(connListener),
-    m_socket(NULL),
+    m_socket(nullptr),
     m_regThread(new HTSPRegister(this)),
     m_ready(false),
     m_seq(0),
@@ -106,7 +106,7 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
     m_serverVersion(""),
     m_htspVersion(0),
     m_webRoot(""),
-    m_challenge(NULL),
+    m_challenge(nullptr),
     m_challengeLen(0),
     m_suspended(false),
     m_state(PVR_CONNECTION_STATE_UNKNOWN)
@@ -249,7 +249,7 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
 
     /* Notify connection state change (callback!) */
     serverString = GetServerString();
-    PVR->ConnectionStateChange(serverString.c_str(), newState, NULL);
+    PVR->ConnectionStateChange(serverString.c_str(), newState, nullptr);
   }
 }
 
@@ -410,7 +410,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   {
     m_messages.erase(seq);
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to transmit");
-    return NULL;
+    return nullptr;
   }
 
   /* Wait for response */
@@ -421,7 +421,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
-    return NULL;
+    return nullptr;
   }
 
   /* Check result for errors and announce. */
@@ -431,16 +431,16 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
     // access denied
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: Access denied", method);
     htsmsg_destroy(msg);
-    return NULL;
+    return nullptr;
   }
   else
   {
     const char* strError;
-    if ((strError = htsmsg_get_str(msg, "error")) != NULL)
+    if ((strError = htsmsg_get_str(msg, "error")) != nullptr)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: %s", method, strError);
       htsmsg_destroy(msg);
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -456,7 +456,7 @@ htsmsg_t* HTSPConnection::SendAndWait(const char* method, htsmsg_t* msg, int iRe
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
 
   if (!WaitForConnection())
-    return NULL;
+    return nullptr;
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 
@@ -532,7 +532,7 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
   /* Send and Wait */
   msg = SendAndWait0("authenticate", msg);
 
-  if (msg == NULL)
+  if (!msg)
     return 0;
 
   if (m_htspVersion >= 26)
@@ -652,7 +652,7 @@ void* HTSPConnection::Process()
       if (m_challenge)
       {
         free(m_challenge);
-        m_challenge = NULL;
+        m_challenge = nullptr;
       }
     }
 
@@ -708,5 +708,5 @@ void* HTSPConnection::Process()
     m_regThread->StopThread(0);
   }
 
-  return NULL;
+  return nullptr;
 }

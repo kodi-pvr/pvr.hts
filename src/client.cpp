@@ -46,10 +46,10 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
  * Globals
  */
 CMutex g_mutex;
-CHelper_libXBMC_addon* XBMC = NULL;
-CHelper_libXBMC_pvr* PVR = NULL;
-PVR_MENUHOOK* menuHook = NULL;
-CTvheadend* tvh = NULL;
+CHelper_libXBMC_addon* XBMC = nullptr;
+CHelper_libXBMC_pvr* PVR = nullptr;
+PVR_MENUHOOK* menuHook = nullptr;
+CTvheadend* tvh = nullptr;
 
 /* **************************************************************************
  * ADDON setup

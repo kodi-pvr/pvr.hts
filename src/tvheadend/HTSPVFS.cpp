@@ -188,7 +188,7 @@ long long HTSPVFS::Size()
     m = m_conn.SendAndWait("fileStat", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return -1;
 
   /* Get size. Note: 'size' field is optional. */
@@ -254,7 +254,7 @@ bool HTSPVFS::SendFileOpen(bool force)
       m = m_conn.SendAndWait("fileOpen", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return false;
 
   /* Get ID */
@@ -323,7 +323,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
       m = m_conn.SendAndWait("fileSeek", m);
   }
 
-  if (m == NULL)
+  if (!m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileSeek failed");
     return -1;
@@ -368,7 +368,7 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
     m = m_conn.SendAndWait("fileRead", m);
   }
 
-  if (m == NULL)
+  if (!m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileRead failed");
     return -1;

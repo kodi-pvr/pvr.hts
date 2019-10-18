@@ -130,7 +130,7 @@ void HTSPDemuxer::Close()
 
 DemuxPacket* HTSPDemuxer::Read()
 {
-  DemuxPacket* pkt = NULL;
+  DemuxPacket* pkt = nullptr;
   m_lastUse.store(time(nullptr));
 
   if (m_pktBuffer.Pop(pkt, 100))
@@ -629,7 +629,7 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
       stream.iCodecType == XBMC_CODEC_TYPE_RDS)
   {
     const char* language;
-    if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
+    if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != nullptr)
       strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
   }
 
@@ -694,7 +694,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   /* Validate */
   htsmsg_t* l;
 
-  if ((l = htsmsg_get_list(m, "streams")) == NULL)
+  if ((l = htsmsg_get_list(m, "streams")) == nullptr)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed subscriptionStart: 'streams' missing");
     return;
@@ -716,7 +716,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
       continue;
 
     const char* type;
-    if ((type = htsmsg_get_str(&f->hmf_msg, "type")) == NULL)
+    if ((type = htsmsg_get_str(&f->hmf_msg, "type")) == nullptr)
       continue;
 
     uint32_t idx;
@@ -751,34 +751,34 @@ void HTSPDemuxer::ParseSourceInfo(htsmsg_t* m)
   /* include position in mux name
    * as users might receive multiple satellite positions */
   m_sourceInfo.si_mux.clear();
-  if ((str = htsmsg_get_str(m, "satpos")) != NULL)
+  if ((str = htsmsg_get_str(m, "satpos")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  satpos : %s", str);
     m_sourceInfo.si_mux.append(str);
     m_sourceInfo.si_mux.append(": ");
   }
-  if ((str = htsmsg_get_str(m, "mux")) != NULL)
+  if ((str = htsmsg_get_str(m, "mux")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  mux     : %s", str);
     m_sourceInfo.si_mux.append(str);
   }
 
-  if ((str = htsmsg_get_str(m, "adapter")) != NULL)
+  if ((str = htsmsg_get_str(m, "adapter")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  adapter : %s", str);
     m_sourceInfo.si_adapter = str;
   }
-  if ((str = htsmsg_get_str(m, "network")) != NULL)
+  if ((str = htsmsg_get_str(m, "network")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  network : %s", str);
     m_sourceInfo.si_network = str;
   }
-  if ((str = htsmsg_get_str(m, "provider")) != NULL)
+  if ((str = htsmsg_get_str(m, "provider")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  provider : %s", str);
     m_sourceInfo.si_provider = str;
   }
-  if ((str = htsmsg_get_str(m, "service")) != NULL)
+  if ((str = htsmsg_get_str(m, "service")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  service : %s", str);
     m_sourceInfo.si_service = str;
@@ -862,7 +862,7 @@ void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 
   /* Parse */
   Logger::Log(LogLevel::LEVEL_TRACE, "signalStatus:");
-  if ((str = htsmsg_get_str(m, "feStatus")) != NULL)
+  if ((str = htsmsg_get_str(m, "feStatus")) != nullptr)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  status : %s", str);
     m_signalInfo.fe_status = str;

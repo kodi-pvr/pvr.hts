@@ -148,7 +148,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
     m = m_conn.SendAndWait0("subscribe", m);
   else
     m = m_conn.SendAndWait("subscribe", m);
-  if (m == NULL)
+  if (!m)
     return;
 
   htsmsg_destroy(m);
@@ -170,7 +170,7 @@ void Subscription::SendUnsubscribe()
   SetState(SUBSCRIPTION_STOPPED);
 
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("unsubscribe", m)) == NULL)
+  if ((m = m_conn.SendAndWait("unsubscribe", m)) == nullptr)
     return;
 
   htsmsg_destroy(m);
@@ -261,7 +261,7 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
     const char* error = htsmsg_get_str(m, "subscriptionError");
 
     /* This field is absent when everything is fine */
-    if (error != NULL)
+    if (error)
     {
       if (!strcmp("badSignal", error))
         SetState(SUBSCRIPTION_NOSIGNAL);
@@ -287,7 +287,7 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
   else
   {
     /* This field is absent when everything is fine */
-    if (status != NULL)
+    if (status)
     {
       SetState(SUBSCRIPTION_UNKNOWN);
 
