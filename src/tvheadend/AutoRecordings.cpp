@@ -167,7 +167,6 @@ PVR_ERROR AutoRecordings::SendAutorecUpdate(const PVR_TIMER& timer)
 
 PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool update)
 {
-  uint32_t u32;
   const std::string method = update ? "updateAutorecEntry" : "addAutorecEntry";
 
   /* Build message */
@@ -302,6 +301,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed %s response: 'success' missing", method.c_str());
@@ -314,8 +314,6 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
 
 PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
 {
-  uint32_t u32;
-
   std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
   if (strId.empty())
     return PVR_ERROR_FAILED;
@@ -333,6 +331,7 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed deleteAutorecEntry response: 'success' missing");
@@ -344,10 +343,6 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
 
 bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  uint32_t u32;
-  int32_t s32;
-  int64_t s64;
-
   /* Validate/set mandatory fields */
   const char* str = htsmsg_get_str(msg, "id");
   if (!str)
@@ -364,6 +359,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
   /* Validate/set fields mandatory for autorecEntryAdd */
 
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(msg, "enabled", &u32))
   {
     rec.SetEnabled(u32);
@@ -419,6 +415,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
+  int32_t s32 = 0;
   if (!htsmsg_get_s32(msg, "start", &s32))
   {
     rec.SetStartWindowBegin(s32);
@@ -439,6 +436,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
+  int64_t s64 = 0;
   if (!htsmsg_get_s64(msg, "startExtra", &s64))
   {
     rec.SetMarginStart(s64);

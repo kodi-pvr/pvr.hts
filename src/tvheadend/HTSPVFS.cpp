@@ -102,7 +102,7 @@ void HTSPVFS::Close()
 
   m_offset = 0;
   m_fileId = 0;
-  m_path = "";
+  m_path.clear();
   m_eofOffsetSecs = -1;
   m_pauseTime = 0;
   m_paused = false;
@@ -174,10 +174,9 @@ long long HTSPVFS::Seek(long long pos, int whence, bool inprogress)
 long long HTSPVFS::Size()
 {
   int64_t ret = -1;
-  htsmsg_t* m;
 
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat id=%d", m_fileId);
@@ -236,10 +235,8 @@ bool HTSPVFS::IsRealTimeStream()
 
 bool HTSPVFS::SendFileOpen(bool force)
 {
-  htsmsg_t* m;
-
   /* Build Message */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_str(m, "file", m_path.c_str());
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs open file=%s", m_path.c_str());
@@ -272,10 +269,8 @@ bool HTSPVFS::SendFileOpen(bool force)
 
 void HTSPVFS::SendFileClose()
 {
-  htsmsg_t* m;
-
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
   /* If setting set, we will increase play count with CTvheadend::SetPlayCount */
@@ -298,11 +293,10 @@ void HTSPVFS::SendFileClose()
 
 long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 {
-  htsmsg_t* m;
   int64_t ret = -1;
 
   /* Build Message */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "offset", pos);
   if (whence == SEEK_CUR)
@@ -351,12 +345,8 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 
 ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 {
-  htsmsg_t* m;
-  const void* buffer;
-  size_t read;
-
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "size", len);
 
@@ -375,6 +365,8 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
   }
 
   /* Get Data */
+  const void* buffer = nullptr;
+  size_t read = 0;
   if (htsmsg_get_bin(m, "data", &buffer, &read))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");

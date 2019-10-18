@@ -140,7 +140,6 @@ void HTSPConnection::Stop()
 
 std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
 {
-  va_list va;
   const Settings& settings = Settings::GetInstance();
 
   // Generate the authentication string (user:pass@)
@@ -152,6 +151,8 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
 
   std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(),
                                         settings.GetHostname().c_str(), settings.GetPortHTTP());
+
+  va_list va;
 
   CLockObject lock(m_mutex);
   va_start(va, fmt);
@@ -278,26 +279,20 @@ void HTSPConnection::Disconnect()
  */
 bool HTSPConnection::ReadMessage()
 {
-  uint8_t* buf;
-  uint8_t lb[4];
-  size_t len, cnt;
-  ssize_t r;
-  uint32_t seq;
-  htsmsg_t* msg;
-  const char* method;
-
   /* Read 4 byte len */
-  len = m_socket->Read(&lb, sizeof(lb));
+  uint8_t lb[4];
+  size_t len = m_socket->Read(&lb, sizeof(lb));
   if (len != sizeof(lb))
     return false;
+
   len = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
 
   /* Read rest of packet */
-  buf = static_cast<uint8_t*>(malloc(len));
-  cnt = 0;
+  uint8_t* buf = static_cast<uint8_t*>(malloc(len));
+  size_t cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    ssize_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
@@ -309,7 +304,7 @@ bool HTSPConnection::ReadMessage()
   }
 
   /* Deserialize */
-  msg = htsmsg_binary_deserialize(buf, len, buf);
+  htsmsg_t* msg = htsmsg_binary_deserialize(buf, len, buf);
   if (!msg)
   {
     /* Do not free buf here. Already done by htsmsg_binary_deserialize. */
@@ -318,6 +313,7 @@ bool HTSPConnection::ReadMessage()
   }
 
   /* Sequence number - response */
+  uint32_t seq = 0;
   if (htsmsg_get_u32(msg, "seq", &seq) == 0)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
@@ -331,7 +327,7 @@ bool HTSPConnection::ReadMessage()
   }
 
   /* Get method */
-  method = htsmsg_get_str(msg, "method");
+  const char* method = htsmsg_get_str(msg, "method");
   if (!method)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "message without a method");
@@ -353,12 +349,7 @@ bool HTSPConnection::ReadMessage()
  */
 bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 {
-  int e;
-  void* buf;
-  size_t len;
-  ssize_t c;
-  uint32_t seq;
-
+  uint32_t seq = 0;
   if (!htsmsg_get_u32(msg, "seq", &seq))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "sending message [%s : %d]", method, seq);
@@ -370,13 +361,15 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
   htsmsg_add_str(msg, "method", method);
 
   /* Serialise */
-  e = htsmsg_binary_serialize(msg, &buf, &len, -1);
+  void* buf = nullptr;
+  size_t len = 0;
+  int e = htsmsg_binary_serialize(msg, &buf, &len, -1);
   htsmsg_destroy(msg);
   if (e < 0)
     return false;
 
   /* Send data */
-  c = m_socket->Write(buf, len);
+  ssize_t c = m_socket->Write(buf, len);
   free(buf);
 
   if (c != static_cast<ssize_t>(len))
@@ -399,12 +392,11 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
 
-  uint32_t seq;
-
   /* Add Sequence number */
-  HTSPResponse resp;
-  seq = ++m_seq;
+  uint32_t seq = ++m_seq;
   htsmsg_add_u32(msg, "seq", seq);
+
+  HTSPResponse resp;
   m_messages[seq] = &resp;
 
   /* Send Message (bypass TX check) */
@@ -423,11 +415,12 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
+
     return nullptr;
   }
 
   /* Check result for errors and announce. */
-  uint32_t noaccess;
+  uint32_t noaccess = 0;
   if (!htsmsg_get_u32(msg, "noaccess", &noaccess) && noaccess)
   {
     // access denied
@@ -459,6 +452,7 @@ htsmsg_t* HTSPConnection::SendAndWait(const char* method, htsmsg_t* msg, int iRe
 
   if (!WaitForConnection())
     return nullptr;
+
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 
@@ -475,12 +469,9 @@ bool HTSPConnection::SendHello()
     return false;
 
   /* Process */
-  const char* webroot;
-  const void* chal;
-  size_t chal_len;
 
   /* Basic Info */
-  webroot = htsmsg_get_str(msg, "webroot");
+  const char* webroot = htsmsg_get_str(msg, "webroot");
   m_serverName = htsmsg_get_str(msg, "servername");
   m_serverVersion = htsmsg_get_str(msg, "serverversion");
   m_htspVersion = htsmsg_get_u32_or_default(msg, "htspversion", 0);
@@ -501,6 +492,8 @@ bool HTSPConnection::SendHello()
   }
 
   /* Authentication */
+  const void* chal = nullptr;
+  size_t chal_len = 0;
   htsmsg_get_bin(msg, "challenge", &chal, &chal_len);
   if (chal && chal_len)
   {
@@ -510,13 +503,11 @@ bool HTSPConnection::SendHello()
   }
 
   htsmsg_destroy(msg);
-
   return true;
 }
 
 bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
 {
-  uint32_t u32;
   htsmsg_t* msg = htsmsg_create_map();
   htsmsg_add_str(msg, "username", user.c_str());
 
@@ -542,6 +533,8 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
   {
     /* Log received permissions */
     Logger::Log(LogLevel::LEVEL_INFO, "  Received permissions:");
+
+    uint32_t u32 = 0;
     if (!htsmsg_get_u32(msg, "admin", &u32))
       Logger::Log(LogLevel::LEVEL_INFO, "  administrator              : %i", u32);
     if (!htsmsg_get_u32(msg, "streaming", &u32))
@@ -639,15 +632,15 @@ void* HTSPConnection::Process()
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
     std::string host = settings.GetHostname();
-    int port, timeout;
-    port = settings.GetPortHTSP();
-    timeout = settings.GetConnectTimeout();
+    int port = settings.GetPortHTSP();
+    int timeout = settings.GetConnectTimeout();
 
     /* Create socket (ensure mutex protection) */
     {
       CLockObject lock(m_mutex);
       if (m_socket)
         delete m_socket;
+
       m_connListener.Disconnected();
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready = false;

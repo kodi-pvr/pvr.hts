@@ -130,9 +130,9 @@ void HTSPDemuxer::Close()
 
 DemuxPacket* HTSPDemuxer::Read()
 {
-  DemuxPacket* pkt = nullptr;
   m_lastUse.store(time(nullptr));
 
+  DemuxPacket* pkt = nullptr;
   if (m_pktBuffer.Pop(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
@@ -146,20 +146,21 @@ DemuxPacket* HTSPDemuxer::Read()
 
 void HTSPDemuxer::Flush()
 {
-  DemuxPacket* pkt;
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
+
+  DemuxPacket* pkt = nullptr;
   while (m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
 
 void HTSPDemuxer::Trim()
 {
-  DemuxPacket* pkt;
-
   Logger::Log(LogLevel::LEVEL_TRACE, "demux trim");
+
   /* reduce used buffer space to what is needed for DVDPlayer to resume
    * playback without buffering. This depends on the bitrate, so we don't set
    * this too small. */
+  DemuxPacket* pkt = nullptr;
   while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
@@ -167,6 +168,7 @@ void HTSPDemuxer::Trim()
 void HTSPDemuxer::Abort()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
+
   CLockObject lock(m_conn.Mutex());
   Abort0();
   ResetStatus();
@@ -210,6 +212,7 @@ bool HTSPDemuxer::Seek(double time, bool, double* startpts)
 void HTSPDemuxer::Speed(int speed)
 {
   CLockObject lock(m_conn.Mutex());
+
   if (!m_subscription.IsActive())
     return;
 
@@ -227,6 +230,7 @@ void HTSPDemuxer::Speed(int speed)
 void HTSPDemuxer::FillBuffer(bool mode)
 {
   CLockObject lock(m_conn.Mutex());
+
   if (!m_subscription.IsActive())
     return;
 
@@ -244,6 +248,7 @@ void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)
 {
   if (!m_subscription.IsActive() || m_subscription.GetWeight() == static_cast<uint32_t>(weight))
     return;
+
   m_subscription.SendWeight(static_cast<uint32_t>(weight));
 }
 
@@ -349,6 +354,7 @@ uint32_t HTSPDemuxer::GetChannelId() const
 {
   if (m_subscription.IsActive())
     return m_subscription.GetChannelId();
+
   return 0;
 }
 
@@ -356,6 +362,7 @@ time_t HTSPDemuxer::GetLastUse() const
 {
   if (m_subscription.IsActive())
     return m_lastUse.load();
+
   return 0;
 }
 
@@ -363,6 +370,7 @@ bool HTSPDemuxer::IsPaused() const
 {
   if (m_subscription.IsActive())
     return m_subscription.GetSpeed() == 0;
+
   return false;
 }
 
@@ -472,13 +480,6 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
 void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
 {
-  uint32_t idx, u32;
-  int64_t s64;
-  const void* bin;
-  size_t binlen;
-  char type = 0;
-  int ignore;
-
   CLockObject lock(m_mutex);
 
   /* Ignore packets while switching channels */
@@ -489,6 +490,9 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   }
 
   /* Validate fields */
+  uint32_t idx = 0;
+  const void* bin = nullptr;
+  size_t binlen = 0;
   if (htsmsg_get_u32(m, "stream", &idx) || htsmsg_get_bin(m, "payload", &bin, &binlen))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed muxpkt: 'stream'/'payload' missing");
@@ -517,10 +521,12 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   pkt->iStreamId = idx;
 
   /* Duration */
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(m, "duration", &u32))
     pkt->duration = TVH_TO_DVD_TIME(u32);
 
   /* Timestamps */
+  int64_t s64 = 0;
   if (!htsmsg_get_s64(m, "dts", &s64))
     pkt->dts = TVH_TO_DVD_TIME(s64);
   else
@@ -532,12 +538,13 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
     pkt->pts = DVD_NOPTS_VALUE;
 
   /* Type (for debug only) */
+  char type = 0;
   if (!htsmsg_get_u32(m, "frametype", &u32))
     type = static_cast<char>(u32);
   if (!type)
     type = '_';
 
-  ignore = m_seeking;
+  bool ignore = m_seeking;
 
   Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld%s", idx,
               pkt->iStreamId, type, pkt->pts, static_cast<long long>(binlen),
@@ -709,7 +716,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 
   /* Process each */
-  htsmsg_field_t* f;
+  htsmsg_field_t* f = nullptr;
   HTSMSG_FOREACH(f, l)
   {
     if (f->hmf_type != HMF_MAP)
@@ -719,7 +726,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
     if (!type)
       continue;
 
-    uint32_t idx;
+    uint32_t idx = 0;
     if (htsmsg_get_u32(&f->hmf_msg, "index", &idx))
       continue;
 
@@ -801,10 +808,9 @@ void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 
 void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
 {
-  int64_t s64;
-
   CLockObject lock(m_conn.Mutex());
 
+  int64_t s64 = 0;
   if (htsmsg_get_s64(m, "time", &s64))
   {
     m_seekTime = INVALID_SEEKTIME;
@@ -820,10 +826,9 @@ void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
 
 void HTSPDemuxer::ParseSubscriptionSpeed(htsmsg_t* m)
 {
-  int32_t s32;
+  int32_t s32 = 0;
   if (!htsmsg_get_s32(m, "speed", &s32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
-
 
   CLockObject lock(m_conn.Mutex());
   m_actualSpeed = s32 * 10;
@@ -835,16 +840,17 @@ void HTSPDemuxer::ParseSubscriptionGrace(htsmsg_t* m)
 
 void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
 {
-  uint32_t u32;
-  std::map<int, int>::const_iterator it;
-
   CLockObject lock(m_mutex);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
-  for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
+  for (auto it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
+  {
     Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", it->first, it->second);
+  }
 
   Logger::Log(LogLevel::LEVEL_TRACE, "queue stats:");
+
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(m, "packets", &u32))
     Logger::Log(LogLevel::LEVEL_TRACE, "  pkts  %d", u32);
   if (!htsmsg_get_u32(m, "bytes", &u32))
@@ -861,8 +867,6 @@ void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
 
 void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 {
-  uint32_t u32;
-
   CLockObject lock(m_mutex);
 
   /* Reset */
@@ -881,6 +885,8 @@ void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed signalStatus: 'feStatus' missing, ignoring");
   }
+
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(m, "feSNR", &u32))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  snr    : %d", u32);
@@ -905,13 +911,12 @@ void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 
 void HTSPDemuxer::ParseTimeshiftStatus(htsmsg_t* m)
 {
-  uint32_t u32;
-  int64_t s64;
-
   CLockObject lock(m_mutex);
 
   /* Parse */
   Logger::Log(LogLevel::LEVEL_TRACE, "timeshiftStatus:");
+
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(m, "full", &u32))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  full  : %d", u32);
@@ -921,6 +926,8 @@ void HTSPDemuxer::ParseTimeshiftStatus(htsmsg_t* m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed timeshiftStatus: 'full' missing, ignoring");
   }
+
+  int64_t s64 = 0;
   if (!htsmsg_get_s64(m, "shift", &s64))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  shift : %lld", s64);
@@ -944,10 +951,12 @@ void HTSPDemuxer::ParseTimeshiftStatus(htsmsg_t* m)
 
 void HTSPDemuxer::ParseDescrambleInfo(htsmsg_t* m)
 {
-  uint32_t pid = 0, caid = 0, provid = 0, ecmtime = 0, hops = 0;
-  const char *cardsystem, *reader, *from, *protocol;
-
   /* Parse mandatory fields */
+  uint32_t pid = 0;
+  uint32_t caid = 0;
+  uint32_t provid = 0;
+  uint32_t ecmtime = 0;
+  uint32_t hops = 0;
   if (htsmsg_get_u32(m, "pid", &pid) || htsmsg_get_u32(m, "caid", &caid) ||
       htsmsg_get_u32(m, "provid", &provid) || htsmsg_get_u32(m, "ecmtime", &ecmtime) ||
       htsmsg_get_u32(m, "hops", &hops))
@@ -957,10 +966,10 @@ void HTSPDemuxer::ParseDescrambleInfo(htsmsg_t* m)
   }
 
   /* Parse optional fields */
-  cardsystem = htsmsg_get_str(m, "cardsystem");
-  reader = htsmsg_get_str(m, "reader");
-  from = htsmsg_get_str(m, "from");
-  protocol = htsmsg_get_str(m, "protocol");
+  const char* cardsystem = htsmsg_get_str(m, "cardsystem");
+  const char* reader = htsmsg_get_str(m, "reader");
+  const char* from = htsmsg_get_str(m, "from");
+  const char* protocol = htsmsg_get_str(m, "protocol");
 
   CLockObject lock(m_mutex);
 

@@ -142,7 +142,6 @@ PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER& timer)
 
 PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool update)
 {
-  uint32_t u32;
   const std::string method = update ? "updateTimerecEntry" : "addTimerecEntry";
 
   /* Build message */
@@ -208,6 +207,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed %s response: 'success' missing", method.c_str());
@@ -220,8 +220,6 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
 
 PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
 {
-  uint32_t u32;
-
   std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
   if (strId.empty())
     return PVR_ERROR_FAILED;
@@ -239,6 +237,7 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed deleteTimerecEntry response: 'success' missing");
@@ -250,9 +249,6 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
 
 bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  uint32_t u32;
-  int32_t s32;
-
   /* Validate/set mandatory fields */
   const char* str = htsmsg_get_str(msg, "id");
   if (!str)
@@ -269,6 +265,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
   /* Validate/set fields mandatory for timerecEntryAdd */
 
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(msg, "enabled", &u32))
   {
     rec.SetEnabled(u32);
@@ -324,6 +321,7 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
+  int32_t s32 = 0;
   if (!htsmsg_get_s32(msg, "start", &s32))
   {
     rec.SetStart(s32);
