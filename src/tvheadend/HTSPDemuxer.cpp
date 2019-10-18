@@ -476,7 +476,6 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   int64_t s64;
   const void* bin;
   size_t binlen;
-  DemuxPacket* pkt;
   char type = 0;
   int ignore;
 
@@ -509,8 +508,10 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   m_streamStat[idx]++;
 
   /* Allocate buffer */
-  if (!(pkt = PVR->AllocateDemuxPacket(binlen)))
+  DemuxPacket* pkt = PVR->AllocateDemuxPacket(binlen);
+  if (!pkt)
     return;
+
   memcpy(pkt->pData, bin, binlen);
   pkt->iSize = binlen;
   pkt->iStreamId = idx;
@@ -628,8 +629,8 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE || stream.iCodecType == XBMC_CODEC_TYPE_AUDIO ||
       stream.iCodecType == XBMC_CODEC_TYPE_RDS)
   {
-    const char* language;
-    if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != nullptr)
+    const char* language = htsmsg_get_str(&f->hmf_msg, "language");
+    if (language)
       strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
   }
 
@@ -665,8 +666,8 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
     /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
     stream.fAspect = 0.0f;
 
-    uint32_t duration;
-    if ((duration = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
+    uint32_t duration = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0);
+    if (duration > 0)
     {
       stream.iFPSScale = duration;
       stream.iFPSRate = DVD_TIME_BASE;
@@ -692,9 +693,8 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
 void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 {
   /* Validate */
-  htsmsg_t* l;
-
-  if ((l = htsmsg_get_list(m, "streams")) == nullptr)
+  htsmsg_t* l = htsmsg_get_list(m, "streams");
+  if (!l)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed subscriptionStart: 'streams' missing");
     return;
@@ -715,8 +715,8 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
     if (f->hmf_type != HMF_MAP)
       continue;
 
-    const char* type;
-    if ((type = htsmsg_get_str(&f->hmf_msg, "type")) == nullptr)
+    const char* type = htsmsg_get_str(&f->hmf_msg, "type");
+    if (!type)
       continue;
 
     uint32_t idx;
@@ -740,8 +740,6 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 
 void HTSPDemuxer::ParseSourceInfo(htsmsg_t* m)
 {
-  const char* str;
-
   /* Ignore */
   if (!m)
     return;
@@ -751,34 +749,45 @@ void HTSPDemuxer::ParseSourceInfo(htsmsg_t* m)
   /* include position in mux name
    * as users might receive multiple satellite positions */
   m_sourceInfo.si_mux.clear();
-  if ((str = htsmsg_get_str(m, "satpos")) != nullptr)
+
+  const char* str = htsmsg_get_str(m, "satpos");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  satpos : %s", str);
     m_sourceInfo.si_mux.append(str);
     m_sourceInfo.si_mux.append(": ");
   }
-  if ((str = htsmsg_get_str(m, "mux")) != nullptr)
+
+  str = htsmsg_get_str(m, "mux");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  mux     : %s", str);
     m_sourceInfo.si_mux.append(str);
   }
 
-  if ((str = htsmsg_get_str(m, "adapter")) != nullptr)
+  str = htsmsg_get_str(m, "adapter");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  adapter : %s", str);
     m_sourceInfo.si_adapter = str;
   }
-  if ((str = htsmsg_get_str(m, "network")) != nullptr)
+
+  str = htsmsg_get_str(m, "network");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  network : %s", str);
     m_sourceInfo.si_network = str;
   }
-  if ((str = htsmsg_get_str(m, "provider")) != nullptr)
+
+  str = htsmsg_get_str(m, "provider");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  provider : %s", str);
     m_sourceInfo.si_provider = str;
   }
-  if ((str = htsmsg_get_str(m, "service")) != nullptr)
+
+  str = htsmsg_get_str(m, "service");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  service : %s", str);
     m_sourceInfo.si_service = str;
@@ -853,7 +862,6 @@ void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
 void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 {
   uint32_t u32;
-  const char* str;
 
   CLockObject lock(m_mutex);
 
@@ -862,7 +870,9 @@ void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 
   /* Parse */
   Logger::Log(LogLevel::LEVEL_TRACE, "signalStatus:");
-  if ((str = htsmsg_get_str(m, "feStatus")) != nullptr)
+
+  const char* str = htsmsg_get_str(m, "feStatus");
+  if (str)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "  status : %s", str);
     m_signalInfo.fe_status = str;

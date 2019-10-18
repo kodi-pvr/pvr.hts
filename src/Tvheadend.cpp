@@ -146,10 +146,9 @@ void CTvheadend::QueryAvailableProfiles()
   if (!m)
     return;
 
-  htsmsg_t* l;
-  htsmsg_field_t* f;
+  htsmsg_t* l = htsmsg_get_list(m, "profiles");
 
-  if ((l = htsmsg_get_list(m, "profiles")) == nullptr)
+  if (!l)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed getProfiles: 'profiles' missing");
     htsmsg_destroy(m);
@@ -157,16 +156,21 @@ void CTvheadend::QueryAvailableProfiles()
   }
 
   /* Process */
+  htsmsg_field_t* f = nullptr;
   HTSMSG_FOREACH(f, l)
   {
-    const char* str;
     Profile profile;
 
-    if ((str = htsmsg_get_str(&f->hmf_msg, "uuid")) != nullptr)
+    const char* str = htsmsg_get_str(&f->hmf_msg, "uuid");
+    if (str)
       profile.SetUuid(str);
-    if ((str = htsmsg_get_str(&f->hmf_msg, "name")) != nullptr)
+
+    str = htsmsg_get_str(&f->hmf_msg, "name");
+    if (str)
       profile.SetName(str);
-    if ((str = htsmsg_get_str(&f->hmf_msg, "comment")) != nullptr)
+
+    str = htsmsg_get_str(&f->hmf_msg, "comment");
+    if (str)
       profile.SetComment(str);
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "profile name: %s, comment: %s added",
@@ -348,8 +352,8 @@ PVR_ERROR CTvheadend::SendDvrDelete(uint32_t id, const char* method)
   htsmsg_add_u32(m, "id", id);
 
   /* Send and wait a bit longer than usual */
-  if ((m = m_conn->SendAndWait(
-           method, m, std::max(30000, Settings::GetInstance().GetResponseTimeout()))) == nullptr)
+  m = m_conn->SendAndWait(method, m, std::max(30000, Settings::GetInstance().GetResponseTimeout()));
+  if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
@@ -407,7 +411,6 @@ PVR_ERROR CTvheadend::GetRecordings(ADDON_HANDLE handle)
   std::vector<PVR_RECORDING> recs;
   {
     CLockObject lock(m_mutex);
-    Channels::const_iterator cit;
     char buf[128];
 
     for (const auto& entry : m_recordings)
@@ -421,10 +424,9 @@ PVR_ERROR CTvheadend::GetRecordings(ADDON_HANDLE handle)
       PVR_RECORDING rec = {0};
 
       /* Channel icon */
-      if ((cit = m_channels.find(recording.GetChannel())) != m_channels.end())
-      {
+      const auto& cit = m_channels.find(recording.GetChannel());
+      if (cit != m_channels.end())
         strncpy(rec.strIconPath, cit->second.GetIcon().c_str(), sizeof(rec.strIconPath) - 1);
-      }
 
       /* Channel name */
       strncpy(rec.strChannelName, recording.GetChannelName().c_str(),
@@ -542,7 +544,6 @@ PVR_ERROR CTvheadend::GetRecordings(ADDON_HANDLE handle)
 
 PVR_ERROR CTvheadend::GetRecordingEdl(const PVR_RECORDING& rec, PVR_EDL_ENTRY edl[], int* num)
 {
-  htsmsg_t* list;
   htsmsg_field_t* f;
   int idx;
 
@@ -556,12 +557,14 @@ PVR_ERROR CTvheadend::GetRecordingEdl(const PVR_RECORDING& rec, PVR_EDL_ENTRY ed
   {
     CLockObject lock(m_conn->Mutex());
 
-    if ((m = m_conn->SendAndWait("getDvrCutpoints", m)) == nullptr)
+    m = m_conn->SendAndWait("getDvrCutpoints", m);
+    if (!m)
       return PVR_ERROR_SERVER_ERROR;
   }
 
   /* Check for optional "cutpoints" reply message field */
-  if (!(list = htsmsg_get_list(m, "cutpoints")))
+  htsmsg_t* list = htsmsg_get_list(m, "cutpoints");
+  if (!list)
   {
     *num = 0;
     htsmsg_destroy(m);
@@ -1446,14 +1449,14 @@ PVR_ERROR CTvheadend::GetEPGForChannel(ADDON_HANDLE handle,
   {
     CLockObject lock(m_conn->Mutex());
 
-    if ((msg = m_conn->SendAndWait0("getEvents", msg)) == nullptr)
+    msg = m_conn->SendAndWait0("getEvents", msg);
+    if (!msg)
       return PVR_ERROR_SERVER_ERROR;
   }
 
   /* Process */
-  htsmsg_t* l;
-
-  if (!(l = htsmsg_get_list(msg, "events")))
+  htsmsg_t* l = htsmsg_get_list(msg, "events");
+  if (!l)
   {
     htsmsg_destroy(msg);
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed getEvents response: 'events' missing");
@@ -1550,7 +1553,8 @@ bool CTvheadend::Connected()
   else
     htsmsg_add_u32(msg, "epg", 0);
 
-  if ((msg = m_conn->SendAndWait0("enableAsyncMetadata", msg)) == nullptr)
+  msg = m_conn->SendAndWait0("enableAsyncMetadata", msg);
+  if (!msg)
   {
     m_asyncState.SetState(ASYNC_NONE);
     return false;
@@ -2022,8 +2026,6 @@ void CTvheadend::SyncEpgCompleted()
 void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
   uint32_t u32;
-  const char* str;
-  htsmsg_t* list;
 
   /* Validate */
   if (htsmsg_get_u32(msg, "tagId", &u32))
@@ -2045,8 +2047,11 @@ void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
     tag.SetIndex(u32);
 
   /* Name */
-  if ((str = htsmsg_get_str(msg, "tagName")) != nullptr)
+  const char* str = htsmsg_get_str(msg, "tagName");
+  if (str)
+  {
     tag.SetName(str);
+  }
   else if (bAdd)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed tagAdd: 'tagName' missing");
@@ -2054,11 +2059,13 @@ void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Icon */
-  if ((str = htsmsg_get_str(msg, "tagIcon")) != nullptr)
+  str = htsmsg_get_str(msg, "tagIcon");
+  if (str)
     tag.SetIcon(GetImageURL(str));
 
   /* Members */
-  if ((list = htsmsg_get_list(msg, "members")) != nullptr)
+  htsmsg_t* list = htsmsg_get_list(msg, "members");
+  if (list)
   {
     htsmsg_field_t* f;
     HTSMSG_FOREACH(f, list)
@@ -2101,8 +2108,6 @@ void CTvheadend::ParseTagDelete(htsmsg_t* msg)
 void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
   uint32_t u32;
-  const char* str;
-  htsmsg_t* list;
 
   /* Validate */
   if (htsmsg_get_u32(msg, "channelId", &u32))
@@ -2118,8 +2123,11 @@ void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
   channel.SetDirty(false);
 
   /* Channel name */
-  if ((str = htsmsg_get_str(msg, "channelName")) != nullptr)
+  const char* str = htsmsg_get_str(msg, "channelName");
+  if (str)
+  {
     channel.SetName(str);
+  }
   else if (bAdd)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed channelAdd: 'channelName' missing");
@@ -2146,13 +2154,15 @@ void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
     channel.SetNumMinor(u32);
 
   /* Channel icon */
-  if ((str = htsmsg_get_str(msg, "channelIcon")) != nullptr)
+  str = htsmsg_get_str(msg, "channelIcon");
+  if (str)
     channel.SetIcon(GetImageURL(str));
 
   /* Services */
-  if ((list = htsmsg_get_list(msg, "services")) != nullptr)
+  htsmsg_t* list = htsmsg_get_list(msg, "services");
+  if (list)
   {
-    htsmsg_field_t* f;
+    htsmsg_field_t* f = nullptr;
     uint32_t caid = 0;
     HTSMSG_FOREACH(f, list)
     {
@@ -2167,7 +2177,8 @@ void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
       }
       else
       {
-        if ((str = htsmsg_get_str(&f->hmf_msg, "type")) != nullptr)
+        str = htsmsg_get_str(&f->hmf_msg, "type");
+        if (str)
         {
           if (!strcmp(str, "Radio"))
             channel.SetType(CHANNEL_TYPE_RADIO);
@@ -2220,7 +2231,6 @@ void CTvheadend::ParseChannelDelete(htsmsg_t* msg)
 
 void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  const char *state, *str;
   uint32_t id, channel, eventId, retention, removal, priority, enabled, contentType, playCount,
       playPosition, season, episode, part;
   int64_t start, stop, startExtra, stopExtra;
@@ -2289,10 +2299,9 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     }
   }
 
-  htsmsg_t *files, *streams;
-  if ((files = htsmsg_get_list(msg, "files")) != nullptr)
+  htsmsg_t* files = htsmsg_get_list(msg, "files");
+  if (files)
   {
-    htsmsg_field_t *file, *stream;
     uint32_t u32;
     int64_t s64;
     bool needChannelType = !rec.GetChannelType() && m_conn->GetProtocol() >= 25;
@@ -2302,6 +2311,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     start = 0;
     stop = 0;
 
+    htsmsg_field_t* file = nullptr;
     HTSMSG_FOREACH(file, files) // Loop through all files
     {
       if (file->hmf_type != HMF_MAP)
@@ -2309,8 +2319,10 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
       if (needChannelType && !(hasAudio && hasVideo))
       {
-        if ((streams = htsmsg_get_list(&file->hmf_msg, "info")) != nullptr)
+        htsmsg_t* streams = htsmsg_get_list(&file->hmf_msg, "info");
+        if (streams)
         {
+          htsmsg_field_t* stream = nullptr;
           HTSMSG_FOREACH(stream, streams) // Loop through all streams
           {
             if (stream->hmf_type != HMF_MAP)
@@ -2346,7 +2358,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   /* Channel name fallback (in case channel was deleted) */
   if (rec.GetChannelName().empty() && m_conn->GetProtocol() >= 25)
   {
-    if ((str = htsmsg_get_str(msg, "channelName")) != nullptr)
+    const char* str = htsmsg_get_str(msg, "channelName");
+    if (str)
       rec.SetChannelName(str);
   }
 
@@ -2412,7 +2425,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Parse state */
-  if ((state = htsmsg_get_str(msg, "state")) != nullptr)
+  const char* state = htsmsg_get_str(msg, "state");
+  if (state)
   {
     if (strstr(state, "scheduled"))
       rec.SetState(PVR_TIMER_STATE_SCHEDULED);
@@ -2436,25 +2450,48 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     rec.SetEventId(eventId);
   if (!htsmsg_get_u32(msg, "enabled", &enabled))
     rec.SetEnabled(enabled);
-  if ((str = htsmsg_get_str(msg, "title")) != nullptr)
+
+  const char* str = htsmsg_get_str(msg, "title");
+  if (str)
     rec.SetTitle(str);
-  if ((str = htsmsg_get_str(msg, "subtitle")) != nullptr)
+
+  str = htsmsg_get_str(msg, "subtitle");
+  if (str)
     rec.SetSubtitle(str);
-  if ((str = htsmsg_get_str(msg, "path")) != nullptr)
+
+  str = htsmsg_get_str(msg, "path");
+  if (str)
     rec.SetPath(str);
-  if ((str = htsmsg_get_str(msg, "description")) != nullptr)
+
+  str = htsmsg_get_str(msg, "description");
+  if (str)
+  {
     rec.SetDescription(str);
-  else if ((str = htsmsg_get_str(msg, "summary")) != nullptr)
-    rec.SetDescription(str);
+  }
+  else
+  {
+    str = htsmsg_get_str(msg, "summary");
+    if (str)
+      rec.SetDescription(str);
+  }
+
   if (!htsmsg_get_u32(msg, "contentType", &contentType))
     rec.SetContentType(contentType);
-  if ((str = htsmsg_get_str(msg, "timerecId")) != nullptr)
+
+  str = htsmsg_get_str(msg, "timerecId");
+  if (str)
     rec.SetTimerecId(str);
-  if ((str = htsmsg_get_str(msg, "autorecId")) != nullptr)
+
+  str = htsmsg_get_str(msg, "autorecId");
+  if (str)
     rec.SetAutorecId(str);
-  if ((str = htsmsg_get_str(msg, "image")) != nullptr)
+
+  str = htsmsg_get_str(msg, "image");
+  if (str)
     rec.SetImage(GetImageURL(str));
-  if ((str = htsmsg_get_str(msg, "fanartImage")) != nullptr)
+
+  str = htsmsg_get_str(msg, "fanartImage");
+  if (str)
     rec.SetFanartImage(GetImageURL(str));
 
   if (m_conn->GetProtocol() >= 32)
@@ -2474,7 +2511,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Error */
-  if ((str = htsmsg_get_str(msg, "error")) != nullptr)
+  str = htsmsg_get_str(msg, "error");
+  if (str)
   {
     if (!strcmp(str, "300"))
       rec.SetState(PVR_TIMER_STATE_ABORTED);
@@ -2489,7 +2527,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   {
     /* Parse subscription error */
     /* This field is absent when everything is fine or when htsp version < 20 */
-    if ((str = htsmsg_get_str(msg, "subscriptionError")) != nullptr)
+    str = htsmsg_get_str(msg, "subscriptionError");
+    if (str)
     {
       /* No free adapter, AKA subscription conflict */
       if (!strcmp("noFreeAdapter", str))
@@ -2560,7 +2599,6 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
 
 bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
 {
-  const char* str;
   uint32_t u32, id, channel;
   int64_t s64, start, stop;
 
@@ -2598,16 +2636,26 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
   evt.SetStop(static_cast<time_t>(stop));
 
   /* Add optional fields */
-  if ((str = htsmsg_get_str(msg, "title")) != nullptr)
+  const char* str = htsmsg_get_str(msg, "title");
+  if (str)
     evt.SetTitle(str);
-  if ((str = htsmsg_get_str(msg, "subtitle")) != nullptr)
+
+  str = htsmsg_get_str(msg, "subtitle");
+  if (str)
     evt.SetSubtitle(str);
-  if ((str = htsmsg_get_str(msg, "summary")) != nullptr)
+
+  str = htsmsg_get_str(msg, "summary");
+  if (str)
     evt.SetSummary(str);
-  if ((str = htsmsg_get_str(msg, "description")) != nullptr)
+
+  str = htsmsg_get_str(msg, "description");
+  if (str)
     evt.SetDesc(str);
-  if ((str = htsmsg_get_str(msg, "image")) != nullptr)
+
+  str = htsmsg_get_str(msg, "image");
+  if (str)
     evt.SetImage(GetImageURL(str));
+
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
     evt.SetNext(u32);
   if (!htsmsg_get_u32(msg, "contentType", &u32))
@@ -2624,8 +2672,11 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
     evt.SetEpisode(u32);
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
     evt.SetPart(u32);
-  if ((str = htsmsg_get_str(msg, "serieslinkUri")) != nullptr)
+
+  str = htsmsg_get_str(msg, "serieslinkUri");
+  if (str)
     evt.SetSeriesLink(str);
+
   if (!htsmsg_get_u32(msg, "copyrightYear", &u32))
     evt.SetYear(u32);
   if (!htsmsg_get_u32(msg, "dvrId", &u32))
@@ -2656,14 +2707,14 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
     }
   }
 
-  htsmsg_t* l;
-  if ((l = htsmsg_get_map(msg, "credits")) != nullptr)
+  htsmsg_t* l = htsmsg_get_map(msg, "credits");
+  if (l)
   {
     std::vector<std::string> writers;
     std::vector<std::string> directors;
     std::vector<std::string> cast;
 
-    htsmsg_field_t* f;
+    htsmsg_field_t* f = nullptr;
     HTSMSG_FOREACH(f, l)
     {
       if (!f->hmf_name)
@@ -2686,7 +2737,8 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
     evt.SetCast(cast);
   }
 
-  if ((l = htsmsg_get_list(msg, "category")) != nullptr)
+  l = htsmsg_get_list(msg, "category");
+  if (l)
   {
     std::vector<std::string> categories;
 

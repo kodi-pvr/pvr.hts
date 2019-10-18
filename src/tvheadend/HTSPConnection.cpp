@@ -309,7 +309,8 @@ bool HTSPConnection::ReadMessage()
   }
 
   /* Deserialize */
-  if (!(msg = htsmsg_binary_deserialize(buf, len, buf)))
+  msg = htsmsg_binary_deserialize(buf, len, buf);
+  if (!msg)
   {
     /* Do not free buf here. Already done by htsmsg_binary_deserialize. */
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to decode message");
@@ -321,8 +322,8 @@ bool HTSPConnection::ReadMessage()
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
     CLockObject lock(m_mutex);
-    HTSPResponseList::iterator it;
-    if ((it = m_messages.find(seq)) != m_messages.end())
+    HTSPResponseList::iterator it = m_messages.find(seq);
+    if (it != m_messages.end())
     {
       it->second->Set(msg);
       return true;
@@ -330,7 +331,8 @@ bool HTSPConnection::ReadMessage()
   }
 
   /* Get method */
-  if (!(method = htsmsg_get_str(msg, "method")))
+  method = htsmsg_get_str(msg, "method");
+  if (!method)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "message without a method");
     htsmsg_destroy(msg);
@@ -435,8 +437,8 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   }
   else
   {
-    const char* strError;
-    if ((strError = htsmsg_get_str(msg, "error")) != nullptr)
+    const char* strError = htsmsg_get_str(msg, "error");
+    if (strError)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: %s", method, strError);
       htsmsg_destroy(msg);
@@ -468,14 +470,14 @@ bool HTSPConnection::SendHello()
   htsmsg_add_u32(msg, "htspversion", HTSP_CLIENT_VERSION);
 
   /* Send and Wait */
-  if (!(msg = SendAndWait0("hello", msg)))
+  msg = SendAndWait0("hello", msg);
+  if (!msg)
     return false;
 
   /* Process */
   const char* webroot;
   const void* chal;
   size_t chal_len;
-  htsmsg_t* cap;
 
   /* Basic Info */
   webroot = htsmsg_get_str(msg, "webroot");
@@ -487,9 +489,10 @@ bool HTSPConnection::SendHello()
               m_serverVersion.c_str(), m_htspVersion);
 
   /* Capabilities */
-  if ((cap = htsmsg_get_list(msg, "servercapability")))
+  htsmsg_t* cap = htsmsg_get_list(msg, "servercapability");
+  if (cap)
   {
-    htsmsg_field_t* f;
+    htsmsg_field_t* f = nullptr;
     HTSMSG_FOREACH(f, cap)
     {
       if (f->hmf_type == HMF_STR)

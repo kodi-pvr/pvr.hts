@@ -344,13 +344,13 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
 
 bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  const char* str;
   uint32_t u32;
   int32_t s32;
   int64_t s64;
 
   /* Validate/set mandatory fields */
-  if ((str = htsmsg_get_str(msg, "id")) == nullptr)
+  const char* str = htsmsg_get_str(msg, "id");
+  if (!str)
   {
     Logger::Log(LogLevel::LEVEL_ERROR,
                 "malformed autorecEntryAdd/autorecEntryUpdate: 'id' missing");
@@ -470,30 +470,25 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Add optional fields */
-  if ((str = htsmsg_get_str(msg, "title")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "title");
+  if (str)
     rec.SetTitle(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "name")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "name");
+  if (str)
     rec.SetName(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "directory")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "directory");
+  if (str)
     rec.SetDirectory(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "owner")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "owner");
+  if (str)
     rec.SetOwner(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "creator")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "creator");
+  if (str)
     rec.SetCreator(str);
-  }
 
   if (!htsmsg_get_u32(msg, "channel", &u32))
   {
@@ -507,20 +502,18 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     rec.SetFulltext(u32);
   }
 
-  if ((str = htsmsg_get_str(msg, "serieslinkUri")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "serieslinkUri");
+  if (str)
     rec.SetSeriesLink(str);
-  }
 
   return true;
 }
 
 bool AutoRecordings::ParseAutorecDelete(htsmsg_t* msg)
 {
-  const char* id;
-
   /* Validate/set mandatory fields */
-  if ((id = htsmsg_get_str(msg, "id")) == nullptr)
+  const char* id = htsmsg_get_str(msg, "id");
+  if (!id)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryDelete: 'id' missing");
     return false;

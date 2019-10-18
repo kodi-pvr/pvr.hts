@@ -250,12 +250,12 @@ PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
 
 bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  const char* str;
   uint32_t u32;
   int32_t s32;
 
   /* Validate/set mandatory fields */
-  if ((str = htsmsg_get_str(msg, "id")) == nullptr)
+  const char* str = htsmsg_get_str(msg, "id");
+  if (!str)
   {
     Logger::Log(LogLevel::LEVEL_ERROR,
                 "malformed timerecEntryAdd/timerecEntryUpdate: 'id' missing");
@@ -345,30 +345,25 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Add optional fields */
-  if ((str = htsmsg_get_str(msg, "title")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "title");
+  if (str)
     rec.SetTitle(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "name")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "name");
+  if (str)
     rec.SetName(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "directory")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "directory");
+  if (str)
     rec.SetDirectory(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "owner")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "owner");
+  if (str)
     rec.SetOwner(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "creator")) != nullptr)
-  {
+  str = htsmsg_get_str(msg, "creator");
+  if (str)
     rec.SetCreator(str);
-  }
 
   if (!htsmsg_get_u32(msg, "channel", &u32))
   {
@@ -388,10 +383,9 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
 bool TimeRecordings::ParseTimerecDelete(htsmsg_t* msg)
 {
-  const char* id;
-
   /* Validate/set mandatory fields */
-  if ((id = htsmsg_get_str(msg, "id")) == nullptr)
+  const char* id = htsmsg_get_str(msg, "id");
+  if (!id)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed timerecEntryDelete: 'id' missing");
     return false;

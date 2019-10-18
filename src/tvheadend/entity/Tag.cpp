@@ -77,11 +77,11 @@ std::vector<uint32_t>& Tag::GetChannels()
 bool Tag::ContainsChannelType(channel_type_t eType, const Channels& channels) const
 {
   std::vector<uint32_t>::const_iterator it;
-  Channels::const_iterator cit;
 
   for (it = m_channels.begin(); it != m_channels.end(); ++it)
   {
-    if ((cit = channels.find(*it)) != channels.end())
+    const auto cit = channels.find(*it);
+    if (cit != channels.end())
     {
       if (cit->second.GetType() == eType)
         return true;

@@ -170,7 +170,8 @@ void Subscription::SendUnsubscribe()
   SetState(SUBSCRIPTION_STOPPED);
 
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("unsubscribe", m)) == nullptr)
+  m = m_conn.SendAndWait("unsubscribe", m);
+  if (!m)
     return;
 
   htsmsg_destroy(m);
