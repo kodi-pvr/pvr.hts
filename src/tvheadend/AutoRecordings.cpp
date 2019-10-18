@@ -44,8 +44,8 @@ AutoRecordings::~AutoRecordings()
 void AutoRecordings::Connected()
 {
   /* Flag all async fields in case they've been deleted */
-  for (auto it = m_autoRecordings.begin(); it != m_autoRecordings.end(); ++it)
-    it->second.SetDirty(true);
+  for (auto& rec : m_autoRecordings)
+    rec.second.SetDirty(true);
 }
 
 void AutoRecordings::SyncDvrCompleted()
@@ -61,16 +61,16 @@ int AutoRecordings::GetAutorecTimerCount() const
 
 void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
     /* Setup entry */
     PVR_TIMER tmr = {0};
 
-    tmr.iClientIndex = tit->second.GetId();
+    tmr.iClientIndex = rec.second.GetId();
     tmr.iClientChannelUid =
-        (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
-    tmr.startTime = tit->second.GetStart();
-    tmr.endTime = tit->second.GetStop();
+        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
+    tmr.startTime = rec.second.GetStart();
+    tmr.endTime = rec.second.GetStop();
     if (tmr.startTime == 0)
       tmr.bStartAnyTime = true;
     if (tmr.endTime == 0)
@@ -86,36 +86,36 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
       tmr.endTime = tmr.startTime + 60 * 60; // Nominal 1 hour duration
     }
 
-    if (tit->second.GetName().empty()) // timers created on backend may not contain a name
-      strncpy(tmr.strTitle, tit->second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
+    if (rec.second.GetName().empty()) // timers created on backend may not contain a name
+      strncpy(tmr.strTitle, rec.second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
     else
-      strncpy(tmr.strTitle, tit->second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    strncpy(tmr.strEpgSearchString, tit->second.GetTitle().c_str(),
+      strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+    strncpy(tmr.strEpgSearchString, rec.second.GetTitle().c_str(),
             sizeof(tmr.strEpgSearchString) - 1);
-    strncpy(tmr.strDirectory, tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
     strncpy(tmr.strSummary, "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
-    strncpy(tmr.strSeriesLink, tit->second.GetSeriesLink().c_str(), sizeof(tmr.strSeriesLink) - 1);
-    tmr.state = tit->second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
+    strncpy(tmr.strSeriesLink, rec.second.GetSeriesLink().c_str(), sizeof(tmr.strSeriesLink) - 1);
+    tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType =
-        tit->second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK;
-    tmr.iPriority = tit->second.GetPriority();
-    tmr.iLifetime = tit->second.GetLifetime();
+        rec.second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK;
+    tmr.iPriority = rec.second.GetPriority();
+    tmr.iLifetime = rec.second.GetLifetime();
     tmr.iMaxRecordings = 0; // not supported by tvh
     tmr.iRecordingGroup = 0; // not supported by tvh
 
     if (m_conn.GetProtocol() >= 20)
-      tmr.iPreventDuplicateEpisodes = tit->second.GetDupDetect();
+      tmr.iPreventDuplicateEpisodes = rec.second.GetDupDetect();
     else
       tmr.iPreventDuplicateEpisodes = 0; // not supported by tvh
 
     tmr.firstDay = 0; // not supported by tvh
-    tmr.iWeekdays = tit->second.GetDaysOfWeek();
+    tmr.iWeekdays = rec.second.GetDaysOfWeek();
     tmr.iEpgUid = PVR_TIMER_NO_EPG_UID; // n/a for repeating timers
-    tmr.iMarginStart = static_cast<unsigned int>(tit->second.GetMarginStart());
-    tmr.iMarginEnd = static_cast<unsigned int>(tit->second.GetMarginEnd());
+    tmr.iMarginStart = static_cast<unsigned int>(rec.second.GetMarginStart());
+    tmr.iMarginEnd = static_cast<unsigned int>(rec.second.GetMarginEnd());
     tmr.iGenreType = 0; // not supported by tvh?
     tmr.iGenreSubType = 0; // not supported by tvh?
-    tmr.bFullTextEpgSearch = tit->second.GetFulltext();
+    tmr.bFullTextEpgSearch = rec.second.GetFulltext();
     tmr.iParentClientIndex = 0;
 
     timers.emplace_back(tmr);
@@ -124,10 +124,10 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
 
 const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string& strId) const
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
-    if (tit->second.GetStringId() == strId)
-      return tit->second.GetId();
+    if (rec.second.GetStringId() == strId)
+      return rec.second.GetId();
   }
   Logger::Log(LogLevel::LEVEL_ERROR, "Autorec: Unable to obtain int id for string id %s",
               strId.c_str());
@@ -136,10 +136,10 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string& 
 
 const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) const
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
-    if (tit->second.GetId() == intId)
-      return tit->second.GetStringId();
+    if (rec.second.GetId() == intId)
+      return rec.second.GetStringId();
   }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Autorec: Unable to obtain string id for int id %s", intId);

@@ -182,11 +182,12 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
     pCapabilities->iRecordingsLifetimesSize = lifetimeValues.size();
 
     int i = 0;
-    for (auto it = lifetimeValues.cbegin(); it != lifetimeValues.cend(); ++it, ++i)
+    for (const auto& lifetimeValue : lifetimeValues)
     {
-      pCapabilities->recordingsLifetimeValues[i].iValue = it->first;
-      strncpy(pCapabilities->recordingsLifetimeValues[i].strDescription, it->second.c_str(),
+      pCapabilities->recordingsLifetimeValues[i].iValue = lifetimeValue.first;
+      strncpy(pCapabilities->recordingsLifetimeValues[i].strDescription, lifetimeValue.second.c_str(),
               sizeof(pCapabilities->recordingsLifetimeValues[i].strDescription) - 1);
+      ++i;
     }
   }
   return PVR_ERROR_NO_ERROR;

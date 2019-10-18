@@ -843,9 +843,9 @@ void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
   CLockObject lock(m_mutex);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
-  for (auto it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
+  for (const auto& stat : m_streamStat)
   {
-    Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", it->first, it->second);
+    Logger::Log(LogLevel::LEVEL_TRACE, "  idx:%d num:%d", stat.first, stat.second);
   }
 
   Logger::Log(LogLevel::LEVEL_TRACE, "queue stats:");

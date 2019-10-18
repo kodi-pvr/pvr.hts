@@ -230,10 +230,10 @@ PVR_ERROR CTvheadend::GetTags(ADDON_HANDLE handle, bool bRadio)
     }
   }
 
-  for (auto it = tags.begin(); it != tags.end(); ++it)
+  for (const auto& tag : tags)
   {
     /* Callback. */
-    PVR->TransferChannelGroup(handle, &(*it));
+    PVR->TransferChannelGroup(handle, &tag);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -275,10 +275,10 @@ PVR_ERROR CTvheadend::GetTagMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP
     }
   }
 
-  for (auto it = gms.begin(); it != gms.end(); ++it)
+  for (const auto& gm : gms)
   {
     /* Callback. */
-    PVR->TransferChannelGroupMember(handle, &(*it));
+    PVR->TransferChannelGroupMember(handle, &gm);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -327,10 +327,10 @@ PVR_ERROR CTvheadend::GetChannels(ADDON_HANDLE handle, bool radio)
     }
   }
 
-  for (auto it = channels.begin(); it != channels.end(); ++it)
+  for (const auto& channel : channels)
   {
     /* Callback. */
-    PVR->TransferChannelEntry(handle, &(*it));
+    PVR->TransferChannelEntry(handle, &channel);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -529,10 +529,10 @@ PVR_ERROR CTvheadend::GetRecordings(ADDON_HANDLE handle)
     }
   }
 
-  for (auto it = recs.begin(); it != recs.end(); ++it)
+  for (const auto& rec : recs)
   {
     /* Callback. */
-    PVR->TransferRecordingEntry(handle, &(*it));
+    PVR->TransferRecordingEntry(handle, &rec);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -734,27 +734,30 @@ struct TimerType : PVR_TIMER_TYPE
     strncpy(strDescription, description.c_str(), sizeof(strDescription) - 1);
 
     int i = 0;
-    for (auto it = priorityValues.begin(); it != priorityValues.end(); ++it, ++i)
+    for (const auto& priorityValue : priorityValues)
     {
-      priorities[i].iValue = it->first;
-      strncpy(priorities[i].strDescription, it->second.c_str(),
+      priorities[i].iValue = priorityValue.first;
+      strncpy(priorities[i].strDescription, priorityValue.second.c_str(),
               sizeof(priorities[i].strDescription) - 1);
+      ++i;
     }
 
     i = 0;
-    for (auto it = dupEpisodesValues.begin(); it != dupEpisodesValues.end(); ++it, ++i)
+    for (const auto& dupEpisodesValue : dupEpisodesValues)
     {
-      preventDuplicateEpisodes[i].iValue = it->first;
-      strncpy(preventDuplicateEpisodes[i].strDescription, it->second.c_str(),
+      preventDuplicateEpisodes[i].iValue = dupEpisodesValue.first;
+      strncpy(preventDuplicateEpisodes[i].strDescription, dupEpisodesValue.second.c_str(),
               sizeof(preventDuplicateEpisodes[i].strDescription) - 1);
+      ++i;
     }
 
     i = 0;
-    for (auto it = lifetimeValues.begin(); it != lifetimeValues.end(); ++it, ++i)
+    for (const auto& lifetimeValue : lifetimeValues)
     {
-      lifetimes[i].iValue = it->first;
-      strncpy(lifetimes[i].strDescription, it->second.c_str(),
+      lifetimes[i].iValue = lifetimeValue.first;
+      strncpy(lifetimes[i].strDescription, lifetimeValue.second.c_str(),
               sizeof(lifetimes[i].strDescription) - 1);
+      ++i;
     }
   }
 };
@@ -1020,8 +1023,11 @@ PVR_ERROR CTvheadend::GetTimerTypes(PVR_TIMER_TYPE types[], int* size)
 
   /* Copy data to target array. */
   int i = 0;
-  for (auto it = timerTypes.begin(); it != timerTypes.end(); ++it, ++i)
-    types[i] = **it;
+  for (const auto& timerType : timerTypes)
+  {
+    types[i] = *timerType;
+    ++i;
+  }
 
   *size = timerTypes.size();
   return PVR_ERROR_NO_ERROR;
@@ -1117,10 +1123,10 @@ PVR_ERROR CTvheadend::GetTimers(ADDON_HANDLE handle)
     m_autoRecordings.GetAutorecTimers(timers);
   }
 
-  for (auto it = timers.begin(); it != timers.end(); ++it)
+  for (const auto& timer : timers)
   {
     /* Callback. */
-    PVR->TransferTimerEntry(handle, &(*it));
+    PVR->TransferTimerEntry(handle, &timer);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -1506,9 +1512,8 @@ bool CTvheadend::Connected()
 {
   /* Rebuild state */
   for (auto* dmx : m_dmx)
-  {
     dmx->Connected();
-  }
+
   m_vfs->Connected();
   m_timeRecordings.Connected();
   m_autoRecordings.Connected();
@@ -1814,9 +1819,9 @@ void* CTvheadend::Process()
      * Note: due to potential deadly embrace this must be done without the
      *       m_mutex held!
      */
-    for (auto it = eventsCopy.begin(); it != eventsCopy.end(); ++it)
+    for (const auto& event : eventsCopy)
     {
-      switch (it->m_type)
+      switch (event.m_type)
       {
         case HTSP_EVENT_TAG_UPDATE:
           PVR->TriggerChannelGroupsUpdate();
@@ -1829,7 +1834,7 @@ void* CTvheadend::Process()
           PVR->TriggerRecordingUpdate();
           break;
         case HTSP_EVENT_EPG_UPDATE:
-          TransferEvent(it->m_epg, it->m_state);
+          TransferEvent(event.m_epg, event.m_state);
           break;
         case HTSP_EVENT_NONE:
           break;

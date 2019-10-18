@@ -43,8 +43,8 @@ TimeRecordings::~TimeRecordings()
 void TimeRecordings::Connected()
 {
   /* Flag all async fields in case they've been deleted */
-  for (auto it = m_timeRecordings.begin(); it != m_timeRecordings.end(); ++it)
-    it->second.SetDirty(true);
+  for (auto& rec : m_timeRecordings)
+    rec.second.SetDirty(true);
 }
 
 void TimeRecordings::SyncDvrCompleted()
@@ -60,31 +60,31 @@ int TimeRecordings::GetTimerecTimerCount() const
 
 void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER>& timers)
 {
-  for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
+  for (const auto& rec : m_timeRecordings)
   {
     /* Setup entry */
     PVR_TIMER tmr = {0};
 
-    tmr.iClientIndex = tit->second.GetId();
+    tmr.iClientIndex = rec.second.GetId();
     tmr.iClientChannelUid =
-        (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
-    tmr.startTime = tit->second.GetStart();
-    tmr.endTime = tit->second.GetStop();
-    strncpy(tmr.strTitle, tit->second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
+    tmr.startTime = rec.second.GetStart();
+    tmr.endTime = rec.second.GetStop();
+    strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
     strncpy(tmr.strEpgSearchString, "",
             sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
-    strncpy(tmr.strDirectory, tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
     strncpy(tmr.strSummary, "",
             sizeof(tmr.strSummary) - 1); // n/a for repeating timers
-    tmr.state = tit->second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
+    tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType = TIMER_REPEATING_MANUAL;
-    tmr.iPriority = tit->second.GetPriority();
-    tmr.iLifetime = tit->second.GetLifetime();
+    tmr.iPriority = rec.second.GetPriority();
+    tmr.iLifetime = rec.second.GetLifetime();
     tmr.iMaxRecordings = 0; // not supported by tvh
     tmr.iRecordingGroup = 0; // not supported by tvh
     tmr.iPreventDuplicateEpisodes = 0; // n/a for manual timers
     tmr.firstDay = 0; // not supported by tvh
-    tmr.iWeekdays = tit->second.GetDaysOfWeek();
+    tmr.iWeekdays = rec.second.GetDaysOfWeek();
     tmr.iEpgUid = PVR_TIMER_NO_EPG_UID; // n/a for manual timers
     tmr.iMarginStart = 0; // n/a for manual timers
     tmr.iMarginEnd = 0; // n/a for manual timers
@@ -99,10 +99,10 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER>& timers)
 
 const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string& strId) const
 {
-  for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
+  for (const auto& rec : m_timeRecordings)
   {
-    if (tit->second.GetStringId() == strId)
-      return tit->second.GetId();
+    if (rec.second.GetStringId() == strId)
+      return rec.second.GetId();
   }
   Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain int id for string id %s",
               strId.c_str());
@@ -111,10 +111,10 @@ const unsigned int TimeRecordings::GetTimerIntIdFromStringId(const std::string& 
 
 const std::string TimeRecordings::GetTimerStringIdFromIntId(unsigned int intId) const
 {
-  for (auto tit = m_timeRecordings.begin(); tit != m_timeRecordings.end(); ++tit)
+  for (const auto& rec : m_timeRecordings)
   {
-    if (tit->second.GetId() == intId)
-      return tit->second.GetStringId();
+    if (rec.second.GetId() == intId)
+      return rec.second.GetStringId();
   }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
