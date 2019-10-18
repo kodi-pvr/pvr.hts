@@ -45,7 +45,7 @@ using namespace tvheadend::utilities;
 
 HTSPDemuxer::HTSPDemuxer(HTSPConnection& conn)
   : m_conn(conn),
-    m_pktBuffer((size_t)-1),
+    m_pktBuffer(static_cast<size_t>(-1)),
     m_seekTime(INVALID_SEEKTIME),
     m_seeking(false),
     m_subscription(conn),
@@ -136,7 +136,7 @@ DemuxPacket* HTSPDemuxer::Read()
   if (m_pktBuffer.Pop(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
-                pkt->pts, (long long)pkt->iSize);
+                pkt->pts, static_cast<long long>(pkt->iSize));
     return pkt;
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
@@ -532,14 +532,15 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
 
   /* Type (for debug only) */
   if (!htsmsg_get_u32(m, "frametype", &u32))
-    type = (char)u32;
+    type = static_cast<char>(u32);
   if (!type)
     type = '_';
 
   ignore = m_seeking;
 
   Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld%s", idx,
-              pkt->iStreamId, type, pkt->pts, (long long)binlen, ignore ? " IGNORE" : "");
+              pkt->iStreamId, type, pkt->pts, static_cast<long long>(binlen),
+              ignore ? " IGNORE" : "");
 
   /* Store */
   if (!ignore)

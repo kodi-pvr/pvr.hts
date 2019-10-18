@@ -51,7 +51,7 @@ void AsyncState::SetState(eAsyncState state)
 
 bool AsyncState::PredicateCallback(void* p)
 {
-  Param* param = (Param*)p;
+  Param* param = reinterpret_cast<Param*>(p);
   return param->self->m_state >= param->state;
 }
 
@@ -62,5 +62,5 @@ bool AsyncState::WaitForState(eAsyncState state)
   p.self = this;
 
   CLockObject lock(m_mutex);
-  return m_condition.Wait(m_mutex, AsyncState::PredicateCallback, (void*)&p, m_timeout);
+  return m_condition.Wait(m_mutex, AsyncState::PredicateCallback, &p, m_timeout);
 }

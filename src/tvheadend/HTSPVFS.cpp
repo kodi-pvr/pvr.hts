@@ -195,7 +195,7 @@ long long HTSPVFS::Size()
   if (htsmsg_get_s64(m, "size", &ret))
     ret = -1;
   else
-    Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat size=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat size=%lld", static_cast<long long>(ret));
 
   htsmsg_destroy(m);
 
@@ -311,7 +311,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
   Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek id=%d whence=%d pos=%lld", m_fileId, whence,
-              (long long)pos);
+              static_cast<long long>(pos));
 
   /* Send */
   {
@@ -339,7 +339,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
   }
   else
   {
-    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", static_cast<long long>(ret));
     m_offset = ret;
   }
 

@@ -293,11 +293,11 @@ bool HTSPConnection::ReadMessage()
   len = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
 
   /* Read rest of packet */
-  buf = (uint8_t*)malloc(len);
+  buf = static_cast<uint8_t*>(malloc(len));
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
@@ -376,11 +376,13 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
   /* Send data */
   c = m_socket->Write(buf, len);
   free(buf);
-  if (c != (ssize_t)len)
+
+  if (c != static_cast<ssize_t>(len))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to write (%s)", m_socket->GetError().c_str());
     if (!m_suspended)
       Disconnect();
+
     return false;
   }
 
@@ -517,12 +519,12 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
 
   /* Add Password */
   // Note: we MUST send a digest or TVH will not evaluate the
-  struct HTSSHA1* sha = (struct HTSSHA1*)malloc(hts_sha1_size);
+  struct HTSSHA1* sha = static_cast<struct HTSSHA1*>(malloc(hts_sha1_size));
   uint8_t d[20];
   hts_sha1_init(sha);
-  hts_sha1_update(sha, (const uint8_t*)pass.c_str(), pass.length());
+  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()), pass.length());
   if (m_challenge)
-    hts_sha1_update(sha, (const uint8_t*)m_challenge, m_challengeLen);
+    hts_sha1_update(sha, static_cast<const uint8_t*>(m_challenge), m_challengeLen);
   hts_sha1_final(sha, d);
   htsmsg_add_bin(msg, "digest", d, sizeof(d));
   free(sha);

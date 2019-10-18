@@ -45,7 +45,7 @@ CTvheadend::CTvheadend(PVR_PROPERTIES* pvrProps)
   : m_conn(new HTSPConnection(*this)),
     m_streamchange(false),
     m_vfs(new HTSPVFS(*m_conn)),
-    m_queue((size_t)-1),
+    m_queue(static_cast<size_t>(-1)),
     m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn),
     m_autoRecordings(*m_conn),
@@ -1434,8 +1434,8 @@ PVR_ERROR CTvheadend::GetEPGForChannel(ADDON_HANDLE handle,
 {
   htsmsg_field_t* f;
 
-  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %ld stop %ld", iChannelUid,
-              (long long)start, (long long)end);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "get epg channel %d start %lld stop %lld", iChannelUid,
+              static_cast<long long>(start), static_cast<long long>(end));
 
   /* Build message */
   htsmsg_t* msg = htsmsg_create_map();
@@ -1541,7 +1541,7 @@ bool CTvheadend::Connected()
   msg = htsmsg_create_map();
   if (Settings::GetInstance().GetAsyncEpg())
   {
-    Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%ld)", (long)m_epgMaxDays);
+    Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%d)", m_epgMaxDays);
     htsmsg_add_u32(msg, "epg", 1);
     if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
       htsmsg_add_s64(msg, "epgMaxTime",
@@ -2065,7 +2065,7 @@ void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
     {
       if (f->hmf_type != HMF_S64)
         continue;
-      tag.GetChannels().emplace_back((int)f->hmf_s64);
+      tag.GetChannels().emplace_back(static_cast<int>(f->hmf_s64));
     }
   }
 
@@ -2594,8 +2594,8 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
 
   evt.SetId(id);
   evt.SetChannel(channel);
-  evt.SetStart((time_t)start);
-  evt.SetStop((time_t)stop);
+  evt.SetStart(static_cast<time_t>(start));
+  evt.SetStop(static_cast<time_t>(stop));
 
   /* Add optional fields */
   if ((str = htsmsg_get_str(msg, "title")) != NULL)
@@ -2617,7 +2617,7 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
     evt.SetAge(u32);
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
-    evt.SetAired((time_t)s64);
+    evt.SetAired(static_cast<time_t>(s64));
   if (!htsmsg_get_u32(msg, "seasonNumber", &u32))
     evt.SetSeason(u32);
   if (!htsmsg_get_u32(msg, "episodeNumber", &u32))
@@ -2745,8 +2745,8 @@ void CTvheadend::ParseEventAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   Logger::Log(LogLevel::LEVEL_TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-              evt.GetId(), evt.GetChannel(), (int)evt.GetStart(), (int)evt.GetStop(),
-              evt.GetTitle().c_str(), evt.GetDesc().c_str());
+              evt.GetId(), evt.GetChannel(), static_cast<int>(evt.GetStart()),
+              static_cast<int>(evt.GetStop()), evt.GetTitle().c_str(), evt.GetDesc().c_str());
 
   /* Transfer event to Kodi (callback) */
   PushEpgEventUpdate(evt, (!bAdd || bUpdated) ? EPG_EVENT_UPDATED : EPG_EVENT_CREATED);
