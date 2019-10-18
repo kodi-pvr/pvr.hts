@@ -32,13 +32,14 @@ namespace tvheadend
 {
 namespace entity
 {
+
 class Event;
 typedef std::pair<uint32_t, Event> EventMapEntry;
 typedef std::map<uint32_t, Event> Events;
 
 /**
-     * Represents an event/programme
-     */
+ * Represents an event/programme
+ */
 class Event : public Entity
 {
 public:
@@ -172,5 +173,6 @@ private:
   std::string m_cast;
   std::string m_categories;
 };
+
 } // namespace entity
 } // namespace tvheadend

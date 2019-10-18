@@ -31,8 +31,8 @@ class Profile;
 typedef std::vector<Profile> Profiles;
 
 /**
-   * Represents a single streaming profile
-   */
+ * Represents a single streaming profile
+ */
 class Profile
 {
 public:
@@ -46,19 +46,19 @@ public:
   void SetComment(const std::string& comment) { m_comment = comment; }
 
 private:
-  /*
-     * The profile UUID
-     */
+  /**
+   * The profile UUID
+   */
   std::string m_uuid;
 
   /**
-     * The profile name
-     */
+   * The profile name
+   */
   std::string m_name;
 
   /**
-     * The profile comment
-     */
+   * The profile comment
+   */
   std::string m_comment;
 };
 

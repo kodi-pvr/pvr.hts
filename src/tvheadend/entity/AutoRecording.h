@@ -29,6 +29,7 @@ namespace tvheadend
 {
 namespace entity
 {
+
 class AutoRecording : public RecordingBase
 {
 public:
@@ -70,5 +71,6 @@ private:
 
 typedef std::map<std::string, AutoRecording> AutoRecordingsMap;
 typedef std::pair<std::string, AutoRecording> AutoRecordingMapEntry;
+
 } // namespace entity
 } // namespace tvheadend

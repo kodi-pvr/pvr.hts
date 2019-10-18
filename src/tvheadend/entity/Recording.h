@@ -48,10 +48,10 @@ typedef std::pair<uint32_t, Recording> RecordingMapEntry;
 typedef std::map<uint32_t, Recording> Recordings;
 
 /**
-     * Represents a recording or a timer
-     * TODO: Create separate classes for recordings and timers since a 
-     * recording obviously can't have a "timer type"
-     */
+ * Represents a recording or a timer
+ * TODO: Create separate classes for recordings and timers since a
+ * recording obviously can't have a "timer type"
+ */
 class Recording : public Entity
 {
 public:
@@ -110,8 +110,8 @@ public:
   }
 
   /**
-       * @return the type of timer
-       */
+   * @return the type of timer
+   */
   unsigned int GetTimerType() const
   {
     if (!m_timerecId.empty())
@@ -250,5 +250,6 @@ private:
   uint32_t m_episode;
   uint32_t m_part;
 };
+
 } // namespace entity
 } // namespace tvheadend

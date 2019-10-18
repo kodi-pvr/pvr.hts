@@ -39,8 +39,8 @@ using namespace tvheadend;
 using namespace tvheadend::utilities;
 
 /*
-* VFS handler
-*/
+ * VFS handler
+ */
 HTSPVFS::HTSPVFS(HTSPConnection& conn)
   : m_conn(conn),
     m_path(""),

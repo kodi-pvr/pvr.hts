@@ -61,8 +61,8 @@ public:
   static const bool DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES;
 
   /**
-     * Singleton getter for the instance
-     */
+   * Singleton getter for the instance
+   */
   static Settings& GetInstance()
   {
     static Settings settings;
@@ -70,18 +70,18 @@ public:
   }
 
   /**
-     * Read all settings defined in settings.xml
-     */
+   * Read all settings defined in settings.xml
+   */
   void ReadSettings();
 
   /**
-     * Set a value according to key definition in settings.xml
-     */
+   * Set a value according to key definition in settings.xml
+   */
   ADDON_STATUS SetSetting(const std::string& key, const void* value);
 
   /**
-     * Getters for the settings values
-     */
+   * Getters for the settings values
+   */
   std::string GetHostname() const { return m_strHostname; }
   const char* GetConstCharHostname() const { return m_strHostname.c_str(); }
   int GetPortHTSP() const { return m_iPortHTSP; }
@@ -134,8 +134,8 @@ private:
   void operator=(Settings const&) = delete;
 
   /**
-     * Setters
-     */
+   * Setters
+   */
   void SetHostname(const std::string& value) { m_strHostname = value; }
   void SetPortHTSP(int value) { m_iPortHTSP = value; }
   void SetPortHTTP(int value) { m_iPortHTTP = value; }
@@ -158,8 +158,8 @@ private:
   void SetIgnoreDuplicateSchedules(bool value) { m_bIgnoreDuplicateSchedules = value; }
 
   /**
-     * Read/Set values according to definition in settings.xml
-     */
+   * Read/Set values according to definition in settings.xml
+   */
   static std::string ReadStringSetting(const std::string& key, const std::string& def);
   static int ReadIntSetting(const std::string& key, int def);
   static bool ReadBoolSetting(const std::string& key, bool def);

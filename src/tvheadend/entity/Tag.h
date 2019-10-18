@@ -34,13 +34,14 @@ namespace tvheadend
 {
 namespace entity
 {
+
 class Tag;
 typedef std::pair<uint32_t, Tag> TagMapEntry;
 typedef std::map<uint32_t, Tag> Tags;
 
 /**
-     * Represents a channel tag
-     */
+ * Represents a channel tag
+ */
 class Tag : public Entity
 {
 public:
@@ -68,5 +69,6 @@ private:
   std::string m_icon;
   std::vector<uint32_t> m_channels;
 };
+
 } // namespace entity
 } // namespace tvheadend
