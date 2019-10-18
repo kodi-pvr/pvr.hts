@@ -375,7 +375,7 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
   }
   else
   {
-    memcpy(buf, buffer, read);
+    std::memcpy(buf, buffer, read);
   }
 
   /* Cleanup */

@@ -28,6 +28,8 @@
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 
+#include <cstring>
+
 using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -185,8 +187,9 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
     for (const auto& lifetimeValue : lifetimeValues)
     {
       pCapabilities->recordingsLifetimeValues[i].iValue = lifetimeValue.first;
-      strncpy(pCapabilities->recordingsLifetimeValues[i].strDescription, lifetimeValue.second.c_str(),
-              sizeof(pCapabilities->recordingsLifetimeValues[i].strDescription) - 1);
+      std::strncpy(pCapabilities->recordingsLifetimeValues[i].strDescription,
+                   lifetimeValue.second.c_str(),
+                   sizeof(pCapabilities->recordingsLifetimeValues[i].strDescription) - 1);
       ++i;
     }
   }

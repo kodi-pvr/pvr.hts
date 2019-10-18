@@ -24,6 +24,7 @@
 #include "../utilities/LifetimeMapper.h"
 
 #include <algorithm>
+#include <ctime>
 
 using namespace tvheadend::entity;
 
@@ -152,14 +153,14 @@ time_t RecordingBase::LocaltimeToUTC(int32_t lctime)
   /* Note: lctime contains minutes from midnight (up to 24*60) as local time. */
 
   /* complete lctime with current year, month, day, ... */
-  time_t t = time(nullptr);
-  struct tm* tm_time = localtime(&t);
+  time_t t = std::time(nullptr);
+  struct tm* tm_time = std::localtime(&t);
 
   tm_time->tm_hour = lctime / 60;
   tm_time->tm_min = lctime % 60;
   tm_time->tm_sec = 0;
 
-  return mktime(tm_time);
+  return std::mktime(tm_time);
 }
 
 // static

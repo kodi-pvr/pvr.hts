@@ -25,6 +25,8 @@
 #include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
 
+#include <cstring>
+
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
@@ -264,17 +266,17 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
     /* This field is absent when everything is fine */
     if (error)
     {
-      if (!strcmp("badSignal", error))
+      if (!std::strcmp("badSignal", error))
         SetState(SUBSCRIPTION_NOSIGNAL);
-      else if (!strcmp("scrambled", error))
+      else if (!std::strcmp("scrambled", error))
         SetState(SUBSCRIPTION_SCRAMBLED);
-      else if (!strcmp("userLimit", error))
+      else if (!std::strcmp("userLimit", error))
         SetState(SUBSCRIPTION_USERLIMIT);
-      else if (!strcmp("noFreeAdapter", error))
+      else if (!std::strcmp("noFreeAdapter", error))
         SetState(SUBSCRIPTION_NOFREEADAPTER);
-      else if (!strcmp("tuningFailed", error))
+      else if (!std::strcmp("tuningFailed", error))
         SetState(SUBSCRIPTION_TUNINGFAILED);
-      else if (!strcmp("userAccess", error))
+      else if (!std::strcmp("userAccess", error))
         SetState(SUBSCRIPTION_NOACCESS);
       else
         SetState(SUBSCRIPTION_UNKNOWN);

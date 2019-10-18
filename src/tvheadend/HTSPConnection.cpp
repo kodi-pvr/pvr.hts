@@ -499,7 +499,7 @@ bool HTSPConnection::SendHello()
   {
     m_challenge = malloc(chal_len);
     m_challengeLen = chal_len;
-    memcpy(m_challenge, chal, chal_len);
+    std::memcpy(m_challenge, chal, chal_len);
   }
 
   htsmsg_destroy(msg);

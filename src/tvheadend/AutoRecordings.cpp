@@ -28,6 +28,9 @@
 #include "utilities/Logger.h"
 #include "utilities/Utilities.h"
 
+#include <cstring>
+#include <ctime>
+
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
@@ -82,19 +85,20 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
       tmr.startTime = tmr.endTime - 60 * 60; // Nominal 1 hour duration
     if (tmr.bStartAnyTime && tmr.bEndAnyTime)
     {
-      tmr.startTime = time(nullptr); // now
+      tmr.startTime = std::time(nullptr); // now
       tmr.endTime = tmr.startTime + 60 * 60; // Nominal 1 hour duration
     }
 
     if (rec.second.GetName().empty()) // timers created on backend may not contain a name
-      strncpy(tmr.strTitle, rec.second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
+      std::strncpy(tmr.strTitle, rec.second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
     else
-      strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    strncpy(tmr.strEpgSearchString, rec.second.GetTitle().c_str(),
-            sizeof(tmr.strEpgSearchString) - 1);
-    strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
-    strncpy(tmr.strSummary, "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
-    strncpy(tmr.strSeriesLink, rec.second.GetSeriesLink().c_str(), sizeof(tmr.strSeriesLink) - 1);
+      std::strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+    std::strncpy(tmr.strEpgSearchString, rec.second.GetTitle().c_str(),
+                 sizeof(tmr.strEpgSearchString) - 1);
+    std::strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    std::strncpy(tmr.strSummary, "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
+    std::strncpy(tmr.strSeriesLink, rec.second.GetSeriesLink().c_str(),
+                 sizeof(tmr.strSeriesLink) - 1);
     tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType =
         rec.second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK;
@@ -227,7 +231,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (strcmp(timer.strDirectory, "/") != 0)
+  if (std::strcmp(timer.strDirectory, "/") != 0)
     htsmsg_add_str(m, "directory", timer.strDirectory);
 
 
@@ -244,7 +248,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
       time_t startTime = timer.startTime;
-      struct tm* tm_start = localtime(&startTime);
+      struct tm* tm_start = std::localtime(&startTime);
       int32_t startWindowBegin =
           tm_start->tm_hour * 60 + tm_start->tm_min - settings.GetAutorecMaxDiff();
       int32_t startWindowEnd =
@@ -266,7 +270,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     {
       /* Exact start time (minutes from midnight). */
       time_t startTime = timer.startTime;
-      struct tm* tm_start = localtime(&startTime);
+      struct tm* tm_start = std::localtime(&startTime);
       htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
     }
     else
@@ -278,7 +282,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     {
       /* Exact stop time (minutes from midnight). */
       time_t endTime = timer.endTime;
-      struct tm* tm_stop = localtime(&endTime);
+      struct tm* tm_stop = std::localtime(&endTime);
       htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
     }
     else

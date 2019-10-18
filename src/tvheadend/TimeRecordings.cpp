@@ -27,6 +27,9 @@
 #include "utilities/Logger.h"
 #include "utilities/Utilities.h"
 
+#include <cstring>
+#include <ctime>
+
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
@@ -70,12 +73,12 @@ void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER>& timers)
         (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
     tmr.startTime = rec.second.GetStart();
     tmr.endTime = rec.second.GetStop();
-    strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    strncpy(tmr.strEpgSearchString, "",
-            sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
-    strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
-    strncpy(tmr.strSummary, "",
-            sizeof(tmr.strSummary) - 1); // n/a for repeating timers
+    std::strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+    std::strncpy(tmr.strEpgSearchString, "",
+                 sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
+    std::strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    std::strncpy(tmr.strSummary, "",
+                 sizeof(tmr.strSummary) - 1); // n/a for repeating timers
     tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType = TIMER_REPEATING_MANUAL;
     tmr.iPriority = rec.second.GetPriority();
@@ -167,11 +170,11 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
   htsmsg_add_str(m, "name", timer.strTitle);
   htsmsg_add_str(m, "title", title);
   time_t startTime = timer.startTime;
-  struct tm* tm_start = localtime(&startTime);
+  struct tm* tm_start = std::localtime(&startTime);
   htsmsg_add_u32(m, "start",
                  tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
   time_t endTime = timer.endTime;
-  struct tm* tm_stop = localtime(&endTime);
+  struct tm* tm_stop = std::localtime(&endTime);
   htsmsg_add_u32(m, "stop",
                  tm_stop->tm_hour * 60 + tm_stop->tm_min); // end time in minutes from midnight
 
@@ -194,7 +197,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (strcmp(timer.strDirectory, "/") != 0)
+  if (std::strcmp(timer.strDirectory, "/") != 0)
     htsmsg_add_str(m, "directory", timer.strDirectory);
 
   /* Send and Wait */
