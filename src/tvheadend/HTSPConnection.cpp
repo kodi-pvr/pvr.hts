@@ -162,7 +162,7 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
   return url;
 }
 
-bool HTSPConnection::WaitForConnection(void)
+bool HTSPConnection::WaitForConnection()
 {
   if (!m_ready)
   {
@@ -172,25 +172,25 @@ bool HTSPConnection::WaitForConnection(void)
   return m_ready;
 }
 
-int HTSPConnection::GetProtocol(void) const
+int HTSPConnection::GetProtocol() const
 {
   CLockObject lock(m_mutex);
   return m_htspVersion;
 }
 
-std::string HTSPConnection::GetServerName(void) const
+std::string HTSPConnection::GetServerName() const
 {
   CLockObject lock(m_mutex);
   return m_serverName;
 }
 
-std::string HTSPConnection::GetServerVersion(void) const
+std::string HTSPConnection::GetServerVersion() const
 {
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
-std::string HTSPConnection::GetServerString(void) const
+std::string HTSPConnection::GetServerString() const
 {
   const Settings& settings = Settings::GetInstance();
 
@@ -204,7 +204,7 @@ bool HTSPConnection::HasCapability(const std::string& capability) const
          m_capabilities.end();
 }
 
-void HTSPConnection::OnSleep(void)
+void HTSPConnection::OnSleep()
 {
   CLockObject lock(m_mutex);
 
@@ -214,7 +214,7 @@ void HTSPConnection::OnSleep(void)
   m_suspended = true;
 }
 
-void HTSPConnection::OnWake(void)
+void HTSPConnection::OnWake()
 {
   CLockObject lock(m_mutex);
 
@@ -256,7 +256,7 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
 /*
  * Close the connection
  */
-void HTSPConnection::Disconnect(void)
+void HTSPConnection::Disconnect()
 {
   CLockObject lock(m_mutex);
 
@@ -276,7 +276,7 @@ void HTSPConnection::Disconnect(void)
  *
  * Return false if an error occurs and the connection should be terminated
  */
-bool HTSPConnection::ReadMessage(void)
+bool HTSPConnection::ReadMessage()
 {
   uint8_t* buf;
   uint8_t lb[4];
@@ -458,7 +458,7 @@ htsmsg_t* HTSPConnection::SendAndWait(const char* method, htsmsg_t* msg, int iRe
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 
-bool HTSPConnection::SendHello(void)
+bool HTSPConnection::SendHello()
 {
   /* Build message */
   htsmsg_t* msg = htsmsg_create_map();
@@ -562,7 +562,7 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
 /**
  * Register the connection, hello+auth
  */
-void HTSPConnection::Register(void)
+void HTSPConnection::Register()
 {
   std::string user = Settings::GetInstance().GetUsername();
   std::string pass = Settings::GetInstance().GetPassword();
@@ -623,7 +623,7 @@ fail:
 /*
  * Main thread loop for connection and rx handling
  */
-void* HTSPConnection::Process(void)
+void* HTSPConnection::Process()
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;

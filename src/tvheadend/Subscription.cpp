@@ -159,7 +159,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
               GetId());
 }
 
-void Subscription::SendUnsubscribe(void)
+void Subscription::SendUnsubscribe()
 {
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
@@ -299,7 +299,7 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
   }
 }
 
-void Subscription::ShowStateNotification(void)
+void Subscription::ShowStateNotification()
 {
   if (GetState() == SUBSCRIPTION_NOFREEADAPTER)
     XBMC->QueueNotification(ADDON::QUEUE_WARNING, LocalizedString(30450).Get().c_str());

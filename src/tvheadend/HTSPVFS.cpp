@@ -57,7 +57,7 @@ HTSPVFS::~HTSPVFS()
 {
 }
 
-void HTSPVFS::Connected(void)
+void HTSPVFS::Connected()
 {
   /* Re-open */
   if (m_fileId != 0)
@@ -95,7 +95,7 @@ bool HTSPVFS::Open(const PVR_RECORDING& rec)
   return true;
 }
 
-void HTSPVFS::Close(void)
+void HTSPVFS::Close()
 {
   if (m_fileId != 0)
     SendFileClose();
@@ -171,7 +171,7 @@ long long HTSPVFS::Seek(long long pos, int whence, bool inprogress)
   return ret;
 }
 
-long long HTSPVFS::Size(void)
+long long HTSPVFS::Size()
 {
   int64_t ret = -1;
   htsmsg_t* m;
@@ -225,7 +225,7 @@ void HTSPVFS::PauseStream(bool paused)
   }
 }
 
-bool HTSPVFS::IsRealTimeStream(void)
+bool HTSPVFS::IsRealTimeStream()
 {
   return m_isRealTimeStream;
 }
@@ -270,7 +270,7 @@ bool HTSPVFS::SendFileOpen(bool force)
   return m_fileId > 0;
 }
 
-void HTSPVFS::SendFileClose(void)
+void HTSPVFS::SendFileClose()
 {
   htsmsg_t* m;
 

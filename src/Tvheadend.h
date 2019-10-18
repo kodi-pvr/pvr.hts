@@ -71,8 +71,8 @@ public:
   CTvheadend(PVR_PROPERTIES* pvrProps);
   ~CTvheadend() override;
 
-  void Start(void);
-  void Stop(void);
+  void Start();
+  void Stop();
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
@@ -83,14 +83,14 @@ public:
 
   PVR_ERROR GetDriveSpace(long long* total, long long* used);
 
-  int GetTagCount(void);
+  int GetTagCount();
   PVR_ERROR GetTags(ADDON_HANDLE handle, bool bRadio);
   PVR_ERROR GetTagMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& group);
 
-  int GetChannelCount(void);
+  int GetChannelCount();
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool radio);
 
-  int GetRecordingCount(void);
+  int GetRecordingCount();
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR GetRecordingEdl(const PVR_RECORDING& rec, PVR_EDL_ENTRY edl[], int* num);
   PVR_ERROR DeleteRecording(const PVR_RECORDING& rec);
@@ -100,7 +100,7 @@ public:
   PVR_ERROR SetPlayPosition(const PVR_RECORDING& rec, int playposition);
   int GetPlayPosition(const PVR_RECORDING& rec);
   PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int* size);
-  int GetTimerCount(void);
+  int GetTimerCount();
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER& tmr);
   PVR_ERROR DeleteTimer(const PVR_TIMER& tmr, bool force);
@@ -165,10 +165,10 @@ private:
   /*
    * Channel/Tags/Recordings/Events
    */
-  void SyncChannelsCompleted(void);
-  void SyncDvrCompleted(void);
-  void SyncEpgCompleted(void);
-  void SyncCompleted(void);
+  void SyncChannelsCompleted();
+  void SyncDvrCompleted();
+  void SyncEpgCompleted();
+  void SyncCompleted();
   void ParseTagAddOrUpdate(htsmsg_t* m, bool bAdd);
   void ParseTagDelete(htsmsg_t* m);
   void ParseChannelAddOrUpdate(htsmsg_t* m, bool bAdd);
@@ -203,10 +203,10 @@ public:
    * Demuxer
    */
   bool DemuxOpen(const PVR_CHANNEL& chn);
-  void DemuxClose(void);
-  DemuxPacket* DemuxRead(void);
-  void DemuxFlush(void);
-  void DemuxAbort(void);
+  void DemuxClose();
+  DemuxPacket* DemuxRead();
+  void DemuxFlush();
+  void DemuxAbort();
   bool DemuxSeek(double time, bool backward, double* startpts);
   void DemuxSpeed(int speed);
   void DemuxFillBuffer(bool mode);

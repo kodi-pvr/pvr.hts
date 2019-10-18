@@ -58,7 +58,7 @@ CTvheadend* tvh = NULL;
 extern "C"
 {
 
-void ADDON_ReadSettings(void) { Settings::GetInstance().ReadSettings(); }
+void ADDON_ReadSettings() { Settings::GetInstance().ReadSettings(); }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
@@ -192,7 +192,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   return PVR_ERROR_NO_ERROR;
 }
 
-const char* GetBackendName(void)
+const char* GetBackendName()
 {
   static std::string serverName;
 
@@ -200,7 +200,7 @@ const char* GetBackendName(void)
   return serverName.c_str();
 }
 
-const char* GetBackendVersion(void)
+const char* GetBackendVersion()
 {
   static std::string serverVersion;
 
@@ -208,7 +208,7 @@ const char* GetBackendVersion(void)
   return serverVersion.c_str();
 }
 
-const char* GetConnectionString(void)
+const char* GetConnectionString()
 {
   static std::string serverString;
 
@@ -216,7 +216,7 @@ const char* GetConnectionString(void)
   return serverString.c_str();
 }
 
-const char* GetBackendHostname(void) { return Settings::GetInstance().GetConstCharHostname(); }
+const char* GetBackendHostname() { return Settings::GetInstance().GetConstCharHostname(); }
 
 PVR_ERROR GetDriveSpace(long long* iTotal, long long* iUsed)
 {
@@ -245,9 +245,9 @@ PVR_ERROR GetStreamReadChunkSize(int* chunksize)
   return PVR_ERROR_NO_ERROR;
 }
 
-bool CanPauseStream(void) { return tvh->HasCapability("timeshift"); }
+bool CanPauseStream() { return tvh->HasCapability("timeshift"); }
 
-bool CanSeekStream(void) { return tvh->HasCapability("timeshift"); }
+bool CanSeekStream() { return tvh->HasCapability("timeshift"); }
 
 PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES* times)
 {
@@ -257,7 +257,7 @@ PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES* times)
   return tvh->GetStreamTimes(times);
 }
 
-bool IsTimeshifting(void) { return tvh->DemuxIsTimeShifting(); }
+bool IsTimeshifting() { return tvh->DemuxIsTimeShifting(); }
 
 bool IsRealTimeStream()
 {
@@ -269,7 +269,7 @@ bool IsRealTimeStream()
 
 bool OpenLiveStream(const PVR_CHANNEL& channel) { return tvh->DemuxOpen(channel); }
 
-void CloseLiveStream(void) { tvh->DemuxClose(); }
+void CloseLiveStream() { tvh->DemuxClose(); }
 
 bool SeekTime(double time, bool backward, double* startpts)
 {
@@ -304,19 +304,19 @@ PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo)
   return tvh->DemuxCurrentDescramble(descrambleInfo);
 }
 
-DemuxPacket* DemuxRead(void) { return tvh->DemuxRead(); }
+DemuxPacket* DemuxRead() { return tvh->DemuxRead(); }
 
-void DemuxAbort(void) { tvh->DemuxAbort(); }
+void DemuxAbort() { tvh->DemuxAbort(); }
 
-void DemuxReset(void) {}
+void DemuxReset() {}
 
-void DemuxFlush(void) { tvh->DemuxFlush(); }
+void DemuxFlush() { tvh->DemuxFlush(); }
 
 /* **************************************************************************
  * Channel Management
  * *************************************************************************/
 
-int GetChannelGroupsAmount(void) { return tvh->GetTagCount(); }
+int GetChannelGroupsAmount() { return tvh->GetTagCount(); }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
@@ -328,7 +328,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& g
   return tvh->GetTagMembers(handle, group);
 }
 
-int GetChannelsAmount(void) { return tvh->GetChannelCount(); }
+int GetChannelsAmount() { return tvh->GetChannelCount(); }
 
 PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
@@ -397,7 +397,7 @@ PVR_ERROR GetTimerTypes(PVR_TIMER_TYPE types[], int* size)
   return tvh->GetTimerTypes(types, size);
 }
 
-int GetTimersAmount(void) { return tvh->GetTimerCount(); }
+int GetTimersAmount() { return tvh->GetTimerCount(); }
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle) { return tvh->GetTimers(handle); }
 
@@ -416,7 +416,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER& timer) { return tvh->UpdateTimer(timer); 
 
 bool OpenRecordedStream(const PVR_RECORDING& recording) { return tvh->VfsOpen(recording); }
 
-void CloseRecordedStream(void) { tvh->VfsClose(); }
+void CloseRecordedStream() { tvh->VfsClose(); }
 
 int ReadRecordedStream(unsigned char* pBuffer, unsigned int iBufferSize)
 {
@@ -428,13 +428,13 @@ long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
   return tvh->VfsSeek(iPosition, iWhence);
 }
 
-long long LengthRecordedStream(void) { return tvh->VfsSize(); }
+long long LengthRecordedStream() { return tvh->VfsSize(); }
 
 /* **************************************************************************
  * Unused Functions
  * *************************************************************************/
 
-PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelScan() { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 PVR_ERROR DeleteChannel(const PVR_CHANNEL&) { return PVR_ERROR_NOT_IMPLEMENTED; }
 
@@ -448,7 +448,7 @@ int ReadLiveStream(unsigned char*, unsigned int) { return 0; }
 
 long long SeekLiveStream(long long, int) { return -1; }
 
-long long LengthLiveStream(void) { return -1; }
+long long LengthLiveStream() { return -1; }
 
 PVR_ERROR GetChannelStreamProperties(const PVR_CHANNEL*, PVR_NAMED_VALUE*, unsigned int*)
 {

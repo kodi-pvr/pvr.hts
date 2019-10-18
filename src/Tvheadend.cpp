@@ -69,13 +69,13 @@ CTvheadend::~CTvheadend()
   delete m_vfs;
 }
 
-void CTvheadend::Start(void)
+void CTvheadend::Start()
 {
   CreateThread();
   m_conn->Start();
 }
 
-void CTvheadend::Stop(void)
+void CTvheadend::Stop()
 {
   for (auto* dmx : m_dmx)
     dmx->Close();
@@ -190,7 +190,7 @@ bool CTvheadend::HasStreamingProfile(const std::string& streamingProfile) const
  * Tags
  * *************************************************************************/
 
-int CTvheadend::GetTagCount(void)
+int CTvheadend::GetTagCount()
 {
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return 0;
@@ -284,7 +284,7 @@ PVR_ERROR CTvheadend::GetTagMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP
  * Channels
  * *************************************************************************/
 
-int CTvheadend::GetChannelCount(void)
+int CTvheadend::GetChannelCount()
 {
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return 0;
@@ -388,7 +388,7 @@ PVR_ERROR CTvheadend::SendDvrUpdate(htsmsg_t* m)
   return u32 > 0 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-int CTvheadend::GetRecordingCount(void)
+int CTvheadend::GetRecordingCount()
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
@@ -1028,7 +1028,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(PVR_TIMER_TYPE types[], int* size)
   return PVR_ERROR_NO_ERROR;
 }
 
-int CTvheadend::GetTimerCount(void)
+int CTvheadend::GetTimerCount()
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return 0;
@@ -1502,12 +1502,12 @@ PVR_ERROR CTvheadend::SetEPGTimeFrame(int iDays)
  * Connection
  * *************************************************************************/
 
-void CTvheadend::Disconnected(void)
+void CTvheadend::Disconnected()
 {
   m_asyncState.SetState(ASYNC_NONE);
 }
 
-bool CTvheadend::Connected(void)
+bool CTvheadend::Connected()
 {
   htsmsg_t* msg;
 
@@ -1706,7 +1706,7 @@ void CTvheadend::CloseExpiredSubscriptions()
   }
 }
 
-void* CTvheadend::Process(void)
+void* CTvheadend::Process()
 {
   HTSPMessage msg;
   const char* method;
@@ -1877,7 +1877,7 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
     m_events.emplace_back(event);
 }
 
-void CTvheadend::SyncCompleted(void)
+void CTvheadend::SyncCompleted()
 {
   Logger::Log(LogLevel::LEVEL_INFO, "async updates initialised");
 
@@ -1906,7 +1906,7 @@ void CTvheadend::SyncCompleted(void)
   }
 }
 
-void CTvheadend::SyncChannelsCompleted(void)
+void CTvheadend::SyncChannelsCompleted()
 {
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_CHN)
@@ -1927,7 +1927,7 @@ void CTvheadend::SyncChannelsCompleted(void)
   m_asyncState.SetState(ASYNC_DVR);
 }
 
-void CTvheadend::SyncDvrCompleted(void)
+void CTvheadend::SyncDvrCompleted()
 {
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_DVR)
@@ -1964,7 +1964,7 @@ void CTvheadend::SyncDvrCompleted(void)
   m_asyncState.SetState(ASYNC_EPG);
 }
 
-void CTvheadend::SyncEpgCompleted(void)
+void CTvheadend::SyncEpgCompleted()
 {
   /* check state engine */
   if (!Settings::GetInstance().GetAsyncEpg())
@@ -2893,7 +2893,7 @@ bool CTvheadend::DemuxOpen(const PVR_CHANNEL& chn)
   return m_playingLiveStream;
 }
 
-DemuxPacket* CTvheadend::DemuxRead(void)
+DemuxPacket* CTvheadend::DemuxRead()
 {
   DemuxPacket* pkt = NULL;
 
@@ -2919,7 +2919,7 @@ DemuxPacket* CTvheadend::DemuxRead(void)
   return pkt;
 }
 
-void CTvheadend::DemuxClose(void)
+void CTvheadend::DemuxClose()
 {
   // If predictive tuning is active, demuxers will be closed automatically once they are expired.
   if (m_dmx.size() == 1)
@@ -2928,12 +2928,12 @@ void CTvheadend::DemuxClose(void)
   m_playingLiveStream = false;
 }
 
-void CTvheadend::DemuxFlush(void)
+void CTvheadend::DemuxFlush()
 {
   m_dmx_active->Flush();
 }
 
-void CTvheadend::DemuxAbort(void)
+void CTvheadend::DemuxAbort()
 {
   // If predictive tuning is active, demuxers will be closed/aborted automatically once they are expired.
   if (m_dmx.size() == 1)

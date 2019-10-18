@@ -59,7 +59,7 @@ HTSPDemuxer::~HTSPDemuxer()
 {
 }
 
-void HTSPDemuxer::Connected(void)
+void HTSPDemuxer::Connected()
 {
   /* Re-subscribe */
   if (m_subscription.IsActive())
@@ -76,7 +76,7 @@ void HTSPDemuxer::Connected(void)
  * Demuxer API
  * *************************************************************************/
 
-void HTSPDemuxer::Close0(void)
+void HTSPDemuxer::Close0()
 {
   /* Send unsubscribe */
   if (m_subscription.IsActive())
@@ -87,7 +87,7 @@ void HTSPDemuxer::Close0(void)
   Abort0();
 }
 
-void HTSPDemuxer::Abort0(void)
+void HTSPDemuxer::Abort0()
 {
   CLockObject lock(m_mutex);
   m_streams.clear();
@@ -120,7 +120,7 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
   return m_subscription.IsActive();
 }
 
-void HTSPDemuxer::Close(void)
+void HTSPDemuxer::Close()
 {
   CLockObject lock(m_conn.Mutex());
   Close0();
@@ -128,7 +128,7 @@ void HTSPDemuxer::Close(void)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
 
-DemuxPacket* HTSPDemuxer::Read(void)
+DemuxPacket* HTSPDemuxer::Read()
 {
   DemuxPacket* pkt = NULL;
   m_lastUse.store(time(nullptr));
@@ -144,7 +144,7 @@ DemuxPacket* HTSPDemuxer::Read(void)
   return PVR->AllocateDemuxPacket(0);
 }
 
-void HTSPDemuxer::Flush(void)
+void HTSPDemuxer::Flush()
 {
   DemuxPacket* pkt;
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
@@ -152,7 +152,7 @@ void HTSPDemuxer::Flush(void)
     PVR->FreeDemuxPacket(pkt);
 }
 
-void HTSPDemuxer::Trim(void)
+void HTSPDemuxer::Trim()
 {
   DemuxPacket* pkt;
 
@@ -164,7 +164,7 @@ void HTSPDemuxer::Trim(void)
     PVR->FreeDemuxPacket(pkt);
 }
 
-void HTSPDemuxer::Abort(void)
+void HTSPDemuxer::Abort()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
   CLockObject lock(m_conn.Mutex());

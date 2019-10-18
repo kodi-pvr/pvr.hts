@@ -29,16 +29,16 @@
 class CodecDescriptor
 {
 public:
-  CodecDescriptor(void)
+  CodecDescriptor()
   {
     m_codec.codec_id = XBMC_INVALID_CODEC_ID;
     m_codec.codec_type = XBMC_CODEC_TYPE_UNKNOWN;
   }
 
   CodecDescriptor(xbmc_codec_t codec, const char* name) : m_codec(codec), m_strName(name) {}
-  virtual ~CodecDescriptor(void) {}
+  virtual ~CodecDescriptor() {}
 
-  xbmc_codec_t Codec(void) const { return m_codec; }
+  xbmc_codec_t Codec() const { return m_codec; }
 
   static CodecDescriptor GetCodecByName(const char* strCodecName)
   {
