@@ -1224,6 +1224,27 @@ PVR_ERROR CTvheadend::AddTimer(const PVR_TIMER& timer)
 
 PVR_ERROR CTvheadend::DeleteTimer(const PVR_TIMER& timer, bool)
 {
+  {
+    CLockObject lock(m_mutex);
+
+    const auto& it = m_recordings.find(timer.iClientIndex);
+    if (it != m_recordings.end() && it->second.IsRecording())
+    {
+      // This is a request to stop an active recording.
+      if (m_conn->GetProtocol() >= 26)
+      {
+        // gracefully stop the recording (mark as success in tvh)
+        return SendDvrDelete(timer.iClientIndex, "stopDvrEntry");
+      }
+      else
+      {
+        // abort the recording (mark as failure in tvh) - no other choice,
+        // because graceful stop HTSP method was not available before HTSP v26.
+        return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
+      }
+    }
+  }
+
   if ((timer.iTimerType == TIMER_ONCE_MANUAL) || (timer.iTimerType == TIMER_ONCE_EPG))
   {
     /* one shot timer */
@@ -1244,19 +1265,8 @@ PVR_ERROR CTvheadend::DeleteTimer(const PVR_TIMER& timer, bool)
            (timer.iTimerType == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
     /* Read-only timer created by autorec or timerec */
-    CLockObject lock(m_mutex);
-
-    const auto& it = m_recordings.find(timer.iClientIndex);
-    if (it != m_recordings.end() && it->second.IsRecording())
-    {
-      /* This is actually a request to cancel an active recording. */
-      return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
-    }
-    else
-    {
-      Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
-      return PVR_ERROR_INVALID_PARAMETERS;
-    }
+    Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
+    return PVR_ERROR_INVALID_PARAMETERS;
   }
   else
   {
