@@ -1664,7 +1664,7 @@ bool CTvheadend::VfsIsRealTimeStream()
  * Message handling
  * *************************************************************************/
 
-bool CTvheadend::ProcessMessage(const char* method, htsmsg_t* msg)
+bool CTvheadend::ProcessMessage(const std::string& method, htsmsg_t* msg)
 {
   uint32_t subId = 0;
   if (!htsmsg_get_u32(msg, "subscriptionId", &subId))
@@ -1711,12 +1711,11 @@ void CTvheadend::CloseExpiredSubscriptions()
 
 void* CTvheadend::Process()
 {
-  HTSPMessage msg = {};
-
   while (!IsStopped())
   {
     /* Check Q */
     // this is a bit horrible, but meh
+    HTSPMessage msg = {};
     bool bSuccess = m_queue.Pop(msg, 2000);
 
     if (IsStopped())
@@ -1728,7 +1727,7 @@ void* CTvheadend::Process()
     if (!bSuccess || !msg.GetMessage())
       continue;
 
-    const char* method = msg.GetMethod().c_str();
+    const std::string& method = msg.GetMethod();
 
     SHTSPEventList eventsCopy;
     /* Scope lock for processing */
@@ -1736,78 +1735,78 @@ void* CTvheadend::Process()
       CLockObject lock(m_mutex);
 
       /* Channels */
-      if (!std::strcmp("channelAdd", method))
+      if (method == "channelAdd")
         ParseChannelAddOrUpdate(msg.GetMessage(), true);
-      else if (!std::strcmp("channelUpdate", method))
+      else if (method == "channelUpdate")
         ParseChannelAddOrUpdate(msg.GetMessage(), false);
-      else if (!std::strcmp("channelDelete", method))
+      else if (method == "channelDelete")
         ParseChannelDelete(msg.GetMessage());
 
       /* Channel Tags (aka channel groups)*/
-      else if (!std::strcmp("tagAdd", method))
+      else if (method == "tagAdd")
         ParseTagAddOrUpdate(msg.GetMessage(), true);
-      else if (!std::strcmp("tagUpdate", method))
+      else if (method == "tagUpdate")
         ParseTagAddOrUpdate(msg.GetMessage(), false);
-      else if (!std::strcmp("tagDelete", method))
+      else if (method == "tagDelete")
         ParseTagDelete(msg.GetMessage());
 
       /* Recordings */
-      else if (!std::strcmp("dvrEntryAdd", method))
+      else if (method == "dvrEntryAdd")
         ParseRecordingAddOrUpdate(msg.GetMessage(), true);
-      else if (!std::strcmp("dvrEntryUpdate", method))
+      else if (method == "dvrEntryUpdate")
         ParseRecordingAddOrUpdate(msg.GetMessage(), false);
-      else if (!std::strcmp("dvrEntryDelete", method))
+      else if (method == "dvrEntryDelete")
         ParseRecordingDelete(msg.GetMessage());
 
       /* Timerec */
-      else if (!std::strcmp("timerecEntryAdd", method))
+      else if (method == "timerecEntryAdd")
       {
         if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetMessage(), true))
           TriggerTimerUpdate();
       }
-      else if (!std::strcmp("timerecEntryUpdate", method))
+      else if (method == "timerecEntryUpdate")
       {
         if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetMessage(), false))
           TriggerTimerUpdate();
       }
-      else if (!std::strcmp("timerecEntryDelete", method))
+      else if (method == "timerecEntryDelete")
       {
         if (m_timeRecordings.ParseTimerecDelete(msg.GetMessage()))
           TriggerTimerUpdate();
       }
 
       /* Autorec */
-      else if (!std::strcmp("autorecEntryAdd", method))
+      else if (method == "autorecEntryAdd")
       {
         if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetMessage(), true))
           TriggerTimerUpdate();
       }
-      else if (!std::strcmp("autorecEntryUpdate", method))
+      else if (method == "autorecEntryUpdate")
       {
         if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetMessage(), false))
           TriggerTimerUpdate();
       }
-      else if (!std::strcmp("autorecEntryDelete", method))
+      else if (method == "autorecEntryDelete")
       {
         if (m_autoRecordings.ParseAutorecDelete(msg.GetMessage()))
           TriggerTimerUpdate();
       }
 
       /* EPG */
-      else if (!std::strcmp("eventAdd", method))
+      else if (method == "eventAdd")
         ParseEventAddOrUpdate(msg.GetMessage(), true);
-      else if (!std::strcmp("eventUpdate", method))
+      else if (method == "eventUpdate")
         ParseEventAddOrUpdate(msg.GetMessage(), false);
-      else if (!std::strcmp("eventDelete", method))
+      else if (method == "eventDelete")
         ParseEventDelete(msg.GetMessage());
 
       /* ASync complete */
-      else if (!std::strcmp("initialSyncCompleted", method))
+      else if (method == "initialSyncCompleted")
         SyncCompleted();
 
       /* Unknown */
       else
-        Logger::Log(LogLevel::LEVEL_DEBUG, "unhandled message [%s]", method);
+        Logger::Log(LogLevel::LEVEL_DEBUG, "unhandled message [%s]", method.c_str());
 
       /* make a copy of events list to process it without lock. */
       eventsCopy = m_events;

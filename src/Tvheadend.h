@@ -77,7 +77,7 @@ public:
   // IHTSPConnectionListener implementation
   void Disconnected() override;
   bool Connected() override;
-  bool ProcessMessage(const char* method, htsmsg_t* msg) override;
+  bool ProcessMessage(const std::string& method, htsmsg_t* msg) override;
 
   const tvheadend::entity::Channels& GetChannels() const { return m_channels; }
 

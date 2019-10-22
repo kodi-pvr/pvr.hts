@@ -402,33 +402,33 @@ void HTSPDemuxer::ResetStatus(bool resetStartTime /* = true */)
  * Parse incoming data
  * *************************************************************************/
 
-bool HTSPDemuxer::ProcessMessage(const char* method, htsmsg_t* m)
+bool HTSPDemuxer::ProcessMessage(const std::string& method, htsmsg_t* m)
 {
   /* Subscription messages */
-  if (!std::strcmp("muxpkt", method))
+  if (method == "muxpkt")
     ParseMuxPacket(m);
-  else if (!std::strcmp("subscriptionStatus", method))
+  else if (method == "subscriptionStatus")
     m_subscription.ParseSubscriptionStatus(m);
-  else if (!std::strcmp("queueStatus", method))
+  else if (method == "queueStatus")
     ParseQueueStatus(m);
-  else if (!std::strcmp("signalStatus", method))
+  else if (method == "signalStatus")
     ParseSignalStatus(m);
-  else if (!std::strcmp("timeshiftStatus", method))
+  else if (method == "timeshiftStatus")
     ParseTimeshiftStatus(m);
-  else if (!std::strcmp("descrambleInfo", method))
+  else if (method == "descrambleInfo")
     ParseDescrambleInfo(m);
-  else if (!std::strcmp("subscriptionStart", method))
+  else if (method == "subscriptionStart")
     ParseSubscriptionStart(m);
-  else if (!std::strcmp("subscriptionStop", method))
+  else if (method == "subscriptionStop")
     ParseSubscriptionStop(m);
-  else if (!std::strcmp("subscriptionSkip", method))
+  else if (method == "subscriptionSkip")
     ParseSubscriptionSkip(m);
-  else if (!std::strcmp("subscriptionSpeed", method))
+  else if (method == "subscriptionSpeed")
     ParseSubscriptionSpeed(m);
-  else if (!std::strcmp("subscriptionGrace", method))
+  else if (method == "subscriptionGrace")
     ParseSubscriptionGrace(m);
   else
-    Logger::Log(LogLevel::LEVEL_DEBUG, "demux unhandled subscription message [%s]", method);
+    Logger::Log(LogLevel::LEVEL_DEBUG, "demux unhandled subscription message [%s]", method.c_str());
 
   return true;
 }
