@@ -38,8 +38,8 @@ typedef std::pair<uint32_t, Channel> ChannelMapEntry;
 typedef std::map<uint32_t, Channel> Channels;
 
 /**
-     * Represents a channel
-     */
+ * Represents a channel
+ */
 class Channel : public Entity
 {
 public:

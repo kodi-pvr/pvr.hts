@@ -1,3 +1,7 @@
+5.3.0
+- Code cleanup
+- Fixed: 'Stop recording' no longer aborts in-progress recordings (HTSP v26)
+
 5.2.1
 - Code cleanup: Apply Kodi clang-format ruleset.
 

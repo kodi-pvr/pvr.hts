@@ -31,6 +31,7 @@ namespace tvheadend
 {
 namespace entity
 {
+
 class RecordingBase : public Entity
 {
 protected:
@@ -88,5 +89,6 @@ private:
   std::string m_creator; // Creator.
   uint32_t m_channel; // Channel ID.
 };
+
 } // namespace entity
 } // namespace tvheadend

@@ -39,8 +39,8 @@ using namespace tvheadend;
 using namespace tvheadend::utilities;
 
 /*
-* VFS handler
-*/
+ * VFS handler
+ */
 HTSPVFS::HTSPVFS(HTSPConnection& conn)
   : m_conn(conn),
     m_path(""),
@@ -57,7 +57,7 @@ HTSPVFS::~HTSPVFS()
 {
 }
 
-void HTSPVFS::Connected(void)
+void HTSPVFS::Connected()
 {
   /* Re-open */
   if (m_fileId != 0)
@@ -95,14 +95,14 @@ bool HTSPVFS::Open(const PVR_RECORDING& rec)
   return true;
 }
 
-void HTSPVFS::Close(void)
+void HTSPVFS::Close()
 {
   if (m_fileId != 0)
     SendFileClose();
 
   m_offset = 0;
   m_fileId = 0;
-  m_path = "";
+  m_path.clear();
   m_eofOffsetSecs = -1;
   m_pauseTime = 0;
   m_paused = false;
@@ -171,13 +171,12 @@ long long HTSPVFS::Seek(long long pos, int whence, bool inprogress)
   return ret;
 }
 
-long long HTSPVFS::Size(void)
+long long HTSPVFS::Size()
 {
   int64_t ret = -1;
-  htsmsg_t* m;
 
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat id=%d", m_fileId);
@@ -188,14 +187,14 @@ long long HTSPVFS::Size(void)
     m = m_conn.SendAndWait("fileStat", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return -1;
 
   /* Get size. Note: 'size' field is optional. */
   if (htsmsg_get_s64(m, "size", &ret))
     ret = -1;
   else
-    Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat size=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs stat size=%lld", static_cast<long long>(ret));
 
   htsmsg_destroy(m);
 
@@ -225,7 +224,7 @@ void HTSPVFS::PauseStream(bool paused)
   }
 }
 
-bool HTSPVFS::IsRealTimeStream(void)
+bool HTSPVFS::IsRealTimeStream()
 {
   return m_isRealTimeStream;
 }
@@ -236,10 +235,8 @@ bool HTSPVFS::IsRealTimeStream(void)
 
 bool HTSPVFS::SendFileOpen(bool force)
 {
-  htsmsg_t* m;
-
   /* Build Message */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_str(m, "file", m_path.c_str());
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs open file=%s", m_path.c_str());
@@ -254,7 +251,7 @@ bool HTSPVFS::SendFileOpen(bool force)
       m = m_conn.SendAndWait("fileOpen", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return false;
 
   /* Get ID */
@@ -270,12 +267,10 @@ bool HTSPVFS::SendFileOpen(bool force)
   return m_fileId > 0;
 }
 
-void HTSPVFS::SendFileClose(void)
+void HTSPVFS::SendFileClose()
 {
-  htsmsg_t* m;
-
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
   /* If setting set, we will increase play count with CTvheadend::SetPlayCount */
@@ -298,11 +293,10 @@ void HTSPVFS::SendFileClose(void)
 
 long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 {
-  htsmsg_t* m;
   int64_t ret = -1;
 
   /* Build Message */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "offset", pos);
   if (whence == SEEK_CUR)
@@ -311,7 +305,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
   Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek id=%d whence=%d pos=%lld", m_fileId, whence,
-              (long long)pos);
+              static_cast<long long>(pos));
 
   /* Send */
   {
@@ -323,7 +317,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
       m = m_conn.SendAndWait("fileSeek", m);
   }
 
-  if (m == NULL)
+  if (!m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileSeek failed");
     return -1;
@@ -339,7 +333,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
   }
   else
   {
-    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", (long long)ret);
+    Logger::Log(LogLevel::LEVEL_TRACE, "vfs seek offset=%lld", static_cast<long long>(ret));
     m_offset = ret;
   }
 
@@ -351,12 +345,8 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 
 ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 {
-  htsmsg_t* m;
-  const void* buffer;
-  size_t read;
-
   /* Build */
-  m = htsmsg_create_map();
+  htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
   htsmsg_add_s64(m, "size", len);
 
@@ -368,13 +358,15 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
     m = m_conn.SendAndWait("fileRead", m);
   }
 
-  if (m == NULL)
+  if (!m)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "vfs fileRead failed");
     return -1;
   }
 
   /* Get Data */
+  const void* buffer = nullptr;
+  size_t read = 0;
   if (htsmsg_get_bin(m, "data", &buffer, &read))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed fileRead response: 'data' missing");
@@ -383,7 +375,7 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
   }
   else
   {
-    memcpy(buf, buffer, read);
+    std::memcpy(buf, buffer, read);
   }
 
   /* Cleanup */

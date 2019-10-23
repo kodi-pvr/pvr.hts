@@ -29,8 +29,8 @@ namespace entity
 {
 
 /**
-     * Abstract entity. An entity can be dirty or clean and has a numeric ID.
-     */
+ * Abstract entity. An entity can be dirty or clean and has a numeric ID.
+ */
 class Entity
 {
 public:
@@ -38,25 +38,25 @@ public:
   virtual ~Entity() = default;
 
   /**
-       * @return if the entity is dirty
-       */
+   * @return if the entity is dirty
+   */
   virtual bool IsDirty() const { return m_dirty; }
 
   /**
-       * Marks the entity as dirty or not
-       * @param dirty
-       */
+   * Marks the entity as dirty or not
+   * @param dirty
+   */
   virtual void SetDirty(bool dirty) { m_dirty = dirty; }
 
   /**
-       * @return the entity ID
-       */
+   * @return the entity ID
+   */
   uint32_t GetId() const { return m_id; }
 
   /**
-       * Sets the entity ID
-       * @param id
-       */
+   * Sets the entity ID
+   * @param id
+   */
   void SetId(uint32_t id) { m_id = id; }
 
 protected:
@@ -65,5 +65,6 @@ protected:
 private:
   bool m_dirty;
 };
+
 } // namespace entity
 } // namespace tvheadend

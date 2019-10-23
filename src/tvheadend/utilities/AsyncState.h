@@ -29,8 +29,8 @@ namespace utilities
 {
 
 /**
-     * Represents the possible states
-     */
+ * Represents the possible states
+ */
 enum eAsyncState
 {
   ASYNC_NONE = 0,
@@ -41,8 +41,8 @@ enum eAsyncState
 };
 
 /**
-     * State tracker for the initial sync process. This class is thread-safe.
-     */
+ * State tracker for the initial sync process. This class is thread-safe.
+ */
 class AsyncState
 {
 public:
@@ -51,22 +51,22 @@ public:
   virtual ~AsyncState(){};
 
   /**
-       * @return the current state
-       */
+   * @return the current state
+   */
   eAsyncState GetState();
 
   /**
-       * Changes the current state to "state"
-       * @param state the new state
-       */
+   * Changes the current state to "state"
+   * @param state the new state
+   */
   void SetState(eAsyncState state);
 
   /**
-       * Waits for the current state to change into "state" or higher
-       * before the timeout is reached
-       * @param state the minimum state desired
-       * @return whether the state changed or not
-       */
+   * Waits for the current state to change into "state" or higher
+   * before the timeout is reached
+   * @param state the minimum state desired
+   * @return whether the state changed or not
+   */
   bool WaitForState(eAsyncState state);
 
 private:
@@ -77,5 +77,6 @@ private:
   P8PLATFORM::CCondition<bool> m_condition;
   int m_timeout;
 };
+
 } // namespace utilities
 } // namespace tvheadend

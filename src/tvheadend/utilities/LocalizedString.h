@@ -29,9 +29,10 @@ namespace tvheadend
 {
 namespace utilities
 {
+
 /**
-     * Encapsulates an localized string.
-     */
+ * Encapsulates a localized string.
+ */
 class LocalizedString
 {
 public:
@@ -51,5 +52,6 @@ private:
 
   char* m_localizedString;
 };
+
 } // namespace utilities
 } // namespace tvheadend

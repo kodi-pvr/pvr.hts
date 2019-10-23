@@ -28,6 +28,9 @@
 #include "utilities/Logger.h"
 #include "utilities/Utilities.h"
 
+#include <cstring>
+#include <ctime>
+
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
@@ -44,8 +47,8 @@ AutoRecordings::~AutoRecordings()
 void AutoRecordings::Connected()
 {
   /* Flag all async fields in case they've been deleted */
-  for (auto it = m_autoRecordings.begin(); it != m_autoRecordings.end(); ++it)
-    it->second.SetDirty(true);
+  for (auto& rec : m_autoRecordings)
+    rec.second.SetDirty(true);
 }
 
 void AutoRecordings::SyncDvrCompleted()
@@ -61,16 +64,16 @@ int AutoRecordings::GetAutorecTimerCount() const
 
 void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
     /* Setup entry */
     PVR_TIMER tmr = {0};
 
-    tmr.iClientIndex = tit->second.GetId();
+    tmr.iClientIndex = rec.second.GetId();
     tmr.iClientChannelUid =
-        (tit->second.GetChannel() > 0) ? tit->second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
-    tmr.startTime = tit->second.GetStart();
-    tmr.endTime = tit->second.GetStop();
+        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
+    tmr.startTime = rec.second.GetStart();
+    tmr.endTime = rec.second.GetStop();
     if (tmr.startTime == 0)
       tmr.bStartAnyTime = true;
     if (tmr.endTime == 0)
@@ -82,40 +85,41 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
       tmr.startTime = tmr.endTime - 60 * 60; // Nominal 1 hour duration
     if (tmr.bStartAnyTime && tmr.bEndAnyTime)
     {
-      tmr.startTime = time(NULL); // now
+      tmr.startTime = std::time(nullptr); // now
       tmr.endTime = tmr.startTime + 60 * 60; // Nominal 1 hour duration
     }
 
-    if (tit->second.GetName().empty()) // timers created on backend may not contain a name
-      strncpy(tmr.strTitle, tit->second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
+    if (rec.second.GetName().empty()) // timers created on backend may not contain a name
+      std::strncpy(tmr.strTitle, rec.second.GetTitle().c_str(), sizeof(tmr.strTitle) - 1);
     else
-      strncpy(tmr.strTitle, tit->second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    strncpy(tmr.strEpgSearchString, tit->second.GetTitle().c_str(),
-            sizeof(tmr.strEpgSearchString) - 1);
-    strncpy(tmr.strDirectory, tit->second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
-    strncpy(tmr.strSummary, "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
-    strncpy(tmr.strSeriesLink, tit->second.GetSeriesLink().c_str(), sizeof(tmr.strSeriesLink) - 1);
-    tmr.state = tit->second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
+      std::strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
+    std::strncpy(tmr.strEpgSearchString, rec.second.GetTitle().c_str(),
+                 sizeof(tmr.strEpgSearchString) - 1);
+    std::strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
+    std::strncpy(tmr.strSummary, "", sizeof(tmr.strSummary) - 1); // n/a for repeating timers
+    std::strncpy(tmr.strSeriesLink, rec.second.GetSeriesLink().c_str(),
+                 sizeof(tmr.strSeriesLink) - 1);
+    tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
     tmr.iTimerType =
-        tit->second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK;
-    tmr.iPriority = tit->second.GetPriority();
-    tmr.iLifetime = tit->second.GetLifetime();
+        rec.second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK;
+    tmr.iPriority = rec.second.GetPriority();
+    tmr.iLifetime = rec.second.GetLifetime();
     tmr.iMaxRecordings = 0; // not supported by tvh
     tmr.iRecordingGroup = 0; // not supported by tvh
 
     if (m_conn.GetProtocol() >= 20)
-      tmr.iPreventDuplicateEpisodes = tit->second.GetDupDetect();
+      tmr.iPreventDuplicateEpisodes = rec.second.GetDupDetect();
     else
       tmr.iPreventDuplicateEpisodes = 0; // not supported by tvh
 
     tmr.firstDay = 0; // not supported by tvh
-    tmr.iWeekdays = tit->second.GetDaysOfWeek();
+    tmr.iWeekdays = rec.second.GetDaysOfWeek();
     tmr.iEpgUid = PVR_TIMER_NO_EPG_UID; // n/a for repeating timers
-    tmr.iMarginStart = static_cast<unsigned int>(tit->second.GetMarginStart());
-    tmr.iMarginEnd = static_cast<unsigned int>(tit->second.GetMarginEnd());
+    tmr.iMarginStart = static_cast<unsigned int>(rec.second.GetMarginStart());
+    tmr.iMarginEnd = static_cast<unsigned int>(rec.second.GetMarginEnd());
     tmr.iGenreType = 0; // not supported by tvh?
     tmr.iGenreSubType = 0; // not supported by tvh?
-    tmr.bFullTextEpgSearch = tit->second.GetFulltext();
+    tmr.bFullTextEpgSearch = rec.second.GetFulltext();
     tmr.iParentClientIndex = 0;
 
     timers.emplace_back(tmr);
@@ -124,10 +128,10 @@ void AutoRecordings::GetAutorecTimers(std::vector<PVR_TIMER>& timers)
 
 const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string& strId) const
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
-    if (tit->second.GetStringId() == strId)
-      return tit->second.GetId();
+    if (rec.second.GetStringId() == strId)
+      return rec.second.GetId();
   }
   Logger::Log(LogLevel::LEVEL_ERROR, "Autorec: Unable to obtain int id for string id %s",
               strId.c_str());
@@ -136,10 +140,10 @@ const unsigned int AutoRecordings::GetTimerIntIdFromStringId(const std::string& 
 
 const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) const
 {
-  for (auto tit = m_autoRecordings.begin(); tit != m_autoRecordings.end(); ++tit)
+  for (const auto& rec : m_autoRecordings)
   {
-    if (tit->second.GetId() == intId)
-      return tit->second.GetStringId();
+    if (rec.second.GetId() == intId)
+      return rec.second.GetStringId();
   }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Autorec: Unable to obtain string id for int id %s", intId);
@@ -167,7 +171,6 @@ PVR_ERROR AutoRecordings::SendAutorecUpdate(const PVR_TIMER& timer)
 
 PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool update)
 {
-  uint32_t u32;
   const std::string method = update ? "updateAutorecEntry" : "addAutorecEntry";
 
   /* Build message */
@@ -228,7 +231,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (strcmp(timer.strDirectory, "/") != 0)
+  if (std::strcmp(timer.strDirectory, "/") != 0)
     htsmsg_add_str(m, "directory", timer.strDirectory);
 
 
@@ -245,7 +248,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     if (timer.startTime > 0 && !timer.bStartAnyTime)
     {
       time_t startTime = timer.startTime;
-      struct tm* tm_start = localtime(&startTime);
+      struct tm* tm_start = std::localtime(&startTime);
       int32_t startWindowBegin =
           tm_start->tm_hour * 60 + tm_start->tm_min - settings.GetAutorecMaxDiff();
       int32_t startWindowEnd =
@@ -267,7 +270,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     {
       /* Exact start time (minutes from midnight). */
       time_t startTime = timer.startTime;
-      struct tm* tm_start = localtime(&startTime);
+      struct tm* tm_start = std::localtime(&startTime);
       htsmsg_add_s32(m, "start", tm_start->tm_hour * 60 + tm_start->tm_min);
     }
     else
@@ -279,7 +282,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     {
       /* Exact stop time (minutes from midnight). */
       time_t endTime = timer.endTime;
-      struct tm* tm_stop = localtime(&endTime);
+      struct tm* tm_stop = std::localtime(&endTime);
       htsmsg_add_s32(m, "startWindow", tm_stop->tm_hour * 60 + tm_stop->tm_min);
     }
     else
@@ -298,10 +301,11 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
     m = m_conn.SendAndWait(method.c_str(), m);
   }
 
-  if (m == NULL)
+  if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed %s response: 'success' missing", method.c_str());
@@ -314,8 +318,6 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool up
 
 PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
 {
-  uint32_t u32;
-
   std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
   if (strId.empty())
     return PVR_ERROR_FAILED;
@@ -329,10 +331,11 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
     m = m_conn.SendAndWait("deleteAutorecEntry", m);
   }
 
-  if (m == NULL)
+  if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
   /* Check for error */
+  uint32_t u32 = 0;
   if (htsmsg_get_u32(m, "success", &u32))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed deleteAutorecEntry response: 'success' missing");
@@ -344,13 +347,9 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const PVR_TIMER& timer)
 
 bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  const char* str;
-  uint32_t u32;
-  int32_t s32;
-  int64_t s64;
-
   /* Validate/set mandatory fields */
-  if ((str = htsmsg_get_str(msg, "id")) == NULL)
+  const char* str = htsmsg_get_str(msg, "id");
+  if (!str)
   {
     Logger::Log(LogLevel::LEVEL_ERROR,
                 "malformed autorecEntryAdd/autorecEntryUpdate: 'id' missing");
@@ -364,6 +363,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
   /* Validate/set fields mandatory for autorecEntryAdd */
 
+  uint32_t u32 = 0;
   if (!htsmsg_get_u32(msg, "enabled", &u32))
   {
     rec.SetEnabled(u32);
@@ -419,6 +419,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
+  int32_t s32 = 0;
   if (!htsmsg_get_s32(msg, "start", &s32))
   {
     rec.SetStartWindowBegin(s32);
@@ -439,6 +440,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
+  int64_t s64 = 0;
   if (!htsmsg_get_s64(msg, "startExtra", &s64))
   {
     rec.SetMarginStart(s64);
@@ -470,30 +472,25 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Add optional fields */
-  if ((str = htsmsg_get_str(msg, "title")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "title");
+  if (str)
     rec.SetTitle(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "name")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "name");
+  if (str)
     rec.SetName(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "directory")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "directory");
+  if (str)
     rec.SetDirectory(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "owner")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "owner");
+  if (str)
     rec.SetOwner(str);
-  }
 
-  if ((str = htsmsg_get_str(msg, "creator")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "creator");
+  if (str)
     rec.SetCreator(str);
-  }
 
   if (!htsmsg_get_u32(msg, "channel", &u32))
   {
@@ -507,20 +504,18 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     rec.SetFulltext(u32);
   }
 
-  if ((str = htsmsg_get_str(msg, "serieslinkUri")) != NULL)
-  {
+  str = htsmsg_get_str(msg, "serieslinkUri");
+  if (str)
     rec.SetSeriesLink(str);
-  }
 
   return true;
 }
 
 bool AutoRecordings::ParseAutorecDelete(htsmsg_t* msg)
 {
-  const char* id;
-
   /* Validate/set mandatory fields */
-  if ((id = htsmsg_get_str(msg, "id")) == NULL)
+  const char* id = htsmsg_get_str(msg, "id");
+  if (!id)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryDelete: 'id' missing");
     return false;

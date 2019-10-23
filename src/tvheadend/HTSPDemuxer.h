@@ -55,7 +55,7 @@ public:
   HTSPDemuxer(HTSPConnection& conn);
   ~HTSPDemuxer();
 
-  bool ProcessMessage(const char* method, htsmsg_t* m);
+  bool ProcessMessage(const std::string& method, htsmsg_t* m);
   void Connected();
 
   bool Open(uint32_t channelId,

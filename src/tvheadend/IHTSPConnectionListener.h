@@ -39,7 +39,7 @@ public:
 
   virtual void Disconnected() = 0;
   virtual bool Connected() = 0;
-  virtual bool ProcessMessage(const char* method, htsmsg_t* msg) = 0;
+  virtual bool ProcessMessage(const std::string& method, htsmsg_t* msg) = 0;
 };
 
 } // namespace tvheadend

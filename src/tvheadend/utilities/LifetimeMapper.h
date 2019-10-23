@@ -27,9 +27,10 @@ namespace tvheadend
 {
 namespace utilities
 {
+
 /**
-     * Maps "lifetime" values from Kodi to Tvheadend and vica versa
-     */
+ * Maps "lifetime" values from Kodi to Tvheadend and vica versa
+ */
 class LifetimeMapper
 {
 public:
@@ -54,5 +55,6 @@ public:
       return kodiLifetime; // lifetime in days
   }
 };
+
 } // namespace utilities
 } // namespace tvheadend

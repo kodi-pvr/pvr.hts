@@ -25,45 +25,47 @@ namespace tvheadend
 {
 namespace status
 {
+
 /**
-     * Represents the current demuxer packet queue
-     */
+ * Represents the current demuxer packet queue
+ */
 struct QueueStatus
 {
   /**
-       * Number of data packets in queue
-       */
+   * Number of data packets in queue
+   */
   uint32_t packets;
 
   /**
-       * Number of bytes in queue.
-       */
+   * Number of bytes in queue.
+   */
   uint32_t bytes;
 
   /**
-       * Estimated delay of queue (in µs)
-       */
+   * Estimated delay of queue (in µs)
+   */
   uint32_t delay;
 
   /**
-       * Number of B-frames dropped
-       */
+   * Number of B-frames dropped
+   */
   uint32_t bdrops;
 
   /**
-       * Number of P-frames dropped
-       */
+   * Number of P-frames dropped
+   */
   uint32_t pdrops;
 
   /**
-       * Number of I-frames dropped
-       */
+   * Number of I-frames dropped
+   */
   uint32_t idrops;
 
   /**
-       * Constructor
-       */
+   * Constructor
+   */
   QueueStatus() : packets(0), bytes(0), delay(0), bdrops(0), pdrops(0), idrops(0) {}
 };
+
 } // namespace status
 } // namespace tvheadend

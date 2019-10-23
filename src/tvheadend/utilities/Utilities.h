@@ -27,9 +27,9 @@ namespace utilities
 {
 
 /**
-     * std::remove_if() for maps. Borrowed from:
-     * http://stackoverflow.com/questions/800955/remove-if-equivalent-for-stdmap
-     */
+ * std::remove_if() for maps. Borrowed from:
+ * http://stackoverflow.com/questions/800955/remove-if-equivalent-for-stdmap
+ */
 template<typename ContainerT, typename PredicateT>
 void erase_if(ContainerT& items, const PredicateT& predicate)
 {
@@ -41,5 +41,6 @@ void erase_if(ContainerT& items, const PredicateT& predicate)
       ++it;
   }
 };
+
 } // namespace utilities
 } // namespace tvheadend

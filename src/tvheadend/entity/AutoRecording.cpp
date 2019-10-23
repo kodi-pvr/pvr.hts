@@ -57,7 +57,9 @@ time_t AutoRecording::GetStart() const
     /* Calculate the approximate start time from the starting window */
     if ((m_startWindowBegin == -1) ||
         (m_startWindowEnd == -1)) // no starting window set => "any time"
+    {
       return 0;
+    }
     else if (m_startWindowEnd < m_startWindowBegin)
     {
       /* End of start window is a day in the future */

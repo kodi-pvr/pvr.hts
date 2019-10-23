@@ -30,8 +30,8 @@ namespace status
 {
 
 /**
-     * Contains information about the descrambler used
-     */
+ * Contains information about the descrambler used
+ */
 class DescrambleInfo
 {
 public:

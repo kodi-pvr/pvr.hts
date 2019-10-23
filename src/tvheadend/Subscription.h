@@ -32,6 +32,7 @@ extern "C"
 
 namespace tvheadend
 {
+
 class HTSPConnection;
 
 /* streaming uses a weight of 100 by default on the tvh side  */
@@ -79,48 +80,48 @@ public:
   std::string GetProfile() const;
 
   /**
-     * Subscribe to a channel on the backend
-     * @param channelId the channel to subscribe to
-     * @param weight the desired subscription weight
-     * @param restart restart the current subscription (i.e. after lost connection), other parameters will be ignored
-     */
+   * Subscribe to a channel on the backend
+   * @param channelId the channel to subscribe to
+   * @param weight the desired subscription weight
+   * @param restart restart the current subscription (i.e. after lost connection), other parameters will be ignored
+   */
   void SendSubscribe(uint32_t channelId, uint32_t weight, bool restart = false);
 
   /**
-     * Unsubscribe from a channel on the backend
-     */
+   * Unsubscribe from a channel on the backend
+   */
   void SendUnsubscribe();
 
   /**
-     * Send a seek to the backend
-     * @param time timestamp to seek to
-     * @return false if the command failed, true otherwise
-     */
+   * Send a seek to the backend
+   * @param time timestamp to seek to
+   * @return false if the command failed, true otherwise
+   */
   bool SendSeek(double time);
 
   /**
-     * Change the subscription speed on the backend
-     * @param speed the desired speed of the subscription
-     * @param restart resent the current subscription speed (i.e. after lost connection), other parameters will be ignored
-     */
+   * Change the subscription speed on the backend
+   * @param speed the desired speed of the subscription
+   * @param restart resent the current subscription speed (i.e. after lost connection), other parameters will be ignored
+   */
   void SendSpeed(int32_t speed, bool restart = false);
 
   /**
-     * Change the subscription weight on the backend
-     * @param weight the desired subscription weight
-     */
+   * Change the subscription weight on the backend
+   * @param weight the desired subscription weight
+   */
   void SendWeight(uint32_t weight);
 
   /**
-     * Parse the subscription status out of the incoming htsp data
-     * @param m message containing the status field
-     */
+   * Parse the subscription status out of the incoming htsp data
+   * @param m message containing the status field
+   */
   void ParseSubscriptionStatus(htsmsg_t* m);
 
   /**
-     * Use the specified profile for all new subscriptions
-     * @param profile the profile
-     */
+   * Use the specified profile for all new subscriptions
+   * @param profile the profile
+   */
   void SetProfile(const std::string& profile);
 
 private:
@@ -131,13 +132,13 @@ private:
   void SetState(eSubsriptionState state);
 
   /**
-     * Show a notification to the user depending on the subscription state
-     */
+   * Show a notification to the user depending on the subscription state
+   */
   void ShowStateNotification();
 
   /**
-     * Get the next unique subscription Id
-     */
+   * Get the next unique subscription Id
+   */
   static uint32_t GetNextId();
 
   uint32_t m_id;
@@ -150,4 +151,5 @@ private:
 
   mutable P8PLATFORM::CMutex m_mutex;
 };
+
 } // namespace tvheadend

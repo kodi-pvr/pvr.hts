@@ -72,7 +72,7 @@ public:
   {
     m_cond.Wait(mutex, m_flag, timeout);
     htsmsg_t* r = m_msg;
-    m_msg = NULL;
+    m_msg = nullptr;
     m_flag = false;
     return r;
   }
@@ -98,7 +98,7 @@ private:
 
 HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
   : m_connListener(connListener),
-    m_socket(NULL),
+    m_socket(nullptr),
     m_regThread(new HTSPRegister(this)),
     m_ready(false),
     m_seq(0),
@@ -106,7 +106,7 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
     m_serverVersion(""),
     m_htspVersion(0),
     m_webRoot(""),
-    m_challenge(NULL),
+    m_challenge(nullptr),
     m_challengeLen(0),
     m_suspended(false),
     m_state(PVR_CONNECTION_STATE_UNKNOWN)
@@ -140,7 +140,6 @@ void HTSPConnection::Stop()
 
 std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
 {
-  va_list va;
   const Settings& settings = Settings::GetInstance();
 
   // Generate the authentication string (user:pass@)
@@ -153,6 +152,8 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
   std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(),
                                         settings.GetHostname().c_str(), settings.GetPortHTTP());
 
+  va_list va;
+
   CLockObject lock(m_mutex);
   va_start(va, fmt);
   url += m_webRoot;
@@ -162,7 +163,7 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
   return url;
 }
 
-bool HTSPConnection::WaitForConnection(void)
+bool HTSPConnection::WaitForConnection()
 {
   if (!m_ready)
   {
@@ -172,25 +173,25 @@ bool HTSPConnection::WaitForConnection(void)
   return m_ready;
 }
 
-int HTSPConnection::GetProtocol(void) const
+int HTSPConnection::GetProtocol() const
 {
   CLockObject lock(m_mutex);
   return m_htspVersion;
 }
 
-std::string HTSPConnection::GetServerName(void) const
+std::string HTSPConnection::GetServerName() const
 {
   CLockObject lock(m_mutex);
   return m_serverName;
 }
 
-std::string HTSPConnection::GetServerVersion(void) const
+std::string HTSPConnection::GetServerVersion() const
 {
   CLockObject lock(m_mutex);
   return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
-std::string HTSPConnection::GetServerString(void) const
+std::string HTSPConnection::GetServerString() const
 {
   const Settings& settings = Settings::GetInstance();
 
@@ -204,7 +205,7 @@ bool HTSPConnection::HasCapability(const std::string& capability) const
          m_capabilities.end();
 }
 
-void HTSPConnection::OnSleep(void)
+void HTSPConnection::OnSleep()
 {
   CLockObject lock(m_mutex);
 
@@ -214,7 +215,7 @@ void HTSPConnection::OnSleep(void)
   m_suspended = true;
 }
 
-void HTSPConnection::OnWake(void)
+void HTSPConnection::OnWake()
 {
   CLockObject lock(m_mutex);
 
@@ -249,14 +250,14 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
 
     /* Notify connection state change (callback!) */
     serverString = GetServerString();
-    PVR->ConnectionStateChange(serverString.c_str(), newState, NULL);
+    PVR->ConnectionStateChange(serverString.c_str(), newState, nullptr);
   }
 }
 
 /*
  * Close the connection
  */
-void HTSPConnection::Disconnect(void)
+void HTSPConnection::Disconnect()
 {
   CLockObject lock(m_mutex);
 
@@ -276,28 +277,22 @@ void HTSPConnection::Disconnect(void)
  *
  * Return false if an error occurs and the connection should be terminated
  */
-bool HTSPConnection::ReadMessage(void)
+bool HTSPConnection::ReadMessage()
 {
-  uint8_t* buf;
-  uint8_t lb[4];
-  size_t len, cnt;
-  ssize_t r;
-  uint32_t seq;
-  htsmsg_t* msg;
-  const char* method;
-
   /* Read 4 byte len */
-  len = m_socket->Read(&lb, sizeof(lb));
+  uint8_t lb[4];
+  size_t len = m_socket->Read(&lb, sizeof(lb));
   if (len != sizeof(lb))
     return false;
+
   len = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
 
   /* Read rest of packet */
-  buf = (uint8_t*)malloc(len);
-  cnt = 0;
+  uint8_t* buf = static_cast<uint8_t*>(malloc(len));
+  size_t cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read((char*)buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    ssize_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
@@ -309,7 +304,8 @@ bool HTSPConnection::ReadMessage(void)
   }
 
   /* Deserialize */
-  if (!(msg = htsmsg_binary_deserialize(buf, len, buf)))
+  htsmsg_t* msg = htsmsg_binary_deserialize(buf, len, buf);
+  if (!msg)
   {
     /* Do not free buf here. Already done by htsmsg_binary_deserialize. */
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to decode message");
@@ -317,12 +313,13 @@ bool HTSPConnection::ReadMessage(void)
   }
 
   /* Sequence number - response */
+  uint32_t seq = 0;
   if (htsmsg_get_u32(msg, "seq", &seq) == 0)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
     CLockObject lock(m_mutex);
-    HTSPResponseList::iterator it;
-    if ((it = m_messages.find(seq)) != m_messages.end())
+    HTSPResponseList::iterator it = m_messages.find(seq);
+    if (it != m_messages.end())
     {
       it->second->Set(msg);
       return true;
@@ -330,7 +327,8 @@ bool HTSPConnection::ReadMessage(void)
   }
 
   /* Get method */
-  if (!(method = htsmsg_get_str(msg, "method")))
+  const char* method = htsmsg_get_str(msg, "method");
+  if (!method)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "message without a method");
     htsmsg_destroy(msg);
@@ -351,12 +349,7 @@ bool HTSPConnection::ReadMessage(void)
  */
 bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 {
-  int e;
-  void* buf;
-  size_t len;
-  ssize_t c;
-  uint32_t seq;
-
+  uint32_t seq = 0;
   if (!htsmsg_get_u32(msg, "seq", &seq))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "sending message [%s : %d]", method, seq);
@@ -368,19 +361,23 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
   htsmsg_add_str(msg, "method", method);
 
   /* Serialise */
-  e = htsmsg_binary_serialize(msg, &buf, &len, -1);
+  void* buf = nullptr;
+  size_t len = 0;
+  int e = htsmsg_binary_serialize(msg, &buf, &len, -1);
   htsmsg_destroy(msg);
   if (e < 0)
     return false;
 
   /* Send data */
-  c = m_socket->Write(buf, len);
+  ssize_t c = m_socket->Write(buf, len);
   free(buf);
-  if (c != (ssize_t)len)
+
+  if (c != static_cast<ssize_t>(len))
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to write (%s)", m_socket->GetError().c_str());
     if (!m_suspended)
       Disconnect();
+
     return false;
   }
 
@@ -395,12 +392,11 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
 
-  uint32_t seq;
-
   /* Add Sequence number */
-  HTSPResponse resp;
-  seq = ++m_seq;
+  uint32_t seq = ++m_seq;
   htsmsg_add_u32(msg, "seq", seq);
+
+  HTSPResponse resp;
   m_messages[seq] = &resp;
 
   /* Send Message (bypass TX check) */
@@ -408,7 +404,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   {
     m_messages.erase(seq);
     Logger::Log(LogLevel::LEVEL_ERROR, "failed to transmit");
-    return NULL;
+    return nullptr;
   }
 
   /* Wait for response */
@@ -419,26 +415,27 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
-    return NULL;
+
+    return nullptr;
   }
 
   /* Check result for errors and announce. */
-  uint32_t noaccess;
+  uint32_t noaccess = 0;
   if (!htsmsg_get_u32(msg, "noaccess", &noaccess) && noaccess)
   {
     // access denied
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: Access denied", method);
     htsmsg_destroy(msg);
-    return NULL;
+    return nullptr;
   }
   else
   {
-    const char* strError;
-    if ((strError = htsmsg_get_str(msg, "error")) != NULL)
+    const char* strError = htsmsg_get_str(msg, "error");
+    if (strError)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: %s", method, strError);
       htsmsg_destroy(msg);
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -454,11 +451,12 @@ htsmsg_t* HTSPConnection::SendAndWait(const char* method, htsmsg_t* msg, int iRe
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
 
   if (!WaitForConnection())
-    return NULL;
+    return nullptr;
+
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 
-bool HTSPConnection::SendHello(void)
+bool HTSPConnection::SendHello()
 {
   /* Build message */
   htsmsg_t* msg = htsmsg_create_map();
@@ -466,17 +464,14 @@ bool HTSPConnection::SendHello(void)
   htsmsg_add_u32(msg, "htspversion", HTSP_CLIENT_VERSION);
 
   /* Send and Wait */
-  if (!(msg = SendAndWait0("hello", msg)))
+  msg = SendAndWait0("hello", msg);
+  if (!msg)
     return false;
 
   /* Process */
-  const char* webroot;
-  const void* chal;
-  size_t chal_len;
-  htsmsg_t* cap;
 
   /* Basic Info */
-  webroot = htsmsg_get_str(msg, "webroot");
+  const char* webroot = htsmsg_get_str(msg, "webroot");
   m_serverName = htsmsg_get_str(msg, "servername");
   m_serverVersion = htsmsg_get_str(msg, "serverversion");
   m_htspVersion = htsmsg_get_u32_or_default(msg, "htspversion", 0);
@@ -485,9 +480,10 @@ bool HTSPConnection::SendHello(void)
               m_serverVersion.c_str(), m_htspVersion);
 
   /* Capabilities */
-  if ((cap = htsmsg_get_list(msg, "servercapability")))
+  htsmsg_t* cap = htsmsg_get_list(msg, "servercapability");
+  if (cap)
   {
-    htsmsg_field_t* f;
+    htsmsg_field_t* f = nullptr;
     HTSMSG_FOREACH(f, cap)
     {
       if (f->hmf_type == HMF_STR)
@@ -496,33 +492,33 @@ bool HTSPConnection::SendHello(void)
   }
 
   /* Authentication */
+  const void* chal = nullptr;
+  size_t chal_len = 0;
   htsmsg_get_bin(msg, "challenge", &chal, &chal_len);
   if (chal && chal_len)
   {
     m_challenge = malloc(chal_len);
     m_challengeLen = chal_len;
-    memcpy(m_challenge, chal, chal_len);
+    std::memcpy(m_challenge, chal, chal_len);
   }
 
   htsmsg_destroy(msg);
-
   return true;
 }
 
 bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
 {
-  uint32_t u32;
   htsmsg_t* msg = htsmsg_create_map();
   htsmsg_add_str(msg, "username", user.c_str());
 
   /* Add Password */
   // Note: we MUST send a digest or TVH will not evaluate the
-  struct HTSSHA1* sha = (struct HTSSHA1*)malloc(hts_sha1_size);
+  struct HTSSHA1* sha = static_cast<struct HTSSHA1*>(malloc(hts_sha1_size));
   uint8_t d[20];
   hts_sha1_init(sha);
-  hts_sha1_update(sha, (const uint8_t*)pass.c_str(), pass.length());
+  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()), pass.length());
   if (m_challenge)
-    hts_sha1_update(sha, (const uint8_t*)m_challenge, m_challengeLen);
+    hts_sha1_update(sha, static_cast<const uint8_t*>(m_challenge), m_challengeLen);
   hts_sha1_final(sha, d);
   htsmsg_add_bin(msg, "digest", d, sizeof(d));
   free(sha);
@@ -530,13 +526,15 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
   /* Send and Wait */
   msg = SendAndWait0("authenticate", msg);
 
-  if (msg == NULL)
+  if (!msg)
     return 0;
 
   if (m_htspVersion >= 26)
   {
     /* Log received permissions */
     Logger::Log(LogLevel::LEVEL_INFO, "  Received permissions:");
+
+    uint32_t u32 = 0;
     if (!htsmsg_get_u32(msg, "admin", &u32))
       Logger::Log(LogLevel::LEVEL_INFO, "  administrator              : %i", u32);
     if (!htsmsg_get_u32(msg, "streaming", &u32))
@@ -562,7 +560,7 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
 /**
  * Register the connection, hello+auth
  */
-void HTSPConnection::Register(void)
+void HTSPConnection::Register()
 {
   std::string user = Settings::GetInstance().GetUsername();
   std::string pass = Settings::GetInstance().GetPassword();
@@ -623,7 +621,7 @@ fail:
 /*
  * Main thread loop for connection and rx handling
  */
-void* HTSPConnection::Process(void)
+void* HTSPConnection::Process()
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
@@ -634,15 +632,15 @@ void* HTSPConnection::Process(void)
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
     std::string host = settings.GetHostname();
-    int port, timeout;
-    port = settings.GetPortHTSP();
-    timeout = settings.GetConnectTimeout();
+    int port = settings.GetPortHTSP();
+    int timeout = settings.GetConnectTimeout();
 
     /* Create socket (ensure mutex protection) */
     {
       CLockObject lock(m_mutex);
       if (m_socket)
         delete m_socket;
+
       m_connListener.Disconnected();
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready = false;
@@ -650,7 +648,7 @@ void* HTSPConnection::Process(void)
       if (m_challenge)
       {
         free(m_challenge);
-        m_challenge = NULL;
+        m_challenge = nullptr;
       }
     }
 
@@ -706,5 +704,5 @@ void* HTSPConnection::Process(void)
     m_regThread->StopThread(0);
   }
 
-  return NULL;
+  return nullptr;
 }
