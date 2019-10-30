@@ -122,7 +122,7 @@ msgstr "Trace (détaillée)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "Mauvaise version HTSP (prise en charge : v%d, exigée : v%d). Veuillez mettre tvheadend à jour."
+msgstr "Mauvaise version HTSP (prise en charge : v%d, exigée : v%d). Veuillez mettre tvheadend à jour."
 
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
@@ -174,27 +174,27 @@ msgstr "Enregistrer au plus une fois par jour"
 
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Cette règle seulement : enregistrer si le numéro d’épisode diffère"
+msgstr "Cette règle seulement : enregistrer si le numéro d’épisode diffère"
 
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Cette règle seulement : enregistrer si le nom de l’épisode diffère"
+msgstr "Cette règle seulement : enregistrer si le nom de l’épisode diffère"
 
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Cette règle seulement : enregistrer si le titre diffère"
+msgstr "Cette règle seulement : enregistrer si le titre diffère"
 
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Cette règle seulement : enregistrer si la description diffère"
+msgstr "Cette règle seulement : enregistrer si la description diffère"
 
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Cette règle seulement : enregistrer au plus une fois par semaine"
+msgstr "Cette règle seulement : enregistrer au plus une fois par semaine"
 
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Cette règle seulement : enregistrer au plus une fois par jour"
+msgstr "Cette règle seulement : enregistrer au plus une fois par jour"
 
 msgctxt "#30368"
 msgid "Default"
