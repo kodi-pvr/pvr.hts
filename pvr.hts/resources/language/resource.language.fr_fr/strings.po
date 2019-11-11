@@ -170,7 +170,7 @@ msgstr "Enregistrer max. une fois pas semaine"
 
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Enregistrer max. une fois pas jour"
+msgstr "Enregistrer max. une fois par jour"
 
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
