@@ -130,7 +130,7 @@ msgstr "Jednou (naplánováno pravidlem časovače)"
 
 msgctxt "#30351"
 msgid "Important (Highest)"
-msgstr "Důležité (Nejvyšší)"
+msgstr "Důležité (nejvyšší)"
 
 msgctxt "#30352"
 msgid "High"

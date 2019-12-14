@@ -44,6 +44,10 @@ msgctxt "#30006"
 msgid "Connection timeout (seconds)"
 msgstr "Pieslēguma noilgums (sekundes)"
 
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr "Taimera iestatījumi"
+
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr "Asinhronā EPG pārsūtīšana"
