@@ -96,6 +96,14 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "ברירות מחדל לתזמון חדש"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr "הקלטות מתוזמנות"
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr "התעלמות מכפילויות (tvh 4.3+‎)"
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "העברת נתונים"
@@ -195,6 +203,18 @@ msgstr "ברירת מחדל"
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "כלל שעון העצר (קישור בסדרה)"
+
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr "להקליט פעם בחודש לכל היותר"
+
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr "כלל זה בלבד: להקליט אחד לחודש לכל היותר"
+
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr "להקליט אם מדובר בפרק ייחודי לפי EPG/XMLTV"
 
 msgctxt "#30373"
 msgid "Until space needed"
@@ -323,6 +343,10 @@ msgstr "פרופיל הזרמה %s אינו זמין"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "העברת נתונים"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr "גודל נתח קריאת תזרים להקלטות (ק״ב)"
 
 msgctxt "#30510"
 msgid "Recordings"
