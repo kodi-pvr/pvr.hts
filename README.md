@@ -2,7 +2,7 @@
 
 This is a [Kodi](http://kodi.tv) PVR addon for connecting to a [tvheadend](https://tvheadend.org) backend.
 
-[![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=master)](https://travis-ci.org/kodi-pvr/pvr.hts)
+[![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=Matrix)](https://travis-ci.org/kodi-pvr/pvr.hts/branches)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
 
 ## Build instructions
