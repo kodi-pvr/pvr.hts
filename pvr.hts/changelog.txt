@@ -1,3 +1,17 @@
+5.3.4
+- Replace AppVeyor with Azure for test build (better performance)
+- Add p8-platform to addon depends instead of from kodi
+- Updated language files from Transifex
+
+5.3.3
+- Updated language files from Transifex
+
+5.3.2
+- Updated language files from Transifex
+
+5.3.1
+- Updated language files from Transifex
+
 5.3.0
 - Code cleanup
 - Fixed: 'Stop recording' no longer aborts in-progress recordings (HTSP v26)
