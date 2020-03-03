@@ -62,7 +62,11 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr ""
 
-#empty strings from id 30011 to 30049
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr "Use HTTPS"
+
+#empty strings from id 30012 to 30049
 
 msgctxt "#30050"
 msgid "Auto recordings"

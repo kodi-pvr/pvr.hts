@@ -149,7 +149,8 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
   if (!auth.empty())
     auth += "@";
 
-  std::string url = StringUtils::Format("http://%s%s:%d", auth.c_str(),
+  const char* proto = settings.GetUseHTTPS() ? "https" : "http";
+  std::string url = StringUtils::Format("%s://%s%s:%d", proto, auth.c_str(),
                                         settings.GetHostname().c_str(), settings.GetPortHTTP());
 
   va_list va;

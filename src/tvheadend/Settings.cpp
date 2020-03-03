@@ -28,6 +28,7 @@ using namespace tvheadend;
 using namespace tvheadend::utilities;
 
 const std::string Settings::DEFAULT_HOST = "127.0.0.1";
+const bool Settings::DEFAULT_USE_HTTPS = false;
 const int Settings::DEFAULT_HTTP_PORT = 9981;
 const int Settings::DEFAULT_HTSP_PORT = 9982;
 const std::string Settings::DEFAULT_USERNAME = "";
@@ -108,6 +109,8 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const void* value)
     return SetIntSetting(GetPortHTSP(), value);
   else if (key == "http_port")
     return SetIntSetting(GetPortHTTP(), value);
+  else if (key == "https")
+    return SetIntSetting(GetUseHTTPS(), value);
   else if (key == "user")
     return SetStringSetting(GetUsername(), value);
   else if (key == "pass")

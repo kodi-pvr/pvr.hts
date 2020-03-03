@@ -39,6 +39,7 @@ public:
   static const std::string DEFAULT_HOST;
   static const int DEFAULT_HTTP_PORT;
   static const int DEFAULT_HTSP_PORT;
+  static const bool DEFAULT_USE_HTTPS;
   static const std::string DEFAULT_USERNAME;
   static const std::string DEFAULT_PASSWORD;
   static const int DEFAULT_CONNECT_TIMEOUT; // millisecs
@@ -86,6 +87,7 @@ public:
   const char* GetConstCharHostname() const { return m_strHostname.c_str(); }
   int GetPortHTSP() const { return m_iPortHTSP; }
   int GetPortHTTP() const { return m_iPortHTTP; }
+  bool GetUseHTTPS() const { return m_bUseHTTPS; }
   std::string GetUsername() const { return m_strUsername; }
   std::string GetPassword() const { return m_strPassword; }
   int GetConnectTimeout() const { return m_iConnectTimeout; }
@@ -109,6 +111,7 @@ private:
     : m_strHostname(DEFAULT_HOST),
       m_iPortHTSP(DEFAULT_HTTP_PORT),
       m_iPortHTTP(DEFAULT_HTSP_PORT),
+      m_bUseHTTPS(DEFAULT_USE_HTTPS),
       m_strUsername(DEFAULT_USERNAME),
       m_strPassword(DEFAULT_PASSWORD),
       m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
@@ -139,6 +142,7 @@ private:
   void SetHostname(const std::string& value) { m_strHostname = value; }
   void SetPortHTSP(int value) { m_iPortHTSP = value; }
   void SetPortHTTP(int value) { m_iPortHTTP = value; }
+  void SetUseHTTPS(bool value) { m_bUseHTTPS = value; }
   void SetUsername(const std::string& value) { m_strUsername = value; }
   void SetPassword(const std::string& value) { m_strPassword = value; }
   void SetConnectTimeout(int value) { m_iConnectTimeout = value; }
@@ -172,6 +176,7 @@ private:
   std::string m_strHostname;
   int m_iPortHTSP;
   int m_iPortHTTP;
+  bool m_bUseHTTPS;
   std::string m_strUsername;
   std::string m_strPassword;
   int m_iConnectTimeout;

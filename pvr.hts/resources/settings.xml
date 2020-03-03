@@ -2,6 +2,7 @@
 <settings>
   <category label="30000">
     <setting id="host" type="text" label="30001" default="127.0.0.1" />
+    <setting id="https" type="bool" label="30011" default="false" />
     <setting id="http_port" type="number" option="int" label="30002" default="9981" />
     <setting id="htsp_port" type="number" option="int" label="30003" default="9982" />
     <setting id="user" type="text" label="30004" default="" />
