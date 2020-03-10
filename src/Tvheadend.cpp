@@ -2567,11 +2567,11 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   /* season/episode/part */
   uint32_t season = 0;
   if (!htsmsg_get_u32(msg, "seasonNumber", &season))
-    rec.SetSeason(season);
+    rec.SetSeason(static_cast<int32_t>(season));
 
   uint32_t episode = 0;
   if (!htsmsg_get_u32(msg, "episodeNumber", &episode))
-    rec.SetEpisode(episode);
+    rec.SetEpisode(static_cast<int32_t>(episode));
 
   uint32_t part = 0;
   if (!htsmsg_get_u32(msg, "partNumber", &part))
@@ -2694,9 +2694,9 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
     evt.SetAired(static_cast<time_t>(s64));
   if (!htsmsg_get_u32(msg, "seasonNumber", &u32))
-    evt.SetSeason(u32);
+    evt.SetSeason(static_cast<int32_t>(u32));
   if (!htsmsg_get_u32(msg, "episodeNumber", &u32))
-    evt.SetEpisode(u32);
+    evt.SetEpisode(static_cast<int32_t>(u32));
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
     evt.SetPart(u32);
 
