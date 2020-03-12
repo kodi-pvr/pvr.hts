@@ -50,8 +50,8 @@ namespace tvheadend
         m_stars(0),
         m_age(0),
         m_aired(0),
-        m_season(0),
-        m_episode(0),
+        m_season(-1),
+        m_episode(-1),
         m_part(0),
         m_recordingId(0),
         m_year(0)
@@ -117,11 +117,11 @@ namespace tvheadend
       time_t GetAired() const { return m_aired; }
       void SetAired(time_t aired) { m_aired = aired; }
 
-      uint32_t GetSeason() const { return m_season; }
-      void SetSeason(uint32_t season) { m_season = season; }
+      int32_t GetSeason() const { return m_season; }
+      void SetSeason(int32_t season) { m_season = season; }
 
-      uint32_t GetEpisode() const { return m_episode; }
-      void SetEpisode(uint32_t episode) { m_episode = episode; }
+      int32_t GetEpisode() const { return m_episode; }
+      void SetEpisode(int32_t episode) { m_episode = episode; }
 
       uint32_t GetPart() const { return m_part; }
       void SetPart(uint32_t part) { m_part = part; }
@@ -172,8 +172,8 @@ namespace tvheadend
       uint32_t    m_stars; /* 1 - 5 */
       uint32_t    m_age;   /* years */
       time_t      m_aired;
-      uint32_t    m_season;
-      uint32_t    m_episode;
+      int32_t     m_season;
+      int32_t     m_episode;
       uint32_t    m_part;
       std::string m_title;
       std::string m_subtitle; /* episode name */
