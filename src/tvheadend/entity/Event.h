@@ -54,7 +54,7 @@ public:
       m_aired(0),
       m_season(-1),
       m_episode(-1),
-      m_part(0),
+      m_part(-1),
       m_recordingId(0),
       m_year(0)
   {
@@ -108,8 +108,8 @@ public:
   int32_t GetEpisode() const { return m_episode; }
   void SetEpisode(int32_t episode) { m_episode = episode; }
 
-  uint32_t GetPart() const { return m_part; }
-  void SetPart(uint32_t part) { m_part = part; }
+  int32_t GetPart() const { return m_part; }
+  void SetPart(int32_t part) { m_part = part; }
 
   const std::string& GetTitle() const { return m_title; }
   void SetTitle(const std::string& title) { m_title = title; }
