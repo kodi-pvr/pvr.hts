@@ -1385,20 +1385,6 @@ PVR_ERROR CTvheadend::UpdateTimer(const PVR_TIMER& timer)
  * EPG
  * *************************************************************************/
 
-namespace
-{
-
-std::string ParseAsW3CDateString(time_t time)
-{
-  std::tm* tm = std::localtime(&time);
-  char buffer[16];
-  std::strftime(buffer, 16, "%Y-%m-%d", tm);
-
-  return buffer;
-}
-
-} // unnamed namespace
-
 void CTvheadend::CreateEvent(const Event& event, EPG_TAG& epg)
 {
   epg = {0};
@@ -1427,8 +1413,7 @@ void CTvheadend::CreateEvent(const Event& event, EPG_TAG& epg)
       epg.strGenreDescription = categories.c_str();
     }
   }
-  std::string strFirstAired((event.GetAired() > 0) ? ParseAsW3CDateString(event.GetAired()) : "");
-  epg.strFirstAired = strFirstAired.c_str();
+  epg.strFirstAired = event.GetAired().c_str();
   epg.iParentalRating = event.GetAge();
   epg.iStarRating = event.GetStars();
   epg.iSeriesNumber = event.GetSeason();

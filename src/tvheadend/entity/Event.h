@@ -51,7 +51,6 @@ public:
       m_stop(0),
       m_stars(0),
       m_age(0),
-      m_aired(0),
       m_season(-1),
       m_episode(-1),
       m_part(-1),
@@ -99,9 +98,6 @@ public:
   uint32_t GetAge() const { return m_age; }
   void SetAge(uint32_t age) { m_age = age; }
 
-  time_t GetAired() const { return m_aired; }
-  void SetAired(time_t aired) { m_aired = aired; }
-
   int32_t GetSeason() const { return m_season; }
   void SetSeason(int32_t season) { m_season = season; }
 
@@ -148,6 +144,9 @@ public:
   const std::string& GetCategories() const { return m_categories; }
   void SetCategories(const std::vector<std::string>& categories);
 
+  const std::string& GetAired() const { return m_aired; }
+  void SetAired(time_t aired);
+
 private:
   uint32_t m_next;
   uint32_t m_channel;
@@ -156,7 +155,6 @@ private:
   time_t m_stop;
   uint32_t m_stars; /* 1 - 5 */
   uint32_t m_age; /* years */
-  time_t m_aired;
   int32_t m_season;
   int32_t m_episode;
   uint32_t m_part;
@@ -172,6 +170,7 @@ private:
   std::string m_directors;
   std::string m_cast;
   std::string m_categories;
+  std::string m_aired;
 };
 
 } // namespace entity
