@@ -9,7 +9,7 @@
 #pragma once
 
 #include "HTSPTypes.h"
-#include "kodi/xbmc_addon_types.h"
+#include "kodi/AddonBase.h"
 
 #include <string>
 
