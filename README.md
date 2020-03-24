@@ -8,8 +8,8 @@ This is a [Kodi](http://kodi.tv) PVR addon for connecting to a [tvheadend](https
 
 ## Build instructions
 
-When building the addon you have to use the correct branch depending on which version of Kodi you're building against. 
-For example, if you're building the `Jarvis` branch of Kodi you should checkout the `Jarvis` branch of this repository. 
+When building the addon you have to use the correct branch depending on which version of Kodi you're building against.
+If you want to build the addon to be compatible with the latest kodi `master` commit, you need to checkout the branch with the current kodi codename.
 Also make sure you follow this README from the branch in question.
 
 ### Linux
