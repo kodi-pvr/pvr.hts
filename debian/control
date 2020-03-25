@@ -1,9 +1,9 @@
 Source: kodi-pvr-hts
 Priority: extra
-Maintainer: Arne Morten Kvarving <arne.morten.kvarving@sintef.no>
+Maintainer: Nobody <nobody@kodi.tv>
 Build-Depends: debhelper (>= 9.0.0), cmake, libp8-platform-dev,
                kodi-addon-dev
-Standards-Version: 3.9.4
+Standards-Version: 4.1.2
 Section: libs
 
 Package: kodi-pvr-hts
