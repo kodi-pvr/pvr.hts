@@ -5,6 +5,7 @@ This is a [Kodi](http://kodi.tv) PVR addon for connecting to a [tvheadend](https
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=Matrix)](https://travis-ci.org/kodi-pvr/pvr.hts/branches)
 [![Build Status](https://dev.azure.com/teamkodi/kodi-pvr/_apis/build/status/kodi-pvr.pvr.hts?branchName=Matrix)](https://dev.azure.com/teamkodi/kodi-pvr/_build/latest?definitionId=62&branchName=Matrix)
+[![Build Status](https://jenkins.kodi.tv/view/Addons/job/kodi-pvr/job/pvr.hts/job/Matrix/badge/icon)](https://jenkins.kodi.tv/blue/organizations/jenkins/kodi-pvr%2Fpvr.hts/branches/)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/5120/badge.svg)](https://scan.coverity.com/projects/5120)
 
 ## Build instructions
