@@ -1,6 +1,6 @@
 # Tvheadend PVR addon for Kodi
 
-This is a [Kodi](http://kodi.tv) PVR addon for connecting to a [tvheadend](https://tvheadend.org) backend.
+This is a [Kodi](https://kodi.tv) PVR addon for connecting to a [tvheadend](https://tvheadend.org) backend.
 
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.org/kodi-pvr/pvr.hts.svg?branch=Matrix)](https://travis-ci.org/kodi-pvr/pvr.hts/branches)
@@ -30,5 +30,5 @@ the addon will be available as a system addon.
 
 ##### Useful links
 
-* [Kodi's PVR user support] (http://forum.kodi.tv/forumdisplay.php?fid=167)
-* [Kodi's PVR development support] (http://forum.kodi.tv/forumdisplay.php?fid=136)
+* [Kodi's PVR user support](https://forum.kodi.tv/forumdisplay.php?fid=167)
+* [Kodi's PVR development support](https://forum.kodi.tv/forumdisplay.php?fid=136)
