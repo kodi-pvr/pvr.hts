@@ -1,23 +1,50 @@
 # build artifacts
 build/
+pvr.*/addon.xml
+
+# Debian build files
 debian/changelog
 debian/files
-debian/kodi-pvr-hts-dbg.debhelper.log
-debian/kodi-pvr-hts-dbg.substvars
-debian/kodi-pvr-hts-dbg/
-debian/kodi-pvr-hts.debhelper.log
-debian/kodi-pvr-hts.postinst.debhelper
-debian/kodi-pvr-hts.postrm.debhelper
-debian/kodi-pvr-hts.substvars
-debian/kodi-pvr-hts/
+debian/*.log
+debian/*.substvars
+debian/.debhelper/
 debian/tmp/
+debian/kodi-pvr-*/
 obj-x86_64-linux-gnu/
-pvr.hts/addon.xml
+
+# commonly used editors
+# vim
+*.swp
+
+# Eclipse
+*.project
+*.cproject
+.classpath
+*.sublime-*
+.settings/
+
+# KDevelop 4
+*.kdev4
+
+# gedit
+*~
+
+# CLion
+/.idea
 
 # clion
 .idea/
 
-# Eclipse/CDT
-.cproject
-.project
-.settings/
+# to prevent add after a "git format-patch VALUE" and "git add ." call
+/*.patch
+
+# Visual Studio Code
+.vscode
+
+# to prevent add if project code opened by Visual Studio over CMake file
+.vs/
+
+# General MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
