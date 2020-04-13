@@ -185,6 +185,9 @@ PVR_ERROR GetCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
       ++i;
     }
   }
+
+  pCapabilities->bSupportsRecordingSize = tvh->GetProtocol() >= 35;
+
   return PVR_ERROR_NO_ERROR;
 }
 

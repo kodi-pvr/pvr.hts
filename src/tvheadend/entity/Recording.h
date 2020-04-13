@@ -53,6 +53,7 @@ public:
       m_stopExtra(0),
       m_filesStart(0),
       m_filesStop(0),
+      m_filesSize(0),
       m_state(PVR_TIMER_STATE_ERROR),
       m_lifetime(0),
       m_priority(50), // Kodi default - "normal"
@@ -72,7 +73,7 @@ public:
            m_eventId == other.m_eventId && m_start == other.m_start && m_stop == other.m_stop &&
            m_startExtra == other.m_startExtra && m_stopExtra == other.m_stopExtra &&
            m_filesStart == other.m_filesStart && m_filesStop == other.m_filesStop &&
-           m_title == other.m_title && m_path == other.m_path &&
+           m_filesSize == other.m_filesSize && m_title == other.m_title && m_path == other.m_path &&
            m_description == other.m_description && m_image == other.m_image &&
            m_fanartImage == other.m_fanartImage && m_timerecId == other.m_timerecId &&
            m_autorecId == other.m_autorecId && m_state == other.m_state &&
@@ -148,6 +149,9 @@ public:
   int64_t GetFilesStop() const { return m_filesStop; }
   void SetFilesStop(int64_t stop) { m_filesStop = stop; }
 
+  int64_t GetFilesSize() const { return m_filesSize; }
+  void SetFilesSize(int64_t size) { m_filesSize = size; }
+
   const std::string& GetTitle() const { return m_title; }
   void SetTitle(const std::string& title) { m_title = title; }
 
@@ -218,6 +222,7 @@ private:
   int64_t m_stopExtra;
   int64_t m_filesStart;
   int64_t m_filesStop;
+  int64_t m_filesSize;
   std::string m_title;
   std::string m_subtitle;
   std::string m_path;
