@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="5.4.5"
+  version="5.4.6"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
@@ -122,7 +122,7 @@
     <description lang="zh_CN">Tvheadend 前端，支持直播电视和录像流媒体、电子节目单、定时器</description>
     <description lang="zh_TW">Tvheadend前端，支援的串流媒體包含有直播電視和錄製節目，電子節目表，定時器 等</description>
     <platform>@PLATFORM@</platform>
-    <license>GPL-2.0+</license>
+    <license>GPL-2.0-or-later</license>
     <source>https://github.com/kodi-pvr/pvr.hts</source>
     <forum>https://forum.kodi.tv/forumdisplay.php?fid=168</forum>
     <assets>
