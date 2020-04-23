@@ -73,8 +73,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
     switch (level)
     {
+      case LogLevel::LEVEL_FATAL:
+        addonLevel = addon_log_t::LOG_FATAL;
+        break;
       case LogLevel::LEVEL_ERROR:
         addonLevel = addon_log_t::LOG_ERROR;
+        break;
+      case LogLevel::LEVEL_WARNING:
+        addonLevel = addon_log_t::LOG_WARNING;
         break;
       case LogLevel::LEVEL_INFO:
         addonLevel = addon_log_t::LOG_INFO;
