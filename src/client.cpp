@@ -9,7 +9,6 @@
 #include "client.h"
 
 #include "Tvheadend.h"
-#include "kodi/libKODI_guilib.h"
 #include "kodi/xbmc_pvr_dll.h"
 #include "p8-platform/util/util.h"
 #include "tvheadend/Settings.h"
