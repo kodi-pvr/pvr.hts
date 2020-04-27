@@ -144,7 +144,7 @@ void OnPowerSavingDeactivated() {}
  * Capabilities / Info
  * *************************************************************************/
 
-PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
+PVR_ERROR GetCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG = true;
   pCapabilities->bSupportsTV = true;
