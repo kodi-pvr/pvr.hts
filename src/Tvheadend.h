@@ -198,7 +198,7 @@ public:
   void DemuxSpeed(int speed);
   void DemuxFillBuffer(bool mode);
   PVR_ERROR DemuxCurrentStreams(PVR_STREAM_PROPERTIES* streams);
-  PVR_ERROR DemuxCurrentSignal(PVR_SIGNAL_STATUS& sig);
+  PVR_ERROR DemuxCurrentSignal(PVR_SIGNAL_STATUS* sig);
   PVR_ERROR DemuxCurrentDescramble(PVR_DESCRAMBLE_INFO* info);
   bool DemuxIsTimeShifting() const;
   bool DemuxIsRealTimeStream() const;

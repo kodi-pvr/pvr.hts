@@ -3024,7 +3024,7 @@ PVR_ERROR CTvheadend::DemuxCurrentStreams(PVR_STREAM_PROPERTIES* streams)
   return m_dmx_active->CurrentStreams(streams);
 }
 
-PVR_ERROR CTvheadend::DemuxCurrentSignal(PVR_SIGNAL_STATUS& sig)
+PVR_ERROR CTvheadend::DemuxCurrentSignal(PVR_SIGNAL_STATUS* sig)
 {
   return m_dmx_active->CurrentSignal(sig);
 }

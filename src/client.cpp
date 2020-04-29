@@ -287,12 +287,12 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 
 void FillBuffer(bool mode) { tvh->DemuxFillBuffer(mode); }
 
-PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS& signalStatus)
+PVR_ERROR GetSignalStatus(int channelUid, PVR_SIGNAL_STATUS* signalStatus)
 {
   return tvh->DemuxCurrentSignal(signalStatus);
 }
 
-PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo)
+PVR_ERROR GetDescrambleInfo(int channelUid, PVR_DESCRAMBLE_INFO* descrambleInfo)
 {
   if (!descrambleInfo)
     return PVR_ERROR_INVALID_PARAMETERS;
