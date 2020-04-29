@@ -55,7 +55,7 @@ typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 class CTvheadend : public P8PLATFORM::CThread, public tvheadend::IHTSPConnectionListener
 {
 public:
-  CTvheadend(PVR_PROPERTIES* pvrProps);
+  CTvheadend(AddonProperties_PVR* pvrProps);
   ~CTvheadend() override;
 
   void Start();

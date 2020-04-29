@@ -30,7 +30,7 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-CTvheadend::CTvheadend(PVR_PROPERTIES* pvrProps)
+CTvheadend::CTvheadend(AddonProperties_PVR* pvrProps)
   : m_conn(new HTSPConnection(*this)),
     m_streamchange(false),
     m_vfs(new HTSPVFS(*m_conn)),

@@ -101,7 +101,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   ADDON_ReadSettings();
 
-  tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES*>(props));
+  tvh = new CTvheadend(reinterpret_cast<AddonProperties_PVR*>(props));
   tvh->Start();
 
   m_CurStatus = ADDON_STATUS_OK;
