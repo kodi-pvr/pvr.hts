@@ -30,7 +30,7 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-CTvheadend::CTvheadend(PVR_PROPERTIES* pvrProps)
+CTvheadend::CTvheadend(AddonProperties_PVR* pvrProps)
   : m_conn(new HTSPConnection(*this)),
     m_streamchange(false),
     m_vfs(new HTSPVFS(*m_conn)),
@@ -3024,7 +3024,7 @@ PVR_ERROR CTvheadend::DemuxCurrentStreams(PVR_STREAM_PROPERTIES* streams)
   return m_dmx_active->CurrentStreams(streams);
 }
 
-PVR_ERROR CTvheadend::DemuxCurrentSignal(PVR_SIGNAL_STATUS& sig)
+PVR_ERROR CTvheadend::DemuxCurrentSignal(PVR_SIGNAL_STATUS* sig)
 {
   return m_dmx_active->CurrentSignal(sig);
 }

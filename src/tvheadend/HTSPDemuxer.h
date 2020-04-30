@@ -58,7 +58,7 @@ public:
   void Weight(tvheadend::eSubscriptionWeight weight);
 
   PVR_ERROR CurrentStreams(PVR_STREAM_PROPERTIES* streams);
-  PVR_ERROR CurrentSignal(PVR_SIGNAL_STATUS& sig);
+  PVR_ERROR CurrentSignal(PVR_SIGNAL_STATUS* sig);
   PVR_ERROR CurrentDescrambleInfo(PVR_DESCRAMBLE_INFO* info);
 
   bool IsTimeShifting() const;

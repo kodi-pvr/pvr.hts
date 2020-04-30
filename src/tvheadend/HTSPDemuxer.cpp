@@ -255,24 +255,24 @@ PVR_ERROR HTSPDemuxer::CurrentStreams(PVR_STREAM_PROPERTIES* props)
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR HTSPDemuxer::CurrentSignal(PVR_SIGNAL_STATUS& sig)
+PVR_ERROR HTSPDemuxer::CurrentSignal(PVR_SIGNAL_STATUS* sig)
 {
   CLockObject lock(m_mutex);
 
-  sig = {0};
+  *sig = {0};
 
-  std::strncpy(sig.strAdapterName, m_sourceInfo.si_adapter.c_str(), sizeof(sig.strAdapterName) - 1);
-  std::strncpy(sig.strAdapterStatus, m_signalInfo.fe_status.c_str(),
-               sizeof(sig.strAdapterStatus) - 1);
-  std::strncpy(sig.strServiceName, m_sourceInfo.si_service.c_str(), sizeof(sig.strServiceName) - 1);
-  std::strncpy(sig.strProviderName, m_sourceInfo.si_provider.c_str(),
-               sizeof(sig.strProviderName) - 1);
-  std::strncpy(sig.strMuxName, m_sourceInfo.si_mux.c_str(), sizeof(sig.strMuxName) - 1);
+  std::strncpy(sig->strAdapterName, m_sourceInfo.si_adapter.c_str(), sizeof(sig->strAdapterName) - 1);
+  std::strncpy(sig->strAdapterStatus, m_signalInfo.fe_status.c_str(),
+               sizeof(sig->strAdapterStatus) - 1);
+  std::strncpy(sig->strServiceName, m_sourceInfo.si_service.c_str(), sizeof(sig->strServiceName) - 1);
+  std::strncpy(sig->strProviderName, m_sourceInfo.si_provider.c_str(),
+               sizeof(sig->strProviderName) - 1);
+  std::strncpy(sig->strMuxName, m_sourceInfo.si_mux.c_str(), sizeof(sig->strMuxName) - 1);
 
-  sig.iSNR = m_signalInfo.fe_snr;
-  sig.iSignal = m_signalInfo.fe_signal;
-  sig.iBER = m_signalInfo.fe_ber;
-  sig.iUNC = m_signalInfo.fe_unc;
+  sig->iSNR = m_signalInfo.fe_snr;
+  sig->iSignal = m_signalInfo.fe_signal;
+  sig->iBER = m_signalInfo.fe_ber;
+  sig->iUNC = m_signalInfo.fe_unc;
 
   return PVR_ERROR_NO_ERROR;
 }

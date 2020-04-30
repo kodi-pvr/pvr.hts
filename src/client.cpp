@@ -9,7 +9,6 @@
 #include "client.h"
 
 #include "Tvheadend.h"
-#include "kodi/libKODI_guilib.h"
 #include "kodi/xbmc_pvr_dll.h"
 #include "p8-platform/util/util.h"
 #include "tvheadend/Settings.h"
@@ -102,7 +101,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   ADDON_ReadSettings();
 
-  tvh = new CTvheadend(reinterpret_cast<PVR_PROPERTIES*>(props));
+  tvh = new CTvheadend(reinterpret_cast<AddonProperties_PVR*>(props));
   tvh->Start();
 
   m_CurStatus = ADDON_STATUS_OK;
@@ -145,7 +144,7 @@ void OnPowerSavingDeactivated() {}
  * Capabilities / Info
  * *************************************************************************/
 
-PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
+PVR_ERROR GetCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG = true;
   pCapabilities->bSupportsTV = true;
@@ -288,12 +287,12 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 
 void FillBuffer(bool mode) { tvh->DemuxFillBuffer(mode); }
 
-PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS& signalStatus)
+PVR_ERROR GetSignalStatus(int channelUid, PVR_SIGNAL_STATUS* signalStatus)
 {
   return tvh->DemuxCurrentSignal(signalStatus);
 }
 
-PVR_ERROR GetDescrambleInfo(PVR_DESCRAMBLE_INFO* descrambleInfo)
+PVR_ERROR GetDescrambleInfo(int channelUid, PVR_DESCRAMBLE_INFO* descrambleInfo)
 {
   if (!descrambleInfo)
     return PVR_ERROR_INVALID_PARAMETERS;
