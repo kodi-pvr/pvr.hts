@@ -469,6 +469,9 @@ PVR_ERROR CTvheadend::GetRecordings(ADDON_HANDLE handle)
       rec.recordingTime = static_cast<time_t>(start);
       rec.iDuration = static_cast<int>(stop - start);
 
+      /* File size */
+      rec.sizeInBytes = recording.GetFilesSize();
+
       /* Priority */
       rec.iPriority = recording.GetPriority();
 
@@ -2297,6 +2300,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
     start = 0;
     stop = 0;
+    int64_t size = 0;
 
     htsmsg_field_t* file = nullptr;
     HTSMSG_FOREACH(file, files) // Loop through all files
@@ -2333,11 +2337,15 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
       if (!htsmsg_get_s64(&file->hmf_msg, "stop", &s64) && stop < s64)
         stop = s64;
+
+      if (!htsmsg_get_s64(&file->hmf_msg, "size", &s64))
+        size += s64;
     }
 
     // Set the times the recording actually started/stopped. They may differ from the scheduled start/stop.
     rec.SetFilesStart(start);
     rec.SetFilesStop(stop);
+    rec.SetFilesSize(size);
 
     /* Channel type fallback (in case channel was deleted) */
     if (needChannelType)
