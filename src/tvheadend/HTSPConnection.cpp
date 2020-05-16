@@ -658,6 +658,17 @@ void* HTSPConnection::Process()
       Logger::Log(LogLevel::LEVEL_TRACE, "connecting to %s:%d", host.c_str(), port);
     }
 
+    /* wakeup server */
+    std::string wol_mac = settings.GetWolMac();
+    if (!wol_mac.empty())
+    {
+      Logger::Log(LogLevel::LEVEL_TRACE, "send wol packet...");
+      if (!XBMC->WakeOnLan(wol_mac.c_str()))
+      {
+        Logger::Log(LogLevel::LEVEL_ERROR, "Error waking up Server at MAC-Address %s", wol_mac.c_str());
+      }
+    }
+
     /* Connect */
     Logger::Log(LogLevel::LEVEL_TRACE, "waiting for connection...");
     if (!m_socket->Open(timeout))

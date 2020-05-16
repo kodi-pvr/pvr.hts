@@ -9,6 +9,7 @@
     <setting id="pass" type="text" label="30005" option="hidden" enable="!eq(-1,)" default="" />
     <setting id="connect_timeout" type="slider" option="int" range="1,60" label="30006" default="10" />
     <setting id="response_timeout" type="slider" option="int" range="1,60" label="30007" default="5" />
+    <setting id="wol_mac" type="text" label="30012" default="" />
   </category>
 
   <category label="30009">
