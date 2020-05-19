@@ -29,6 +29,7 @@ public:
   static const bool DEFAULT_USE_HTTPS;
   static const std::string DEFAULT_USERNAME;
   static const std::string DEFAULT_PASSWORD;
+  static const std::string DEFAULT_WOL_MAC;
   static const int DEFAULT_CONNECT_TIMEOUT; // millisecs
   static const int DEFAULT_RESPONSE_TIMEOUT; // millisecs
   static const bool DEFAULT_TRACE_DEBUG;
@@ -77,6 +78,7 @@ public:
   bool GetUseHTTPS() const { return m_bUseHTTPS; }
   std::string GetUsername() const { return m_strUsername; }
   std::string GetPassword() const { return m_strPassword; }
+  std::string GetWolMac() const { return m_strWolMac; }
   int GetConnectTimeout() const { return m_iConnectTimeout; }
   int GetResponseTimeout() const { return m_iResponseTimeout; }
   bool GetTraceDebug() const { return m_bTraceDebug; }
@@ -101,6 +103,7 @@ private:
       m_bUseHTTPS(DEFAULT_USE_HTTPS),
       m_strUsername(DEFAULT_USERNAME),
       m_strPassword(DEFAULT_PASSWORD),
+      m_strWolMac(DEFAULT_WOL_MAC),
       m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
       m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
       m_bTraceDebug(DEFAULT_TRACE_DEBUG),
@@ -132,6 +135,7 @@ private:
   void SetUseHTTPS(bool value) { m_bUseHTTPS = value; }
   void SetUsername(const std::string& value) { m_strUsername = value; }
   void SetPassword(const std::string& value) { m_strPassword = value; }
+  void SetWolMac(const std::string& value) { m_strWolMac = value; }
   void SetConnectTimeout(int value) { m_iConnectTimeout = value; }
   void SetResponseTimeout(int value) { m_iResponseTimeout = value; }
   void SetTraceDebug(bool value) { m_bTraceDebug = value; }
@@ -166,6 +170,7 @@ private:
   bool m_bUseHTTPS;
   std::string m_strUsername;
   std::string m_strPassword;
+  std::string m_strWolMac;
   int m_iConnectTimeout;
   int m_iResponseTimeout;
   bool m_bTraceDebug;
