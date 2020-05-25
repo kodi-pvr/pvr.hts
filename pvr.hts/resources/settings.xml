@@ -1,52 +1,273 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<settings>
-  <category label="30000">
-    <setting id="host" type="text" label="30001" default="127.0.0.1" />
-    <setting id="https" type="bool" label="30011" default="false" />
-    <setting id="http_port" type="number" option="int" label="30002" default="9981" />
-    <setting id="htsp_port" type="number" option="int" label="30003" default="9982" />
-    <setting id="user" type="text" label="30004" default="" />
-    <setting id="pass" type="text" label="30005" option="hidden" enable="!eq(-1,)" default="" />
-    <setting id="connect_timeout" type="slider" option="int" range="1,60" label="30006" default="10" />
-    <setting id="response_timeout" type="slider" option="int" range="1,60" label="30007" default="5" />
-    <setting id="wol_mac" type="text" label="30012" default="" />
-  </category>
+<settings version="1">
+  <section id="addon" label="-1" help="-1">
+    <category id="connection" label="30000" help="-1">
+      <group id="1" label="-1">
+        <setting id="host" type="string" label="30001">
+          <level>0</level>
+          <default>127.0.0.1</default>
+          <control type="edit" format="string" />
+        </setting>
+        <setting id="https" type="boolean" label="30011" help="-1">
+          <level>0</level>
+          <default>false</default>
+          <control type="toggle"/>
+        </setting>
+        <setting id="http_port" type="integer" label="30002">
+          <level>0</level>
+          <default>9981</default>
+          <constraints>
+            <minimum>1</minimum>
+            <step>1</step>
+            <maximum>65535</maximum>
+          </constraints>
+          <control type="edit" format="integer" />
+        </setting>
+        <setting id="htsp_port" type="integer" label="30003">
+          <level>0</level>
+          <default>9982</default>
+          <constraints>
+            <minimum>1</minimum>
+            <step>1</step>
+            <maximum>65535</maximum>
+          </constraints>
+          <control type="edit" format="integer" />
+        </setting>
+        <setting id="user" type="string" label="30004">
+          <level>0</level>
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+          <control type="edit" format="string" />
+        </setting>
+        <setting id="pass" type="string" label="30005">
+          <level>0</level>
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+          <control type="edit" format="string">
+            <hidden>true</hidden>
+          </control>
+          <dependencies>
+            <dependency type="enable" setting="user" operator="!is"></dependency>
+          </dependencies>
+        </setting>
+        <setting id="connect_timeout" type="integer" label="30006" help="-1">
+          <level>0</level>
+          <default>10</default>
+          <constraints>
+            <minimum>1</minimum>
+            <step>1</step>
+            <maximum>60</maximum>
+          </constraints>
+          <control type="slider" format="integer" />
+        </setting>
+        <setting id="response_timeout" type="integer" label="30007" help="-1">
+          <level>0</level>
+          <default>5</default>
+          <constraints>
+            <minimum>1</minimum>
+            <step>1</step>
+            <maximum>60</maximum>
+          </constraints>
+          <control type="slider" format="integer" />
+        </setting>
+        <setting id="wol_mac" type="string" label="30012" help="-1">
+          <level>0</level>
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+          <control type="edit" format="string" />
+        </setting>
+      </group>
+    </category>
 
-  <category label="30009">
-    <setting label="30500" type="lsep"/>
-    <setting id="streaming_profile" type="text" label="30501" default="" />
+    <!-- =================================================================== -->
 
-    <setting label="30400" type="lsep"/>
-    <setting id="pretuner_enabled" type="bool" label="30403" default="false" />
-    <setting id="total_tuners" enable="eq(-1,true)" type="slider" option="int" range="2,1,10" label="30401" default="2" />
-    <setting id="pretuner_closedelay" enable="eq(-2,true)" type="slider" option="int" range="5,5,60" label="30402" default="10" />
+    <category id="streaming" label="30009" help="-1">
+      <group id="1" label="30500">
+        <setting id="streaming_profile" type="string" label="30501" help="-1">
+          <level>0</level>
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+          <control type="edit" format="string" />
+        </setting>
+      </group>
 
-    <setting label="30503" type="lsep"/>
-    <setting id="stream_readchunksize" type="slider" option="int" range="4,4,512" label="30504" default="64" />
-  </category>
+      <group id="2" label="30400">
+        <setting id="pretuner_enabled" type="boolean" label="30403" help="-1">
+          <level>0</level>
+          <default>false</default>
+          <control type="toggle"/>
+        </setting>
+        <setting id="total_tuners" type="integer" label="30401" help="-1">
+          <level>0</level>
+          <default>2</default>
+          <constraints>
+            <minimum>2</minimum>
+            <step>1</step>
+            <maximum>10</maximum>
+          </constraints>
+          <dependencies>
+            <dependency type="enable" setting="pretuner_enabled">true</dependency>
+          </dependencies>
+          <control type="slider" format="integer" />
+        </setting>
+        <setting id="pretuner_closedelay" type="integer" label="30402" help="-1">
+          <level>0</level>
+          <default>10</default>
+          <constraints>
+            <minimum>5</minimum>
+            <step>5</step>
+            <maximum>60</maximum>
+          </constraints>
+          <dependencies>
+            <dependency type="enable" setting="pretuner_enabled">true</dependency>
+          </dependencies>
+          <control type="slider" format="integer" />
+        </setting>
+      </group>
 
-  <category label="30010">
-    <setting label="30050" type="lsep"/>
-    <setting id="autorec_approxtime" type="enum" label="30051" lvalues="30052|30053" default="0"/>
-    <setting id="autorec_maxdiff" enable="eq(-1,1)"  type="slider" option="int" range="0,5,120" label="30054" default="15" />
-    
-    <setting label="30059" type="lsep"/>
-    <setting id="dvr_ignore_duplicates" type="bool" label="30060" default="true" />
+      <group id="3" label="30503">
+        <setting id="stream_readchunksize" type="integer" label="30504" help="-1">
+          <level>0</level>
+          <default>64</default>
+          <constraints>
+            <minimum>4</minimum>
+            <step>4</step>
+            <maximum>512</maximum>
+          </constraints>
+          <control type="slider" format="integer" />
+        </setting>
+      </group>
+    </category>
 
-    <setting label="30058" type="lsep"/>
-    <setting id="dvr_priority" type="enum" label="30055" lvalues="30351|30352|30353|30354|30355" default="2"/>
-    <setting id="dvr_lifetime" type="enum" label="30056" lvalues="30375|30376|30377|30378|30379|30380|30381|30382|30383|30384|30385|30386|30387|30388|30389" default="8"/>
-    <setting id="dvr_dubdetect" type="enum" label="30057" lvalues="30356|30357|30358|30359|30360|30361" default="0"/>
-  </category>
+    <!-- =================================================================== -->
 
-  <category label="30008">
-    <setting label="30100" type="lsep"/>
-    <setting id="epg_async" type="bool" label="30101" default="true"/>
+    <category id="timer" label="30010" help="-1">
+      <group id="1" label="30050">
+        <setting id="autorec_approxtime" type="integer" label="30051" help="-1">
+          <level>0</level>
+          <default>0</default> <!-- Strict (start time + end time) -->
+          <constraints>
+            <options>
+              <option label="30052">0</option> <!-- Strict (start time + end time) -->
+              <option label="30053">1</option> <!-- Relaxed (start time +/- margin) -->
+            </options>
+          </constraints>
+          <control type="spinner" format="string" />
+        </setting>
+        <setting id="autorec_maxdiff" type="integer" label="30054" help="-1">
+          <level>0</level>
+          <default>15</default>
+          <constraints>
+            <minimum>0</minimum>
+            <step>5</step>
+            <maximum>120</maximum>
+          </constraints>
+          <dependencies>
+            <dependency type="enable" setting="autorec_approxtime">1</dependency>
+          </dependencies>
+          <control type="slider" format="integer" />
+        </setting>
+      </group>
 
-    <setting label="30510" type="lsep"/>
-    <setting id="dvr_playstatus" type="bool" label="30511" default="true"/>
+      <group id="2" label="30059">
+        <setting id="dvr_ignore_duplicates" type="boolean" label="30060" help="-1">
+          <level>0</level>
+          <default>true</default>
+          <control type="toggle"/>
+        </setting>
+      </group>
 
-    <setting label="30200" type="lsep"/>
-    <setting id="trace_debug" type="bool" label="30201" default="false"/>
-  </category>
+      <group id="3" label="30058">
+        <setting id="dvr_priority" type="integer" label="30055" help="-1">
+          <level>0</level>
+          <default>2</default> <!-- Normal -->
+          <constraints>
+            <options>
+              <option label="30351">0</option> <!-- Important (Highest) -->
+              <option label="30352">1</option> <!-- High -->
+              <option label="30353">2</option> <!-- Normal -->
+              <option label="30354">3</option> <!-- Low -->
+              <option label="30355">4</option> <!-- Unimportant (Lowest) -->
+            </options>
+          </constraints>
+          <control type="spinner" format="string" />
+        </setting>
+        <setting id="dvr_lifetime" type="integer" label="30056" help="-1">
+          <level>0</level>
+          <default>8</default> <!-- 3 months -->
+          <constraints>
+            <options>
+              <option label="30375">0</option> <!-- 1 day -->
+              <option label="30376">1</option> <!-- 3 days -->
+              <option label="30377">2</option> <!-- 5 days -->
+              <option label="30378">3</option> <!-- 1 week -->
+              <option label="30379">4</option> <!-- 2 weeks -->
+              <option label="30380">5</option> <!-- 3 weeks -->
+              <option label="30381">6</option> <!-- 1 month -->
+              <option label="30382">7</option> <!-- 2 months -->
+              <option label="30383">8</option> <!-- 3 months -->
+              <option label="30384">9</option> <!-- 6 months -->
+              <option label="30385">10</option> <!-- 1 year -->
+              <option label="30386">11</option> <!-- 2 years -->
+              <option label="30387">12</option> <!-- 3 years -->
+              <option label="30388">13</option> <!-- Until space needed (tvh 4.1+) -->
+              <option label="30389">14</option> <!-- Forever (tvh 4.1+) -->
+            </options>
+          </constraints>
+          <control type="spinner" format="string" />
+        </setting>
+        <setting id="dvr_dubdetect" type="integer" label="30057" help="-1">
+          <level>0</level>
+          <default>0</default> <!-- Record all episodes -->
+          <constraints>
+            <options>
+              <option label="30356">0</option> <!-- Record all episodes -->
+              <option label="30357">1</option> <!-- Record if episode number differs -->
+              <option label="30358">2</option> <!-- Record if episode name differs -->
+              <option label="30359">3</option> <!-- Record if description differs -->
+              <option label="30360">4</option> <!-- Record max once per week -->
+              <option label="30361">5</option> <!-- Record max once per day -->
+            </options>
+          </constraints>
+          <control type="spinner" format="string" />
+        </setting>
+      </group>
+    </category>
+
+    <!-- =================================================================== -->
+
+    <category id="advanced" label="30008" help="-1">
+      <group id="1" label="30100">
+        <setting id="epg_async" type="boolean" label="30101" help="-1">
+          <level>0</level>
+          <default>true</default>
+          <control type="toggle"/>
+        </setting>
+      </group>
+
+      <group id="2" label="30510">
+        <setting id="dvr_playstatus" type="boolean" label="30511" help="-1">
+          <level>0</level>
+          <default>true</default>
+          <control type="toggle"/>
+        </setting>
+      </group>
+
+      <group id="3" label="30200">
+        <setting id="trace_debug" type="boolean" label="30201" help="-1">
+          <level>0</level>
+          <default>false</default>
+          <control type="toggle"/>
+        </setting>
+      </group>
+    </category>
+  </section>
 </settings>
