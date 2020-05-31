@@ -200,6 +200,7 @@ void HTSPConnection::OnSleep()
   Logger::Log(LogLevel::LEVEL_TRACE, "going to sleep (OnSleep)");
 
   /* close connection, prevent reconnect while suspending/suspended */
+  Disconnect();
   m_suspended = true;
 }
 
