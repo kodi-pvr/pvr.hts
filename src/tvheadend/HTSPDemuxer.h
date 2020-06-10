@@ -21,14 +21,15 @@ extern "C"
 
 #include "IHTSPDemuxPacketHandler.h"
 #include "Subscription.h"
-#include "kodi/addon-instance/pvr/Channels.h"
-#include "kodi/addon-instance/pvr/Stream.h"
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/buffer.h"
 #include "status/DescrambleInfo.h"
 #include "status/Quality.h"
 #include "status/SourceInfo.h"
 #include "status/TimeshiftStatus.h"
+
+#include "kodi/addon-instance/pvr/Channels.h"
+#include "kodi/addon-instance/pvr/Stream.h"
+#include "p8-platform/threads/mutex.h"
+#include "p8-platform/util/buffer.h"
 
 namespace tvheadend
 {

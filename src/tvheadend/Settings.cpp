@@ -200,7 +200,8 @@ bool Settings::ReadBoolSetting(const std::string& key, bool def)
   return def;
 }
 
-ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue, const kodi::CSettingValue& newValue)
+ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue,
+                                        const kodi::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetString())
     return ADDON_STATUS_OK;

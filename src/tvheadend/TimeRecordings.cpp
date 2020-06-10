@@ -56,8 +56,8 @@ void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers
     kodi::addon::PVRTimer tmr;
 
     tmr.SetClientIndex(rec.second.GetId());
-    tmr.SetClientChannelUid(
-        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL);
+    tmr.SetClientChannelUid((rec.second.GetChannel() > 0) ? rec.second.GetChannel()
+                                                          : PVR_TIMER_ANY_CHANNEL);
     tmr.SetStartTime(rec.second.GetStart());
     tmr.SetEndTime(rec.second.GetStop());
     tmr.SetTitle(rec.second.GetName());
@@ -165,13 +165,15 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& ti
   if (m_conn.GetProtocol() >= 25)
   {
     htsmsg_add_u32(m, "removal", timer.GetLifetime()); // remove from disk
-    htsmsg_add_s64(m, "channelId", timer.GetClientChannelUid()); // channelId is signed for >= htspv25
+    htsmsg_add_s64(m, "channelId",
+                   timer.GetClientChannelUid()); // channelId is signed for >= htspv25
   }
   else
   {
     htsmsg_add_u32(m, "retention",
                    LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from tvh database
-    htsmsg_add_u32(m, "channelId", timer.GetClientChannelUid()); // channelId is unsigned for < htspv25
+    htsmsg_add_u32(m, "channelId",
+                   timer.GetClientChannelUid()); // channelId is unsigned for < htspv25
   }
 
   htsmsg_add_u32(m, "daysOfWeek", timer.GetWeekdays());

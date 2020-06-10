@@ -9,6 +9,7 @@
 #pragma once
 
 #include "HTSPTypes.h"
+
 #include "kodi/AddonBase.h"
 
 #include <string>
@@ -160,7 +161,8 @@ private:
   static bool ReadBoolSetting(const std::string& key, bool def);
 
   // @return ADDON_STATUS_OK if value has not changed, ADDON_STATUS_NEED_RESTART otherwise
-  static ADDON_STATUS SetStringSetting(const std::string& oldValue, const kodi::CSettingValue& newValue);
+  static ADDON_STATUS SetStringSetting(const std::string& oldValue,
+                                       const kodi::CSettingValue& newValue);
   static ADDON_STATUS SetIntSetting(int oldValue, const kodi::CSettingValue& newValue);
   static ADDON_STATUS SetBoolSetting(bool oldValue, const kodi::CSettingValue& newValue);
 

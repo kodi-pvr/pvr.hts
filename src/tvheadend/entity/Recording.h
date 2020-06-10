@@ -10,6 +10,7 @@
 
 #include "../utilities/LifetimeMapper.h"
 #include "Entity.h"
+
 #include "kodi/addon-instance/pvr/Timers.h"
 
 #include <algorithm>

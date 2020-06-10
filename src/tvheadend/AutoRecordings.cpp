@@ -57,8 +57,8 @@ void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers
     kodi::addon::PVRTimer tmr;
 
     tmr.SetClientIndex(rec.second.GetId());
-    tmr.SetClientChannelUid(
-        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL);
+    tmr.SetClientChannelUid((rec.second.GetChannel() > 0) ? rec.second.GetChannel()
+                                                          : PVR_TIMER_ANY_CHANNEL);
     tmr.SetStartTime(rec.second.GetStart());
     tmr.SetEndTime(rec.second.GetStop());
     if (tmr.GetStartTime() == 0)
@@ -85,8 +85,8 @@ void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetSummary(""); // n/a for repeating timers
     tmr.SetSeriesLink(rec.second.GetSeriesLink());
     tmr.SetState(rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED);
-    tmr.SetTimerType(
-        rec.second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG : TIMER_REPEATING_SERIESLINK);
+    tmr.SetTimerType(rec.second.GetSeriesLink().empty() ? TIMER_REPEATING_EPG
+                                                        : TIMER_REPEATING_SERIESLINK);
     tmr.SetPriority(rec.second.GetPriority());
     tmr.SetLifetime(rec.second.GetLifetime());
     tmr.SetMaxRecordings(0); // not supported by tvh

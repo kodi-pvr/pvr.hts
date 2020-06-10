@@ -16,9 +16,9 @@ namespace kodi
 {
 namespace addon
 {
-  class PVRRecording;
+class PVRRecording;
 }
-}
+} // namespace kodi
 
 namespace tvheadend
 {

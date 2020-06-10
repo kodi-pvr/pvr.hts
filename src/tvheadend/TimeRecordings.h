@@ -18,6 +18,7 @@ extern "C"
 }
 
 #include "entity/TimeRecording.h"
+
 #include "kodi/addon-instance/pvr/Timers.h"
 
 namespace tvheadend

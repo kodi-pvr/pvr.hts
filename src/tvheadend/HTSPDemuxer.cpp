@@ -617,8 +617,8 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   }
 
   /* Language */
-  if (stream.GetCodecType() == PVR_CODEC_TYPE_SUBTITLE || stream.GetCodecType() == PVR_CODEC_TYPE_AUDIO ||
-      stream.GetCodecType() == PVR_CODEC_TYPE_RDS)
+  if (stream.GetCodecType() == PVR_CODEC_TYPE_SUBTITLE ||
+      stream.GetCodecType() == PVR_CODEC_TYPE_AUDIO || stream.GetCodecType() == PVR_CODEC_TYPE_RDS)
   {
     const char* language = htsmsg_get_str(&f->hmf_msg, "language");
     if (language)
@@ -668,7 +668,8 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   /* We can only use PVR_STREAM_MAX_STREAMS streams */
   if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
   {
-    Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.GetCodecId());
+    Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type,
+                stream.GetCodecId());
     m_streams.emplace_back(stream);
     return true;
   }

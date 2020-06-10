@@ -15,9 +15,6 @@ extern "C"
 #include <sys/types.h>
 }
 
-#include "kodi/addon-instance/PVR.h"
-#include "p8-platform/threads/threads.h"
-#include "p8-platform/util/buffer.h"
 #include "tvheadend/AutoRecordings.h"
 #include "tvheadend/ChannelTuningPredictor.h"
 #include "tvheadend/HTSPMessage.h"
@@ -30,6 +27,10 @@ extern "C"
 #include "tvheadend/entity/Schedule.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/utilities/AsyncState.h"
+
+#include "kodi/addon-instance/PVR.h"
+#include "p8-platform/threads/threads.h"
+#include "p8-platform/util/buffer.h"
 
 #include <string>
 #include <utility>
@@ -53,11 +54,10 @@ typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 /*
  * Root object for Tvheadend connection
  */
-class CTvheadend
-  : public kodi::addon::CInstancePVRClient,
-    public P8PLATFORM::CThread,
-    public tvheadend::IHTSPConnectionListener,
-    public tvheadend::IHTSPDemuxPacketHandler
+class CTvheadend : public kodi::addon::CInstancePVRClient,
+                   public P8PLATFORM::CThread,
+                   public tvheadend::IHTSPConnectionListener,
+                   public tvheadend::IHTSPDemuxPacketHandler
 {
 public:
   CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion);
@@ -86,20 +86,24 @@ public:
 
   PVR_ERROR GetChannelGroupsAmount(int& amount) override;
   PVR_ERROR GetChannelGroups(bool radio, kodi::addon::PVRChannelGroupsResultSet& results) override;
-  PVR_ERROR GetChannelGroupMembers(const kodi::addon::PVRChannelGroup& group, kodi::addon::PVRChannelGroupMembersResultSet& results) override;
+  PVR_ERROR GetChannelGroupMembers(const kodi::addon::PVRChannelGroup& group,
+                                   kodi::addon::PVRChannelGroupMembersResultSet& results) override;
 
   PVR_ERROR GetChannelsAmount(int& amount) override;
   PVR_ERROR GetChannels(bool radio, kodi::addon::PVRChannelsResultSet& results) override;
 
   PVR_ERROR GetRecordingsAmount(bool deleted, int& amount) override;
   PVR_ERROR GetRecordings(bool deleted, kodi::addon::PVRRecordingsResultSet& results) override;
-  PVR_ERROR GetRecordingEdl(const kodi::addon::PVRRecording& rec, std::vector<kodi::addon::PVREDLEntry>& edl) override;
+  PVR_ERROR GetRecordingEdl(const kodi::addon::PVRRecording& rec,
+                            std::vector<kodi::addon::PVREDLEntry>& edl) override;
   PVR_ERROR DeleteRecording(const kodi::addon::PVRRecording& rec) override;
   PVR_ERROR RenameRecording(const kodi::addon::PVRRecording& rec) override;
   PVR_ERROR SetRecordingLifetime(const kodi::addon::PVRRecording& rec) override;
   PVR_ERROR SetRecordingPlayCount(const kodi::addon::PVRRecording& rec, int playCount) override;
-  PVR_ERROR SetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec, int playposition) override;
-  PVR_ERROR GetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec, int& playposition) override;
+  PVR_ERROR SetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec,
+                                           int playposition) override;
+  PVR_ERROR GetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec,
+                                           int& playposition) override;
   PVR_ERROR GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& types) override;
   PVR_ERROR GetTimersAmount(int& amount) override;
   PVR_ERROR GetTimers(kodi::addon::PVRTimersResultSet& results) override;
@@ -107,7 +111,10 @@ public:
   PVR_ERROR DeleteTimer(const kodi::addon::PVRTimer& timer, bool forceDelete) override;
   PVR_ERROR UpdateTimer(const kodi::addon::PVRTimer& timer) override;
 
-  PVR_ERROR GetEPGForChannel(int channelUid, time_t start, time_t end, kodi::addon::PVREPGTagsResultSet& results) override;
+  PVR_ERROR GetEPGForChannel(int channelUid,
+                             time_t start,
+                             time_t end,
+                             kodi::addon::PVREPGTagsResultSet& results) override;
   PVR_ERROR SetEPGTimeFrame(int days) override;
 
   void GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const;
@@ -155,7 +162,8 @@ private:
    */
   void CreateEvent(const tvheadend::entity::Event& event, kodi::addon::PVREPGTag& epg);
   void TransferEvent(const tvheadend::entity::Event& event, EPG_EVENT_STATE state);
-  void TransferEvent(kodi::addon::PVREPGTagsResultSet& results, const tvheadend::entity::Event& event);
+  void TransferEvent(kodi::addon::PVREPGTagsResultSet& results,
+                     const tvheadend::entity::Event& event);
 
   /*
    * Message sending

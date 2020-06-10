@@ -14,10 +14,11 @@ extern "C"
 }
 #include "HTSPConnection.h"
 #include "Settings.h"
+#include "utilities/Logger.h"
+
 #include "kodi/addon-instance/pvr/Recordings.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/StringUtils.h"
-#include "utilities/Logger.h"
 
 #include <chrono>
 #include <ctime>

@@ -16,11 +16,12 @@ extern "C"
 
 #include "IHTSPConnectionListener.h"
 #include "Settings.h"
+#include "utilities/Logger.h"
+
 #include "kodi/Network.h"
 #include "kodi/addon-instance/PVR.h"
 #include "p8-platform/os.h"
 #include "p8-platform/util/StringUtils.h"
-#include "utilities/Logger.h"
 
 using namespace P8PLATFORM;
 using namespace tvheadend;
@@ -667,7 +668,8 @@ void* HTSPConnection::Process()
       Logger::Log(LogLevel::LEVEL_TRACE, "send wol packet...");
       if (!kodi::network::WakeOnLan(wol_mac))
       {
-        Logger::Log(LogLevel::LEVEL_ERROR, "Error waking up Server at MAC-Address %s", wol_mac.c_str());
+        Logger::Log(LogLevel::LEVEL_ERROR, "Error waking up Server at MAC-Address %s",
+                    wol_mac.c_str());
       }
     }
 

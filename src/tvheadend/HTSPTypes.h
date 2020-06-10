@@ -9,6 +9,7 @@
 #pragma once
 
 #include "entity/Event.h"
+
 #include "kodi/addon-instance/pvr/EPG.h"
 
 #include <algorithm>
