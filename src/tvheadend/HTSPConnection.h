@@ -17,7 +17,7 @@ extern "C"
 #include "libhts/htsmsg.h"
 }
 
-#include "kodi/libXBMC_pvr.h"
+#include "kodi/addon-instance/pvr/General.h"
 #include "p8-platform/sockets/tcp.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/threads/threads.h"

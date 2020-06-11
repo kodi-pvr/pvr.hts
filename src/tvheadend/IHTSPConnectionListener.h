@@ -27,6 +27,9 @@ public:
   virtual void Disconnected() = 0;
   virtual bool Connected() = 0;
   virtual bool ProcessMessage(const std::string& method, htsmsg_t* msg) = 0;
+  virtual void ConnectionStateChange(const std::string& connectionString,
+                                     PVR_CONNECTION_STATE newState,
+                                     const std::string& message) = 0;
 };
 
 } // namespace tvheadend

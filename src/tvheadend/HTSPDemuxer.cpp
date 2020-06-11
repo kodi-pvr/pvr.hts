@@ -8,11 +8,11 @@
 
 #include "HTSPDemuxer.h"
 
-#include "../client.h"
 #include "HTSPConnection.h"
 #include "Settings.h"
 #include "utilities/Logger.h"
-#include "xbmc_codec_descriptor.hpp"
+
+#include "kodi/addon-instance/PVR.h"
 
 #include <cstring>
 #include <ctime>
@@ -28,12 +28,11 @@
 // use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
 static const int TVH_STREAM_INDEX_OFFSET = 1000;
 
-using namespace ADDON;
 using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-HTSPDemuxer::HTSPDemuxer(HTSPConnection& conn)
+HTSPDemuxer::HTSPDemuxer(IHTSPDemuxPacketHandler& demuxPktHdl, HTSPConnection& conn)
   : m_conn(conn),
     m_pktBuffer(static_cast<size_t>(-1)),
     m_seekTime(INVALID_SEEKTIME),
@@ -41,7 +40,8 @@ HTSPDemuxer::HTSPDemuxer(HTSPConnection& conn)
     m_subscription(conn),
     m_lastUse(0),
     m_startTime(0),
-    m_rdsIdx(0)
+    m_rdsIdx(0),
+    m_demuxPktHdl(demuxPktHdl)
 {
 }
 
@@ -131,7 +131,7 @@ DemuxPacket* HTSPDemuxer::Read()
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
 
-  return PVR->AllocateDemuxPacket(0);
+  return m_demuxPktHdl.AllocateDemuxPacket(0);
 }
 
 void HTSPDemuxer::Flush()
@@ -140,7 +140,7 @@ void HTSPDemuxer::Flush()
 
   DemuxPacket* pkt = nullptr;
   while (m_pktBuffer.Pop(pkt))
-    PVR->FreeDemuxPacket(pkt);
+    m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
 
 void HTSPDemuxer::Trim()
@@ -152,7 +152,7 @@ void HTSPDemuxer::Trim()
    * this too small. */
   DemuxPacket* pkt = nullptr;
   while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
-    PVR->FreeDemuxPacket(pkt);
+    m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
 
 void HTSPDemuxer::Abort()
@@ -164,7 +164,7 @@ void HTSPDemuxer::Abort()
   ResetStatus();
 }
 
-bool HTSPDemuxer::Seek(double time, bool, double* startpts)
+bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 {
   if (!m_subscription.IsActive())
     return false;
@@ -193,8 +193,8 @@ bool HTSPDemuxer::Seek(double time, bool, double* startpts)
     return false;
 
   /* Store */
-  *startpts = TVH_TO_DVD_TIME(m_seekTime - 1);
-  Logger::Log(LogLevel::LEVEL_TRACE, "demux seek startpts = %lf", *startpts);
+  startpts = TVH_TO_DVD_TIME(m_seekTime - 1);
+  Logger::Log(LogLevel::LEVEL_TRACE, "demux seek startpts = %lf", startpts);
 
   return true;
 }
@@ -242,59 +242,45 @@ void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)
   m_subscription.SendWeight(static_cast<uint32_t>(weight));
 }
 
-PVR_ERROR HTSPDemuxer::CurrentStreams(PVR_STREAM_PROPERTIES* props)
+PVR_ERROR HTSPDemuxer::CurrentStreams(std::vector<kodi::addon::PVRStreamProperties>& streams)
 {
   CLockObject lock(m_mutex);
 
-  for (size_t i = 0; i < m_streams.size(); i++)
-  {
-    std::memcpy(&props->stream[i], &m_streams.at(i), sizeof(PVR_STREAM_PROPERTIES::PVR_STREAM));
-  }
-
-  props->iStreamCount = static_cast<unsigned int>(m_streams.size());
-  return PVR_ERROR_NO_ERROR;
-}
-
-PVR_ERROR HTSPDemuxer::CurrentSignal(PVR_SIGNAL_STATUS* sig)
-{
-  CLockObject lock(m_mutex);
-
-  *sig = {0};
-
-  std::strncpy(sig->strAdapterName, m_sourceInfo.si_adapter.c_str(), sizeof(sig->strAdapterName) - 1);
-  std::strncpy(sig->strAdapterStatus, m_signalInfo.fe_status.c_str(),
-               sizeof(sig->strAdapterStatus) - 1);
-  std::strncpy(sig->strServiceName, m_sourceInfo.si_service.c_str(), sizeof(sig->strServiceName) - 1);
-  std::strncpy(sig->strProviderName, m_sourceInfo.si_provider.c_str(),
-               sizeof(sig->strProviderName) - 1);
-  std::strncpy(sig->strMuxName, m_sourceInfo.si_mux.c_str(), sizeof(sig->strMuxName) - 1);
-
-  sig->iSNR = m_signalInfo.fe_snr;
-  sig->iSignal = m_signalInfo.fe_signal;
-  sig->iBER = m_signalInfo.fe_ber;
-  sig->iUNC = m_signalInfo.fe_unc;
+  streams = m_streams;
 
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo(PVR_DESCRAMBLE_INFO* info)
+PVR_ERROR HTSPDemuxer::CurrentSignal(kodi::addon::PVRSignalStatus& sig)
 {
   CLockObject lock(m_mutex);
 
-  *info = {0};
+  sig.SetAdapterName(m_sourceInfo.si_adapter);
+  sig.SetServiceName(m_sourceInfo.si_service);
+  sig.SetMuxName(m_sourceInfo.si_mux);
 
-  info->iPid = m_descrambleInfo.GetPid();
-  info->iCaid = m_descrambleInfo.GetCaid();
-  info->iProvid = m_descrambleInfo.GetProvid();
-  info->iEcmTime = m_descrambleInfo.GetEcmTime();
-  info->iHops = m_descrambleInfo.GetHops();
+  sig.SetSNR(m_signalInfo.fe_snr);
+  sig.SetSignal(m_signalInfo.fe_signal);
+  sig.SetBER(m_signalInfo.fe_ber);
+  sig.SetUNC(m_signalInfo.fe_unc);
 
-  std::strncpy(info->strCardSystem, m_descrambleInfo.GetCardSystem().c_str(),
-               sizeof(info->strCardSystem) - 1);
-  std::strncpy(info->strReader, m_descrambleInfo.GetReader().c_str(), sizeof(info->strReader) - 1);
-  std::strncpy(info->strFrom, m_descrambleInfo.GetFrom().c_str(), sizeof(info->strFrom) - 1);
-  std::strncpy(info->strProtocol, m_descrambleInfo.GetProtocol().c_str(),
-               sizeof(info->strProtocol) - 1);
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo(kodi::addon::PVRDescrambleInfo& info)
+{
+  CLockObject lock(m_mutex);
+
+  info.SetPID(m_descrambleInfo.GetPid());
+  info.SetCAID(m_descrambleInfo.GetCaid());
+  info.SetProviderID(m_descrambleInfo.GetProvid());
+  info.SetECMTime(m_descrambleInfo.GetEcmTime());
+  info.SetHops(m_descrambleInfo.GetHops());
+
+  info.SetCardSystem(m_descrambleInfo.GetCardSystem());
+  info.SetReader(m_descrambleInfo.GetReader());
+  info.SetFrom(m_descrambleInfo.GetFrom());
+  info.SetProtocol(m_descrambleInfo.GetProtocol());
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -324,16 +310,15 @@ bool HTSPDemuxer::IsRealTimeStream() const
   return (m_timeshiftStatus.shift < 10000000);
 }
 
-PVR_ERROR HTSPDemuxer::GetStreamTimes(PVR_STREAM_TIMES* times) const
+PVR_ERROR HTSPDemuxer::GetStreamTimes(kodi::addon::PVRStreamTimes& times) const
 {
-  *times = {0};
 
   CLockObject lock(m_mutex);
 
-  times->startTime = m_startTime;
-  times->ptsStart = 0;
-  times->ptsBegin = TVH_TO_DVD_TIME(m_timeshiftStatus.start);
-  times->ptsEnd = TVH_TO_DVD_TIME(m_timeshiftStatus.end);
+  times.SetStartTime(m_startTime);
+  times.SetPTSStart(0);
+  times.SetPTSBegin(TVH_TO_DVD_TIME(m_timeshiftStatus.start));
+  times.SetPTSEnd(TVH_TO_DVD_TIME(m_timeshiftStatus.end));
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -446,12 +431,12 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
         // Update streams.
         Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
 
-        DemuxPacket* pktSpecial = PVR->AllocateDemuxPacket(0);
+        DemuxPacket* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
         pktSpecial->iStreamId = DMX_SPECIALID_STREAMCHANGE;
         m_pktBuffer.Push(pktSpecial);
       }
 
-      DemuxPacket* pkt = PVR->AllocateDemuxPacket(rdslen);
+      DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
       if (!pkt)
         return;
 
@@ -505,7 +490,7 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   m_streamStat[idx]++;
 
   /* Allocate buffer */
-  DemuxPacket* pkt = PVR->AllocateDemuxPacket(binlen);
+  DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(binlen);
   if (!pkt)
     return;
 
@@ -557,30 +542,28 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
     ProcessRDS(idx, bin, binlen);
   }
   else
-    PVR->FreeDemuxPacket(pkt);
+    m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
 
 bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
 {
   for (const auto& stream : m_streams)
   {
-    if (stream.iPID != audioIdx)
+    if (stream.GetPID() != audioIdx)
       continue;
 
     // Found the stream with the embedded RDS data. Create corresponding RDS stream.
-    const CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName("rds");
-    const xbmc_codec_t codec = codecDescriptor.Codec();
-
-    if (codec.codec_type == XBMC_CODEC_TYPE_UNKNOWN)
+    kodi::addon::PVRCodec codec = m_demuxPktHdl.GetCodecByName("rds");
+    if (codec.GetCodecType() == PVR_CODEC_TYPE_UNKNOWN)
       return false;
 
     m_streamStat[rdsIdx] = 0;
 
-    PVR_STREAM_PROPERTIES::PVR_STREAM rdsStream = {};
-    rdsStream.iCodecType = codec.codec_type;
-    rdsStream.iCodecId = codec.codec_id;
-    rdsStream.iPID = rdsIdx;
-    std::strncpy(rdsStream.strLanguage, stream.strLanguage, sizeof(rdsStream.strLanguage) - 1);
+    kodi::addon::PVRStreamProperties rdsStream;
+    rdsStream.SetCodecType(codec.GetCodecType());
+    rdsStream.SetCodecId(codec.GetCodecId());
+    rdsStream.SetPID(rdsIdx);
+    rdsStream.SetLanguage(stream.GetLanguage());
 
     // We can only use PVR_STREAM_MAX_STREAMS streams
     if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
@@ -593,7 +576,7 @@ bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
     {
       Logger::Log(LogLevel::LEVEL_INFO,
                   "Maximum stream limit reached ignoring id: %d, type rds, codec: %u", rdsIdx,
-                  rdsStream.iCodecId);
+                  rdsStream.GetCodecId());
       return false;
     }
   }
@@ -603,42 +586,50 @@ bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
 
 bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f)
 {
-  const CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
-  const xbmc_codec_t codec = codecDescriptor.Codec();
+  std::string codecName;
+  if (!strcmp(type, "MPEG2AUDIO"))
+    codecName = "MP2";
+  else if (!strcmp(type, "MPEGTS"))
+    codecName = "MPEG2VIDEO";
+  else if (!strcmp(type, "TEXTSUB"))
+    codecName = "TEXT";
+  else
+    codecName = type;
 
-  if (codec.codec_type == XBMC_CODEC_TYPE_UNKNOWN)
+  kodi::addon::PVRCodec codec = m_demuxPktHdl.GetCodecByName(codecName);
+  if (codec.GetCodecType() == PVR_CODEC_TYPE_UNKNOWN)
     return false;
 
   m_streamStat[idx] = 0;
 
-  PVR_STREAM_PROPERTIES::PVR_STREAM stream = {};
-  stream.iCodecType = codec.codec_type;
-  stream.iCodecId = codec.codec_id;
-  stream.iPID = idx;
+  kodi::addon::PVRStreamProperties stream;
+  stream.SetCodecType(codec.GetCodecType());
+  stream.SetCodecId(codec.GetCodecId());
+  stream.SetPID(idx);
 
   /* Subtitle ID */
-  if ((stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE) && !std::strcmp("DVBSUB", type))
+  if ((stream.GetCodecType() == PVR_CODEC_TYPE_SUBTITLE) && !std::strcmp("DVBSUB", type))
   {
     uint32_t composition_id = 0, ancillary_id = 0;
     htsmsg_get_u32(&f->hmf_msg, "composition_id", &composition_id);
     htsmsg_get_u32(&f->hmf_msg, "ancillary_id", &ancillary_id);
-    stream.iSubtitleInfo = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+    stream.SetSubtitleInfo((composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16));
   }
 
   /* Language */
-  if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE || stream.iCodecType == XBMC_CODEC_TYPE_AUDIO ||
-      stream.iCodecType == XBMC_CODEC_TYPE_RDS)
+  if (stream.GetCodecType() == PVR_CODEC_TYPE_SUBTITLE || stream.GetCodecType() == PVR_CODEC_TYPE_AUDIO ||
+      stream.GetCodecType() == PVR_CODEC_TYPE_RDS)
   {
     const char* language = htsmsg_get_str(&f->hmf_msg, "language");
     if (language)
-      std::strncpy(stream.strLanguage, language, sizeof(stream.strLanguage) - 1);
+      stream.SetLanguage(language);
   }
 
   /* Audio data */
-  if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
+  if (stream.GetCodecType() == PVR_CODEC_TYPE_AUDIO)
   {
-    stream.iChannels = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
-    stream.iSampleRate = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
+    stream.SetChannels(htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2));
+    stream.SetSampleRate(htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000));
 
     if (std::strcmp("MPEG2AUDIO", type) == 0)
     {
@@ -649,35 +640,35 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   }
 
   /* Video */
-  if (stream.iCodecType == XBMC_CODEC_TYPE_VIDEO)
+  if (stream.GetCodecType() == PVR_CODEC_TYPE_VIDEO)
   {
-    stream.iWidth = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
-    stream.iHeight = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
+    stream.SetWidth(htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0));
+    stream.SetHeight(htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0));
 
     /* Ignore this message if the stream details haven't been determined
        yet, a new message will be sent once they have. This is fixed in
        some versions of tvheadend and is here for backward compatibility. */
-    if (stream.iWidth == 0 || stream.iHeight == 0)
+    if (stream.GetWidth() == 0 || stream.GetHeight() == 0)
     {
       Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring subscriptionStart, stream details missing");
       return false;
     }
 
     /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
-    stream.fAspect = 0.0f;
+    stream.SetAspect(0.0f);
 
     uint32_t duration = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0);
     if (duration > 0)
     {
-      stream.iFPSScale = duration;
-      stream.iFPSRate = DVD_TIME_BASE;
+      stream.SetFPSScale(duration);
+      stream.SetFPSRate(DVD_TIME_BASE);
     }
   }
 
   /* We can only use PVR_STREAM_MAX_STREAMS streams */
   if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
   {
-    Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
+    Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type, stream.GetCodecId());
     m_streams.emplace_back(stream);
     return true;
   }
@@ -685,7 +676,7 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   {
     Logger::Log(LogLevel::LEVEL_INFO,
                 "Maximum stream limit reached ignoring id: %d, type %s, codec: %u", idx, type,
-                stream.iCodecId);
+                stream.GetCodecId());
     return false;
   }
 }
@@ -730,7 +721,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   /* Update streams */
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
 
-  DemuxPacket* pkt = PVR->AllocateDemuxPacket(0);
+  DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
   pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
   m_pktBuffer.Push(pkt);
 

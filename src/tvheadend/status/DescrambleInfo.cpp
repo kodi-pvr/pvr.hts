@@ -8,7 +8,7 @@
 
 #include "DescrambleInfo.h"
 
-#include "kodi/xbmc_pvr_types.h"
+#include "kodi/addon-instance/pvr/Channels.h"
 
 using namespace tvheadend::status;
 

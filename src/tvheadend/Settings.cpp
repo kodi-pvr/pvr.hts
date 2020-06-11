@@ -8,8 +8,9 @@
 
 #include "Settings.h"
 
-#include "../client.h"
 #include "utilities/Logger.h"
+
+#include "kodi/General.h"
 
 using namespace tvheadend;
 using namespace tvheadend::utilities;
@@ -89,7 +90,7 @@ void Settings::ReadSettings()
       ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
 }
 
-ADDON_STATUS Settings::SetSetting(const std::string& key, const void* value)
+ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingValue& value)
 {
   /* Connection */
   if (key == "host")
@@ -108,14 +109,14 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const void* value)
     return SetStringSetting(GetWolMac(), value);
   else if (key == "connect_timeout")
   {
-    if (GetConnectTimeout() == (*(reinterpret_cast<const int*>(value)) * 1000))
+    if (GetConnectTimeout() == value.GetInt() * 1000)
       return ADDON_STATUS_OK;
     else
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (key == "response_timeout")
   {
-    if (GetResponseTimeout() == (*(reinterpret_cast<const int*>(value)) * 1000))
+    if (GetResponseTimeout() == value.GetInt() * 1000)
       return ADDON_STATUS_OK;
     else
       return ADDON_STATUS_NEED_RESTART;
@@ -174,8 +175,8 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const void* value)
 
 std::string Settings::ReadStringSetting(const std::string& key, const std::string& def)
 {
-  char value[1024];
-  if (XBMC->GetSetting(key.c_str(), value))
+  std::string value;
+  if (kodi::CheckSettingString(key, value))
     return value;
 
   return def;
@@ -184,7 +185,7 @@ std::string Settings::ReadStringSetting(const std::string& key, const std::strin
 int Settings::ReadIntSetting(const std::string& key, int def)
 {
   int value;
-  if (XBMC->GetSetting(key.c_str(), &value))
+  if (kodi::CheckSettingInt(key, value))
     return value;
 
   return def;
@@ -193,31 +194,31 @@ int Settings::ReadIntSetting(const std::string& key, int def)
 bool Settings::ReadBoolSetting(const std::string& key, bool def)
 {
   bool value;
-  if (XBMC->GetSetting(key.c_str(), &value))
+  if (kodi::CheckSettingBoolean(key, value))
     return value;
 
   return def;
 }
 
-ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue, const void* newValue)
+ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue, const kodi::CSettingValue& newValue)
 {
-  if (oldValue == std::string(reinterpret_cast<const char*>(newValue)))
+  if (oldValue == newValue.GetString())
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetIntSetting(int oldValue, const void* newValue)
+ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::CSettingValue& newValue)
 {
-  if (oldValue == *(reinterpret_cast<const int*>(newValue)))
+  if (oldValue == newValue.GetInt())
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const void* newValue)
+ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const kodi::CSettingValue& newValue)
 {
-  if (oldValue == *(reinterpret_cast<const bool*>(newValue)))
+  if (oldValue == newValue.GetBoolean())
     return ADDON_STATUS_OK;
 
   return ADDON_STATUS_NEED_RESTART;

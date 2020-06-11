@@ -19,8 +19,10 @@ extern "C"
 #include "libhts/htsmsg.h"
 }
 
+#include "IHTSPDemuxPacketHandler.h"
 #include "Subscription.h"
-#include "kodi/libXBMC_pvr.h"
+#include "kodi/addon-instance/pvr/Channels.h"
+#include "kodi/addon-instance/pvr/Stream.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/buffer.h"
 #include "status/DescrambleInfo.h"
@@ -39,7 +41,7 @@ class HTSPConnection;
 class HTSPDemuxer
 {
 public:
-  HTSPDemuxer(HTSPConnection& conn);
+  HTSPDemuxer(IHTSPDemuxPacketHandler& demuxPktHdl, HTSPConnection& conn);
   ~HTSPDemuxer();
 
   bool ProcessMessage(const std::string& method, htsmsg_t* m);
@@ -52,18 +54,18 @@ public:
   void Trim();
   void Flush();
   void Abort();
-  bool Seek(double time, bool backwards, double* startpts);
+  bool Seek(double time, bool backwards, double& startpts);
   void Speed(int speed);
   void FillBuffer(bool mode);
   void Weight(tvheadend::eSubscriptionWeight weight);
 
-  PVR_ERROR CurrentStreams(PVR_STREAM_PROPERTIES* streams);
-  PVR_ERROR CurrentSignal(PVR_SIGNAL_STATUS* sig);
-  PVR_ERROR CurrentDescrambleInfo(PVR_DESCRAMBLE_INFO* info);
+  PVR_ERROR CurrentStreams(std::vector<kodi::addon::PVRStreamProperties>& streams);
+  PVR_ERROR CurrentSignal(kodi::addon::PVRSignalStatus& sig);
+  PVR_ERROR CurrentDescrambleInfo(kodi::addon::PVRDescrambleInfo& info);
 
   bool IsTimeShifting() const;
   bool IsRealTimeStream() const;
-  PVR_ERROR GetStreamTimes(PVR_STREAM_TIMES* times) const;
+  PVR_ERROR GetStreamTimes(kodi::addon::PVRStreamTimes& times) const;
 
   uint32_t GetSubscriptionId() const;
   uint32_t GetChannelId() const;
@@ -105,7 +107,7 @@ private:
   mutable P8PLATFORM::CMutex m_mutex;
   HTSPConnection& m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*> m_pktBuffer;
-  std::vector<PVR_STREAM_PROPERTIES::PVR_STREAM> m_streams;
+  std::vector<kodi::addon::PVRStreamProperties> m_streams;
   std::map<int, int> m_streamStat;
   int64_t m_seekTime;
   P8PLATFORM::CCondition<volatile int64_t> m_seekCond;
@@ -120,6 +122,8 @@ private:
   uint32_t m_rdsIdx;
   int32_t m_requestedSpeed = 1000;
   int32_t m_actualSpeed = 1000;
+
+  IHTSPDemuxPacketHandler& m_demuxPktHdl;
 };
 
 } // namespace tvheadend

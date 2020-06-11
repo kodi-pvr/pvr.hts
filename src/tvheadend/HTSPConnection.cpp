@@ -14,9 +14,10 @@ extern "C"
 #include "libhts/sha1.h"
 }
 
-#include "../client.h"
 #include "IHTSPConnectionListener.h"
 #include "Settings.h"
+#include "kodi/Network.h"
+#include "kodi/addon-instance/PVR.h"
 #include "p8-platform/os.h"
 #include "p8-platform/util/StringUtils.h"
 #include "utilities/Logger.h"
@@ -239,7 +240,7 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
 
     /* Notify connection state change (callback!) */
     serverString = GetServerString();
-    PVR->ConnectionStateChange(serverString.c_str(), newState, nullptr);
+    m_connListener.ConnectionStateChange(serverString, newState, "");
   }
 }
 
@@ -664,7 +665,7 @@ void* HTSPConnection::Process()
     if (!wol_mac.empty())
     {
       Logger::Log(LogLevel::LEVEL_TRACE, "send wol packet...");
-      if (!XBMC->WakeOnLan(wol_mac.c_str()))
+      if (!kodi::network::WakeOnLan(wol_mac))
       {
         Logger::Log(LogLevel::LEVEL_ERROR, "Error waking up Server at MAC-Address %s", wol_mac.c_str());
       }

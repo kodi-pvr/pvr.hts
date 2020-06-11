@@ -9,7 +9,7 @@
 #pragma once
 
 #include "entity/Event.h"
-#include "kodi/libXBMC_pvr.h"
+#include "kodi/addon-instance/pvr/EPG.h"
 
 #include <algorithm>
 #include <deque>
