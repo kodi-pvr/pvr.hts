@@ -55,7 +55,7 @@ public:
   }
 
   const std::string& GetMethod() const { return m_method; }
-  htsmsg_t* GetMessage() const { return m_msg; }
+  htsmsg_t* GetHTSPMessage() const { return m_msg; }
 
   void ClearMessage()
   {

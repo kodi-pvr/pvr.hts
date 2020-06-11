@@ -1741,7 +1741,7 @@ void* CTvheadend::Process()
     // check for expired predictive tuning subscriptions and close those
     CloseExpiredSubscriptions();
 
-    if (!bSuccess || !msg.GetMessage())
+    if (!bSuccess || !msg.GetHTSPMessage())
       continue;
 
     const std::string& method = msg.GetMethod();
@@ -1753,69 +1753,69 @@ void* CTvheadend::Process()
 
       /* Channels */
       if (method == "channelAdd")
-        ParseChannelAddOrUpdate(msg.GetMessage(), true);
+        ParseChannelAddOrUpdate(msg.GetHTSPMessage(), true);
       else if (method == "channelUpdate")
-        ParseChannelAddOrUpdate(msg.GetMessage(), false);
+        ParseChannelAddOrUpdate(msg.GetHTSPMessage(), false);
       else if (method == "channelDelete")
-        ParseChannelDelete(msg.GetMessage());
+        ParseChannelDelete(msg.GetHTSPMessage());
 
       /* Channel Tags (aka channel groups)*/
       else if (method == "tagAdd")
-        ParseTagAddOrUpdate(msg.GetMessage(), true);
+        ParseTagAddOrUpdate(msg.GetHTSPMessage(), true);
       else if (method == "tagUpdate")
-        ParseTagAddOrUpdate(msg.GetMessage(), false);
+        ParseTagAddOrUpdate(msg.GetHTSPMessage(), false);
       else if (method == "tagDelete")
-        ParseTagDelete(msg.GetMessage());
+        ParseTagDelete(msg.GetHTSPMessage());
 
       /* Recordings */
       else if (method == "dvrEntryAdd")
-        ParseRecordingAddOrUpdate(msg.GetMessage(), true);
+        ParseRecordingAddOrUpdate(msg.GetHTSPMessage(), true);
       else if (method == "dvrEntryUpdate")
-        ParseRecordingAddOrUpdate(msg.GetMessage(), false);
+        ParseRecordingAddOrUpdate(msg.GetHTSPMessage(), false);
       else if (method == "dvrEntryDelete")
-        ParseRecordingDelete(msg.GetMessage());
+        ParseRecordingDelete(msg.GetHTSPMessage());
 
       /* Timerec */
       else if (method == "timerecEntryAdd")
       {
-        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetMessage(), true))
+        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetHTSPMessage(), true))
           TriggerTimerUpdate();
       }
       else if (method == "timerecEntryUpdate")
       {
-        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetMessage(), false))
+        if (m_timeRecordings.ParseTimerecAddOrUpdate(msg.GetHTSPMessage(), false))
           TriggerTimerUpdate();
       }
       else if (method == "timerecEntryDelete")
       {
-        if (m_timeRecordings.ParseTimerecDelete(msg.GetMessage()))
+        if (m_timeRecordings.ParseTimerecDelete(msg.GetHTSPMessage()))
           TriggerTimerUpdate();
       }
 
       /* Autorec */
       else if (method == "autorecEntryAdd")
       {
-        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetMessage(), true))
+        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetHTSPMessage(), true))
           TriggerTimerUpdate();
       }
       else if (method == "autorecEntryUpdate")
       {
-        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetMessage(), false))
+        if (m_autoRecordings.ParseAutorecAddOrUpdate(msg.GetHTSPMessage(), false))
           TriggerTimerUpdate();
       }
       else if (method == "autorecEntryDelete")
       {
-        if (m_autoRecordings.ParseAutorecDelete(msg.GetMessage()))
+        if (m_autoRecordings.ParseAutorecDelete(msg.GetHTSPMessage()))
           TriggerTimerUpdate();
       }
 
       /* EPG */
       else if (method == "eventAdd")
-        ParseEventAddOrUpdate(msg.GetMessage(), true);
+        ParseEventAddOrUpdate(msg.GetHTSPMessage(), true);
       else if (method == "eventUpdate")
-        ParseEventAddOrUpdate(msg.GetMessage(), false);
+        ParseEventAddOrUpdate(msg.GetHTSPMessage(), false);
       else if (method == "eventDelete")
-        ParseEventDelete(msg.GetMessage());
+        ParseEventDelete(msg.GetHTSPMessage());
 
       /* ASync complete */
       else if (method == "initialSyncCompleted")
