@@ -9,6 +9,7 @@
 #pragma once
 
 #include "HTSPTypes.h"
+
 #include "kodi/AddonBase.h"
 
 #include <string>
@@ -66,7 +67,7 @@ public:
   /**
    * Set a value according to key definition in settings.xml
    */
-  ADDON_STATUS SetSetting(const std::string& key, const void* value);
+  ADDON_STATUS SetSetting(const std::string& key, const kodi::CSettingValue& value);
 
   /**
    * Getters for the settings values
@@ -160,9 +161,10 @@ private:
   static bool ReadBoolSetting(const std::string& key, bool def);
 
   // @return ADDON_STATUS_OK if value has not changed, ADDON_STATUS_NEED_RESTART otherwise
-  static ADDON_STATUS SetStringSetting(const std::string& oldValue, const void* newValue);
-  static ADDON_STATUS SetIntSetting(int oldValue, const void* newValue);
-  static ADDON_STATUS SetBoolSetting(bool oldValue, const void* newValue);
+  static ADDON_STATUS SetStringSetting(const std::string& oldValue,
+                                       const kodi::CSettingValue& newValue);
+  static ADDON_STATUS SetIntSetting(int oldValue, const kodi::CSettingValue& newValue);
+  static ADDON_STATUS SetBoolSetting(bool oldValue, const kodi::CSettingValue& newValue);
 
   std::string m_strHostname;
   int m_iPortHTSP;

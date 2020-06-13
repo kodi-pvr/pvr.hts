@@ -12,7 +12,13 @@
 
 #include <string>
 
-struct PVR_RECORDING;
+namespace kodi
+{
+namespace addon
+{
+class PVRRecording;
+}
+} // namespace kodi
 
 namespace tvheadend
 {
@@ -30,7 +36,7 @@ public:
 
   void Connected();
 
-  bool Open(const PVR_RECORDING& rec);
+  bool Open(const kodi::addon::PVRRecording& rec);
   void Close();
   ssize_t Read(unsigned char* buf, unsigned int len, bool inprogress);
   long long Seek(long long pos, int whence, bool inprogress);

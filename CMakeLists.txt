@@ -8,11 +8,9 @@ include_directories(${p8-platform_INCLUDE_DIRS}
                     ${KODI_INCLUDE_DIR}/.. # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
                     ${PROJECT_SOURCE_DIR}/lib)
 
-add_definitions(-DUSE_DEMUX)
-
 # Sources and headers
-set(HTS_SOURCES src/client.h
-                src/client.cpp
+set(HTS_SOURCES src/addon.h
+                src/addon.cpp
                 src/Tvheadend.cpp
                 src/Tvheadend.h)
 
@@ -30,14 +28,14 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/HTSPVFS.h
                 src/tvheadend/HTSPVFS.cpp
                 src/tvheadend/IHTSPConnectionListener.h
+                src/tvheadend/IHTSPDemuxPacketHandler.h
                 src/tvheadend/Profile.h
                 src/tvheadend/Settings.cpp
                 src/tvheadend/Settings.h
                 src/tvheadend/Subscription.cpp
                 src/tvheadend/Subscription.h
                 src/tvheadend/TimeRecordings.cpp
-                src/tvheadend/TimeRecordings.h
-                src/tvheadend/xbmc_codec_descriptor.hpp)
+                src/tvheadend/TimeRecordings.h)
 
 set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/AutoRecording.h
@@ -68,11 +66,10 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/Utilities.h
                 src/tvheadend/utilities/Logger.h
                 src/tvheadend/utilities/Logger.cpp
-                src/tvheadend/utilities/LocalizedString.h
                 src/tvheadend/utilities/LifetimeMapper.h
                 src/tvheadend/utilities/AsyncState.cpp
                 src/tvheadend/utilities/AsyncState.h)
-                
+
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
@@ -80,14 +77,14 @@ source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STA
 source_group("Source Files\\tvheadend\\utilities" FILES ${HTS_SOURCES_TVHEADEND_UTILITIES})
 
 # Resource files
-set(HTS_RESOURCES 
+set(HTS_RESOURCES
                 README.md
                 pvr.hts/addon.xml
                 pvr.hts/changelog.txt
                 pvr.hts/icon.png
                 pvr.hts/resources/settings.xml
                 pvr.hts/resources/language/resource.language.en_gb/strings.po)
-                
+
 source_group("Resource Files" FILES ${HTS_RESOURCES})
 
 # Combine the file lists

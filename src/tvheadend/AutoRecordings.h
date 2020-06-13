@@ -18,7 +18,8 @@ extern "C"
 }
 
 #include "entity/AutoRecording.h"
-#include "kodi/libXBMC_pvr.h"
+
+#include "kodi/addon-instance/pvr/Timers.h"
 
 namespace tvheadend
 {
@@ -37,13 +38,13 @@ public:
 
   /* data access */
   int GetAutorecTimerCount() const;
-  void GetAutorecTimers(std::vector<PVR_TIMER>& timers);
+  void GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers);
   const unsigned int GetTimerIntIdFromStringId(const std::string& strId) const;
 
   /* client to server messages */
-  PVR_ERROR SendAutorecAdd(const PVR_TIMER& timer);
-  PVR_ERROR SendAutorecUpdate(const PVR_TIMER& timer);
-  PVR_ERROR SendAutorecDelete(const PVR_TIMER& timer);
+  PVR_ERROR SendAutorecAdd(const kodi::addon::PVRTimer& timer);
+  PVR_ERROR SendAutorecUpdate(const kodi::addon::PVRTimer& timer);
+  PVR_ERROR SendAutorecDelete(const kodi::addon::PVRTimer& timer);
 
   /* server to client messages */
   bool ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd);
@@ -51,7 +52,7 @@ public:
 
 private:
   const std::string GetTimerStringIdFromIntId(unsigned int intId) const;
-  PVR_ERROR SendAutorecAddOrUpdate(const PVR_TIMER& timer, bool update);
+  PVR_ERROR SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update);
 
   HTSPConnection& m_conn;
   tvheadend::entity::AutoRecordingsMap m_autoRecordings;

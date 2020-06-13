@@ -48,40 +48,38 @@ int TimeRecordings::GetTimerecTimerCount() const
   return m_timeRecordings.size();
 }
 
-void TimeRecordings::GetTimerecTimers(std::vector<PVR_TIMER>& timers)
+void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers)
 {
   for (const auto& rec : m_timeRecordings)
   {
     /* Setup entry */
-    PVR_TIMER tmr = {0};
+    kodi::addon::PVRTimer tmr;
 
-    tmr.iClientIndex = rec.second.GetId();
-    tmr.iClientChannelUid =
-        (rec.second.GetChannel() > 0) ? rec.second.GetChannel() : PVR_TIMER_ANY_CHANNEL;
-    tmr.startTime = rec.second.GetStart();
-    tmr.endTime = rec.second.GetStop();
-    std::strncpy(tmr.strTitle, rec.second.GetName().c_str(), sizeof(tmr.strTitle) - 1);
-    std::strncpy(tmr.strEpgSearchString, "",
-                 sizeof(tmr.strEpgSearchString) - 1); // n/a for manual timers
-    std::strncpy(tmr.strDirectory, rec.second.GetDirectory().c_str(), sizeof(tmr.strDirectory) - 1);
-    std::strncpy(tmr.strSummary, "",
-                 sizeof(tmr.strSummary) - 1); // n/a for repeating timers
-    tmr.state = rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED;
-    tmr.iTimerType = TIMER_REPEATING_MANUAL;
-    tmr.iPriority = rec.second.GetPriority();
-    tmr.iLifetime = rec.second.GetLifetime();
-    tmr.iMaxRecordings = 0; // not supported by tvh
-    tmr.iRecordingGroup = 0; // not supported by tvh
-    tmr.iPreventDuplicateEpisodes = 0; // n/a for manual timers
-    tmr.firstDay = 0; // not supported by tvh
-    tmr.iWeekdays = rec.second.GetDaysOfWeek();
-    tmr.iEpgUid = PVR_TIMER_NO_EPG_UID; // n/a for manual timers
-    tmr.iMarginStart = 0; // n/a for manual timers
-    tmr.iMarginEnd = 0; // n/a for manual timers
-    tmr.iGenreType = 0; // not supported by tvh?
-    tmr.iGenreSubType = 0; // not supported by tvh?
-    tmr.bFullTextEpgSearch = false; // n/a for manual timers
-    tmr.iParentClientIndex = 0;
+    tmr.SetClientIndex(rec.second.GetId());
+    tmr.SetClientChannelUid((rec.second.GetChannel() > 0) ? rec.second.GetChannel()
+                                                          : PVR_TIMER_ANY_CHANNEL);
+    tmr.SetStartTime(rec.second.GetStart());
+    tmr.SetEndTime(rec.second.GetStop());
+    tmr.SetTitle(rec.second.GetName());
+    tmr.SetEPGSearchString(""); // n/a for manual timers
+    tmr.SetDirectory(rec.second.GetDirectory());
+    tmr.SetSummary(""); // n/a for repeating timers
+    tmr.SetState(rec.second.IsEnabled() ? PVR_TIMER_STATE_SCHEDULED : PVR_TIMER_STATE_DISABLED);
+    tmr.SetTimerType(TIMER_REPEATING_MANUAL);
+    tmr.SetPriority(rec.second.GetPriority());
+    tmr.SetLifetime(rec.second.GetLifetime());
+    tmr.SetMaxRecordings(0); // not supported by tvh
+    tmr.SetRecordingGroup(0); // not supported by tvh
+    tmr.SetPreventDuplicateEpisodes(0); // n/a for manual timers
+    tmr.SetFirstDay(0); // not supported by tvh
+    tmr.SetWeekdays(rec.second.GetDaysOfWeek());
+    tmr.SetEPGUid(PVR_TIMER_NO_EPG_UID); // n/a for manual timers
+    tmr.SetMarginStart(0); // n/a for manual timers
+    tmr.SetMarginEnd(0); // n/a for manual timers
+    tmr.SetGenreType(0); // not supported by tvh?
+    tmr.SetGenreSubType(0); // not supported by tvh?
+    tmr.SetFullTextEpgSearch(false); // n/a for manual timers
+    tmr.SetParentClientIndex(0);
 
     timers.emplace_back(tmr);
   }
@@ -111,12 +109,12 @@ const std::string TimeRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
   return "";
 }
 
-PVR_ERROR TimeRecordings::SendTimerecAdd(const PVR_TIMER& timer)
+PVR_ERROR TimeRecordings::SendTimerecAdd(const kodi::addon::PVRTimer& timer)
 {
   return SendTimerecAddOrUpdate(timer, false);
 }
 
-PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER& timer)
+PVR_ERROR TimeRecordings::SendTimerecUpdate(const kodi::addon::PVRTimer& timer)
 {
   if (m_conn.GetProtocol() >= 25)
     return SendTimerecAddOrUpdate(timer, true);
@@ -130,7 +128,7 @@ PVR_ERROR TimeRecordings::SendTimerecUpdate(const PVR_TIMER& timer)
   return error;
 }
 
-PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool update)
+PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update)
 {
   const std::string method = update ? "updateTimerecEntry" : "addTimerecEntry";
 
@@ -139,7 +137,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
 
   if (update)
   {
-    std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+    std::string strId = GetTimerStringIdFromIntId(timer.GetClientIndex());
     if (strId.empty())
     {
       htsmsg_destroy(m);
@@ -149,43 +147,44 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
     htsmsg_add_str(m, "id", strId.c_str()); // Autorec DVR Entry ID (string!)
   }
 
-  char title[PVR_ADDON_NAME_STRING_LENGTH + 6];
   const char* titleExt =
       "%F-%R"; // timerec title should contain the pattern (e.g. %F-%R) for the generated recording files. Scary...
-  snprintf(title, sizeof(title), "%s-%s", timer.strTitle, titleExt);
+  std::string title = timer.GetTitle() + "-" + titleExt;
 
-  htsmsg_add_str(m, "name", timer.strTitle);
-  htsmsg_add_str(m, "title", title);
-  time_t startTime = timer.startTime;
+  htsmsg_add_str(m, "name", timer.GetTitle().c_str());
+  htsmsg_add_str(m, "title", title.c_str());
+  time_t startTime = timer.GetStartTime();
   struct tm* tm_start = std::localtime(&startTime);
   htsmsg_add_u32(m, "start",
                  tm_start->tm_hour * 60 + tm_start->tm_min); // start time in minutes from midnight
-  time_t endTime = timer.endTime;
+  time_t endTime = timer.GetEndTime();
   struct tm* tm_stop = std::localtime(&endTime);
   htsmsg_add_u32(m, "stop",
                  tm_stop->tm_hour * 60 + tm_stop->tm_min); // end time in minutes from midnight
 
   if (m_conn.GetProtocol() >= 25)
   {
-    htsmsg_add_u32(m, "removal", timer.iLifetime); // remove from disk
-    htsmsg_add_s64(m, "channelId", timer.iClientChannelUid); // channelId is signed for >= htspv25
+    htsmsg_add_u32(m, "removal", timer.GetLifetime()); // remove from disk
+    htsmsg_add_s64(m, "channelId",
+                   timer.GetClientChannelUid()); // channelId is signed for >= htspv25
   }
   else
   {
     htsmsg_add_u32(m, "retention",
-                   LifetimeMapper::KodiToTvh(timer.iLifetime)); // remove from tvh database
-    htsmsg_add_u32(m, "channelId", timer.iClientChannelUid); // channelId is unsigned for < htspv25
+                   LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from tvh database
+    htsmsg_add_u32(m, "channelId",
+                   timer.GetClientChannelUid()); // channelId is unsigned for < htspv25
   }
 
-  htsmsg_add_u32(m, "daysOfWeek", timer.iWeekdays);
-  htsmsg_add_u32(m, "priority", timer.iPriority);
-  htsmsg_add_u32(m, "enabled", timer.state == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+  htsmsg_add_u32(m, "daysOfWeek", timer.GetWeekdays());
+  htsmsg_add_u32(m, "priority", timer.GetPriority());
+  htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (std::strcmp(timer.strDirectory, "/") != 0)
-    htsmsg_add_str(m, "directory", timer.strDirectory);
+  if (timer.GetDirectory() != "/")
+    htsmsg_add_str(m, "directory", timer.GetDirectory().c_str());
 
   /* Send and Wait */
   {
@@ -208,9 +207,9 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool up
   return u32 == 1 ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR TimeRecordings::SendTimerecDelete(const PVR_TIMER& timer)
+PVR_ERROR TimeRecordings::SendTimerecDelete(const kodi::addon::PVRTimer& timer)
 {
-  std::string strId = GetTimerStringIdFromIntId(timer.iClientIndex);
+  std::string strId = GetTimerStringIdFromIntId(timer.GetClientIndex());
   if (strId.empty())
     return PVR_ERROR_FAILED;
 

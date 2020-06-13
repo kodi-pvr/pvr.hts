@@ -8,7 +8,7 @@
 
 #include "Event.h"
 
-#include "kodi/xbmc_pvr_types.h"
+#include "kodi/addon-instance/pvr/EPG.h"
 #include "p8-platform/util/StringUtils.h"
 
 #include <ctime>

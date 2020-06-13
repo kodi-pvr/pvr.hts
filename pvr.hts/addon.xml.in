@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="6.1.1"
+  version="7.0.0"
   name="Tvheadend HTSP Client"
   provider-name="Adam Sutton, Sam Stenvall, Lars Op den Kamp, Kai Sommerfeld">
   <requires>@ADDON_DEPENDS@</requires>
   <extension
-    point="xbmc.pvrclient"
+    point="kodi.pvrclient"
     library_@PLATFORM@="@LIBRARY_FILENAME@"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af_ZA">Kodi se voorprogram vir Tvheadend</summary>

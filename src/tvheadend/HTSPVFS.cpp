@@ -14,9 +14,11 @@ extern "C"
 }
 #include "HTSPConnection.h"
 #include "Settings.h"
+#include "utilities/Logger.h"
+
+#include "kodi/addon-instance/pvr/Recordings.h"
 #include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/StringUtils.h"
-#include "utilities/Logger.h"
 
 #include <chrono>
 #include <ctime>
@@ -63,14 +65,14 @@ void HTSPVFS::Connected()
  * VFS API
  * *************************************************************************/
 
-bool HTSPVFS::Open(const PVR_RECORDING& rec)
+bool HTSPVFS::Open(const kodi::addon::PVRRecording& rec)
 {
   /* Close existing */
   Close();
 
   /* Cache details */
-  m_path = StringUtils::Format("dvr/%s", rec.strRecordingId);
-  m_fileStart = rec.recordingTime;
+  m_path = StringUtils::Format("dvr/%s", rec.GetRecordingId().c_str());
+  m_fileStart = rec.GetRecordingTime();
 
   /* Send open */
   if (!SendFileOpen())

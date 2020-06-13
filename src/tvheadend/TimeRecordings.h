@@ -18,7 +18,8 @@ extern "C"
 }
 
 #include "entity/TimeRecording.h"
-#include "kodi/libXBMC_pvr.h"
+
+#include "kodi/addon-instance/pvr/Timers.h"
 
 namespace tvheadend
 {
@@ -37,13 +38,13 @@ public:
 
   /* data access */
   int GetTimerecTimerCount() const;
-  void GetTimerecTimers(std::vector<PVR_TIMER>& timers);
+  void GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers);
   const unsigned int GetTimerIntIdFromStringId(const std::string& strId) const;
 
   /* client to server messages */
-  PVR_ERROR SendTimerecAdd(const PVR_TIMER& timer);
-  PVR_ERROR SendTimerecUpdate(const PVR_TIMER& timer);
-  PVR_ERROR SendTimerecDelete(const PVR_TIMER& timer);
+  PVR_ERROR SendTimerecAdd(const kodi::addon::PVRTimer& timer);
+  PVR_ERROR SendTimerecUpdate(const kodi::addon::PVRTimer& timer);
+  PVR_ERROR SendTimerecDelete(const kodi::addon::PVRTimer& timer);
 
   /* server to client messages */
   bool ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd);
@@ -51,7 +52,7 @@ public:
 
 private:
   const std::string GetTimerStringIdFromIntId(unsigned int intId) const;
-  PVR_ERROR SendTimerecAddOrUpdate(const PVR_TIMER& timer, bool update);
+  PVR_ERROR SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update);
 
   HTSPConnection& m_conn;
   tvheadend::entity::TimeRecordingsMap m_timeRecordings;

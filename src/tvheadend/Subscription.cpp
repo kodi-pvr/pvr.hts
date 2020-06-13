@@ -9,8 +9,9 @@
 #include "Subscription.h"
 
 #include "HTSPConnection.h"
-#include "utilities/LocalizedString.h"
 #include "utilities/Logger.h"
+
+#include "kodi/General.h"
 
 #include <cstring>
 
@@ -282,7 +283,7 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
       SetState(SUBSCRIPTION_UNKNOWN);
 
       /* Show an OSD message */
-      XBMC->QueueNotification(QUEUE_INFO, status);
+      kodi::QueueNotification(QUEUE_INFO, "", status);
     }
     else
       SetState(SUBSCRIPTION_RUNNING);
@@ -292,19 +293,19 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
 void Subscription::ShowStateNotification()
 {
   if (GetState() == SUBSCRIPTION_NOFREEADAPTER)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30450).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30450));
   else if (GetState() == SUBSCRIPTION_SCRAMBLED)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30451).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30451));
   else if (GetState() == SUBSCRIPTION_NOSIGNAL)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30452).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30452));
   else if (GetState() == SUBSCRIPTION_TUNINGFAILED)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30453).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30453));
   else if (GetState() == SUBSCRIPTION_USERLIMIT)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30454).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30454));
   else if (GetState() == SUBSCRIPTION_NOACCESS)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30455).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30455));
   else if (GetState() == SUBSCRIPTION_UNKNOWN)
-    XBMC->QueueNotification(QUEUE_WARNING, LocalizedString(30456).Get().c_str());
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30456));
 }
 
 uint32_t Subscription::GetNextId()
