@@ -54,10 +54,10 @@ typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 /*
  * Root object for Tvheadend connection
  */
-class CTvheadend : public kodi::addon::CInstancePVRClient,
-                   public P8PLATFORM::CThread,
-                   public tvheadend::IHTSPConnectionListener,
-                   public tvheadend::IHTSPDemuxPacketHandler
+class ATTRIBUTE_HIDDEN CTvheadend : public kodi::addon::CInstancePVRClient,
+                                    public P8PLATFORM::CThread,
+                                    public tvheadend::IHTSPConnectionListener,
+                                    public tvheadend::IHTSPDemuxPacketHandler
 {
 public:
   CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion);
