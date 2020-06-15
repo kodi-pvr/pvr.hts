@@ -52,6 +52,8 @@ CTvheadend::CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion)
 
 CTvheadend::~CTvheadend()
 {
+  Stop();
+
   for (auto* dmx : m_dmx)
     delete dmx;
 
