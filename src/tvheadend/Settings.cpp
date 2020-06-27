@@ -35,7 +35,7 @@ const int Settings::DEFAULT_APPROX_TIME =
     0; // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
 const int Settings::DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
-const int Settings::DEFAULT_DVR_LIFETIME = 8; // enum 8 = 3 months
+const int Settings::DEFAULT_DVR_LIFETIME = 14; // enum 14 = forever
 const int Settings::DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
 const bool Settings::DEFAULT_DVR_PLAYSTATUS = true;
 const int Settings::DEFAULT_STREAM_CHUNKSIZE = 64; // KB
