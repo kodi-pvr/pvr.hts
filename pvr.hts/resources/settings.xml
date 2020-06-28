@@ -220,6 +220,7 @@
               <option label="30387">12</option> <!-- 3 years -->
               <option label="30388">13</option> <!-- Until space needed (tvh 4.1+) -->
               <option label="30389">14</option> <!-- Forever (tvh 4.1+) -->
+              <option label="30390">15</option> <!-- Use backend setting -->
             </options>
           </constraints>
           <control type="spinner" format="string" />

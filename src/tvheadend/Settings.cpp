@@ -261,8 +261,11 @@ int Settings::GetDvrLifetime(bool asEnum) const
         return DVR_RET_3YEARS;
       case 13:
         return DVR_RET_SPACE;
-      default:
+      case 14:
         return DVR_RET_FOREVER;
+      case 15:
+      default:
+        return DVR_RET_DVRCONFIG;
     }
   }
 }
