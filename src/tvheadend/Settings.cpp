@@ -76,7 +76,7 @@ void Settings::ReadSettings()
 
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
-  SetDvrLifetime(ReadIntSetting("dvr_lifetime", DEFAULT_DVR_LIFETIME));
+  SetDvrLifetime(ReadIntSetting("dvr_lifetime2", DEFAULT_DVR_LIFETIME));
   SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUPDETECT));
 
   /* Sever based play status */
@@ -155,7 +155,7 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
   /* Default dvr settings */
   else if (key == "dvr_priority")
     return SetIntSetting(GetDvrPriority(), value);
-  else if (key == "dvr_lifetime")
+  else if (key == "dvr_lifetime2")
     return SetIntSetting(GetDvrLifetime(true), value);
   else if (key == "dvr_dubdetect")
     return SetIntSetting(GetDvrDupdetect(), value);

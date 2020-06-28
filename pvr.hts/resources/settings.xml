@@ -200,7 +200,7 @@
           </constraints>
           <control type="spinner" format="string" />
         </setting>
-        <setting id="dvr_lifetime" type="integer" label="30056" help="-1">
+        <setting id="dvr_lifetime2" type="integer" label="30056" help="-1">
           <level>0</level>
           <default>15</default> <!-- Use backend setting -->
           <constraints>
