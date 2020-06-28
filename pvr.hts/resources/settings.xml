@@ -202,7 +202,7 @@
         </setting>
         <setting id="dvr_lifetime" type="integer" label="30056" help="-1">
           <level>0</level>
-          <default>8</default> <!-- 3 months -->
+          <default>15</default> <!-- Use backend setting -->
           <constraints>
             <options>
               <option label="30375">0</option> <!-- 1 day -->
