@@ -766,6 +766,7 @@ struct TimerType : kodi::addon::PVRTimerType
 void CTvheadend::GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const
 {
   lifetimeValues = {
+      {LifetimeMapper::TvhToKodi(DVR_RET_DVRCONFIG), kodi::GetLocalizedString(30390)},
       {LifetimeMapper::TvhToKodi(DVR_RET_1DAY), kodi::GetLocalizedString(30375)},
       {LifetimeMapper::TvhToKodi(DVR_RET_3DAY), kodi::GetLocalizedString(30376)},
       {LifetimeMapper::TvhToKodi(DVR_RET_5DAY), kodi::GetLocalizedString(30377)},

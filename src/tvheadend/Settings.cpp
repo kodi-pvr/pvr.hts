@@ -35,7 +35,7 @@ const int Settings::DEFAULT_APPROX_TIME =
     0; // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
 const int Settings::DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
-const int Settings::DEFAULT_DVR_LIFETIME = 8; // enum 8 = 3 months
+const int Settings::DEFAULT_DVR_LIFETIME = 15; // use backend setting
 const int Settings::DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
 const bool Settings::DEFAULT_DVR_PLAYSTATUS = true;
 const int Settings::DEFAULT_STREAM_CHUNKSIZE = 64; // KB
@@ -76,7 +76,7 @@ void Settings::ReadSettings()
 
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
-  SetDvrLifetime(ReadIntSetting("dvr_lifetime", DEFAULT_DVR_LIFETIME));
+  SetDvrLifetime(ReadIntSetting("dvr_lifetime2", DEFAULT_DVR_LIFETIME));
   SetDvrDupdetect(ReadIntSetting("dvr_dubdetect", DEFAULT_DVR_DUPDETECT));
 
   /* Sever based play status */
@@ -155,7 +155,7 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
   /* Default dvr settings */
   else if (key == "dvr_priority")
     return SetIntSetting(GetDvrPriority(), value);
-  else if (key == "dvr_lifetime")
+  else if (key == "dvr_lifetime2")
     return SetIntSetting(GetDvrLifetime(true), value);
   else if (key == "dvr_dubdetect")
     return SetIntSetting(GetDvrDupdetect(), value);
@@ -261,8 +261,11 @@ int Settings::GetDvrLifetime(bool asEnum) const
         return DVR_RET_3YEARS;
       case 13:
         return DVR_RET_SPACE;
-      default:
+      case 14:
         return DVR_RET_FOREVER;
+      case 15:
+      default:
+        return DVR_RET_DVRCONFIG;
     }
   }
 }

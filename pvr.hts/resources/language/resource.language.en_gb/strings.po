@@ -382,7 +382,12 @@ msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr ""
 
-#empty strings from id 30390 to 30399
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
+
+#empty strings from id 30391 to 30399
 
 msgctxt "#30400"
 msgid "Predictive tuning"

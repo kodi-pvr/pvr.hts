@@ -1,3 +1,10 @@
+7.1.0
+- Add new setting value for recordings lifetime of timers created by Kodi: 'Use backend setting"
+- Change default value for 'lifetime' setting from '3 months' to 'Use backend setting' to
+  avoid unintended loss of data
+- Enforce reset of default value for lifetime' to 'Use backend setting' to avoid unintended loss
+  of data for existing addon configurations
+
 7.0.1
 - Fix hang during addon stop
 
