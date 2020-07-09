@@ -1,3 +1,6 @@
+7.1.1
+- Fix 'provider name' and 'device status' signal status values after update to PVR API 7.0.0
+
 7.1.0
 - Add new setting value for recordings lifetime of timers created by Kodi: 'Use backend setting"
 - Change default value for 'lifetime' setting from '3 months' to 'Use backend setting' to

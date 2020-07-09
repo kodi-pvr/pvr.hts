@@ -257,8 +257,10 @@ PVR_ERROR HTSPDemuxer::CurrentSignal(kodi::addon::PVRSignalStatus& sig)
 
   sig.SetAdapterName(m_sourceInfo.si_adapter);
   sig.SetServiceName(m_sourceInfo.si_service);
+  sig.SetProviderName(m_sourceInfo.si_provider);
   sig.SetMuxName(m_sourceInfo.si_mux);
 
+  sig.SetAdapterStatus(m_signalInfo.fe_status);
   sig.SetSNR(m_signalInfo.fe_snr);
   sig.SetSignal(m_signalInfo.fe_signal);
   sig.SetBER(m_signalInfo.fe_ber);
