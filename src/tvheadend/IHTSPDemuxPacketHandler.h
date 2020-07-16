@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "kodi/DemuxPacket.h"
+#include "kodi/addon-instance/inputstream/DemuxPacket.h"
 #include "kodi/addon-instance/pvr/Stream.h"
 
 namespace tvheadend
@@ -23,8 +23,8 @@ public:
   virtual ~IHTSPDemuxPacketHandler() = default;
 
   virtual kodi::addon::PVRCodec GetCodecByName(const std::string& codecName) const = 0;
-  virtual DemuxPacket* AllocateDemuxPacket(int iDataSize) = 0;
-  virtual void FreeDemuxPacket(DemuxPacket* pPacket) = 0;
+  virtual DEMUX_PACKET* AllocateDemuxPacket(int iDataSize) = 0;
+  virtual void FreeDemuxPacket(DEMUX_PACKET* pPacket) = 0;
 };
 
 } // namespace tvheadend

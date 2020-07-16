@@ -19,7 +19,7 @@
 #include <cstring>
 #include <ctime>
 
-#define TVH_TO_DVD_TIME(x) (static_cast<double>(x) * DVD_TIME_BASE / 1000000.0f)
+#define TVH_TO_DVD_TIME(x) (static_cast<double>(x) * STREAM_TIME_BASE / 1000000.0f)
 
 #define INVALID_SEEKTIME (-1)
 #define SPEED_NORMAL (1000) // x1 playback speed
@@ -120,11 +120,11 @@ void HTSPDemuxer::Close()
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
 
-DemuxPacket* HTSPDemuxer::Read()
+DEMUX_PACKET* HTSPDemuxer::Read()
 {
   m_lastUse.store(std::time(nullptr));
 
-  DemuxPacket* pkt = nullptr;
+  DEMUX_PACKET* pkt = nullptr;
   if (m_pktBuffer.Pop(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
@@ -140,7 +140,7 @@ void HTSPDemuxer::Flush()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
 
-  DemuxPacket* pkt = nullptr;
+  DEMUX_PACKET* pkt = nullptr;
   while (m_pktBuffer.Pop(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
@@ -152,7 +152,7 @@ void HTSPDemuxer::Trim()
   /* reduce used buffer space to what is needed for DVDPlayer to resume
    * playback without buffering. This depends on the bitrate, so we don't set
    * this too small. */
-  DemuxPacket* pkt = nullptr;
+  DEMUX_PACKET* pkt = nullptr;
   while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
@@ -468,12 +468,12 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
         // Update streams.
         Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
 
-        DemuxPacket* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
-        pktSpecial->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+        DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
+        pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
         m_pktBuffer.Push(pktSpecial);
       }
 
-      DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
+      DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
       if (!pkt)
         return;
 
@@ -527,7 +527,7 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   m_streamStat[idx]++;
 
   /* Allocate buffer */
-  DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(binlen);
+  DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(binlen);
   if (!pkt)
     return;
 
@@ -545,12 +545,12 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   if (!htsmsg_get_s64(m, "dts", &s64))
     pkt->dts = TVH_TO_DVD_TIME(s64);
   else
-    pkt->dts = DVD_NOPTS_VALUE;
+    pkt->dts = STREAM_NOPTS_VALUE;
 
   if (!htsmsg_get_s64(m, "pts", &s64))
     pkt->pts = TVH_TO_DVD_TIME(s64);
   else
-    pkt->pts = DVD_NOPTS_VALUE;
+    pkt->pts = STREAM_NOPTS_VALUE;
 
   /* Type (for debug only) */
   char type = 0;
@@ -698,7 +698,7 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
     if (duration > 0)
     {
       stream.SetFPSScale(duration);
-      stream.SetFPSRate(DVD_TIME_BASE);
+      stream.SetFPSRate(STREAM_TIME_BASE);
     }
   }
 
@@ -759,8 +759,8 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   /* Update streams */
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
 
-  DemuxPacket* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
-  pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+  DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
+  pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
   m_pktBuffer.Push(pkt);
 
   /* Source data */

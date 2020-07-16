@@ -77,8 +77,8 @@ public:
 
   // IHTSPDemuxPacketHandler implementation
   kodi::addon::PVRCodec GetCodecByName(const std::string& codecName) const override;
-  DemuxPacket* AllocateDemuxPacket(int iDataSize) override;
-  void FreeDemuxPacket(DemuxPacket* pPacket) override;
+  DEMUX_PACKET* AllocateDemuxPacket(int iDataSize) override;
+  void FreeDemuxPacket(DEMUX_PACKET* pPacket) override;
 
   const tvheadend::entity::Channels& GetChannels() const { return m_channels; }
 
@@ -218,7 +218,7 @@ public:
    */
   bool OpenLiveStream(const kodi::addon::PVRChannel& chn) override;
   void CloseLiveStream() override;
-  DemuxPacket* DemuxRead() override;
+  DEMUX_PACKET* DemuxRead() override;
   void DemuxFlush() override;
   void DemuxAbort() override;
   bool SeekTime(double time, bool backward, double& startpts) override;
