@@ -121,7 +121,7 @@ PVR_ERROR CTvheadend::GetDriveSpace(uint64_t& total, uint64_t& used)
   CLockObject lock(m_conn->Mutex());
 
   htsmsg_t* m = htsmsg_create_map();
-  m = m_conn->SendAndWait("getDiskSpace", m);
+  m = m_conn->SendAndWait("getDiskSpace", m, std::max(30000, Settings::GetInstance().GetResponseTimeout()));
   if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
