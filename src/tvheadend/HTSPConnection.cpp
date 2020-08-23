@@ -557,8 +557,6 @@ void HTSPConnection::Register()
   std::string pass = Settings::GetInstance().GetPassword();
 
   {
-    CLockObject lock(m_mutex);
-
     /* Send Greeting */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending hello");
     if (!SendHello())
@@ -581,7 +579,6 @@ void HTSPConnection::Register()
 
     /* Send Auth */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending auth");
-
     if (!SendAuth(user, pass))
     {
       SetState(PVR_CONNECTION_STATE_ACCESS_DENIED);
@@ -595,15 +592,19 @@ void HTSPConnection::Register()
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "registered");
     SetState(PVR_CONNECTION_STATE_CONNECTED);
-    m_ready = true;
-    m_regCond.Broadcast();
+
+    {
+      CLockObject lock(m_mutex);
+      m_ready = true;
+      m_regCond.Broadcast();
+    }
     return;
   }
 
 fail:
   if (!m_suspended)
   {
-    /* Don't immediately reconnect (spare server CPU cycles)*/
+    /* Don't immediately reconnect (spare server CPU cycles) */
     Sleep(SLOW_RECONNECT_INTERVAL);
     Disconnect();
   }
@@ -632,7 +633,6 @@ void* HTSPConnection::Process()
       if (m_socket)
         delete m_socket;
 
-      m_connListener.Disconnected();
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready = false;
       m_seq = 0;
@@ -642,6 +642,8 @@ void* HTSPConnection::Process()
         m_challenge = nullptr;
       }
     }
+
+    m_connListener.Disconnected();
 
     while (m_suspended)
     {
