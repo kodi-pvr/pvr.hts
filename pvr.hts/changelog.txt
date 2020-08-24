@@ -1,3 +1,9 @@
+7.1.3
+- Withdraw v7.1.2 due to new deadlocks it introduces, for example during initial connect to backend.
+
+7.1.2
+- Fix deadlock while reconnecting to backend after a backend response timeout (Fixes #465)
+
 7.1.1
 - Fix 'provider name' and 'device status' signal status values after update to PVR API 7.0.0
 
