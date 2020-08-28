@@ -46,7 +46,7 @@ public:
   ~HTSPDemuxer();
 
   bool ProcessMessage(const std::string& method, htsmsg_t* m);
-  void Connected();
+  void RebuildState();
 
   bool Open(uint32_t channelId,
             tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL);

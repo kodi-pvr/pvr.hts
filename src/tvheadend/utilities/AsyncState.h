@@ -21,10 +21,11 @@ namespace utilities
 enum eAsyncState
 {
   ASYNC_NONE = 0,
-  ASYNC_CHN = 1,
-  ASYNC_DVR = 2,
-  ASYNC_EPG = 3,
-  ASYNC_DONE = 4
+  ASYNC_INIT = 1,
+  ASYNC_CHN = 2,
+  ASYNC_DVR = 3,
+  ASYNC_EPG = 4,
+  ASYNC_DONE = 5
 };
 
 /**

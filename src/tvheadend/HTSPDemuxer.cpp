@@ -49,12 +49,14 @@ HTSPDemuxer::~HTSPDemuxer()
 {
 }
 
-void HTSPDemuxer::Connected()
+void HTSPDemuxer::RebuildState()
 {
   /* Re-subscribe */
   if (m_subscription.IsActive())
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux re-starting stream");
+
+    CLockObject lock(m_conn.Mutex());
     m_subscription.SendSubscribe(0, 0, true);
     m_subscription.SendSpeed(0, true);
 

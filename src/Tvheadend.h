@@ -174,6 +174,7 @@ private:
   /*
    * Channel/Tags/Recordings/Events
    */
+  void SyncInitCompleted();
   void SyncChannelsCompleted();
   void SyncDvrCompleted();
   void SyncEpgCompleted();

@@ -325,6 +325,7 @@ bool HTSPConnection::ReadMessage()
     htsmsg_destroy(msg);
     return true;
   }
+
   Logger::Log(LogLevel::LEVEL_TRACE, "receive message [%s]", method);
 
   /* Pass (if return is true, message is finished) */
@@ -365,7 +366,8 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 
   if (c != static_cast<ssize_t>(len))
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "failed to write (%s)", m_socket->GetError().c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to write (%s)", method,
+                m_socket->GetError().c_str());
     if (!m_suspended)
       Disconnect();
 
@@ -394,7 +396,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   if (!SendMessage0(method, msg))
   {
     m_messages.erase(seq);
-    Logger::Log(LogLevel::LEVEL_ERROR, "failed to transmit");
+    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to transmit", method);
     return nullptr;
   }
 
@@ -581,7 +583,6 @@ void HTSPConnection::Register()
 
     /* Send Auth */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending auth");
-
     if (!SendAuth(user, pass))
     {
       SetState(PVR_CONNECTION_STATE_ACCESS_DENIED);
@@ -595,6 +596,7 @@ void HTSPConnection::Register()
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "registered");
     SetState(PVR_CONNECTION_STATE_CONNECTED);
+
     m_ready = true;
     m_regCond.Broadcast();
     return;
@@ -603,7 +605,7 @@ void HTSPConnection::Register()
 fail:
   if (!m_suspended)
   {
-    /* Don't immediately reconnect (spare server CPU cycles)*/
+    /* Don't immediately reconnect (spare server CPU cycles) */
     Sleep(SLOW_RECONNECT_INTERVAL);
     Disconnect();
   }
