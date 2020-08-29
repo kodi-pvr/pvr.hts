@@ -180,17 +180,12 @@ bool Subscription::SendSeek(double time)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %d", time);
 
   /* Send and Wait */
-  {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("subscriptionSeek", m);
-  }
-  if (m)
-  {
-    htsmsg_destroy(m);
-    return true;
-  }
+  m = m_conn.SendAndWait("subscriptionSeek", m);
+  if (!m)
+    return false;
 
-  return false;
+  htsmsg_destroy(m);
+  return true;
 }
 
 void Subscription::SendSpeed(int32_t speed, bool restart)
