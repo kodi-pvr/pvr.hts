@@ -221,10 +221,7 @@ void Subscription::SendWeight(uint32_t weight)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send weight %u", GetWeight());
 
   /* Send and Wait */
-  {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("subscriptionChangeWeight", m);
-  }
+  m = m_conn.SendAndWait("subscriptionChangeWeight", m);
   if (m)
     htsmsg_destroy(m);
 }

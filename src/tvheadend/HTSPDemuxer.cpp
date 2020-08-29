@@ -269,6 +269,8 @@ void HTSPDemuxer::FillBuffer(bool mode)
 
 void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)
 {
+  CLockObject lock(m_conn.Mutex());
+
   if (!m_subscription.IsActive() || m_subscription.GetWeight() == static_cast<uint32_t>(weight))
     return;
 
