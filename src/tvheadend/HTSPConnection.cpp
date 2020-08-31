@@ -645,13 +645,14 @@ void* HTSPConnection::Process()
       }
     }
 
-    while (m_suspended)
+    while (m_suspended && !IsStopped())
     {
-      Logger::Log(LogLevel::LEVEL_DEBUG, "suspended. Waiting for wakeup...");
-
       /* Wait for wakeup */
       Sleep(1000);
     }
+
+    if (IsStopped())
+      break;
 
     if (!log)
     {
@@ -691,6 +692,7 @@ void* HTSPConnection::Process()
 
       continue;
     }
+
     Logger::Log(LogLevel::LEVEL_DEBUG, "connected");
     log = false;
     retryAttempt = 0;
