@@ -47,7 +47,7 @@ HTSPVFS::~HTSPVFS()
 {
 }
 
-void HTSPVFS::Connected()
+void HTSPVFS::RebuildState()
 {
   /* Re-open */
   if (m_fileId != 0)

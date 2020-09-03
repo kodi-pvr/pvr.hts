@@ -1493,31 +1493,8 @@ void CTvheadend::Disconnected()
 
 bool CTvheadend::Connected()
 {
-  /* Rebuild state */
-  for (auto* dmx : m_dmx)
-    dmx->Connected();
-
-  m_vfs->Connected();
-  m_timeRecordings.Connected();
-  m_autoRecordings.Connected();
-
-  /* Flag all async fields in case they've been deleted */
-  for (auto& entry : m_channels)
-    entry.second.SetDirty(true);
-  for (auto& entry : m_tags)
-    entry.second.SetDirty(true);
-  for (auto& entry : m_schedules)
-    entry.second.SetDirty(true);
-
-  {
-    CLockObject lock(m_mutex);
-
-    for (auto& entry : m_recordings)
-      entry.second.SetDirty(true);
-  }
-
-  /* Request Async data, first is channels */
-  m_asyncState.SetState(ASYNC_CHN);
+  /* Request Async data, first is init (which rebuilds state) */
+  m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (Settings::GetInstance().GetAsyncEpg())
@@ -1902,6 +1879,7 @@ void CTvheadend::SyncCompleted()
   Logger::Log(LogLevel::LEVEL_INFO, "async updates initialised");
 
   /* The complete calls are probably redundant, but its a safety feature */
+  SyncInitCompleted();
   SyncChannelsCompleted();
   SyncDvrCompleted();
   SyncEpgCompleted();
@@ -1924,6 +1902,34 @@ void CTvheadend::SyncCompleted()
     for (auto* dmx : m_dmx)
       dmx->SetStreamingProfile(streamingProfile);
   }
+}
+
+void CTvheadend::SyncInitCompleted()
+{
+  /* check state engine */
+  if (m_asyncState.GetState() != ASYNC_INIT)
+    return;
+
+  /* Rebuild state */
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  m_vfs->RebuildState();
+  m_timeRecordings.RebuildState();
+  m_autoRecordings.RebuildState();
+
+  /* Flag all async fields in case they've been deleted */
+  for (auto& entry : m_channels)
+    entry.second.SetDirty(true);
+  for (auto& entry : m_tags)
+    entry.second.SetDirty(true);
+  for (auto& entry : m_schedules)
+    entry.second.SetDirty(true);
+  for (auto& entry : m_recordings)
+    entry.second.SetDirty(true);
+
+  /* Next */
+  m_asyncState.SetState(ASYNC_CHN);
 }
 
 void CTvheadend::SyncChannelsCompleted()
@@ -1987,15 +1993,14 @@ void CTvheadend::SyncDvrCompleted()
 void CTvheadend::SyncEpgCompleted()
 {
   /* check state engine */
+  if (m_asyncState.GetState() != ASYNC_EPG)
+    return;
+
   if (!Settings::GetInstance().GetAsyncEpg())
   {
     m_asyncState.SetState(ASYNC_DONE);
     return;
   }
-
-  /* check state engine */
-  if (m_asyncState.GetState() != ASYNC_EPG)
-    return;
 
   /* Schedules */
   std::vector<std::pair<uint32_t, uint32_t>> deletedEvents;
@@ -2040,6 +2045,9 @@ void CTvheadend::SyncEpgCompleted()
 
 void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
+  /* Rebuild state upon arrival of first async data */
+  SyncInitCompleted();
+
   /* Validate */
   uint32_t u32 = 0;
   if (htsmsg_get_u32(msg, "tagId", &u32))
@@ -2120,6 +2128,8 @@ void CTvheadend::ParseTagDelete(htsmsg_t* msg)
 
 void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
+  /* Rebuild state upon arrival of first async data */
+  SyncInitCompleted();
 
   /* Validate */
   uint32_t u32 = 0;
@@ -2243,7 +2253,10 @@ void CTvheadend::ParseChannelDelete(htsmsg_t* msg)
 
 void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  /* Channels must be complete */
+  /* Rebuild state upon arrival of first async data */
+  SyncInitCompleted();
+
+  /* Channels complete */
   SyncChannelsCompleted();
 
   /* Validate */
@@ -2637,6 +2650,9 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
 
 bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
 {
+  /* Rebuild state upon arrival of first async data */
+  SyncInitCompleted();
+
   /* Recordings complete */
   SyncDvrCompleted();
 

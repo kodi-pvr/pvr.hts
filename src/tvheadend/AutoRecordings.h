@@ -33,7 +33,7 @@ public:
   ~AutoRecordings();
 
   /* state updates */
-  void Connected();
+  void RebuildState();
   void SyncDvrCompleted();
 
   /* data access */

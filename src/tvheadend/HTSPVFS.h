@@ -34,7 +34,7 @@ public:
   HTSPVFS(HTSPConnection& conn);
   ~HTSPVFS();
 
-  void Connected();
+  void RebuildState();
 
   bool Open(const kodi::addon::PVRRecording& rec);
   void Close();
