@@ -45,10 +45,10 @@ public:
   bool IsRealTimeStream();
 
 private:
-  bool SendFileOpen(bool force = false);
+  bool SendFileOpen();
   void SendFileClose();
   ssize_t SendFileRead(unsigned char* buf, unsigned int len);
-  long long SendFileSeek(int64_t pos, int whence, bool force = false);
+  long long SendFileSeek(int64_t pos, int whence);
 
   HTSPConnection& m_conn;
   std::string m_path;

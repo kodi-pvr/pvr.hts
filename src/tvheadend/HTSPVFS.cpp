@@ -53,7 +53,7 @@ void HTSPVFS::RebuildState()
   if (m_fileId != 0)
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "vfs re-open file");
-    if (!SendFileOpen(true) || !SendFileSeek(m_offset, SEEK_SET, true))
+    if (!SendFileOpen() || !SendFileSeek(m_offset, SEEK_SET))
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "vfs failed to re-open file");
       Close();
@@ -223,7 +223,7 @@ bool HTSPVFS::IsRealTimeStream()
  * HTSP Messages
  * *************************************************************************/
 
-bool HTSPVFS::SendFileOpen(bool force)
+bool HTSPVFS::SendFileOpen()
 {
   /* Build Message */
   htsmsg_t* m = htsmsg_create_map();
@@ -234,11 +234,7 @@ bool HTSPVFS::SendFileOpen(bool force)
   /* Send */
   {
     CLockObject lock(m_conn.Mutex());
-
-    if (force)
-      m = m_conn.SendAndWait0("fileOpen", m);
-    else
-      m = m_conn.SendAndWait("fileOpen", m);
+    m = m_conn.SendAndWait("fileOpen", m);
   }
 
   if (!m)
@@ -281,7 +277,7 @@ void HTSPVFS::SendFileClose()
     htsmsg_destroy(m);
 }
 
-long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
+long long HTSPVFS::SendFileSeek(int64_t pos, int whence)
 {
   int64_t ret = -1;
 
@@ -300,11 +296,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
   /* Send */
   {
     CLockObject lock(m_conn.Mutex());
-
-    if (force)
-      m = m_conn.SendAndWait0("fileSeek", m);
-    else
-      m = m_conn.SendAndWait("fileSeek", m);
+    m = m_conn.SendAndWait("fileSeek", m);
   }
 
   if (!m)
