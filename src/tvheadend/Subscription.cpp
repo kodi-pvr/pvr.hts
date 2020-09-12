@@ -134,10 +134,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %d", GetChannelId());
 
   /* Send and Wait for response */
-  if (restart)
-    m = m_conn.SendAndWait0("subscribe", m);
-  else
-    m = m_conn.SendAndWait("subscribe", m);
+  m = m_conn.SendAndWait("subscribe", m);
   if (!m)
     return;
 
@@ -201,11 +198,7 @@ void Subscription::SendSpeed(int32_t speed, bool restart)
                  GetSpeed() / 10); // Kodi uses values an order of magnitude larger than tvheadend
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send speed %d", GetSpeed() / 10);
 
-  if (restart)
-    m = m_conn.SendAndWait0("subscriptionSpeed", m);
-  else
-    m = m_conn.SendAndWait("subscriptionSpeed", m);
-
+  m = m_conn.SendAndWait("subscriptionSpeed", m);
   if (m)
     htsmsg_destroy(m);
 }
