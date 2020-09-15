@@ -39,6 +39,7 @@ ADDON_STATUS CHTSAddon::Create()
         break;
       default:
         addonLevel = AddonLog::ADDON_LOG_DEBUG;
+        break;
     }
 
     /* Don't log trace messages unless told so */
@@ -47,8 +48,6 @@ ADDON_STATUS CHTSAddon::Create()
 
     kodi::Log(addonLevel, "%s", message);
   });
-
-  Logger::GetInstance().SetPrefix("pvr.hts");
 
   Logger::Log(LogLevel::LEVEL_INFO, "starting PVR client");
 
