@@ -367,6 +367,34 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel, std::vector<kodi::addon::PVRStreamProperty>& properties)
+{
+  CLockObject lock(m_mutex);
+
+  if (!Settings::GetInstance().GetStreamingHTTP())
+    return PVR_ERROR_NO_ERROR;
+
+  auto it = m_channels.find(channel.GetUniqueId());
+  if (it == m_channels.end())
+    return PVR_ERROR_FAILED;
+
+  std::string url = "http://";
+  url += Settings::GetInstance().GetUsername() + ":" + Settings::GetInstance().GetPassword() + "@";
+  url += Settings::GetInstance().GetHostname() + ":";
+  url += std::to_string(Settings::GetInstance().GetPortHTTP());
+  url += "/stream/channelid/";
+  url += std::to_string(it->first);
+
+  std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
+  if (!streamingProfile.empty())
+    url += "?profile" + streamingProfile;
+
+  properties.emplace_back(PVR_STREAM_PROPERTY_STREAMURL, url);
+  properties.emplace_back(PVR_STREAM_PROPERTY_ISREALTIMESTREAM, "true");
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 /* **************************************************************************
  * Recordings
  * *************************************************************************/
