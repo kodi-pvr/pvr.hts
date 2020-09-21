@@ -387,7 +387,7 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
 
   std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
   if (!streamingProfile.empty())
-    url += "?profile" + streamingProfile;
+    url += "?profile=" + streamingProfile;
 
   properties.emplace_back(PVR_STREAM_PROPERTY_STREAMURL, url);
   properties.emplace_back(PVR_STREAM_PROPERTY_ISREALTIMESTREAM, "true");
