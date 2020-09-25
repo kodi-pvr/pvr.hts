@@ -1,3 +1,7 @@
+7.1.5
+- Fix C++17 build by add of latest original p8-platform to depends
+- Add Debian package build test to Travis CI
+
 7.1.4
 - Fix deadlock while reconnecting to backend after a backend response timeout (Fixes #465)
 - Refactor subscription seek code
