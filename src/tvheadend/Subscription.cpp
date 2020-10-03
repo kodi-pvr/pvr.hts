@@ -15,7 +15,6 @@
 
 #include <cstring>
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -31,83 +30,86 @@ Subscription::Subscription(HTSPConnection& conn)
 
 bool Subscription::IsActive() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return (GetState() != SUBSCRIPTION_STOPPED);
 }
 
 uint32_t Subscription::GetId() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_id;
 }
 
 void Subscription::SetId(uint32_t id)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_id = id;
 }
 
 uint32_t Subscription::GetChannelId() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_channelId;
 }
 
 void Subscription::SetChannelId(uint32_t id)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_channelId = id;
 }
 
 uint32_t Subscription::GetWeight() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_weight;
 }
 
 void Subscription::SetWeight(uint32_t weight)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_weight = weight;
 }
 
 int32_t Subscription::GetSpeed() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_speed;
 }
 
 void Subscription::SetSpeed(int32_t speed)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_speed = speed;
 }
 
 eSubsriptionState Subscription::GetState() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_state;
 }
 
 void Subscription::SetState(eSubsriptionState state)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_state = state;
 }
 
 std::string Subscription::GetProfile() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_profile;
 }
 
 void Subscription::SetProfile(const std::string& profile)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_profile = profile;
 }
 
-void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool restart)
+void Subscription::SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
+                                 uint32_t channelId,
+                                 uint32_t weight,
+                                 bool restart)
 {
   /* We don't want to change anything when restarting a subscription */
   if (!restart)
@@ -135,9 +137,9 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
 
   /* Send and Wait for response */
   if (restart)
-    m = m_conn.SendAndWait0("subscribe", m);
+    m = m_conn.SendAndWait0(lock, "subscribe", m);
   else
-    m = m_conn.SendAndWait("subscribe", m);
+    m = m_conn.SendAndWait(lock, "subscribe", m);
   if (!m)
     return;
 
@@ -149,7 +151,7 @@ void Subscription::SendSubscribe(uint32_t channelId, uint32_t weight, bool resta
               GetId());
 }
 
-void Subscription::SendUnsubscribe()
+void Subscription::SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
@@ -160,7 +162,7 @@ void Subscription::SendUnsubscribe()
   SetState(SUBSCRIPTION_STOPPED);
 
   /* Send and Wait */
-  m = m_conn.SendAndWait("unsubscribe", m);
+  m = m_conn.SendAndWait(lock, "unsubscribe", m);
   if (!m)
     return;
 
@@ -170,7 +172,7 @@ void Subscription::SendUnsubscribe()
               GetChannelId(), GetId());
 }
 
-bool Subscription::SendSeek(double time)
+bool Subscription::SendSeek(std::unique_lock<std::recursive_mutex>& lock, double time)
 {
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
@@ -180,7 +182,7 @@ bool Subscription::SendSeek(double time)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %d", time);
 
   /* Send and Wait */
-  m = m_conn.SendAndWait("subscriptionSeek", m);
+  m = m_conn.SendAndWait(lock, "subscriptionSeek", m);
   if (!m)
     return false;
 
@@ -188,7 +190,9 @@ bool Subscription::SendSeek(double time)
   return true;
 }
 
-void Subscription::SendSpeed(int32_t speed, bool restart)
+void Subscription::SendSpeed(std::unique_lock<std::recursive_mutex>& lock,
+                             int32_t speed,
+                             bool restart)
 {
   /* We don't want to change the speed when restarting a subscription */
   if (!restart)
@@ -202,15 +206,15 @@ void Subscription::SendSpeed(int32_t speed, bool restart)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send speed %d", GetSpeed() / 10);
 
   if (restart)
-    m = m_conn.SendAndWait0("subscriptionSpeed", m);
+    m = m_conn.SendAndWait0(lock, "subscriptionSpeed", m);
   else
-    m = m_conn.SendAndWait("subscriptionSpeed", m);
+    m = m_conn.SendAndWait(lock, "subscriptionSpeed", m);
 
   if (m)
     htsmsg_destroy(m);
 }
 
-void Subscription::SendWeight(uint32_t weight)
+void Subscription::SendWeight(std::unique_lock<std::recursive_mutex>& lock, uint32_t weight)
 {
   SetWeight(weight);
 
@@ -221,7 +225,7 @@ void Subscription::SendWeight(uint32_t weight)
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send weight %u", GetWeight());
 
   /* Send and Wait */
-  m = m_conn.SendAndWait("subscriptionChangeWeight", m);
+  m = m_conn.SendAndWait(lock, "subscriptionChangeWeight", m);
   if (m)
     htsmsg_destroy(m);
 }

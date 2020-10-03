@@ -9,7 +9,8 @@
 #pragma once
 
 #include "kodi/AddonBase.h"
-#include "p8-platform/threads/mutex.h"
+
+#include <mutex>
 
 class ATTRIBUTE_HIDDEN CHTSAddon : public kodi::addon::CAddonBase
 {
@@ -26,5 +27,5 @@ public:
                               KODI_HANDLE& addonInstance) override;
 
 private:
-  P8PLATFORM::CMutex m_mutex;
+  std::recursive_mutex m_mutex;
 };

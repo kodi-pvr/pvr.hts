@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "p8-platform/threads/mutex.h"
-
+#include <mutex>
 #include <string>
 
 extern "C"
@@ -72,32 +71,35 @@ public:
    * @param weight the desired subscription weight
    * @param restart restart the current subscription (i.e. after lost connection), other parameters will be ignored
    */
-  void SendSubscribe(uint32_t channelId, uint32_t weight, bool restart = false);
+  void SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
+                     uint32_t channelId,
+                     uint32_t weight,
+                     bool restart = false);
 
   /**
    * Unsubscribe from a channel on the backend
    */
-  void SendUnsubscribe();
+  void SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock);
 
   /**
    * Send a seek to the backend
    * @param time timestamp to seek to
    * @return false if the command failed, true otherwise
    */
-  bool SendSeek(double time);
+  bool SendSeek(std::unique_lock<std::recursive_mutex>& lock, double time);
 
   /**
    * Change the subscription speed on the backend
    * @param speed the desired speed of the subscription
    * @param restart resent the current subscription speed (i.e. after lost connection), other parameters will be ignored
    */
-  void SendSpeed(int32_t speed, bool restart = false);
+  void SendSpeed(std::unique_lock<std::recursive_mutex>& lock, int32_t speed, bool restart = false);
 
   /**
    * Change the subscription weight on the backend
    * @param weight the desired subscription weight
    */
-  void SendWeight(uint32_t weight);
+  void SendWeight(std::unique_lock<std::recursive_mutex>& lock, uint32_t weight);
 
   /**
    * Parse the subscription status out of the incoming htsp data
@@ -136,7 +138,7 @@ private:
   std::string m_profile;
   HTSPConnection& m_conn;
 
-  mutable P8PLATFORM::CMutex m_mutex;
+  mutable std::recursive_mutex m_mutex;
 };
 
 } // namespace tvheadend

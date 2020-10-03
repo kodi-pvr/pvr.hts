@@ -12,7 +12,6 @@
 #include "tvheadend/Settings.h"
 #include "tvheadend/utilities/Logger.h"
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -59,7 +58,7 @@ ADDON_STATUS CHTSAddon::Create()
 ADDON_STATUS CHTSAddon::SetSetting(const std::string& settingName,
                                    const kodi::CSettingValue& settingValue)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return Settings::GetInstance().SetSetting(settingName, settingValue);
 }
 
@@ -69,7 +68,7 @@ ADDON_STATUS CHTSAddon::CreateInstance(int instanceType,
                                        const std::string& version,
                                        KODI_HANDLE& addonInstance)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   if (instanceType == ADDON_INSTANCE_PVR)
   {

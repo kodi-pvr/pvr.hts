@@ -14,6 +14,8 @@
 
 #include "kodi/addon-instance/PVR.h"
 
+#include <chrono>
+#include <condition_variable>
 #include <cstring>
 #include <ctime>
 
@@ -28,7 +30,6 @@
 // use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
 static const int TVH_STREAM_INDEX_OFFSET = 1000;
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -55,9 +56,9 @@ void HTSPDemuxer::RebuildState()
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux re-starting stream");
 
-    CLockObject lock(m_conn.Mutex());
-    m_subscription.SendSubscribe(0, 0, true);
-    m_subscription.SendSpeed(0, true);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m_subscription.SendSubscribe(lock, 0, 0, true);
+    m_subscription.SendSpeed(lock, 0, true);
 
     ResetStatus(false);
   }
@@ -67,11 +68,11 @@ void HTSPDemuxer::RebuildState()
  * Demuxer API
  * *************************************************************************/
 
-void HTSPDemuxer::Close0()
+void HTSPDemuxer::Close0(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Send unsubscribe */
   if (m_subscription.IsActive())
-    m_subscription.SendUnsubscribe();
+    m_subscription.SendUnsubscribe(lock);
 
   /* Clear */
   Flush();
@@ -80,7 +81,7 @@ void HTSPDemuxer::Close0()
 
 void HTSPDemuxer::Abort0()
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_streams.clear();
   m_streamStat.clear();
   m_rdsIdx = 0;
@@ -90,21 +91,21 @@ void HTSPDemuxer::Abort0()
 
 bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux open");
 
   /* Close current stream */
-  Close0();
+  Close0(lock);
 
   /* Open new subscription */
-  m_subscription.SendSubscribe(channelId, weight);
+  m_subscription.SendSubscribe(lock, channelId, weight);
 
   /* Reset status */
   ResetStatus();
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
-    m_subscription.SendUnsubscribe();
+    m_subscription.SendUnsubscribe(lock);
   else
     m_lastUse.store(std::time(nullptr));
 
@@ -113,8 +114,8 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
 
 void HTSPDemuxer::Close()
 {
-  CLockObject lock(m_conn.Mutex());
-  Close0();
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+  Close0(lock);
   ResetStatus();
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux close");
 }
@@ -160,7 +161,7 @@ void HTSPDemuxer::Abort()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
 
-  CLockObject lock(m_conn.Mutex());
+  std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
   Abort0();
   ResetStatus();
 }
@@ -178,9 +179,9 @@ public:
     Set(INVALID_SEEKTIME); // ensure signal is sent
   }
 
-  int64_t Get(CMutex& mutex, uint32_t timeout)
+  int64_t Get(std::unique_lock<std::recursive_mutex>& lock, uint32_t timeout)
   {
-    m_cond.Wait(mutex, m_flag, timeout);
+    m_cond.wait_for(lock, std::chrono::milliseconds(timeout), [this] { return m_flag == true; });
     m_flag = false;
     return m_seektime;
   }
@@ -189,11 +190,11 @@ public:
   {
     m_seektime = seektime;
     m_flag = true;
-    m_cond.Broadcast();
+    m_cond.notify_all();
   }
 
 private:
-  CCondition<volatile bool> m_cond;
+  std::condition_variable_any m_cond;
   bool m_flag = false;
   int64_t m_seektime = INVALID_SEEKTIME;
 };
@@ -202,7 +203,7 @@ private:
 
 bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
   if (!m_subscription.IsActive())
     return false;
@@ -210,12 +211,11 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
   SubscriptionSeekTime seekTime;
   m_seektime = &seekTime;
 
-  if (!m_subscription.SendSeek(time))
+  if (!m_subscription.SendSeek(lock, time))
     return false;
 
   /* Wait for time */
-  int64_t seekedTo =
-      (*m_seektime).Get(m_conn.Mutex(), Settings::GetInstance().GetResponseTimeout());
+  int64_t seekedTo = (*m_seektime).Get(lock, Settings::GetInstance().GetResponseTimeout());
   m_seektime = nullptr;
 
   if (seekedTo == INVALID_SEEKTIME)
@@ -234,7 +234,7 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 
 void HTSPDemuxer::Speed(int speed)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
   if (!m_subscription.IsActive())
     return;
@@ -244,7 +244,7 @@ void HTSPDemuxer::Speed(int speed)
 
   if ((speed != m_requestedSpeed || speed == 0) && m_actualSpeed == m_subscription.GetSpeed())
   {
-    m_subscription.SendSpeed(speed);
+    m_subscription.SendSpeed(lock, speed);
   }
 
   m_requestedSpeed = speed;
@@ -252,7 +252,7 @@ void HTSPDemuxer::Speed(int speed)
 
 void HTSPDemuxer::FillBuffer(bool mode)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
   if (!m_subscription.IsActive())
     return;
@@ -261,7 +261,7 @@ void HTSPDemuxer::FillBuffer(bool mode)
 
   if (speed != m_requestedSpeed && m_actualSpeed == m_subscription.GetSpeed())
   {
-    m_subscription.SendSpeed(speed);
+    m_subscription.SendSpeed(lock, speed);
   }
 
   m_requestedSpeed = speed;
@@ -269,17 +269,17 @@ void HTSPDemuxer::FillBuffer(bool mode)
 
 void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
   if (!m_subscription.IsActive() || m_subscription.GetWeight() == static_cast<uint32_t>(weight))
     return;
 
-  m_subscription.SendWeight(static_cast<uint32_t>(weight));
+  m_subscription.SendWeight(lock, static_cast<uint32_t>(weight));
 }
 
 PVR_ERROR HTSPDemuxer::CurrentStreams(std::vector<kodi::addon::PVRStreamProperties>& streams)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   streams = m_streams;
 
@@ -288,7 +288,7 @@ PVR_ERROR HTSPDemuxer::CurrentStreams(std::vector<kodi::addon::PVRStreamProperti
 
 PVR_ERROR HTSPDemuxer::CurrentSignal(kodi::addon::PVRSignalStatus& sig)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   sig.SetAdapterName(m_sourceInfo.si_adapter);
   sig.SetServiceName(m_sourceInfo.si_service);
@@ -306,7 +306,7 @@ PVR_ERROR HTSPDemuxer::CurrentSignal(kodi::addon::PVRSignalStatus& sig)
 
 PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo(kodi::addon::PVRDescrambleInfo& info)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   info.SetPID(m_descrambleInfo.GetPid());
   info.SetCAID(m_descrambleInfo.GetCaid());
@@ -330,7 +330,7 @@ bool HTSPDemuxer::IsTimeShifting() const
   if (m_subscription.GetSpeed() != SPEED_NORMAL)
     return true;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   if (m_timeshiftStatus.shift != 0)
     return true;
 
@@ -343,14 +343,14 @@ bool HTSPDemuxer::IsRealTimeStream() const
     return false;
 
   /* Handle as real time when reading close to the EOF (10 secs) */
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return (m_timeshiftStatus.shift < 10000000);
 }
 
 PVR_ERROR HTSPDemuxer::GetStreamTimes(kodi::addon::PVRStreamTimes& times) const
 {
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   times.SetStartTime(m_startTime);
   times.SetPTSStart(0);
@@ -396,7 +396,7 @@ void HTSPDemuxer::SetStreamingProfile(const std::string& profile)
 
 void HTSPDemuxer::ResetStatus(bool resetStartTime /* = true */)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   m_signalInfo.Clear();
   m_sourceInfo.Clear();
@@ -495,7 +495,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
 void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Ignore packets while switching channels */
   if (!m_subscription.IsActive())
@@ -729,7 +729,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
     return;
   }
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   m_streamStat.clear();
   m_streams.clear();
@@ -829,7 +829,7 @@ void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 
 void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
 {
-  CLockObject lock(m_conn.Mutex());
+  std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
 
   if (m_seektime == nullptr)
     return;
@@ -852,7 +852,7 @@ void HTSPDemuxer::ParseSubscriptionSpeed(htsmsg_t* m)
   if (!htsmsg_get_s32(m, "speed", &s32))
     Logger::Log(LogLevel::LEVEL_TRACE, "recv speed %d", s32);
 
-  CLockObject lock(m_conn.Mutex());
+  std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
   m_actualSpeed = s32 * 10;
 }
 
@@ -862,7 +862,7 @@ void HTSPDemuxer::ParseSubscriptionGrace(htsmsg_t* m)
 
 void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "stream stats:");
   for (const auto& stat : m_streamStat)
@@ -889,7 +889,7 @@ void HTSPDemuxer::ParseQueueStatus(htsmsg_t* m)
 
 void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Reset */
   m_signalInfo.Clear();
@@ -933,7 +933,7 @@ void HTSPDemuxer::ParseSignalStatus(htsmsg_t* m)
 
 void HTSPDemuxer::ParseTimeshiftStatus(htsmsg_t* m)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Parse */
   Logger::Log(LogLevel::LEVEL_TRACE, "timeshiftStatus:");
@@ -993,7 +993,7 @@ void HTSPDemuxer::ParseDescrambleInfo(htsmsg_t* m)
   const char* from = htsmsg_get_str(m, "from");
   const char* protocol = htsmsg_get_str(m, "protocol");
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Reset */
   m_descrambleInfo.Clear();

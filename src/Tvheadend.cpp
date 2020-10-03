@@ -25,7 +25,6 @@
 #include <ctime>
 #include <memory>
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
@@ -118,10 +117,10 @@ PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities
 
 PVR_ERROR CTvheadend::GetDriveSpace(uint64_t& total, uint64_t& used)
 {
-  CLockObject lock(m_conn->Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
 
   htsmsg_t* m = htsmsg_create_map();
-  m = m_conn->SendAndWait("getDiskSpace", m);
+  m = m_conn->SendAndWait(lock, "getDiskSpace", m);
   if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
@@ -166,8 +165,8 @@ void CTvheadend::QueryAvailableProfiles()
 
   /* Send */
   {
-    CLockObject lock(m_conn->Mutex());
-    m = m_conn->SendAndWait("getProfiles", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
+    m = m_conn->SendAndWait(lock, "getProfiles", m);
   }
 
   /* Validate */
@@ -227,7 +226,7 @@ PVR_ERROR CTvheadend::GetChannelGroupsAmount(int& amount)
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return PVR_ERROR_FAILED;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   amount = m_tags.size();
   return PVR_ERROR_NO_ERROR;
 }
@@ -239,7 +238,7 @@ PVR_ERROR CTvheadend::GetChannelGroups(bool radio, kodi::addon::PVRChannelGroups
 
   std::vector<kodi::addon::PVRChannelGroup> tags;
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     for (const auto& entry : m_tags)
     {
@@ -276,7 +275,7 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
 
   std::vector<kodi::addon::PVRChannelGroupMember> gms;
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     // Find the tag
     const auto it = std::find_if(m_tags.cbegin(), m_tags.cend(), [group](const TagMapEntry& tag) {
@@ -335,7 +334,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
 
   std::vector<kodi::addon::PVRChannel> channels;
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     for (const auto& entry : m_channels)
     {
@@ -372,7 +371,7 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
   if (!Settings::GetInstance().GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   auto it = m_channels.find(channel.GetUniqueId());
   if (it == m_channels.end())
@@ -397,14 +396,15 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
 
 PVR_ERROR CTvheadend::SendDvrDelete(uint32_t id, const char* method)
 {
-  CLockObject lock(m_conn->Mutex());
+  std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
 
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", id);
 
   /* Send and wait a bit longer than usual */
-  m = m_conn->SendAndWait(method, m, std::max(30000, Settings::GetInstance().GetResponseTimeout()));
+  m = m_conn->SendAndWait(lock, method, m,
+                          std::max(30000, Settings::GetInstance().GetResponseTimeout()));
   if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
@@ -425,8 +425,8 @@ PVR_ERROR CTvheadend::SendDvrUpdate(htsmsg_t* m)
 {
   /* Send and Wait */
   {
-    CLockObject lock(m_conn->Mutex());
-    m = m_conn->SendAndWait("updateDvrEntry", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
+    m = m_conn->SendAndWait(lock, "updateDvrEntry", m);
   }
 
   if (!m)
@@ -449,7 +449,7 @@ PVR_ERROR CTvheadend::GetRecordingsAmount(bool deleted, int& amount)
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return PVR_ERROR_FAILED;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   amount = std::count_if(m_recordings.cbegin(), m_recordings.cend(),
                          [](const RecordingMapEntry& entry) { return entry.second.IsRecording(); });
@@ -463,7 +463,7 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
 
   std::vector<kodi::addon::PVRRecording> recs;
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     char buf[128];
 
     for (const auto& entry : m_recordings)
@@ -606,9 +606,9 @@ PVR_ERROR CTvheadend::GetRecordingEdl(const kodi::addon::PVRRecording& rec,
 
   /* Send and Wait */
   {
-    CLockObject lock(m_conn->Mutex());
+    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
 
-    m = m_conn->SendAndWait("getDvrCutpoints", m);
+    m = m_conn->SendAndWait(lock, "getDvrCutpoints", m);
     if (!m)
       return PVR_ERROR_SERVER_ERROR;
   }
@@ -748,7 +748,7 @@ PVR_ERROR CTvheadend::GetRecordingLastPlayedPosition(const kodi::addon::PVRRecor
   if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   const auto& it = m_recordings.find(std::stoul(rec.GetRecordingId()));
   if (it != m_recordings.end() && it->second.IsRecording())
@@ -1035,7 +1035,7 @@ PVR_ERROR CTvheadend::GetTimersAmount(int& amount)
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return PVR_ERROR_FAILED;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   // Normal timers
   amount = std::count_if(m_recordings.cbegin(), m_recordings.cend(),
@@ -1095,7 +1095,7 @@ PVR_ERROR CTvheadend::GetTimers(kodi::addon::PVRTimersResultSet& results)
 
   std::vector<kodi::addon::PVRTimer> timers;
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     /* One-shot timers */
     for (const auto& entry : m_recordings)
@@ -1177,8 +1177,8 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
 
     /* Send and Wait */
     {
-      CLockObject lock(m_conn->Mutex());
-      m = m_conn->SendAndWait("addDvrEntry", m);
+      std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
+      m = m_conn->SendAndWait(lock, "addDvrEntry", m);
     }
 
     if (!m)
@@ -1217,7 +1217,7 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
 PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
 {
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     const auto& it = m_recordings.find(timer.GetClientIndex());
     if (it != m_recordings.end() && it->second.IsRecording())
@@ -1285,7 +1285,7 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
     }
     else
     {
-      CLockObject lock(m_mutex);
+      std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
       const auto& it = m_recordings.find(timer.GetClientIndex());
       if (it == m_recordings.end())
@@ -1349,7 +1349,7 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
     if (m_conn->GetProtocol() >= 23)
     {
       /* Read-only timer created by autorec or timerec */
-      CLockObject lock(m_mutex);
+      std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
       const auto& it = m_recordings.find(timer.GetClientIndex());
       if (it != m_recordings.end() &&
@@ -1453,9 +1453,9 @@ PVR_ERROR CTvheadend::GetEPGForChannel(int channelUid,
 
   /* Send and Wait */
   {
-    CLockObject lock(m_conn->Mutex());
+    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
 
-    msg = m_conn->SendAndWait0("getEvents", msg);
+    msg = m_conn->SendAndWait0(lock, "getEvents", msg);
     if (!msg)
       return PVR_ERROR_SERVER_ERROR;
   }
@@ -1515,7 +1515,7 @@ void CTvheadend::Disconnected()
   m_asyncState.SetState(ASYNC_NONE);
 }
 
-bool CTvheadend::Connected()
+bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Request Async data, first is init (which rebuilds state) */
   m_asyncState.SetState(ASYNC_INIT);
@@ -1533,7 +1533,7 @@ bool CTvheadend::Connected()
   else
     htsmsg_add_u32(msg, "epg", 0);
 
-  msg = m_conn->SendAndWait0("enableAsyncMetadata", msg);
+  msg = m_conn->SendAndWait0(lock, "enableAsyncMetadata", msg);
   if (!msg)
   {
     m_asyncState.SetState(ASYNC_NONE);
@@ -1597,7 +1597,7 @@ bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& rec)
 
   if (ret)
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     const auto& it = m_recordings.find(std::stoul(rec.GetRecordingId()));
     if (it != m_recordings.end())
@@ -1613,7 +1613,7 @@ void CTvheadend::CloseRecordedStream()
 {
   m_vfs->Close();
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_playingRecording = nullptr;
 }
 
@@ -1753,7 +1753,7 @@ void* CTvheadend::Process()
     SHTSPEventList eventsCopy;
     /* Scope lock for processing */
     {
-      CLockObject lock(m_mutex);
+      std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
       /* Channels */
       if (method == "channelAdd")
@@ -1985,7 +1985,7 @@ void CTvheadend::SyncDvrCompleted()
 
   /* Recordings */
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     // save id of currently playing recording, if any
     uint32_t id = m_playingRecording ? m_playingRecording->GetId() : 0;
@@ -2304,7 +2304,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   rec.SetDirty(false);
 
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     if (m_playingRecording && m_playingRecording->GetId() == id)
       m_playingRecording = &rec;
@@ -2666,7 +2666,7 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
 
   /* Erase */
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     if (m_playingRecording && m_playingRecording->GetId() == u32)
       m_playingRecording = nullptr;
@@ -2963,7 +2963,7 @@ void CTvheadend::TuneOnOldest(uint32_t channelId)
 
 void CTvheadend::PredictiveTune(uint32_t fromChannelId, uint32_t toChannelId)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Consult the predictive tuning helper for which channel
    * should be predictably tuned next */
@@ -3122,7 +3122,7 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
     return m_dmx_active->GetStreamTimes(times);
   }
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   if (m_playingRecording)
   {

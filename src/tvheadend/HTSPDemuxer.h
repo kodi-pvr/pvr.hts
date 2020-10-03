@@ -10,6 +10,7 @@
 
 #include <atomic>
 #include <map>
+#include <mutex>
 #include <string>
 #include <time.h>
 #include <vector>
@@ -28,7 +29,6 @@ extern "C"
 
 #include "kodi/addon-instance/pvr/Channels.h"
 #include "kodi/addon-instance/pvr/Stream.h"
-#include "p8-platform/threads/mutex.h"
 #include "p8-platform/util/buffer.h"
 
 namespace tvheadend
@@ -81,7 +81,7 @@ public:
   void SetStreamingProfile(const std::string& profile);
 
 private:
-  void Close0();
+  void Close0(std::unique_lock<std::recursive_mutex>& lock);
   void Abort0();
 
   /**
@@ -106,7 +106,7 @@ private:
   bool AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx);
   void ProcessRDS(uint32_t idx, const void* bin, size_t binlen);
 
-  mutable P8PLATFORM::CMutex m_mutex;
+  mutable std::recursive_mutex m_mutex;
   HTSPConnection& m_conn;
   P8PLATFORM::SyncedBuffer<DemuxPacket*> m_pktBuffer;
   std::vector<kodi::addon::PVRStreamProperties> m_streams;

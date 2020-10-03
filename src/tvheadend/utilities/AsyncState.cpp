@@ -8,14 +8,9 @@
 
 #include "AsyncState.h"
 
-using namespace tvheadend::utilities;
-using namespace P8PLATFORM;
+#include <chrono>
 
-struct Param
-{
-  eAsyncState state;
-  AsyncState* self;
-};
+using namespace tvheadend::utilities;
 
 AsyncState::AsyncState(int timeout)
 {
@@ -25,29 +20,20 @@ AsyncState::AsyncState(int timeout)
 
 eAsyncState AsyncState::GetState()
 {
-  P8PLATFORM::CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_state;
 }
 
 void AsyncState::SetState(eAsyncState state)
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_state = state;
-  m_condition.Broadcast();
-}
-
-bool AsyncState::PredicateCallback(void* p)
-{
-  Param* param = reinterpret_cast<Param*>(p);
-  return param->self->m_state >= param->state;
+  m_condition.notify_all();
 }
 
 bool AsyncState::WaitForState(eAsyncState state)
 {
-  Param p;
-  p.state = state;
-  p.self = this;
-
-  CLockObject lock(m_mutex);
-  return m_condition.Wait(m_mutex, AsyncState::PredicateCallback, &p, m_timeout);
+  std::unique_lock<std::recursive_mutex> lock(m_mutex);
+  return m_condition.wait_for(lock, std::chrono::milliseconds(m_timeout),
+                              [this, state] { return m_state >= state; });
 }

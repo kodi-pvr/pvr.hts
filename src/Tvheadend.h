@@ -32,6 +32,7 @@ extern "C"
 #include "p8-platform/threads/threads.h"
 #include "p8-platform/util/buffer.h"
 
+#include <mutex>
 #include <string>
 #include <utility>
 #include <vector>
@@ -68,7 +69,7 @@ public:
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
-  bool Connected() override;
+  bool Connected(std::unique_lock<std::recursive_mutex>& lock) override;
   bool ProcessMessage(const std::string& method, htsmsg_t* msg) override;
   void ConnectionStateChange(const std::string& connectionString,
                              PVR_CONNECTION_STATE newState,
@@ -254,7 +255,7 @@ public:
    */
   tvheadend::Profiles m_profiles;
 
-  P8PLATFORM::CMutex m_mutex;
+  std::recursive_mutex m_mutex;
 
   tvheadend::HTSPConnection* m_conn;
 
