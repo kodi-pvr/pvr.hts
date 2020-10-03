@@ -2355,9 +2355,11 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     bool hasAudio = false;
     bool hasVideo = false;
 
+    // For multi-file recordings, tvheadend will always play the one recorded last.
+    // No way (using HTSP) known to control which file to play.
+    // So, collect meta data for latest file of the multi-file recording.
     start = 0;
-    stop = 0;
-    int64_t size = 0;
+    htsmsg_t* lastfile = nullptr;
 
     htsmsg_field_t* file = nullptr;
     HTSMSG_FOREACH(file, files) // Loop through all files
@@ -2365,9 +2367,19 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
       if (file->hmf_type != HMF_MAP)
         continue;
 
+      int64_t s64 = 0;
+      if (!htsmsg_get_s64(&file->hmf_msg, "start", &s64) && (start == 0 || start < s64))
+      {
+        start = s64;
+        lastfile = &file->hmf_msg;
+      }
+    }
+
+    if (lastfile)
+    {
       if (needChannelType && !(hasAudio && hasVideo))
       {
-        htsmsg_t* streams = htsmsg_get_list(&file->hmf_msg, "info");
+        htsmsg_t* streams = htsmsg_get_list(lastfile, "info");
         if (streams)
         {
           htsmsg_field_t* stream = nullptr;
@@ -2389,20 +2401,15 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
       }
 
       int64_t s64 = 0;
-      if (!htsmsg_get_s64(&file->hmf_msg, "start", &s64) && (start == 0 || start > s64))
-        start = s64;
+      if (!htsmsg_get_s64(lastfile, "start", &s64))
+        rec.SetFilesStart(s64);
 
-      if (!htsmsg_get_s64(&file->hmf_msg, "stop", &s64) && stop < s64)
-        stop = s64;
+      if (!htsmsg_get_s64(lastfile, "stop", &s64))
+        rec.SetFilesStop(s64);
 
-      if (!htsmsg_get_s64(&file->hmf_msg, "size", &s64))
-        size += s64;
+      if (!htsmsg_get_s64(lastfile, "size", &s64))
+        rec.SetFilesSize(s64);
     }
-
-    // Set the times the recording actually started/stopped. They may differ from the scheduled start/stop.
-    rec.SetFilesStart(start);
-    rec.SetFilesStop(stop);
-    rec.SetFilesSize(size);
 
     /* Channel type fallback (in case channel was deleted) */
     if (needChannelType)
