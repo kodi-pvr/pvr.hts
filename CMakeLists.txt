@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(pvr.hts)
 
 find_package(Kodi REQUIRED)
-find_package(p8-platform REQUIRED)
 
-include_directories(${p8-platform_INCLUDE_DIRS}
-                    ${KODI_INCLUDE_DIR}/.. # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
+include_directories(${KODI_INCLUDE_DIR}/.. # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
                     ${PROJECT_SOURCE_DIR}/lib)
 
 # Sources and headers
@@ -100,7 +98,7 @@ list(APPEND HTS_SOURCES
 add_subdirectory(lib/libhts
                  lib/kissnet)
 
-set(DEPLIBS ${p8-platform_LIBRARIES} hts)
+set(DEPLIBS hts)
 
 build_addon(pvr.hts HTS DEPLIBS)
 
