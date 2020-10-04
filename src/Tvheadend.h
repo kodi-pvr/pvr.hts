@@ -30,7 +30,7 @@ extern "C"
 #include "tvheadend/utilities/SyncedBuffer.h"
 
 #include "kodi/addon-instance/PVR.h"
-#include "p8-platform/threads/threads.h"
+#include "kodi/tools/Thread.h"
 
 #include <mutex>
 #include <string>
@@ -56,7 +56,7 @@ typedef tvheadend::utilities::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQu
  * Root object for Tvheadend connection
  */
 class ATTRIBUTE_HIDDEN CTvheadend : public kodi::addon::CInstancePVRClient,
-                                    public P8PLATFORM::CThread,
+                                    public kodi::tools::CThread,
                                     public tvheadend::IHTSPConnectionListener,
                                     public tvheadend::IHTSPDemuxPacketHandler
 {
@@ -149,7 +149,7 @@ private:
   /*
    * Message processing (CThread implementation)
    */
-  void* Process() override;
+  void Process() override;
 
   /*
    * Event handling

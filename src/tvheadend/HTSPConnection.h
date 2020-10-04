@@ -20,8 +20,8 @@ extern "C"
 }
 
 #include "kodi/addon-instance/pvr/General.h"
+#include "kodi/tools/Thread.h"
 #include "p8-platform/sockets/tcp.h"
-#include "p8-platform/threads/threads.h"
 
 namespace tvheadend
 {
@@ -35,7 +35,7 @@ typedef std::map<uint32_t, HTSPResponse*> HTSPResponseList;
 /*
  * HTSP Connection
  */
-class HTSPConnection : public P8PLATFORM::CThread
+class HTSPConnection : public kodi::tools::CThread
 {
 public:
   HTSPConnection(IHTSPConnectionListener& connListener);
@@ -72,7 +72,7 @@ public:
 
 private:
   // CThread iplementation
-  void* Process() override;
+  void Process() override;
 
   void Register();
   bool ReadMessage();
@@ -87,20 +87,16 @@ private:
   /*
    * HTSP Connection registration thread
    */
-  class HTSPRegister : public P8PLATFORM::CThread
+  class HTSPRegister : public kodi::tools::CThread
   {
   public:
     HTSPRegister(HTSPConnection* conn) : m_conn(conn) {}
 
-    ~HTSPRegister() override { StopThread(0); }
+    ~HTSPRegister() override { StopThread(true); }
 
   private:
     // CThread implementation
-    void* Process() override
-    {
-      m_conn->Register();
-      return nullptr;
-    }
+    void Process() override { m_conn->Register(); }
 
     HTSPConnection* m_conn;
   };

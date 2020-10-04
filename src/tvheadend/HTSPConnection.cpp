@@ -105,9 +105,9 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
 
 HTSPConnection::~HTSPConnection()
 {
-  StopThread(-1);
+  StopThread(false);
   Disconnect();
-  StopThread(0);
+  StopThread(true);
   delete m_regThread;
 }
 
@@ -120,7 +120,7 @@ void HTSPConnection::Start()
 
 void HTSPConnection::Stop()
 {
-  StopThread(-1);
+  StopThread(false);
   Disconnect();
 }
 
@@ -625,13 +625,13 @@ fail:
 /*
  * Main thread loop for connection and rx handling
  */
-void* HTSPConnection::Process()
+void HTSPConnection::Process()
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
   const Settings& settings = Settings::GetInstance();
 
-  while (!IsStopped())
+  while (!m_threadStop)
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
@@ -656,13 +656,13 @@ void* HTSPConnection::Process()
       }
     }
 
-    while (m_suspended && !IsStopped())
+    while (m_suspended && !m_threadStop)
     {
       /* Wait for wakeup */
       Sleep(1000);
     }
 
-    if (IsStopped())
+    if (m_threadStop)
       break;
 
     if (!log)
@@ -709,18 +709,16 @@ void* HTSPConnection::Process()
     retryAttempt = 0;
 
     /* Start connect thread */
-    m_regThread->CreateThread(true);
+    m_regThread->CreateThread();
 
     /* Receive loop */
-    while (!IsStopped())
+    while (!m_threadStop)
     {
       if (!ReadMessage())
         break;
     }
 
     /* Stop connect thread (if not already) */
-    m_regThread->StopThread(0);
+    m_regThread->StopThread(true);
   }
-
-  return nullptr;
 }
