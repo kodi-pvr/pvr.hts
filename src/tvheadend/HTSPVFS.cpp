@@ -17,7 +17,7 @@ extern "C"
 #include "utilities/Logger.h"
 
 #include "kodi/addon-instance/pvr/Recordings.h"
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 #include <chrono>
 #include <ctime>
@@ -70,7 +70,7 @@ bool HTSPVFS::Open(const kodi::addon::PVRRecording& rec)
   Close();
 
   /* Cache details */
-  m_path = StringUtils::Format("dvr/%s", rec.GetRecordingId().c_str());
+  m_path = kodi::tools::StringUtils::Format("dvr/%s", rec.GetRecordingId().c_str());
   m_fileStart = rec.GetRecordingTime();
 
   /* Send open */

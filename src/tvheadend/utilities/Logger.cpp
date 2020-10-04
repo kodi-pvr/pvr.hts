@@ -8,7 +8,7 @@
 
 #include "Logger.h"
 
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 using namespace tvheadend::utilities;
 
@@ -30,7 +30,7 @@ void Logger::Log(LogLevel level, const char* message, ...)
 
   va_list arguments;
   va_start(arguments, message);
-  const std::string logMessage = StringUtils::FormatV(message, arguments);
+  const std::string logMessage = kodi::tools::StringUtils::FormatV(message, arguments);
   va_end(arguments);
 
   logger.m_implementation(level, logMessage.c_str());

@@ -9,7 +9,7 @@
 #include "Event.h"
 
 #include "kodi/addon-instance/pvr/EPG.h"
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 #include <ctime>
 
@@ -17,22 +17,22 @@ using namespace tvheadend::entity;
 
 void Event::SetWriters(const std::vector<std::string>& writers)
 {
-  m_writers = StringUtils::Join(writers, EPG_STRING_TOKEN_SEPARATOR);
+  m_writers = kodi::tools::StringUtils::Join(writers, EPG_STRING_TOKEN_SEPARATOR);
 }
 
 void Event::SetDirectors(const std::vector<std::string>& directors)
 {
-  m_directors = StringUtils::Join(directors, EPG_STRING_TOKEN_SEPARATOR);
+  m_directors = kodi::tools::StringUtils::Join(directors, EPG_STRING_TOKEN_SEPARATOR);
 }
 
 void Event::SetCast(const std::vector<std::string>& cast)
 {
-  m_cast = StringUtils::Join(cast, EPG_STRING_TOKEN_SEPARATOR);
+  m_cast = kodi::tools::StringUtils::Join(cast, EPG_STRING_TOKEN_SEPARATOR);
 }
 
 void Event::SetCategories(const std::vector<std::string>& categories)
 {
-  m_categories = StringUtils::Join(categories, EPG_STRING_TOKEN_SEPARATOR);
+  m_categories = kodi::tools::StringUtils::Join(categories, EPG_STRING_TOKEN_SEPARATOR);
 }
 
 void Event::SetAired(time_t aired)

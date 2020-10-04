@@ -20,7 +20,7 @@ extern "C"
 
 #include "kodi/Network.h"
 #include "kodi/addon-instance/PVR.h"
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 #include <chrono>
 #include <condition_variable>
@@ -140,15 +140,15 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
     auth += "@";
 
   const char* proto = settings.GetUseHTTPS() ? "https" : "http";
-  std::string url = StringUtils::Format("%s://%s%s:%d", proto, auth.c_str(),
-                                        settings.GetHostname().c_str(), settings.GetPortHTTP());
+  std::string url = kodi::tools::StringUtils::Format(
+      "%s://%s%s:%d", proto, auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
 
   va_list va;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
   va_start(va, fmt);
   url += m_webRoot;
-  url += StringUtils::FormatV(fmt, va);
+  url += kodi::tools::StringUtils::FormatV(fmt, va);
   va_end(va);
 
   return url;
@@ -180,7 +180,7 @@ std::string HTSPConnection::GetServerName() const
 std::string HTSPConnection::GetServerVersion() const
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
+  return kodi::tools::StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
 std::string HTSPConnection::GetServerString() const
@@ -188,7 +188,8 @@ std::string HTSPConnection::GetServerString() const
   const Settings& settings = Settings::GetInstance();
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
+  return kodi::tools::StringUtils::Format("%s:%d", settings.GetHostname().c_str(),
+                                          settings.GetPortHTSP());
 }
 
 bool HTSPConnection::HasCapability(const std::string& capability) const
