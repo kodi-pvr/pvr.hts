@@ -68,7 +68,8 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/Logger.cpp
                 src/tvheadend/utilities/LifetimeMapper.h
                 src/tvheadend/utilities/AsyncState.cpp
-                src/tvheadend/utilities/AsyncState.h)
+                src/tvheadend/utilities/AsyncState.h
+                src/tvheadend/utilities/SyncedBuffer.h)
 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})

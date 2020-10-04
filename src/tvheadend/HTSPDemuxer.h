@@ -26,10 +26,10 @@ extern "C"
 #include "status/Quality.h"
 #include "status/SourceInfo.h"
 #include "status/TimeshiftStatus.h"
+#include "utilities/SyncedBuffer.h"
 
 #include "kodi/addon-instance/pvr/Channels.h"
 #include "kodi/addon-instance/pvr/Stream.h"
-#include "p8-platform/util/buffer.h"
 
 namespace tvheadend
 {
@@ -108,7 +108,7 @@ private:
 
   mutable std::recursive_mutex m_mutex;
   HTSPConnection& m_conn;
-  P8PLATFORM::SyncedBuffer<DemuxPacket*> m_pktBuffer;
+  tvheadend::utilities::SyncedBuffer<DemuxPacket*> m_pktBuffer;
   std::vector<kodi::addon::PVRStreamProperties> m_streams;
   std::map<int, int> m_streamStat;
   std::atomic<SubscriptionSeekTime*> m_seektime;

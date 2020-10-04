@@ -27,10 +27,10 @@ extern "C"
 #include "tvheadend/entity/Schedule.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/utilities/AsyncState.h"
+#include "tvheadend/utilities/SyncedBuffer.h"
 
 #include "kodi/addon-instance/PVR.h"
 #include "p8-platform/threads/threads.h"
-#include "p8-platform/util/buffer.h"
 
 #include <mutex>
 #include <string>
@@ -50,7 +50,7 @@ class HTSPVFS;
 } // namespace tvheadend
 
 /* Typedefs */
-typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
+typedef tvheadend::utilities::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 
 /*
  * Root object for Tvheadend connection
