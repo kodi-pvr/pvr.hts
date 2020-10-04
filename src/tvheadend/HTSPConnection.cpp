@@ -17,6 +17,7 @@ extern "C"
 #include "IHTSPConnectionListener.h"
 #include "Settings.h"
 #include "utilities/Logger.h"
+#include "utilities/TCPSocket.h"
 
 #include "kodi/Network.h"
 #include "kodi/addon-instance/PVR.h"
@@ -88,7 +89,6 @@ private:
 
 HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
   : m_connListener(connListener),
-    m_socket(nullptr),
     m_regThread(new HTSPRegister(this)),
     m_ready(false),
     m_seq(0),
@@ -289,8 +289,7 @@ bool HTSPConnection::ReadMessage()
     ssize_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
-      Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
-                  m_socket->GetError().c_str());
+      Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
       free(buf);
       return false;
     }
@@ -369,8 +368,7 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 
   if (c != static_cast<ssize_t>(len))
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to write (%s)", method,
-                m_socket->GetError().c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to write to socket", method);
     if (!m_suspended)
       Disconnect();
 
@@ -646,7 +644,7 @@ void HTSPConnection::Process()
         delete m_socket;
 
       m_connListener.Disconnected();
-      m_socket = new P8PLATFORM::CTcpSocket(host.c_str(), port);
+      m_socket = new TCPSocket(host, port);
       m_ready = false;
       m_seq = 0;
       if (m_challenge)

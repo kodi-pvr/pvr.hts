@@ -21,7 +21,6 @@ extern "C"
 
 #include "kodi/addon-instance/pvr/General.h"
 #include "kodi/tools/Thread.h"
-#include "p8-platform/sockets/tcp.h"
 
 namespace tvheadend
 {
@@ -29,6 +28,11 @@ namespace tvheadend
 class HTSPRegister;
 class HTSPResponse;
 class IHTSPConnectionListener;
+
+namespace utilities
+{
+class TCPSocket;
+}
 
 typedef std::map<uint32_t, HTSPResponse*> HTSPResponseList;
 
@@ -102,7 +106,7 @@ private:
   };
 
   IHTSPConnectionListener& m_connListener;
-  P8PLATFORM::CTcpSocket* m_socket;
+  tvheadend::utilities::TCPSocket* m_socket = nullptr;
   mutable std::recursive_mutex m_mutex;
   HTSPRegister* m_regThread;
   std::condition_variable_any m_regCond;
