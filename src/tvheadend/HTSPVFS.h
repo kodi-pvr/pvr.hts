@@ -36,7 +36,7 @@ public:
 
   bool Open(const kodi::addon::PVRRecording& rec);
   void Close();
-  ssize_t Read(unsigned char* buf, unsigned int len, bool inprogress);
+  int64_t Read(unsigned char* buf, unsigned int len, bool inprogress);
   long long Seek(long long pos, int whence, bool inprogress);
   long long Size();
   void PauseStream(bool paused);
@@ -45,7 +45,7 @@ public:
 private:
   bool SendFileOpen(bool force = false);
   void SendFileClose();
-  ssize_t SendFileRead(unsigned char* buf, unsigned int len);
+  int64_t SendFileRead(unsigned char* buf, unsigned int len);
   long long SendFileSeek(int64_t pos, int whence, bool force = false);
 
   HTSPConnection& m_conn;

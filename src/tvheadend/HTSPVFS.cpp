@@ -98,7 +98,7 @@ void HTSPVFS::Close()
   m_isRealTimeStream = false;
 }
 
-ssize_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
+int64_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
 {
   /* Not opened */
   if (!m_fileId)
@@ -107,7 +107,7 @@ ssize_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
   /* Tvheadend may briefly return 0 bytes when playing an in-progress recording at end-of-file
      we'll retry 50 times with 10ms pauses (~500ms) before giving up */
   int tries = inprogress ? 50 : 1;
-  ssize_t read = 0;
+  int64_t read = 0;
 
   for (int i = 1; i <= tries; i++)
   {
@@ -332,7 +332,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
   return ret;
 }
 
-ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
+int64_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 {
   /* Build */
   htsmsg_t* m = htsmsg_create_map();

@@ -33,7 +33,7 @@ public:
 
   int64_t Read(void* data, size_t len, uint64_t iTimeoutMs = 0);
 
-  ssize_t Write(void* data, size_t len);
+  int64_t Write(void* data, size_t len);
 
 private:
   const kissnet::endpoint m_endpoint;
