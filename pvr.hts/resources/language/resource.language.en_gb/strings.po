@@ -460,7 +460,7 @@ msgid "Stream read chunk size for recordings (KB)"
 msgstr ""
 
 msgctxt "#30505"
-msgid "Use http streaming for channels"
+msgid "Use HTTP streaming for channels"
 msgstr ""
 
 #empty strings from id 30506 to 30509

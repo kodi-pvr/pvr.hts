@@ -1,5 +1,5 @@
-7.2.4
-- Add capability to use http streaming instead of htsp
+7.2.0
+- Add capability to use HTTP streaming instead of HTSP
 
 7.1.4
 - Fix deadlock while reconnecting to backend after a backend response timeout (Fixes #465)

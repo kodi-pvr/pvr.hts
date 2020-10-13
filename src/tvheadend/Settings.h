@@ -149,7 +149,7 @@ private:
   void SetAutorecApproxTime(int value) { m_iAutorecApproxTime = value; }
   void SetAutorecMaxDiff(int value) { m_iAutorecMaxDiff = value; }
   void SetStreamingProfile(const std::string& value) { m_strStreamingProfile = value; }
-  void SetStreamingHTTP(const bool& value) { m_bUseHTTPStreaming = value; }
+  void SetStreamingHTTP(bool value) { m_bUseHTTPStreaming = value; }
   void SetDvrPriority(int value) { m_iDvrPriority = value; }
   void SetDvrLifetime(int value) { m_iDvrLifetime = value; }
   void SetDvrDupdetect(int value) { m_iDvrDupdetect = value; }
