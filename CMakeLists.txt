@@ -3,6 +3,8 @@ project(pvr.hts)
 
 find_package(Kodi REQUIRED)
 
+set(CMAKE_CXX_STANDARD 17)
+
 include_directories(${KODI_INCLUDE_DIR}/.. # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
                     ${PROJECT_SOURCE_DIR}/lib)
 
