@@ -97,6 +97,11 @@
           </constraints>
           <control type="edit" format="string" />
         </setting>
+        <setting id="streaming_http" type="boolean" label="30505" help="-1">
+          <level>0</level>
+          <default>false</default>
+          <control type="toggle" />
+        </setting>
       </group>
 
       <group id="2" label="30400">

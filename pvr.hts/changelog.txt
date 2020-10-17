@@ -1,3 +1,6 @@
+7.2.0
+- Add capability to use HTTP streaming instead of HTSP
+
 7.1.4
 - Fix deadlock while reconnecting to backend after a backend response timeout (Fixes #465)
 - Refactor subscription seek code

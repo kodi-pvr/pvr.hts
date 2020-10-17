@@ -34,6 +34,7 @@ const int Settings::DEFAULT_AUTOREC_MAXDIFF =
 const int Settings::DEFAULT_APPROX_TIME =
     0; // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
+const bool Settings::DEFAULT_STREAMING_HTTP = false;
 const int Settings::DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
 const int Settings::DEFAULT_DVR_LIFETIME = 15; // use backend setting
 const int Settings::DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
@@ -73,6 +74,7 @@ void Settings::ReadSettings()
 
   /* Streaming */
   SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
+  SetStreamingHTTP(ReadBoolSetting("streaming_http", DEFAULT_STREAMING_HTTP));
 
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
