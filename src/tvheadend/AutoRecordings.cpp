@@ -18,7 +18,6 @@
 #include <cstring>
 #include <ctime>
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
@@ -282,8 +281,8 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
 
   /* Send and Wait */
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait(method.c_str(), m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m = m_conn.SendAndWait(lock, method.c_str(), m);
   }
 
   if (!m)
@@ -312,8 +311,8 @@ PVR_ERROR AutoRecordings::SendAutorecDelete(const kodi::addon::PVRTimer& timer)
 
   /* Send and Wait */
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("deleteAutorecEntry", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m = m_conn.SendAndWait(lock, "deleteAutorecEntry", m);
   }
 
   if (!m)

@@ -27,11 +27,12 @@ extern "C"
 #include "tvheadend/entity/Schedule.h"
 #include "tvheadend/entity/Tag.h"
 #include "tvheadend/utilities/AsyncState.h"
+#include "tvheadend/utilities/SyncedBuffer.h"
 
 #include "kodi/addon-instance/PVR.h"
-#include "p8-platform/threads/threads.h"
-#include "p8-platform/util/buffer.h"
+#include "kodi/tools/Thread.h"
 
+#include <mutex>
 #include <string>
 #include <utility>
 #include <vector>
@@ -49,13 +50,13 @@ class HTSPVFS;
 } // namespace tvheadend
 
 /* Typedefs */
-typedef P8PLATFORM::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
+typedef tvheadend::utilities::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQueue;
 
 /*
  * Root object for Tvheadend connection
  */
 class ATTRIBUTE_HIDDEN CTvheadend : public kodi::addon::CInstancePVRClient,
-                                    public P8PLATFORM::CThread,
+                                    public kodi::tools::CThread,
                                     public tvheadend::IHTSPConnectionListener,
                                     public tvheadend::IHTSPDemuxPacketHandler
 {
@@ -68,7 +69,7 @@ public:
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
-  bool Connected() override;
+  bool Connected(std::unique_lock<std::recursive_mutex>& lock) override;
   bool ProcessMessage(const std::string& method, htsmsg_t* msg) override;
   void ConnectionStateChange(const std::string& connectionString,
                              PVR_CONNECTION_STATE newState,
@@ -148,7 +149,7 @@ private:
   /*
    * Message processing (CThread implementation)
    */
-  void* Process() override;
+  void Process() override;
 
   /*
    * Event handling
@@ -254,7 +255,7 @@ public:
    */
   tvheadend::Profiles m_profiles;
 
-  P8PLATFORM::CMutex m_mutex;
+  std::recursive_mutex m_mutex;
 
   tvheadend::HTSPConnection* m_conn;
 

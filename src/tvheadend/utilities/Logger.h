@@ -62,12 +62,6 @@ public:
    */
   void SetImplementation(LoggerImplementation implementation);
 
-  /**
-   * Sets the prefix to use in log messages
-   * @param prefix
-   */
-  void SetPrefix(const std::string& prefix);
-
 private:
   Logger();
 
@@ -75,11 +69,6 @@ private:
    * The logger implementation
    */
   LoggerImplementation m_implementation;
-
-  /**
-   * The log message prefix
-   */
-  std::string m_prefix;
 };
 
 } // namespace utilities

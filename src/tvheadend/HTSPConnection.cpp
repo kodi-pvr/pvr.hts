@@ -17,13 +17,15 @@ extern "C"
 #include "IHTSPConnectionListener.h"
 #include "Settings.h"
 #include "utilities/Logger.h"
+#include "utilities/TCPSocket.h"
 
 #include "kodi/Network.h"
 #include "kodi/addon-instance/PVR.h"
-#include "p8-platform/os.h"
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
-using namespace P8PLATFORM;
+#include <chrono>
+#include <condition_variable>
+
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -47,7 +49,7 @@ namespace tvheadend
 class HTSPResponse
 {
 public:
-  HTSPResponse() : m_flag(false), m_msg(nullptr) {}
+  HTSPResponse() = default;
 
   ~HTSPResponse()
   {
@@ -57,9 +59,9 @@ public:
     Set(nullptr); // ensure signal is sent
   }
 
-  htsmsg_t* Get(P8PLATFORM::CMutex& mutex, uint32_t timeout)
+  htsmsg_t* Get(std::unique_lock<std::recursive_mutex>& lock, uint32_t timeout)
   {
-    m_cond.Wait(mutex, m_flag, timeout);
+    m_cond.wait_for(lock, std::chrono::milliseconds(timeout), [this] { return m_flag == true; });
     htsmsg_t* r = m_msg;
     m_msg = nullptr;
     m_flag = false;
@@ -70,13 +72,13 @@ public:
   {
     m_msg = msg;
     m_flag = true;
-    m_cond.Broadcast();
+    m_cond.notify_all();
   }
 
 private:
-  P8PLATFORM::CCondition<volatile bool> m_cond;
-  bool m_flag;
-  htsmsg_t* m_msg;
+  std::condition_variable_any m_cond;
+  bool m_flag = false;
+  htsmsg_t* m_msg = nullptr;
 };
 
 } // namespace tvheadend
@@ -87,7 +89,6 @@ private:
 
 HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
   : m_connListener(connListener),
-    m_socket(nullptr),
     m_regThread(new HTSPRegister(this)),
     m_ready(false),
     m_seq(0),
@@ -104,9 +105,9 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
 
 HTSPConnection::~HTSPConnection()
 {
-  StopThread(-1);
+  StopThread(false);
   Disconnect();
-  StopThread(0);
+  StopThread(true);
   delete m_regThread;
 }
 
@@ -119,7 +120,7 @@ void HTSPConnection::Start()
 
 void HTSPConnection::Stop()
 {
-  StopThread(-1);
+  StopThread(false);
   Disconnect();
 }
 
@@ -139,54 +140,56 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
     auth += "@";
 
   const char* proto = settings.GetUseHTTPS() ? "https" : "http";
-  std::string url = StringUtils::Format("%s://%s%s:%d", proto, auth.c_str(),
-                                        settings.GetHostname().c_str(), settings.GetPortHTTP());
+  std::string url = kodi::tools::StringUtils::Format(
+      "%s://%s%s:%d", proto, auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
 
   va_list va;
 
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   va_start(va, fmt);
   url += m_webRoot;
-  url += StringUtils::FormatV(fmt, va);
+  url += kodi::tools::StringUtils::FormatV(fmt, va);
   va_end(va);
 
   return url;
 }
 
-bool HTSPConnection::WaitForConnection()
+bool HTSPConnection::WaitForConnection(std::unique_lock<std::recursive_mutex>& lock)
 {
   if (!m_ready)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, Settings::GetInstance().GetConnectTimeout());
+    m_regCond.wait_for(lock, std::chrono::milliseconds(Settings::GetInstance().GetConnectTimeout()),
+                       [this] { return m_ready == true; });
   }
   return m_ready;
 }
 
 int HTSPConnection::GetProtocol() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_htspVersion;
 }
 
 std::string HTSPConnection::GetServerName() const
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_serverName;
 }
 
 std::string HTSPConnection::GetServerVersion() const
 {
-  CLockObject lock(m_mutex);
-  return StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  return kodi::tools::StringUtils::Format("%s (HTSP v%d)", m_serverVersion.c_str(), m_htspVersion);
 }
 
 std::string HTSPConnection::GetServerString() const
 {
   const Settings& settings = Settings::GetInstance();
 
-  CLockObject lock(m_mutex);
-  return StringUtils::Format("%s:%d", settings.GetHostname().c_str(), settings.GetPortHTSP());
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  return kodi::tools::StringUtils::Format("%s:%d", settings.GetHostname().c_str(),
+                                          settings.GetPortHTSP());
 }
 
 bool HTSPConnection::HasCapability(const std::string& capability) const
@@ -197,7 +200,7 @@ bool HTSPConnection::HasCapability(const std::string& capability) const
 
 void HTSPConnection::OnSleep()
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "going to sleep (OnSleep)");
 
@@ -208,7 +211,7 @@ void HTSPConnection::OnSleep()
 
 void HTSPConnection::OnWake()
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "waking up (OnWake)");
 
@@ -222,7 +225,7 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
   PVR_CONNECTION_STATE newState(PVR_CONNECTION_STATE_UNKNOWN);
 
   {
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     /* No notification if no state change or while suspended. */
     if (m_state != state && !m_suspended)
@@ -250,7 +253,7 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
  */
 void HTSPConnection::Disconnect()
 {
-  CLockObject lock(m_mutex);
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Close socket */
   if (m_socket)
@@ -283,11 +286,10 @@ bool HTSPConnection::ReadMessage()
   size_t cnt = 0;
   while (cnt < len)
   {
-    ssize_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    int64_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
     if (r < 0)
     {
-      Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet (%s)",
-                  m_socket->GetError().c_str());
+      Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
       free(buf);
       return false;
     }
@@ -308,7 +310,7 @@ bool HTSPConnection::ReadMessage()
   if (htsmsg_get_u32(msg, "seq", &seq) == 0)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "received response [%d]", seq);
-    CLockObject lock(m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     HTSPResponseList::iterator it = m_messages.find(seq);
     if (it != m_messages.end())
     {
@@ -361,13 +363,12 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
     return false;
 
   /* Send data */
-  ssize_t c = m_socket->Write(buf, len);
+  int64_t c = m_socket->Write(buf, len);
   free(buf);
 
-  if (c != static_cast<ssize_t>(len))
+  if (c != static_cast<int64_t>(len))
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to write (%s)", method,
-                m_socket->GetError().c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: failed to write to socket", method);
     if (!m_suspended)
       Disconnect();
 
@@ -380,7 +381,10 @@ bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 /*
  * Send a message and wait for response
  */
-htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iResponseTimeout)
+htsmsg_t* HTSPConnection::SendAndWait0(std::unique_lock<std::recursive_mutex>& lock,
+                                       const char* method,
+                                       htsmsg_t* msg,
+                                       int iResponseTimeout)
 {
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
@@ -401,7 +405,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
   }
 
   /* Wait for response */
-  msg = resp.Get(m_mutex, iResponseTimeout);
+  msg = resp.Get(lock, iResponseTimeout);
   m_messages.erase(seq);
   if (!msg)
   {
@@ -438,18 +442,21 @@ htsmsg_t* HTSPConnection::SendAndWait0(const char* method, htsmsg_t* msg, int iR
 /*
  * Send and wait for response
  */
-htsmsg_t* HTSPConnection::SendAndWait(const char* method, htsmsg_t* msg, int iResponseTimeout)
+htsmsg_t* HTSPConnection::SendAndWait(std::unique_lock<std::recursive_mutex>& lock,
+                                      const char* method,
+                                      htsmsg_t* msg,
+                                      int iResponseTimeout)
 {
   if (iResponseTimeout == -1)
     iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
 
-  if (!WaitForConnection())
+  if (!WaitForConnection(lock))
     return nullptr;
 
-  return SendAndWait0(method, msg, iResponseTimeout);
+  return SendAndWait0(lock, method, msg, iResponseTimeout);
 }
 
-bool HTSPConnection::SendHello()
+bool HTSPConnection::SendHello(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Build message */
   htsmsg_t* msg = htsmsg_create_map();
@@ -457,7 +464,7 @@ bool HTSPConnection::SendHello()
   htsmsg_add_u32(msg, "htspversion", HTSP_CLIENT_VERSION);
 
   /* Send and Wait */
-  msg = SendAndWait0("hello", msg);
+  msg = SendAndWait0(lock, "hello", msg);
   if (!msg)
     return false;
 
@@ -499,7 +506,9 @@ bool HTSPConnection::SendHello()
   return true;
 }
 
-bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
+bool HTSPConnection::SendAuth(std::unique_lock<std::recursive_mutex>& lock,
+                              const std::string& user,
+                              const std::string& pass)
 {
   htsmsg_t* msg = htsmsg_create_map();
   htsmsg_add_str(msg, "username", user.c_str());
@@ -517,7 +526,7 @@ bool HTSPConnection::SendAuth(const std::string& user, const std::string& pass)
   free(sha);
 
   /* Send and Wait */
-  msg = SendAndWait0("authenticate", msg);
+  msg = SendAndWait0(lock, "authenticate", msg);
 
   if (!msg)
     return 0;
@@ -559,11 +568,11 @@ void HTSPConnection::Register()
   std::string pass = Settings::GetInstance().GetPassword();
 
   {
-    CLockObject lock(m_mutex);
+    std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
     /* Send Greeting */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending hello");
-    if (!SendHello())
+    if (!SendHello(lock))
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to send hello");
       SetState(PVR_CONNECTION_STATE_SERVER_MISMATCH);
@@ -583,7 +592,7 @@ void HTSPConnection::Register()
 
     /* Send Auth */
     Logger::Log(LogLevel::LEVEL_DEBUG, "sending auth");
-    if (!SendAuth(user, pass))
+    if (!SendAuth(lock, user, pass))
     {
       SetState(PVR_CONNECTION_STATE_ACCESS_DENIED);
       goto fail;
@@ -591,14 +600,14 @@ void HTSPConnection::Register()
 
     /* Rebuild state */
     Logger::Log(LogLevel::LEVEL_DEBUG, "rebuilding state");
-    if (!m_connListener.Connected())
+    if (!m_connListener.Connected(lock))
       goto fail;
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "registered");
     SetState(PVR_CONNECTION_STATE_CONNECTED);
 
     m_ready = true;
-    m_regCond.Broadcast();
+    m_regCond.notify_all();
     return;
   }
 
@@ -614,13 +623,13 @@ fail:
 /*
  * Main thread loop for connection and rx handling
  */
-void* HTSPConnection::Process()
+void HTSPConnection::Process()
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
   const Settings& settings = Settings::GetInstance();
 
-  while (!IsStopped())
+  while (!m_threadStop)
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
@@ -630,12 +639,12 @@ void* HTSPConnection::Process()
 
     /* Create socket (ensure mutex protection) */
     {
-      CLockObject lock(m_mutex);
+      std::lock_guard<std::recursive_mutex> lock(m_mutex);
       if (m_socket)
         delete m_socket;
 
       m_connListener.Disconnected();
-      m_socket = new CTcpSocket(host.c_str(), port);
+      m_socket = new TCPSocket(host, port);
       m_ready = false;
       m_seq = 0;
       if (m_challenge)
@@ -645,13 +654,13 @@ void* HTSPConnection::Process()
       }
     }
 
-    while (m_suspended && !IsStopped())
+    while (m_suspended && !m_threadStop)
     {
       /* Wait for wakeup */
       Sleep(1000);
     }
 
-    if (IsStopped())
+    if (m_threadStop)
       break;
 
     if (!log)
@@ -698,18 +707,16 @@ void* HTSPConnection::Process()
     retryAttempt = 0;
 
     /* Start connect thread */
-    m_regThread->CreateThread(true);
+    m_regThread->CreateThread();
 
     /* Receive loop */
-    while (!IsStopped())
+    while (!m_threadStop)
     {
       if (!ReadMessage())
         break;
     }
 
     /* Stop connect thread (if not already) */
-    m_regThread->StopThread(0);
+    m_regThread->StopThread(true);
   }
-
-  return nullptr;
 }

@@ -8,7 +8,7 @@
 
 #include "Logger.h"
 
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 using namespace tvheadend::utilities;
 
@@ -28,18 +28,9 @@ void Logger::Log(LogLevel level, const char* message, ...)
 {
   auto& logger = GetInstance();
 
-  std::string logMessage;
-
-  // Prepend the prefix when set
-  const std::string prefix = logger.m_prefix;
-  if (!prefix.empty())
-    logMessage = prefix + " - ";
-
-  logMessage += message;
-
   va_list arguments;
   va_start(arguments, message);
-  logMessage = StringUtils::FormatV(logMessage.c_str(), arguments);
+  const std::string logMessage = kodi::tools::StringUtils::FormatV(message, arguments);
   va_end(arguments);
 
   logger.m_implementation(level, logMessage.c_str());
@@ -48,9 +39,4 @@ void Logger::Log(LogLevel level, const char* message, ...)
 void Logger::SetImplementation(LoggerImplementation implementation)
 {
   m_implementation = implementation;
-}
-
-void Logger::SetPrefix(const std::string& prefix)
-{
-  m_prefix = prefix;
 }

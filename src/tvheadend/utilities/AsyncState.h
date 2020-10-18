@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "p8-platform/threads/mutex.h"
+#include <condition_variable>
+#include <mutex>
 
 namespace tvheadend
 {
@@ -58,11 +59,9 @@ public:
   bool WaitForState(eAsyncState state);
 
 private:
-  static bool PredicateCallback(void* param);
-
   eAsyncState m_state;
-  P8PLATFORM::CMutex m_mutex;
-  P8PLATFORM::CCondition<bool> m_condition;
+  std::recursive_mutex m_mutex;
+  std::condition_variable_any m_condition;
   int m_timeout;
 };
 

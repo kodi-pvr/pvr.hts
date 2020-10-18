@@ -1,3 +1,8 @@
+7.2.1
+- Fix 'pvr.hts' appearing twice in every addon log message
+- Fix calculation of start time, stop time and file size for multi-file recordings
+- Remove p8-platform build dependency
+
 7.2.0
 - Add capability to use HTTP streaming instead of HTSP
 

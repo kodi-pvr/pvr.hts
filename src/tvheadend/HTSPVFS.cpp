@@ -17,14 +17,13 @@ extern "C"
 #include "utilities/Logger.h"
 
 #include "kodi/addon-instance/pvr/Recordings.h"
-#include "p8-platform/threads/mutex.h"
-#include "p8-platform/util/StringUtils.h"
+#include "kodi/tools/StringUtils.h"
 
 #include <chrono>
 #include <ctime>
+#include <mutex>
 #include <thread>
 
-using namespace P8PLATFORM;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -71,7 +70,7 @@ bool HTSPVFS::Open(const kodi::addon::PVRRecording& rec)
   Close();
 
   /* Cache details */
-  m_path = StringUtils::Format("dvr/%s", rec.GetRecordingId().c_str());
+  m_path = kodi::tools::StringUtils::Format("dvr/%s", rec.GetRecordingId().c_str());
   m_fileStart = rec.GetRecordingTime();
 
   /* Send open */
@@ -99,7 +98,7 @@ void HTSPVFS::Close()
   m_isRealTimeStream = false;
 }
 
-ssize_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
+int64_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
 {
   /* Not opened */
   if (!m_fileId)
@@ -108,7 +107,7 @@ ssize_t HTSPVFS::Read(unsigned char* buf, unsigned int len, bool inprogress)
   /* Tvheadend may briefly return 0 bytes when playing an in-progress recording at end-of-file
      we'll retry 50 times with 10ms pauses (~500ms) before giving up */
   int tries = inprogress ? 50 : 1;
-  ssize_t read = 0;
+  int64_t read = 0;
 
   for (int i = 1; i <= tries; i++)
   {
@@ -173,8 +172,8 @@ long long HTSPVFS::Size()
 
   /* Send */
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("fileStat", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m = m_conn.SendAndWait(lock, "fileStat", m);
   }
 
   if (!m)
@@ -233,12 +232,12 @@ bool HTSPVFS::SendFileOpen(bool force)
 
   /* Send */
   {
-    CLockObject lock(m_conn.Mutex());
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
     if (force)
-      m = m_conn.SendAndWait0("fileOpen", m);
+      m = m_conn.SendAndWait0(lock, "fileOpen", m);
     else
-      m = m_conn.SendAndWait("fileOpen", m);
+      m = m_conn.SendAndWait(lock, "fileOpen", m);
   }
 
   if (!m)
@@ -273,8 +272,8 @@ void HTSPVFS::SendFileClose()
 
   /* Send */
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("fileClose", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m = m_conn.SendAndWait(lock, "fileClose", m);
   }
 
   if (m)
@@ -299,12 +298,12 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
 
   /* Send */
   {
-    CLockObject lock(m_conn.Mutex());
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
     if (force)
-      m = m_conn.SendAndWait0("fileSeek", m);
+      m = m_conn.SendAndWait0(lock, "fileSeek", m);
     else
-      m = m_conn.SendAndWait("fileSeek", m);
+      m = m_conn.SendAndWait(lock, "fileSeek", m);
   }
 
   if (!m)
@@ -333,7 +332,7 @@ long long HTSPVFS::SendFileSeek(int64_t pos, int whence, bool force)
   return ret;
 }
 
-ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
+int64_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 {
   /* Build */
   htsmsg_t* m = htsmsg_create_map();
@@ -344,8 +343,8 @@ ssize_t HTSPVFS::SendFileRead(unsigned char* buf, unsigned int len)
 
   /* Send */
   {
-    CLockObject lock(m_conn.Mutex());
-    m = m_conn.SendAndWait("fileRead", m);
+    std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+    m = m_conn.SendAndWait(lock, "fileRead", m);
   }
 
   if (!m)
