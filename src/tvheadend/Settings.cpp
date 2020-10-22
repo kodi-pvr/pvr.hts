@@ -154,6 +154,8 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
   /* Streaming */
   else if (key == "streaming_profile")
     return SetStringSetting(GetStreamingProfile(), value);
+  else if (key == "streaming_http")
+    return SetBoolSetting(GetStreamingHTTP(), value);
   /* Default dvr settings */
   else if (key == "dvr_priority")
     return SetIntSetting(GetDvrPriority(), value);
