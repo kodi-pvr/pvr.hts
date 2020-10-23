@@ -1,3 +1,6 @@
+7.2.2
+- Fix toggling of HTTP streaming setting
+
 7.2.1
 - Fix 'pvr.hts' appearing twice in every addon log message
 - Fix calculation of start time, stop time and file size for multi-file recordings
