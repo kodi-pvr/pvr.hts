@@ -1664,12 +1664,12 @@ kodi::addon::PVRCodec CTvheadend::GetCodecByName(const std::string& codecName) c
   return kodi::addon::CInstancePVRClient::GetCodecByName(codecName);
 }
 
-DemuxPacket* CTvheadend::AllocateDemuxPacket(int iDataSize)
+DEMUX_PACKET* CTvheadend::AllocateDemuxPacket(int iDataSize)
 {
   return kodi::addon::CInstancePVRClient::AllocateDemuxPacket(iDataSize);
 }
 
-void CTvheadend::FreeDemuxPacket(DemuxPacket* pPacket)
+void CTvheadend::FreeDemuxPacket(DEMUX_PACKET* pPacket)
 {
   kodi::addon::CInstancePVRClient::FreeDemuxPacket(pPacket);
 }
@@ -3031,9 +3031,9 @@ bool CTvheadend::OpenLiveStream(const kodi::addon::PVRChannel& chn)
   return m_playingLiveStream;
 }
 
-DemuxPacket* CTvheadend::DemuxRead()
+DEMUX_PACKET* CTvheadend::DemuxRead()
 {
-  DemuxPacket* pkt = nullptr;
+  DEMUX_PACKET* pkt = nullptr;
 
   if (m_streamchange)
   {
@@ -3042,7 +3042,7 @@ DemuxPacket* CTvheadend::DemuxRead()
      * buffer, as we really want to use the currently queued packets for
      * immediate playback. */
     pkt = kodi::addon::CInstancePVRClient::AllocateDemuxPacket(0);
-    pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+    pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
     m_streamchange = false;
     return pkt;
   }
@@ -3128,7 +3128,7 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
     {
       if (m_playingRecording->GetFilesStart() > 0)
       {
-        times.SetPTSEnd((std::time(nullptr) - m_playingRecording->GetFilesStart()) * DVD_TIME_BASE);
+        times.SetPTSEnd((std::time(nullptr) - m_playingRecording->GetFilesStart()) * STREAM_TIME_BASE);
       }
       else
       {
@@ -3137,7 +3137,7 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
         // recording might actually have started later than scheduled start time (server came up too late etc).
         times.SetPTSEnd((m_playingRecording->GetStartExtra() * 60 + std::time(nullptr) -
                          m_playingRecording->GetStart()) *
-                        DVD_TIME_BASE);
+                        STREAM_TIME_BASE);
       }
     }
     else
@@ -3145,7 +3145,7 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
       if (m_playingRecording->GetFilesStart() > 0 && m_playingRecording->GetFilesStop() > 0)
       {
         times.SetPTSEnd((m_playingRecording->GetFilesStop() - m_playingRecording->GetFilesStart()) *
-                        DVD_TIME_BASE);
+                        STREAM_TIME_BASE);
       }
       else
       {

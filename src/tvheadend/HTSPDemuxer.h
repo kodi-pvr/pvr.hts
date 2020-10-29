@@ -52,7 +52,7 @@ public:
   bool Open(uint32_t channelId,
             tvheadend::eSubscriptionWeight weight = tvheadend::SUBSCRIPTION_WEIGHT_NORMAL);
   void Close();
-  DemuxPacket* Read();
+  DEMUX_PACKET* Read();
   void Trim();
   void Flush();
   void Abort();
@@ -108,7 +108,7 @@ private:
 
   mutable std::recursive_mutex m_mutex;
   HTSPConnection& m_conn;
-  tvheadend::utilities::SyncedBuffer<DemuxPacket*> m_pktBuffer;
+  tvheadend::utilities::SyncedBuffer<DEMUX_PACKET*> m_pktBuffer;
   std::vector<kodi::addon::PVRStreamProperties> m_streams;
   std::map<int, int> m_streamStat;
   std::atomic<SubscriptionSeekTime*> m_seektime;

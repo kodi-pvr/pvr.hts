@@ -1,3 +1,6 @@
+8.0.0
+- Update PVR API 7.0.2
+
 7.2.2
 - Fix toggling of HTTP streaming setting
 
