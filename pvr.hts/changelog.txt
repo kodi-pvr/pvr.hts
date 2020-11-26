@@ -1,3 +1,6 @@
+8.1.1
+- Fix IPv6 support
+
 8.1.0
 - Update inputstream API 3.0.1
   - Fix wrong flags bit shift
