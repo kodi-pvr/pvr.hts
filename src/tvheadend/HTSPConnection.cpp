@@ -128,6 +128,31 @@ void HTSPConnection::Stop()
  * Info
  */
 
+namespace
+{
+
+bool IsIPv6NumericHost(const std::string& str)
+{
+  bool ret = !str.empty() && str.find(':') != std::string::npos;
+  if (ret)
+  {
+    struct addrinfo hint = {};
+    hint.ai_family = PF_UNSPEC;
+    hint.ai_flags = AI_NUMERICHOST;
+
+    struct addrinfo* res = nullptr;
+
+    ret = getaddrinfo(str.c_str(), NULL, &hint, &res) == 0;
+    if (ret)
+      ret = (res->ai_family == AF_INET6);
+
+    freeaddrinfo(res);
+  }
+  return ret;
+}
+
+} // unnamed namespace
+
 std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
 {
   const Settings& settings = Settings::GetInstance();
@@ -140,8 +165,10 @@ std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
     auth += "@";
 
   const char* proto = settings.GetUseHTTPS() ? "https" : "http";
+  bool isIPv6 = IsIPv6NumericHost(settings.GetHostname());
   std::string url = kodi::tools::StringUtils::Format(
-      "%s://%s%s:%d", proto, auth.c_str(), settings.GetHostname().c_str(), settings.GetPortHTTP());
+      "%s://%s%s%s%s:%d", proto, auth.c_str(), isIPv6 ? "[" : "", settings.GetHostname().c_str(),
+      isIPv6 ? "]" : "", settings.GetPortHTTP());
 
   va_list va;
 

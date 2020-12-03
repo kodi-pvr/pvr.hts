@@ -1,3 +1,6 @@
+8.1.2
+- More IPv6 fixes
+
 8.1.1
 - Fix IPv6 support
 
