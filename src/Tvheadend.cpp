@@ -1594,6 +1594,11 @@ bool CTvheadend::HasCapability(const std::string& capability) const
 
 PVR_ERROR CTvheadend::OnSystemSleep()
 {
+  // close demuxers
+  for (auto* dmx : m_dmx)
+    dmx->Close();
+
+  // close backend connection
   m_conn->OnSleep();
   return PVR_ERROR_NO_ERROR;
 }
