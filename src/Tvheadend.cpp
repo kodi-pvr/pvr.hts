@@ -158,16 +158,13 @@ std::string CTvheadend::GetImageURL(const char* str)
   }
 }
 
-void CTvheadend::QueryAvailableProfiles()
+void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
 
   /* Send */
-  {
-    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
-    m = m_conn->SendAndWait(lock, "getProfiles", m);
-  }
+  m = m_conn->SendAndWait0(lock, "getProfiles", m);
 
   /* Validate */
   if (!m)
@@ -183,6 +180,8 @@ void CTvheadend::QueryAvailableProfiles()
   }
 
   /* Process */
+  Logger::Log(LogLevel::LEVEL_INFO, "  Available streaming profiles:");
+
   htsmsg_field_t* f = nullptr;
   HTSMSG_FOREACH(f, l)
   {
@@ -200,7 +199,7 @@ void CTvheadend::QueryAvailableProfiles()
     if (str)
       profile.SetComment(str);
 
-    Logger::Log(LogLevel::LEVEL_DEBUG, "profile name: %s, comment: %s added",
+    Logger::Log(LogLevel::LEVEL_INFO, "  Name: %s, Comment: %s",
                 profile.GetName().c_str(), profile.GetComment().c_str());
 
     m_profiles.emplace_back(profile);
@@ -1517,13 +1516,31 @@ void CTvheadend::Disconnected()
 
 bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
 {
+  /* Query the server for available streaming profiles */
+  QueryAvailableProfiles(lock);
+
+  /* Show a notification if the profile is not available */
+  const std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
+
+  if (!streamingProfile.empty() && !HasStreamingProfile(streamingProfile))
+  {
+    kodi::QueueFormattedNotification(QUEUE_ERROR, kodi::GetLocalizedString(30502).c_str(),
+                                     streamingProfile.c_str());
+  }
+  else
+  {
+    /* Tell each demuxer to use this profile from now on */
+    for (auto* dmx : m_dmx)
+      dmx->SetStreamingProfile(streamingProfile);
+  }
+
   /* Request Async data, first is init (which rebuilds state) */
   m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (Settings::GetInstance().GetAsyncEpg())
   {
-    Logger::Log(LogLevel::LEVEL_INFO, "request async EPG (%d)", m_epgMaxDays);
+    Logger::Log(LogLevel::LEVEL_INFO, "Request async EPG (%d days)", m_epgMaxDays);
     htsmsg_add_u32(msg, "epg", 1);
     if (m_epgMaxDays > EPG_TIMEFRAME_UNLIMITED)
       htsmsg_add_s64(
@@ -1541,7 +1558,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   }
 
   htsmsg_destroy(msg);
-  Logger::Log(LogLevel::LEVEL_INFO, "async updates requested");
+  Logger::Log(LogLevel::LEVEL_INFO, "Async updates requested");
 
   return true;
 }
@@ -1898,7 +1915,7 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
 
 void CTvheadend::SyncCompleted()
 {
-  Logger::Log(LogLevel::LEVEL_INFO, "async updates initialised");
+  Logger::Log(LogLevel::LEVEL_INFO, "Async updates initialised");
 
   /* The complete calls are probably redundant, but its a safety feature */
   SyncInitCompleted();
@@ -1906,24 +1923,6 @@ void CTvheadend::SyncCompleted()
   SyncDvrCompleted();
   SyncEpgCompleted();
   m_asyncState.SetState(ASYNC_DONE);
-
-  /* Query the server for available streaming profiles */
-  QueryAvailableProfiles();
-
-  /* Show a notification if the profile is not available */
-  std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
-
-  if (!streamingProfile.empty() && !HasStreamingProfile(streamingProfile))
-  {
-    kodi::QueueFormattedNotification(QUEUE_ERROR, kodi::GetLocalizedString(30502).c_str(),
-                                     streamingProfile.c_str());
-  }
-  else
-  {
-    /* Tell each demuxer to use this profile from now on */
-    for (auto* dmx : m_dmx)
-      dmx->SetStreamingProfile(streamingProfile);
-  }
 }
 
 void CTvheadend::SyncInitCompleted()

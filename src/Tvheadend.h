@@ -132,7 +132,7 @@ private:
    * Queries the server for available streaming profiles and populates
    * m_profiles
    */
-  void QueryAvailableProfiles();
+  void QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& lock);
 
   /**
    * @param streamingProfile the streaming profile to check for
