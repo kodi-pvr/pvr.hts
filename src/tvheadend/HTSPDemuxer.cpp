@@ -224,7 +224,7 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 
   if (seekedTo == INVALID_SEEKTIME)
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "failed to get subscriptionSeek response");
+    Logger::Log(LogLevel::LEVEL_ERROR, "demux seek: invalid seek time (%lf)", time);
     Flush(); /* try to resync */
     return false;
   }
