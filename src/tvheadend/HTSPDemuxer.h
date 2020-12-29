@@ -118,6 +118,7 @@ private:
   tvheadend::status::DescrambleInfo m_descrambleInfo;
   tvheadend::Subscription m_subscription;
   std::atomic<time_t> m_lastUse;
+  std::atomic<time_t> m_lastPkt;
   std::atomic<time_t> m_startTime;
   uint32_t m_rdsIdx;
   int32_t m_requestedSpeed = 1000;

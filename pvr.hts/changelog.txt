@@ -3,6 +3,7 @@
 - Fix: On system sleep, properly close demuxers before disconnecting from backend
 - Fix: Predictive Tuning: Prevent closing the subscription while re-subscribing to it
 - Fix: Error handling for socket read/write operations
+- Improvement: Demux read detects lost backend connection and initiates re-connect
 
 8.1.2
 - More IPv6 fixes
