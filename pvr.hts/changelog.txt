@@ -1,6 +1,7 @@
 8.1.3
 - Fix: Obtain streaming profiles as soon as connected to backend
 - Fix: On system sleep, properly close demuxers before disconnecting from backend
+- Fix: Predictive Tuning: Prevent closing the subscription while re-subscribing to it
 
 8.1.2
 - More IPv6 fixes

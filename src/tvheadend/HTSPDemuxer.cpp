@@ -98,6 +98,8 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
   Close0(lock);
 
   /* Open new subscription */
+  time_t lastUse = m_lastUse.load();
+  m_lastUse.store(std::time(nullptr));
   m_subscription.SendSubscribe(lock, channelId, weight);
 
   /* Reset status */
@@ -105,11 +107,13 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
+  {
     m_subscription.SendUnsubscribe(lock);
-  else
-    m_lastUse.store(std::time(nullptr));
+    m_lastUse.store(lastUse);
+    return false;
+  }
 
-  return m_subscription.IsActive();
+  return true;
 }
 
 void HTSPDemuxer::Close()

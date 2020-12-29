@@ -2999,7 +2999,7 @@ bool CTvheadend::OpenLiveStream(const kodi::addon::PVRChannel& chn)
 
       if (dmx != m_dmx_active)
       {
-        /* Lower the priority on the current subscrption */
+        /* Lower the priority on the current subscription */
         m_dmx_active->Weight(SUBSCRIPTION_WEIGHT_POSTTUNING);
         uint32_t prevId = m_dmx_active->GetChannelId();
 
