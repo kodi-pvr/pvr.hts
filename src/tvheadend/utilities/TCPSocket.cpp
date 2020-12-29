@@ -97,7 +97,7 @@ void TCPSocket::Close()
 int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
 {
   if (!m_socket)
-    return 0;
+    return -1;
 
   try
   {
@@ -154,14 +154,14 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
   }
   catch (std::runtime_error const&)
   {
-    return 0;
+    return -1;
   }
 }
 
 int64_t TCPSocket::Write(void* data, size_t len)
 {
   if (!m_socket)
-    return 0;
+    return -1;
 
   try
   {
@@ -170,6 +170,6 @@ int64_t TCPSocket::Write(void* data, size_t len)
   }
   catch (std::runtime_error const&)
   {
-    return 0;
+    return -1;
   }
 }
