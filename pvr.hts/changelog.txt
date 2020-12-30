@@ -5,6 +5,7 @@
 - Fix: Error handling for socket read/write operations
 - Improvement: Demux read detects lost backend connection and initiates re-connect
 - Fix: Fix crashes while accessing socket concurrently
+- Fix: Do not reset source info when re-subscribing
 
 8.1.2
 - More IPv6 fixes

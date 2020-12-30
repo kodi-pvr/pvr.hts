@@ -86,9 +86,9 @@ private:
 
   /**
    * Resets the signal, quality, timeshift info and optionally the starttime
-   * @param resetStartTime if true, startTime will be reset
+   * @param resetStartTime if true, all subscription-related data will be reset
    */
-  void ResetStatus(bool resetStartTime = true);
+  void ResetStatus(bool resetSubscriptionData = true);
 
   void ParseMuxPacket(htsmsg_t* m);
   void ParseSourceInfo(htsmsg_t* m);

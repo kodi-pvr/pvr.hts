@@ -410,17 +410,19 @@ void HTSPDemuxer::SetStreamingProfile(const std::string& profile)
   m_subscription.SetProfile(profile);
 }
 
-void HTSPDemuxer::ResetStatus(bool resetStartTime /* = true */)
+void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   m_signalInfo.Clear();
-  m_sourceInfo.Clear();
   m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
 
-  if (resetStartTime)
+  if (resetSubscriptionData)
+  {
+    m_sourceInfo.Clear(); // only send once with subscriptionStart response
     m_startTime = 0;
+  }
 }
 
 /* **************************************************************************
