@@ -11,6 +11,7 @@
 #include "kissnet/kissnet.hpp"
 
 #include <memory>
+#include <mutex>
 
 namespace tvheadend
 {
@@ -36,8 +37,12 @@ public:
   int64_t Write(void* data, size_t len);
 
 private:
+  std::shared_ptr<kissnet::tcp_socket> GetSocket(bool bCreate = false);
+  void ResetSocket();
+
   const kissnet::endpoint m_endpoint;
-  std::unique_ptr<kissnet::tcp_socket> m_socket;
+  std::shared_ptr<kissnet::tcp_socket> m_socket;
+  std::recursive_mutex m_mutex;
 };
 
 } // namespace utilities

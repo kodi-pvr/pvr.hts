@@ -36,43 +36,43 @@ bool TCPSocket::Open(uint64_t iTimeoutMs /*= 0*/)
 {
   try
   {
-    if (!m_socket)
-      m_socket.reset(new kissnet::tcp_socket(m_endpoint));
+    auto socket = GetSocket(true);
 
     int status = kissnet::socket_status::valid;
 
-    m_socket->set_non_blocking(true);
-    status = m_socket->connect().value;
-    m_socket->set_non_blocking(false);
+    socket->set_non_blocking(true);
+    status = socket->connect().value;
+    socket->set_non_blocking(false);
 
     if (status == kissnet::socket_status::non_blocking_would_have_blocked)
     {
-      status = m_socket->select(kissnet::fds_write | kissnet::fds_except, iTimeoutMs);
+      status = socket->select(kissnet::fds_write | kissnet::fds_except, iTimeoutMs);
 
       if (status == kissnet::socket_status::valid)
-        status = m_socket->get_status().value; // re-check
+        status = socket->get_status().value; // re-check
     }
 
     if (status == kissnet::socket_status::valid)
-      m_socket->set_tcp_no_delay(true);
+      socket->set_tcp_no_delay(true);
 
     return status == kissnet::socket_status::valid;
   }
   catch (std::runtime_error const&)
   {
-    m_socket.reset();
+    ResetSocket();
     return false;
   }
 }
 
 void TCPSocket::Shutdown()
 {
-  if (!m_socket)
+  auto socket = GetSocket();
+  if (!socket)
     return;
 
   try
   {
-    m_socket->shutdown();
+    socket->shutdown();
   }
   catch (std::runtime_error const&)
   {
@@ -81,13 +81,14 @@ void TCPSocket::Shutdown()
 
 void TCPSocket::Close()
 {
-  if (!m_socket)
+  auto socket = GetSocket();
+  if (!socket)
     return;
 
   try
   {
-    m_socket->close();
-    m_socket.reset();
+    socket->close();
+    ResetSocket();
   }
   catch (std::runtime_error const&)
   {
@@ -96,7 +97,8 @@ void TCPSocket::Close()
 
 int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
 {
-  if (!m_socket)
+  auto socket = GetSocket();
+  if (!socket)
     return -1;
 
   try
@@ -117,7 +119,7 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
     {
       if (iTimeoutMs > 0)
       {
-        const kissnet::socket_status status = m_socket->select(kissnet::fds_read, iTimeoutMs);
+        const kissnet::socket_status status = socket->select(kissnet::fds_read, iTimeoutMs);
 
         if (status.value == kissnet::socket_status::timed_out ||
             status.value == kissnet::socket_status::errored)
@@ -127,9 +129,9 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
       }
 
       const auto [iReadResult, status] =
-          (iTimeoutMs > 0) ? m_socket->recv(static_cast<std::byte*>(data) + iBytesRead,
-                                            len - iBytesRead, false /* no wait */)
-                           : m_socket->recv(static_cast<std::byte*>(data), len, true /* wait */);
+          (iTimeoutMs > 0) ? socket->recv(static_cast<std::byte*>(data) + iBytesRead,
+                                          len - iBytesRead, false /* no wait */)
+                           : socket->recv(static_cast<std::byte*>(data), len, true /* wait */);
 
       if (iTimeoutMs > 0)
         iNow = MillisecondsSinceEpoch();
@@ -160,16 +162,33 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
 
 int64_t TCPSocket::Write(void* data, size_t len)
 {
-  if (!m_socket)
+  auto socket = GetSocket();
+  if (!socket)
     return -1;
 
   try
   {
-    const auto [data_size, status] = m_socket->send(static_cast<std::byte*>(data), len);
+    const auto [data_size, status] = socket->send(static_cast<std::byte*>(data), len);
     return data_size;
   }
   catch (std::runtime_error const&)
   {
     return -1;
   }
+}
+
+std::shared_ptr<kissnet::tcp_socket> TCPSocket::GetSocket(bool bCreate /*= false*/)
+{
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+  if (bCreate && !m_socket)
+    m_socket.reset(new kissnet::tcp_socket(m_endpoint));
+
+  return m_socket;
+}
+
+void TCPSocket::ResetSocket()
+{
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  m_socket.reset();
 }

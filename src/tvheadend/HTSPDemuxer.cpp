@@ -39,6 +39,7 @@ HTSPDemuxer::HTSPDemuxer(IHTSPDemuxPacketHandler& demuxPktHdl, HTSPConnection& c
     m_seektime(nullptr),
     m_subscription(conn),
     m_lastUse(0),
+    m_lastPkt(0),
     m_startTime(0),
     m_rdsIdx(0),
     m_demuxPktHdl(demuxPktHdl)
@@ -99,7 +100,9 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
 
   /* Open new subscription */
   time_t lastUse = m_lastUse.load();
+  time_t lastPkt = m_lastPkt.load();
   m_lastUse.store(std::time(nullptr));
+  m_lastPkt = 0;
   m_subscription.SendSubscribe(lock, channelId, weight);
 
   /* Reset status */
@@ -110,6 +113,7 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
   {
     m_subscription.SendUnsubscribe(lock);
     m_lastUse.store(lastUse);
+    m_lastPkt.store(lastPkt);
     return false;
   }
 
@@ -133,10 +137,18 @@ DEMUX_PACKET* HTSPDemuxer::Read()
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
                 pkt->pts, static_cast<long long>(pkt->iSize));
+    m_lastPkt.store(m_lastUse.load());
     return pkt;
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
 
+  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > 10)
+  {
+    Logger::Log(LogLevel::LEVEL_WARNING,
+                "demux read no data for at least 10 secs; restarting connection");
+    m_lastPkt = 0;
+    m_conn.Disconnect();
+  }
   return m_demuxPktHdl.AllocateDemuxPacket(0);
 }
 
@@ -398,17 +410,19 @@ void HTSPDemuxer::SetStreamingProfile(const std::string& profile)
   m_subscription.SetProfile(profile);
 }
 
-void HTSPDemuxer::ResetStatus(bool resetStartTime /* = true */)
+void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   m_signalInfo.Clear();
-  m_sourceInfo.Clear();
   m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
 
-  if (resetStartTime)
+  if (resetSubscriptionData)
+  {
+    m_sourceInfo.Clear(); // only send once with subscriptionStart response
     m_startTime = 0;
+  }
 }
 
 /* **************************************************************************
