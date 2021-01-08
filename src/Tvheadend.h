@@ -118,7 +118,7 @@ public:
                              time_t start,
                              time_t end,
                              kodi::addon::PVREPGTagsResultSet& results) override;
-  PVR_ERROR SetEPGTimeFrame(int days) override;
+  PVR_ERROR SetEPGMaxFutureDays(int futureDays) override;
 
   void GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const;
 

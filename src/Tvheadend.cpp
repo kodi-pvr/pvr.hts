@@ -38,7 +38,7 @@ CTvheadend::CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion)
     m_asyncState(Settings::GetInstance().GetResponseTimeout()),
     m_timeRecordings(*m_conn),
     m_autoRecordings(*m_conn),
-    m_epgMaxDays(EpgMaxDays()),
+    m_epgMaxDays(EpgMaxFutureDays()),
     m_playingLiveStream(false),
     m_playingRecording(nullptr)
 {
@@ -1488,17 +1488,18 @@ PVR_ERROR CTvheadend::GetEPGForChannel(int channelUid,
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR CTvheadend::SetEPGTimeFrame(int iDays)
+PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
 {
-  if (m_epgMaxDays != iDays)
+  if (m_epgMaxDays != iFutureDays)
   {
-    m_epgMaxDays = iDays;
+    int iOldMaxDays = m_epgMaxDays;
+    m_epgMaxDays = iFutureDays;
 
     if (Settings::GetInstance().GetAsyncEpg())
     {
       Logger::Log(LogLevel::LEVEL_TRACE,
                   "reconnecting to synchronize epg data. epg max time: old = %d, new = %d",
-                  m_epgMaxDays, iDays);
+                  iOldMaxDays, iFutureDays);
       m_conn->Disconnect(); // reconnect to synchronize epg data
     }
   }
