@@ -1,3 +1,6 @@
+8.2.0
+- PVR API 7.1.0 - API change to allow epg max future and past days
+
 8.1.3
 - Fix: Obtain streaming profiles as soon as connected to backend
 - Fix: On system sleep, properly close demuxers before disconnecting from backend
@@ -350,7 +353,7 @@
 - fixed duplicate 'prevent duplicate episodes' timer settings values
 
 4.0.6
-- added HTSP v26 support 
+- added HTSP v26 support
 - added server based playstatus for recordings (HTSP v26 and up)
 
 4.0.5
@@ -429,7 +432,7 @@
 - fixed: potential crash in connection state change callback
 
 3.2.1
-- fixed: lifetime 'forever' should be disabled for HTSP v24 and lower 
+- fixed: lifetime 'forever' should be disabled for HTSP v24 and lower
 - improved: make lifetime settings translatable
 
 3.2.0
@@ -456,7 +459,7 @@
 
 2.2.10
 - updated language files from Transifex
-- fixed: approximate start time setting 
+- fixed: approximate start time setting
 - fixed: invalid addon restart when closing the settings dialog
 - improved: limit the amount of timer lifetime values
 - improved: separate timer and streaming settings
@@ -652,7 +655,7 @@
 1.6.16
 
 - correct some signed/unsigned mixups
-- added imagecache support (icons on the backend) 
+- added imagecache support (icons on the backend)
 
 1.6.15
 
