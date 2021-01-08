@@ -1,3 +1,6 @@
+8.2.1
+- Fix: kissnet update fixing socket creation/connection issue
+
 8.2.0
 - PVR API 7.1.0 - API change to allow epg max future and past days
 

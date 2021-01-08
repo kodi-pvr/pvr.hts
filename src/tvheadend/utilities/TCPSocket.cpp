@@ -38,19 +38,7 @@ bool TCPSocket::Open(uint64_t iTimeoutMs /*= 0*/)
   {
     auto socket = GetSocket(true);
 
-    int status = kissnet::socket_status::valid;
-
-    socket->set_non_blocking(true);
-    status = socket->connect().value;
-    socket->set_non_blocking(false);
-
-    if (status == kissnet::socket_status::non_blocking_would_have_blocked)
-    {
-      status = socket->select(kissnet::fds_write | kissnet::fds_except, iTimeoutMs);
-
-      if (status == kissnet::socket_status::valid)
-        status = socket->get_status().value; // re-check
-    }
+    int status = socket->connect(iTimeoutMs).value; // connect non-blocking
 
     if (status == kissnet::socket_status::valid)
       socket->set_tcp_no_delay(true);
