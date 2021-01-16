@@ -1,3 +1,6 @@
+8.2.2
+- Fix: kissnet update fixing Windows socket connection issue
+
 8.2.1
 - Fix: kissnet update fixing socket creation/connection issue
 
