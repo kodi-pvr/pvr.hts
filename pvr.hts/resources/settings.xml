@@ -165,7 +165,7 @@
               <option label="30053">1</option> <!-- Relaxed (start time +/- margin) -->
             </options>
           </constraints>
-          <control type="spinner" format="string" />
+          <control type="list" format="string" />
         </setting>
         <setting id="autorec_maxdiff" type="integer" label="30054" help="-1">
           <level>0</level>
@@ -203,7 +203,7 @@
               <option label="30355">4</option> <!-- Unimportant (Lowest) -->
             </options>
           </constraints>
-          <control type="spinner" format="string" />
+          <control type="list" format="string" />
         </setting>
         <setting id="dvr_lifetime2" type="integer" label="30056" help="-1">
           <level>0</level>
@@ -228,7 +228,7 @@
               <option label="30390">15</option> <!-- Use backend setting -->
             </options>
           </constraints>
-          <control type="spinner" format="string" />
+          <control type="list" format="string" />
         </setting>
         <setting id="dvr_dubdetect" type="integer" label="30057" help="-1">
           <level>0</level>
@@ -239,11 +239,20 @@
               <option label="30357">1</option> <!-- Record if episode number differs -->
               <option label="30358">2</option> <!-- Record if episode name differs -->
               <option label="30359">3</option> <!-- Record if description differs -->
+              <option label="30370">12</option> <!-- tvh 4.2+: Record max once per month -->
               <option label="30360">4</option> <!-- Record max once per week -->
               <option label="30361">5</option> <!-- Record max once per day -->
+              <option label="30362">6</option> <!-- tvh 4.2+: This rule only: Record if episode number differs -->
+              <option label="30364">8</option> <!-- tvh 4.2+: This rule only: Record if title differs -->
+              <option label="30363">7</option> <!-- tvh 4.2+: This rule only: Record if episode name differs -->
+              <option label="30365">9</option> <!-- tvh 4.2+: This rule only: Record if description differs -->
+              <option label="30371">13</option> <!-- tvh 4.2+: This rule only: Record max once per month -->
+              <option label="30366">10</option> <!-- tvh 4.2+: This rule only: Record max once per week -->
+              <option label="30367">11</option> <!-- tvh 4.2+: This rule only: Record max once per day -->
+              <option label="30372">14</option> <!-- tvh 4.3+: Record if unique episode according EPG/XMLTV -->
             </options>
           </constraints>
-          <control type="spinner" format="string" />
+          <control type="list" format="string" />
         </setting>
       </group>
     </category>

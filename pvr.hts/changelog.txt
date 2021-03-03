@@ -1,3 +1,7 @@
+8.2.3
+- Usability: Change settings spinners to selection lists
+- Fixed: Timer settings: Add missing duplicate detection values
+
 8.2.2
 - Fix: kissnet update fixing Windows socket connection issue
 
