@@ -1,3 +1,6 @@
+8.2.4
+- Fix: broken string in en_gb resource file.
+
 8.2.3
 - Usability: Change settings spinners to selection lists
 - Fixed: Timer settings: Add missing duplicate detection values
