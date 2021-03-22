@@ -31,6 +31,7 @@ const int Settings::DEFAULT_TOTAL_TUNERS = 1; // total tuners > 1 => predictive 
 const int Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
 const int Settings::DEFAULT_AUTOREC_MAXDIFF =
     15; // mins. Maximum difference between real and approximate start time for auto recordings
+const bool Settings::DEFAULT_AUTOREC_USE_REGEX = false;
 const int Settings::DEFAULT_APPROX_TIME =
     0; // don't use an approximate start time, use a fixed time instead for auto recordings
 const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
@@ -71,6 +72,7 @@ void Settings::ReadSettings()
   /* Auto recordings */
   SetAutorecApproxTime(ReadIntSetting("autorec_approxtime", DEFAULT_APPROX_TIME));
   SetAutorecMaxDiff(ReadIntSetting("autorec_maxdiff", DEFAULT_AUTOREC_MAXDIFF));
+  SetAutorecUseRegEx(ReadBoolSetting("autorec_use_regex", DEFAULT_AUTOREC_USE_REGEX));
 
   /* Streaming */
   SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
@@ -151,6 +153,8 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
     return SetIntSetting(GetAutorecApproxTime(), value);
   else if (key == "autorec_maxdiff")
     return SetIntSetting(GetAutorecMaxDiff(), value);
+  else if (key == "autorec_use_regex")
+    return SetBoolSetting(GetAutorecUseRegEx(), value);
   /* Streaming */
   else if (key == "streaming_profile")
     return SetStringSetting(GetStreamingProfile(), value);

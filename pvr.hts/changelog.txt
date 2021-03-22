@@ -1,3 +1,6 @@
+8.3.0
+- New setting: Regular expression vs. 'contains' search for Autorecs.
+
 8.2.4
 - Fix: broken string in en_gb resource file.
 

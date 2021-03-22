@@ -116,7 +116,11 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr ""
 
-#empty strings from id 30061 to 30099
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
+#empty strings from id 30062 to 30099
 
 msgctxt "#30100"
 msgid "Data transfer"

@@ -40,6 +40,7 @@ public:
   static const int DEFAULT_PRETUNER_CLOSEDELAY; // secs
   static const int
       DEFAULT_AUTOREC_MAXDIFF; // mins. Maximum difference between real and approximate start time for auto recordings
+  static const bool DEFAULT_AUTOREC_USE_REGEX;
   static const int
       DEFAULT_APPROX_TIME; // 0..1 (0 = use a fixed start time, 1 = use an approximate start time for auto recordings)
   static const std::string DEFAULT_STREAMING_PROFILE;
@@ -89,6 +90,7 @@ public:
   int GetPreTunerCloseDelay() const { return m_iPreTunerCloseDelay; }
   int GetAutorecApproxTime() const { return m_iAutorecApproxTime; }
   int GetAutorecMaxDiff() const { return m_iAutorecMaxDiff; }
+  bool GetAutorecUseRegEx() const { return m_bAutorecUseRegEx; }
   std::string GetStreamingProfile() const { return m_strStreamingProfile; }
   bool GetStreamingHTTP() const { return m_bUseHTTPStreaming; }
   int GetDvrPriority() const { return m_iDvrPriority; }
@@ -116,6 +118,7 @@ private:
       m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
       m_iAutorecApproxTime(DEFAULT_APPROX_TIME),
       m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
+      m_bAutorecUseRegEx(DEFAULT_AUTOREC_USE_REGEX),
       m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
       m_bUseHTTPStreaming(DEFAULT_STREAMING_HTTP),
       m_iDvrPriority(DEFAULT_DVR_PRIO),
@@ -148,6 +151,7 @@ private:
   void SetPreTunerCloseDelay(int value) { m_iPreTunerCloseDelay = value; }
   void SetAutorecApproxTime(int value) { m_iAutorecApproxTime = value; }
   void SetAutorecMaxDiff(int value) { m_iAutorecMaxDiff = value; }
+  void SetAutorecUseRegEx(bool value) { m_bAutorecUseRegEx = value; }
   void SetStreamingProfile(const std::string& value) { m_strStreamingProfile = value; }
   void SetStreamingHTTP(bool value) { m_bUseHTTPStreaming = value; }
   void SetDvrPriority(int value) { m_iDvrPriority = value; }
@@ -186,6 +190,7 @@ private:
   int m_iPreTunerCloseDelay;
   bool m_iAutorecApproxTime;
   int m_iAutorecMaxDiff;
+  bool m_bAutorecUseRegEx;
   std::string m_strStreamingProfile;
   bool m_bUseHTTPStreaming;
   int m_iDvrPriority;
