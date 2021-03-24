@@ -17,6 +17,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <regex>
 
 using namespace tvheadend;
 using namespace tvheadend::entity;
@@ -174,8 +175,15 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
 
   htsmsg_add_str(m, "name", timer.GetTitle().c_str());
 
-  /* epg search data match string (regexp) */
-  htsmsg_add_str(m, "title", timer.GetEPGSearchString().c_str());
+  /* epg search data match string */
+  std::string searchString = timer.GetEPGSearchString();
+  if (!Settings::GetInstance().GetAutorecUseRegEx())
+  {
+    // escape regex special chars
+    static const std::regex specialChars(R"([-[\]{}()*+?.,\^$|#])");
+    searchString = std::regex_replace(searchString, specialChars, R"(\$&)");
+  }
+  htsmsg_add_str(m, "title", searchString.c_str());
 
   /* fulltext epg search:                                                                          */
   /* "title" not empty && !fulltext => match strEpgSearchString against episode title only         */
