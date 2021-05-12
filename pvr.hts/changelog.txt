@@ -1,3 +1,6 @@
+8.3.1
+- Fix: Demuxer must reset start time when reconnecting
+
 8.3.0
 - New setting: Regular expression vs. 'contains' search for Autorecs.
 
@@ -6,7 +9,7 @@
 
 8.2.3
 - Usability: Change settings spinners to selection lists
-- Fixed: Timer settings: Add missing duplicate detection values
+- Fix: Timer settings: Add missing duplicate detection values
 
 8.2.2
 - Fix: kissnet update fixing Windows socket connection issue
@@ -34,7 +37,7 @@
 
 8.1.0
 - Update inputstream API 3.0.1
-  - Fix wrong flags bit shift
+- Fix wrong flags bit shift
 
 8.0.0
 - Update PVR API 7.0.2

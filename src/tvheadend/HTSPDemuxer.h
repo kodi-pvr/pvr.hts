@@ -86,7 +86,7 @@ private:
 
   /**
    * Resets the signal, quality, timeshift info and optionally the starttime
-   * @param resetStartTime if true, all subscription-related data will be reset
+   * @param resetSubscriptionData if true, all subscription-related data will be reset
    */
   void ResetStatus(bool resetSubscriptionData = true);
 

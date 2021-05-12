@@ -414,6 +414,7 @@ void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+  m_startTime = 0;
   m_signalInfo.Clear();
   m_descrambleInfo.Clear();
   m_timeshiftStatus.Clear();
@@ -421,7 +422,6 @@ void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
   if (resetSubscriptionData)
   {
     m_sourceInfo.Clear(); // only send once with subscriptionStart response
-    m_startTime = 0;
   }
 }
 
