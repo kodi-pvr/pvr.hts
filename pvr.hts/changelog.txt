@@ -1,3 +1,6 @@
+8.3.1
+- Fixed: Demuxer: Only restart connection when not paused
+
 8.3.0
 - New setting: Regular expression vs. 'contains' search for Autorecs.
 

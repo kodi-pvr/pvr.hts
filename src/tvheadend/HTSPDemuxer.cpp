@@ -142,7 +142,7 @@ DEMUX_PACKET* HTSPDemuxer::Read()
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
 
-  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > 10)
+  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > 10 && !IsPaused())
   {
     Logger::Log(LogLevel::LEVEL_WARNING,
                 "demux read no data for at least 10 secs; restarting connection");
@@ -256,7 +256,10 @@ void HTSPDemuxer::Speed(int speed)
     return;
 
   if (speed != 0)
-    speed = 1000;
+  {
+    speed = SPEED_NORMAL;
+    m_lastPkt = 0;
+  }
 
   if ((speed != m_requestedSpeed || speed == 0) && m_actualSpeed == m_subscription.GetSpeed())
   {
@@ -273,7 +276,7 @@ void HTSPDemuxer::FillBuffer(bool mode)
   if (!m_subscription.IsActive())
     return;
 
-  int speed = (!mode || IsRealTimeStream()) ? 1000 : 4000;
+  int speed = (!mode || IsRealTimeStream()) ? SPEED_NORMAL : 4 * SPEED_NORMAL;
 
   if (speed != m_requestedSpeed && m_actualSpeed == m_subscription.GetSpeed())
   {
