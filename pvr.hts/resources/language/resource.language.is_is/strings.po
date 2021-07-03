@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Icelandic (Iceland) (http://www.transifex.com/projects/p/kodi-main/language/is_IS/)\n"
+"PO-Revision-Date: 2021-06-28 13:56+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Icelandic <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/is_is/>\n"
+"Language: is_is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: is_IS\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 4.7\n"
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -60,6 +61,14 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Stillingar tímatöku"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Sjálfvirkar upptökur"
@@ -104,6 +113,10 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr "Hunsa tvítekningar (tvh 4.3+)"
 
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Gagnaflutningur"
@@ -122,167 +135,212 @@ msgstr "Trace (nákvæmt)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "HTSP útgáfa ósamhæfð  (samhæfð: v%d, þarfnast: v%d). Uppfærðu tvheadend."
+msgstr "HTSP útgáfa ósamhæfð (samhæfð: v%d, þarfnast: v%d). Uppfærðu tvheadend."
 
+#. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr "Eins-skiptis (sett á með tímatökureglu)"
 
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Mikilvægt (hæst)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "Hæst"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Venjulegt"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "Lægst"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "Ekki mikilvægt (lægst)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Taka upp allar þáttaraðir"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "Taka upp ef mismunur er á númerum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "Taka upp ef mismunur er á nöfnum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Taka upp ef mismunur er á lýsingum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "Taka upp mest einu sinni í viku"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Taka upp mest einu sinni á dag"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "Einungis þessi regla: Taka upp ef mismunur er á númerum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "Einungis þessi regla: Taka upp ef mismunur er á nöfnum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "Einungis þessi regla: Taka upp ef mismunur er á titli"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "Einungis þessi regla: Taka upp ef mismunur er á lýsingum þátta"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "Einungis þessi regla: Taka upp mest einu sinni í viku"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "Einungis þessi regla: Taka upp mest einu sinni á dag"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "Sjálfgefið"
 
+#. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "Tímatökuregla (tengt við raðir)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr "Taka upp mest einu sinni á mánuði"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
 msgstr "Einungis þessi regla: Taka upp mest einu sinni á mánuði"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Taka upp ef er einstakur þáttur miðað við EPG/XMLTV"
 
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Þangað til vantar pláss"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Að eilífu"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dag"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3 dagar"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5 dagar"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 vika"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "2 vikur"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 vikur"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 mánuður"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "2 mánuðir"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3 mánuðir"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6 mánuðir"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 ár"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "2 ár"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 ár"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "Þangað til vantar pláss (tvh 4.1+)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "Að eilífu (tvh 4.1+)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -336,6 +394,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Snið sem á að nota (autt = sjálfgefið)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streymissniðið %s er ekki tiltækt"
@@ -347,6 +406,10 @@ msgstr "Gagnaflutningur"
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
 msgstr "Stærð lesbúts streymis í upptökum (KB)"
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
 
 msgctxt "#30510"
 msgid "Recordings"

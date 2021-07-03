@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Croatian (Croatia) (http://www.transifex.com/projects/p/kodi-main/language/hr_HR/)\n"
+"PO-Revision-Date: 2021-06-28 13:56+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Croatian <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/hr_hr/>\n"
+"Language: hr_hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hr_HR\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.7\n"
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -60,6 +61,14 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Zakazana snimanja"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Automatska snimanja"
@@ -104,6 +113,10 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr "Zanemari duplikate (tvh 4.3+)"
 
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Prijenos podataka"
@@ -124,165 +137,210 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP inačica se ne podudara (podržana: v%d, potrebna: v%d). Nadogradite tvheadend."
 
+#. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr "Jednom (Zakazano zadanim rasporedom)"
 
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Značajan (Najviši)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "Visok"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Normalan"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "Nizak"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "Beznačajan (Najniži)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Snimi sve epizode"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "Snimi ako se broj epizode razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "Snimi ako se naslov epizode razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Snimi ako se opis razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "Snimi najviše jednom tjedno"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Snimi najviše jednom dnevno"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "Samo ovo pravilo: Snimi ako se broj epizode razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "Samo ovo pravilo: Snimi ako se naslov epizode razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "Samo ovo pravilo: Snimi ako se naslov razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "Samo ovo pravilo: Snimi ako se opis razlikuje"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "Samo ovo pravilo: Snimi najviše jednom tjedno"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "Samo ovo pravilo: Snimi najviše jednom dnevno"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "Zadano"
 
+#. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr "Pravilo zakazanih snimanja  (serijska poveznica)"
+msgstr "Pravilo zakazanih snimanja (serijska poveznica)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr "Snimi najviše jednom mjesečno"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
 msgstr "Samo za ovo pravilo: Snimi najviše jednom mjesečno"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Snimi ako je epizoda jedinstvena prema EPG/XMLTV vodiču"
 
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Dok ima slobodnog prostora"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Zauvijek"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dan"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3 dana"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5 dana"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 tjedan"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "2 tjedna"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 tjedna"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 mjesec"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "2 mjeseca"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3 mjeseca"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6 mjeseca"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 godina"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "2 godine"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 godine"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "Dok ima slobodnog prostora (tvh 4.1+)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "Zauvijek (tvh 4.1+)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -336,6 +394,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Profil za korištenje (prazno = zadano)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profil strujanja %s nije dostupan"
@@ -347,6 +406,10 @@ msgstr "Prijenos podataka"
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
 msgstr "Veličina čitanja dijela strujanja za snimanja (KB)"
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
 
 msgctxt "#30510"
 msgid "Recordings"

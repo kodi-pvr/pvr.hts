@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
 "Language-Team: Hebrew (Israel) (http://www.transifex.com/projects/p/kodi-main/language/he_IL/)\n"
+"Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: he_IL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#30000"
@@ -60,6 +60,14 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "הגדרות תזמון"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "הקלטות אוטומטיות"
@@ -104,6 +112,10 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr "התעלמות מכפילויות (tvh 4.3+‎)"
 
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "העברת נתונים"
@@ -124,165 +136,210 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "חוסר תאימות גרסת HTSP (נתמכת v%d, נדרשת: v%d). יש לעדכן את שרת Tvheadend."
 
+#. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr "חד פעמי (מתוזמן על ידי כלל של שעון העצר)"
 
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "חשובה (גבוהה ביותר)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "גבוהה"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "רגילה"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "נמוכה"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "לא חשובה (נמוכה ביותר)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "הקלט כל הפרקים"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "הקלט כאשר מספר הפרק שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "הקלט כאשר שם הפרק שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "הקלט כאשר תיאור הפרק שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "הקלטה מקסימלית פעם בשבוע"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "הקלטה מקסימלית פעם ביום"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "כלל זה בלבד: יש להקליט אם מספר הפרק שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "כלל זה בלבד: יש להקליט אם שם הפרק שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "כלל זה בלבד: יש להקליט אם הכותרת שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "כלל זה בלבד: יש להקליט אם התיאור שונה"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "כלל זה בלבד: יש להקליט פעם אחת בשבוע"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "כלל זה בלבד: יש להקליט פעם אחת ביום"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "ברירת מחדל"
 
+#. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "כלל שעון העצר (קישור בסדרה)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr "להקליט פעם בחודש לכל היותר"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
 msgstr "כלל זה בלבד: להקליט אחד לחודש לכל היותר"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "להקליט אם מדובר בפרק ייחודי לפי EPG/XMLTV"
 
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "עד שנפח האחסון נדרש"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "לעד"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "יום יחיד"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3 ימים"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5 ימים"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "שבוע יחיד"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "שבועיים"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 שבועות"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "חודש יחיד"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "חודשיים"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3 חודשים"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6 חודשים"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "שנה אחת"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "שנתיים"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 שנים"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "עד שנפח האיחסון הנדרש (tvh 4.1+)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "לתמיד (tvh 4.1+)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -336,6 +393,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "פרופיל לשימוש (ריק = ברירת מחדל)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "פרופיל הזרמה %s אינו זמין"
@@ -347,6 +405,10 @@ msgstr "העברת נתונים"
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
 msgstr "גודל נתח קריאת תזרים להקלטות (ק״ב)"
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
 
 msgctxt "#30510"
 msgid "Recordings"
