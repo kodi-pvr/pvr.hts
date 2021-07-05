@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
 "Language-Team: Galician (Spain) (http://www.transifex.com/projects/p/kodi-main/language/gl_ES/)\n"
+"Language: gl_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: gl_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#30000"
@@ -60,9 +60,21 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Axuste do temporizador"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Gravacións auto."
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr ""
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -71,6 +83,10 @@ msgstr "Estrito (hora de inicio + hora de fin)"
 msgctxt "#30053"
 msgid "Relaxed (start time +/- margin)"
 msgstr "Relaxado (hora de inicio +/- marxe)"
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr ""
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -96,6 +112,10 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr "Ignorar duplicados (tvh 4.3+)"
 
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
@@ -116,153 +136,210 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "A versión do HTSP non coincide (soportado: v%d, requirido: v%d). Por favor actualice o tvheadend."
 
+#. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr "Unha vez (Programado por regra de temporizador)"
 
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importante (Maior)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "Alta"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Normal"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "Baixa"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "Sen importancia (máis baixo)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Gravar todos os episodios"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "Gravar se o número do episodio é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "Gravar se o nome do episodio é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Gravar se a descrición é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "Gravar unha vez por semana como máximo"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Gravar unha vez ao día como máximo"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "Só esta regra: Gravar se o número do capítulo é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "Só esta regra: Gravar se o nome do episodio é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "Só esta regra: Gravar se o título é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "Só esta regra: Gravar se a descrición é diferente"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "Só esta regra: Gravar unha vez por semana como máximo"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "Só esta regra: Gravar unha vez ao día como máximo"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "Predefinida"
 
+#. Timer type representation
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Gravar se o episodio e único segundo o EPG/XMLTV"
 
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Até que precise de espazo"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Sempre"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 día"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3 días"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5 días"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 semana"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "2 semanas"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 semanas"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 mes"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "2 meses"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3 meses"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6 meses"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 ano"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "2 anos"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 anos"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "Até que precise de espazo (tvh 4.1+)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "Sempre (tvh 4.1+)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -316,6 +393,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Perfil a empregar (baleiro = predefinido)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "O perfil de transmisión %s non está dispoñible"
@@ -323,6 +401,14 @@ msgstr "O perfil de transmisión %s non está dispoñible"
 msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Transferencia de datos"
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr ""
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
 
 msgctxt "#30510"
 msgid "Recordings"

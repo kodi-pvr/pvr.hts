@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/kodi-main/language/zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgctxt "#30000"
@@ -60,6 +60,14 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "計時器設定"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "自動錄影"
@@ -104,6 +112,10 @@ msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
 msgstr "忽略重複項目 (tvh 4.3+)"
 
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "資料傳輸"
@@ -124,165 +136,210 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "HTSP版本不匹配 (支援：v%d, 最低：v%d)。請更新電視端程式。"
 
+#. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr "單次 (由定時器規則排程)"
 
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "重要 (最高)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "高"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "一般"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "低"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "不重要 (最低)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "錄製全集"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "若影集編號不同則進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "若影集名稱不同則進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "若描述不同即進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "每週單次錄影的最大值"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "每日單次錄影的最大值"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "僅限本規則:集數不同即進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "僅限本規則:單集名稱不同即進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "僅限本規則:標題不同即進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "僅限本規則:敘述不同即進行錄影"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "僅限本規則:每週最多錄一次"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "僅限本規則:每天最多錄一次"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "預設"
 
+#. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr "定時器規則 (同系列的聯結)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr "每月最多記錄一次"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
 msgstr "僅此規則: 每月最多記錄一次"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "根據獨特情節錄製 EPG/XMLTV"
 
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "直到空間不足"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "無限"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1天"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3天"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5天"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1週"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "2週"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3週"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1個月"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "2個月"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3個月"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6個月"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1年"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "2年"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3年"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "直到空間不足 (tvh 4.1以上)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "無限 (tvh 4.1以上)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -336,6 +393,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "欲使用的設定檔 (瘤空 = 預設值)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "串流設定檔 %s 不可用"
@@ -347,6 +405,10 @@ msgstr "資料傳輸"
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
 msgstr "用於錄製的串流讀取部分大小（KB）"
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
 
 msgctxt "#30510"
 msgid "Recordings"

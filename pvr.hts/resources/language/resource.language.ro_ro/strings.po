@@ -10,10 +10,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/projects/p/kodi-main/language/ro_RO/)\n"
+"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro_RO\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 msgctxt "#30000"
@@ -60,6 +60,14 @@ msgctxt "#30010"
 msgid "Timer settings"
 msgstr "Stabiliri cronometru"
 
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Înregistrări automate"
@@ -96,6 +104,18 @@ msgctxt "#30058"
 msgid "Defaults for new timers"
 msgstr "Implicite pentru cronometrele noi"
 
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr ""
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr "Transfer de date"
@@ -116,145 +136,211 @@ msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr "Nepotrivire versiune HTSP (compatibilă: v%d, necesară: v%d). Actualizați tvheadend."
 
+# empty strings from id 30301 to 30349
+#. Timer type representation
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr ""
+
+#. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr "Importantă (Cea mai mare)"
 
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "Mare"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Normal"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "Mică"
 
+#. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr "Importantă (Cea mai mică)"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr "Înregistrează toate episoadele"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr "Înregistrează dacă numărul episodului diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr "Înregistrează dacă numele episodului diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr "Înregistrează dacă descrierea diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr "Înregistrează maxim o dată pe săptămână"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr "Înregistrează maxim o dată pe zi"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr "Doar această regulă: Înregistrează dacă numărul episodului diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr "Doar această regulă: Înregistrează dacă numele episodului diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr "Doar această regulă: Înregistrează dacă titlul diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr "Doar această regulă: Înregistrează dacă descrierea diferă"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr "Doar această regulă: Înregistrează maxim o dată pe săptămână"
 
+#. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr "Doar această regulă: Înregistrează maxim o dată pe zi"
 
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "Standard"
 
+#. Timer type representation
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr ""
+
+#. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
 msgstr "Până este nevoie de spațiu"
 
+#. Recording lifetime representation
 msgctxt "#30374"
 msgid "Forever"
 msgstr "Pentru totdeauna"
 
+#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 zi"
 
+#. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
 msgstr "3 zile"
 
+#. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
 msgstr "5 zile"
 
+#. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
 msgstr "1 săptămână"
 
+#. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr "2 săptămâni"
 
+#. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr "3 săptămâni"
 
+#. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
 msgstr "1 lună"
 
+#. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
 msgstr "2 luni"
 
+#. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
 msgstr "3 luni"
 
+#. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
 msgstr "6 luni"
 
+#. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
 msgstr "1 an"
 
+#. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
 msgstr "2 ani"
 
+#. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
 msgstr "3 ani"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
 msgstr "Până când e nevoie de spațiu (tvh 4.1+)"
 
+#. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
 msgid "Forever (tvh 4.1+)"
 msgstr "Totdeauna (tvh 4.1+)"
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -308,6 +394,7 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Profil de folosit (gol = implicit)"
 
+#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Profilul pentru difuzarea în flux %s nu este disponibil"
@@ -316,6 +403,18 @@ msgctxt "#30503"
 msgid "Data transfer"
 msgstr "Transfer de date"
 
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr ""
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Înregistrări"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr ""

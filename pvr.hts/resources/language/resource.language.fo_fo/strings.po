@@ -10,11 +10,28 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Kodi Translation Team\n"
 "Language-Team: Faroese (Faroe Islands) (http://www.transifex.com/projects/p/kodi-main/language/fo_FO/)\n"
+"Language: fo_FO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fo_FO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# settings labels
+msgctxt "#30000"
+msgid "Connection settings"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr ""
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr ""
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr ""
 
 msgctxt "#30004"
 msgid "Username"
@@ -24,22 +41,388 @@ msgctxt "#30005"
 msgid "Password"
 msgstr "Loyniorð"
 
+msgctxt "#30006"
+msgid "Connection timeout (seconds)"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Response timeout (seconds)"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Advanced settings"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Streaming settings"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Timer settings"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
+# empty strings from id 30013 to 30049
+msgctxt "#30050"
+msgid "Auto recordings"
+msgstr ""
+
+msgctxt "#30051"
+msgid "Start time window calculation"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Strict (start time + end time)"
+msgstr ""
+
+msgctxt "#30053"
+msgid "Relaxed (start time +/- margin)"
+msgstr ""
+
+msgctxt "#30054"
+msgid "Maximum start time margin (minutes)"
+msgstr ""
+
+msgctxt "#30055"
+msgid "Default priority"
+msgstr ""
+
+msgctxt "#30056"
+msgid "Default lifetime"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Default duplicate detection"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Defaults for new timers"
+msgstr ""
+
+msgctxt "#30059"
+msgid "Scheduled recordings"
+msgstr ""
+
+msgctxt "#30060"
+msgid "Ignore duplicates (tvh 4.3+)"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Use regular expressions (regex) for programme matching"
+msgstr ""
+
+# empty strings from id 30061 to 30099
+msgctxt "#30100"
+msgid "Data transfer"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr ""
+
+# empty strings from id 30102 to 30199
+msgctxt "#30200"
+msgid "Debugging"
+msgstr ""
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr ""
+
+# empty strings from id 30202 to 30299
+msgctxt "#30300"
+msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
+msgstr ""
+
+# empty strings from id 30301 to 30349
+#. Timer type representation
+msgctxt "#30350"
+msgid "One Time (Scheduled by timer rule)"
+msgstr ""
+
+#. Recording priority representation
+msgctxt "#30351"
+msgid "Important (Highest)"
+msgstr ""
+
+#. Recording priority representation
 msgctxt "#30352"
 msgid "High"
 msgstr "Høgt"
 
+#. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
 msgstr "Vanligt"
 
+#. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
 msgstr "Lágt"
 
+#. Recording priority representation
+msgctxt "#30355"
+msgid "Unimportant (Lowest)"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30356"
+msgid "Record all episodes"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30357"
+msgid "Record if episode number differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30358"
+msgid "Record if episode name differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30359"
+msgid "Record if description differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30360"
+msgid "Record max once per week"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30361"
+msgid "Record max once per day"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30362"
+msgid "This rule only: Record if episode number differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30363"
+msgid "This rule only: Record if episode name differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30364"
+msgid "This rule only: Record if title differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30365"
+msgid "This rule only: Record if description differs"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30366"
+msgid "This rule only: Record max once per week"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30367"
+msgid "This rule only: Record max once per day"
+msgstr ""
+
+#. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
 msgstr "Vanligt"
 
+#. Timer type representation
+msgctxt "#30369"
+msgid "Timer rule (series link)"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30370"
+msgid "Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30371"
+msgid "This rule only: Record max once per month"
+msgstr ""
+
+#. Prevent duplicate episodes representation
+msgctxt "#30372"
+msgid "Record if unique episode according EPG/XMLTV"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30373"
+msgid "Until space needed"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30374"
+msgid "Forever"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30375"
+msgid "1 day"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30376"
+msgid "3 days"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30377"
+msgid "5 days"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30378"
+msgid "1 week"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30379"
+msgid "2 weeks"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30380"
+msgid "3 weeks"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30381"
+msgid "1 month"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30382"
+msgid "2 months"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30383"
+msgid "3 months"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30384"
+msgid "6 months"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30385"
+msgid "1 year"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30386"
+msgid "2 years"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30387"
+msgid "3 years"
+msgstr ""
+
+#. Recording lifetime representation (for setting dialog only)
+msgctxt "#30388"
+msgid "Until space needed (tvh 4.1+)"
+msgstr ""
+
+#. Recording lifetime representation (for setting dialog only)
+msgctxt "#30389"
+msgid "Forever (tvh 4.1+)"
+msgstr ""
+
+#. Recording lifetime representation
+msgctxt "#30390"
+msgid "Use backend setting"
+msgstr ""
+
+# empty strings from id 30391 to 30399
+msgctxt "#30400"
+msgid "Predictive tuning"
+msgstr ""
+
+msgctxt "#30401"
+msgid "Number of subscriptions to use"
+msgstr ""
+
+msgctxt "#30402"
+msgid "Unused subscription close delay (seconds)"
+msgstr ""
+
+msgctxt "#30403"
+msgid "Use predictive tuning to speedup channel switches"
+msgstr ""
+
+# empty strings from id 30404 to 30449
+msgctxt "#30450"
+msgid "No free adapter available"
+msgstr ""
+
+msgctxt "#30451"
+msgid "Scrambled channel"
+msgstr ""
+
+msgctxt "#30452"
+msgid "No signal"
+msgstr ""
+
+msgctxt "#30453"
+msgid "Tuning failed"
+msgstr ""
+
+msgctxt "#30454"
+msgid "User limit reached"
+msgstr ""
+
+msgctxt "#30455"
+msgid "No access"
+msgstr ""
+
+msgctxt "#30456"
+msgid "Subscription error"
+msgstr ""
+
+# empty strings from id 30457 to 30499
+msgctxt "#30500"
+msgid "Streaming profile"
+msgstr ""
+
+msgctxt "#30501"
+msgid "Profile to use (empty = default)"
+msgstr ""
+
+#. Check streaming profile validity during startup
+msgctxt "#30502"
+msgid "Streaming profile %s is not available"
+msgstr ""
+
+msgctxt "#30503"
+msgid "Data transfer"
+msgstr ""
+
+msgctxt "#30504"
+msgid "Stream read chunk size for recordings (KB)"
+msgstr ""
+
+msgctxt "#30505"
+msgid "Use HTTP streaming for channels"
+msgstr ""
+
 msgctxt "#30510"
 msgid "Recordings"
 msgstr "Upptøkur"
+
+msgctxt "#30511"
+msgid "Server based play status"
+msgstr ""
