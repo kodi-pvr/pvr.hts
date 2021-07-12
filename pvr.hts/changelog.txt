@@ -1,3 +1,6 @@
+v8.3.3
+- Fixed: Crash while restarting the add-on (due to stale HTSP connection thread after unloading add-on's shared lib).
+
 v8.3.2
 - Fixed: Timeshift issues after pausing and resuming Live TV (affects only demuxer-served channels).
 

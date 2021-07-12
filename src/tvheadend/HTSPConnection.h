@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <condition_variable>
 #include <map>
 #include <mutex>
@@ -78,6 +79,8 @@ private:
   // CThread iplementation
   void Process() override;
 
+  bool ShouldStopProcessing() const { return m_stopProcessing || m_threadStop; }
+
   void Register();
   bool ReadMessage();
   bool SendHello(std::unique_lock<std::recursive_mutex>& lock);
@@ -124,6 +127,8 @@ private:
 
   bool m_suspended;
   PVR_CONNECTION_STATE m_state;
+
+  std::atomic<bool> m_stopProcessing = false;
 };
 
 } // namespace tvheadend
