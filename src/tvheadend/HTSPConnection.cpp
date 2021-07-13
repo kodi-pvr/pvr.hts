@@ -106,7 +106,7 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
 HTSPConnection::~HTSPConnection()
 {
   Stop();
-  StopThread(true);
+  StopThread();
   delete m_regThread;
 }
 
@@ -745,6 +745,6 @@ void HTSPConnection::Process()
     }
 
     /* Stop connect thread (if not already) */
-    m_regThread->StopThread(true);
+    m_regThread->StopThread();
   }
 }

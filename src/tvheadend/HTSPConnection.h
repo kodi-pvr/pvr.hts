@@ -99,7 +99,7 @@ private:
   public:
     HTSPRegister(HTSPConnection* conn) : m_conn(conn) {}
 
-    ~HTSPRegister() override { StopThread(true); }
+    ~HTSPRegister() override { StopThread(); }
 
   private:
     // CThread implementation
