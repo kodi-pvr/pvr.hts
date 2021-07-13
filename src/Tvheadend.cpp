@@ -72,7 +72,7 @@ void CTvheadend::Stop()
     dmx->Close();
 
   m_conn->Stop();
-  StopThread(true);
+  StopThread();
 }
 
 /* **************************************************************************

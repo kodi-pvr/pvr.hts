@@ -105,14 +105,15 @@ HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
 
 HTSPConnection::~HTSPConnection()
 {
-  StopThread(false);
-  Disconnect();
-  StopThread(true);
+  Stop();
+  StopThread();
   delete m_regThread;
 }
 
 void HTSPConnection::Start()
 {
+  m_stopProcessing = false;
+
   // Note: "connecting" must only be set one time, before the very first connection attempt, not on every reconnect.
   SetState(PVR_CONNECTION_STATE_CONNECTING);
   CreateThread();
@@ -120,7 +121,7 @@ void HTSPConnection::Start()
 
 void HTSPConnection::Stop()
 {
-  StopThread(false);
+  m_stopProcessing = true;
   Disconnect();
 }
 
@@ -656,7 +657,7 @@ void HTSPConnection::Process()
   static unsigned int retryAttempt = 0;
   const Settings& settings = Settings::GetInstance();
 
-  while (!m_threadStop)
+  while (!ShouldStopProcessing())
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
@@ -681,13 +682,13 @@ void HTSPConnection::Process()
       }
     }
 
-    while (m_suspended && !m_threadStop)
+    while (m_suspended && !ShouldStopProcessing())
     {
       /* Wait for wakeup */
       Sleep(1000);
     }
 
-    if (m_threadStop)
+    if (ShouldStopProcessing())
       break;
 
     if (!log)
@@ -737,13 +738,13 @@ void HTSPConnection::Process()
     m_regThread->CreateThread();
 
     /* Receive loop */
-    while (!m_threadStop)
+    while (!ShouldStopProcessing())
     {
       if (!ReadMessage())
         break;
     }
 
     /* Stop connect thread (if not already) */
-    m_regThread->StopThread(true);
+    m_regThread->StopThread();
   }
 }
