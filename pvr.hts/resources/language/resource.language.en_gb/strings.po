@@ -16,6 +16,14 @@ msgstr ""
 "Language: en_GB\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "Addon Summary"
+msgid "Kodi's frontend for Tvheadend"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgstr ""
+
 #settings labels
 
 msgctxt "#30000"

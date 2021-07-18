@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Kodi's frontend for Tvheadend"
+msgstr "Tvheadend 을 위한 Kodi 프론트엔드"
+
+msgctxt "Addon Description"
+msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgstr "Tvheadend 프론트엔드; TV 시청 &amp; 녹화, EPG, 타이머 지원"
+
 msgctxt "#30000"
 msgid "Connection settings"
 msgstr "연결 설정"
