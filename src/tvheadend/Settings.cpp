@@ -49,6 +49,7 @@ void Settings::ReadSettings()
   SetHostname(ReadStringSetting("host", DEFAULT_HOST));
   SetPortHTSP(ReadIntSetting("htsp_port", DEFAULT_HTSP_PORT));
   SetPortHTTP(ReadIntSetting("http_port", DEFAULT_HTTP_PORT));
+  SetUseHTTPS(ReadBoolSetting("https", DEFAULT_USE_HTTPS));
   SetUsername(ReadStringSetting("user", DEFAULT_USERNAME));
   SetPassword(ReadStringSetting("pass", DEFAULT_PASSWORD));
   SetWolMac(ReadStringSetting("wol_mac", DEFAULT_WOL_MAC));
@@ -104,7 +105,7 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
   else if (key == "http_port")
     return SetIntSetting(GetPortHTTP(), value);
   else if (key == "https")
-    return SetIntSetting(GetUseHTTPS(), value);
+    return SetBoolSetting(GetUseHTTPS(), value);
   else if (key == "user")
     return SetStringSetting(GetUsername(), value);
   else if (key == "pass")
