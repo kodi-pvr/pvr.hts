@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "Addon Summary"
+msgid "Kodi's frontend for Tvheadend"
+msgstr "Kodi的Tvheadend前端介面"
+
+msgctxt "Addon Description"
+msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgstr "Tvheadend前端，支援的串流媒體包含有直播電視和錄製節目，電子節目表，定時器 等"
+
 msgctxt "#30000"
 msgid "Connection settings"
 msgstr "連接設定"

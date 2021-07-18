@@ -17,6 +17,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.7\n"
 
+msgctxt "Addon Summary"
+msgid "Kodi's frontend for Tvheadend"
+msgstr "Frontale Kodi pour Tvheadend"
+
+msgctxt "Addon Description"
+msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgstr "Frontale pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries"
+
 msgctxt "#30000"
 msgid "Connection settings"
 msgstr "Paramètres de connexion"
