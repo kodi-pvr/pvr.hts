@@ -5,16 +5,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Danish (Denmark) (http://www.transifex.com/projects/p/kodi-main/language/da_DK/)\n"
-"Language: da_DK\n"
+"PO-Revision-Date: 2021-08-06 17:29+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/da_dk/>\n"
+"Language: da_dk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7.2\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -50,7 +51,7 @@ msgstr "Adgangskode"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Forbindelsestidsudløb (sekunder)"
+msgstr "Tidsfrist for forbindelse (sekunder)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
@@ -66,15 +67,15 @@ msgstr "Streaming indstillinger"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Indstil Optagelse"
+msgstr "Indstillinger for timer"
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr ""
+msgstr "Anvend HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr ""
+msgstr "Server MAC-adresse til Wake-on-LAN"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -94,7 +95,7 @@ msgstr "Afslappet (starttidspunkt +/- margen)"
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Maksimal starttidspunktmargen (minutter)"
+msgstr "Maksimal margen for starttidspunkt (minutter)"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -102,7 +103,7 @@ msgstr "Standardprioritet"
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Levetid"
+msgstr "Standard levetid"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
@@ -122,7 +123,7 @@ msgstr "Ignorer dubletter (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr ""
+msgstr "Brug regulære udtryk (regex) til program-matchning"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -212,27 +213,27 @@ msgstr "Kun denne regel: Optag hvis episodenummeret er et andet"
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr ""
+msgstr "Kun denne regel: optag, hvis afsnittets navn adskiller sig"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr ""
+msgstr "Kun denne regel: optag, hvis titlen adskiller sig"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr ""
+msgstr "Kun denne regel: optag, hvis beskrivelsen adskiller sig"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr ""
+msgstr "Kun denne regel: optag maksimalt én gang om ugen"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr ""
+msgstr "Kun denne regel: optag maksimalt én gang om dagen"
 
 #. Recording priority representation
 msgctxt "#30368"
@@ -242,22 +243,22 @@ msgstr "Standard"
 #. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr ""
+msgstr "Timerregel (serieforbindelse)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
-msgstr ""
+msgstr "Optag maksimalt én gang om måneden"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr ""
+msgstr "Kun denne regel: optag maksimalt én gang om måneden"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
-msgstr ""
+msgstr "Optag hvis unik afsnit i henhold til EPG/XMLTV"
 
 #. Recording lifetime representation
 msgctxt "#30373"
@@ -347,7 +348,7 @@ msgstr "Altid (tvh 4.1+)"
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr ""
+msgstr "Anvend indstillinger fra backend"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -412,11 +413,11 @@ msgstr "Dataoverførsel"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr ""
+msgstr "Optagelsens læsestørrelse på stream (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr ""
+msgstr "Brug HTTP-streaming til kanaler"
 
 msgctxt "#30510"
 msgid "Recordings"

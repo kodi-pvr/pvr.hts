@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-07-03 17:29+0000\n"
+"PO-Revision-Date: 2021-07-19 21:43+0000\n"
 "Last-Translator: Kai Sommerfeld <kai.sommerfeld@gmx.com>\n"
 "Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/de_de/>\n"
 "Language: de_de\n"
@@ -23,7 +23,7 @@ msgstr "Kodi-PVR-Client für Tvheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "PVR-Client für Tvheadend. Unterstützt TV &amp; Aufnahmen, Programm-Guide (EPG) und Timer."
+msgstr "PVR-Client für Tvheadend. Unterstützt TV, Aufnahmen, Programm-Guide (EPG) und Timer"
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -75,7 +75,7 @@ msgstr "HTTPS verwenden"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr "Server MAC-Adresse für Wake-on-LAN"
+msgstr "Server MAC-Adresse für Wake on LAN"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -135,7 +135,7 @@ msgstr "Asynchroner EPG-Transfer"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Debugging"
+msgstr "Fehlersuche"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
