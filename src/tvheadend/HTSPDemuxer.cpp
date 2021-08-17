@@ -11,6 +11,7 @@
 #include "HTSPConnection.h"
 #include "Settings.h"
 #include "utilities/Logger.h"
+#include "utilities/RDSExtractor.h"
 
 #include "kodi/addon-instance/PVR.h"
 
@@ -86,6 +87,7 @@ void HTSPDemuxer::Abort0()
   m_streams.clear();
   m_streamStat.clear();
   m_rdsIdx = 0;
+  m_rdsExtractor.reset();
   m_seektime = nullptr;
 }
 
@@ -468,50 +470,44 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
   if (idx != m_rdsIdx)
     return;
 
-  const uint8_t* data = static_cast<const uint8_t*>(bin);
-  const size_t offset = binlen - 1;
+  if (!m_rdsExtractor)
+    return;
 
-  static const uint8_t RDS_IDENTIFIER = 0xFD;
-
-  if (data[offset] == RDS_IDENTIFIER)
+  const uint8_t rdslen = m_rdsExtractor->Decode(static_cast<const uint8_t*>(bin), binlen);
+  if (rdslen > 0)
   {
-    // RDS data present, obtain length.
-    uint8_t rdslen = data[offset - 1];
-    if (rdslen > 0)
+    const uint32_t rdsIdx = idx - TVH_STREAM_INDEX_OFFSET;
+    if (m_streamStat.find(rdsIdx) == m_streamStat.end())
     {
-      const uint32_t rdsIdx = idx - TVH_STREAM_INDEX_OFFSET;
-      if (m_streamStat.find(rdsIdx) == m_streamStat.end())
+      // No RDS stream yet. Create and announce it.
+      if (!AddRDSStream(idx, rdsIdx))
       {
-        // No RDS stream yet. Create and announce it.
-        if (!AddRDSStream(idx, rdsIdx))
-          return;
-
-        // Update streams.
-        Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
-
-        DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
-        pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-        m_pktBuffer.Push(pktSpecial);
+        m_rdsExtractor->Reset();
+        return;
       }
 
-      DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
-      if (!pkt)
-        return;
+      // Update streams.
+      Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change");
 
-      uint8_t* rdsdata = new uint8_t[rdslen];
-
-      // Reassemble UECP block. mpeg stream contains data in reverse order!
-      for (size_t i = offset - 2, j = 0; i > 3 && i > offset - 2 - rdslen; i--, j++)
-        rdsdata[j] = data[i];
-
-      std::memcpy(pkt->pData, rdsdata, rdslen);
-      pkt->iSize = rdslen;
-      pkt->iStreamId = rdsIdx;
-
-      m_pktBuffer.Push(pkt);
-      delete[] rdsdata;
+      DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
+      pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
+      m_pktBuffer.Push(pktSpecial);
     }
+
+    DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
+    if (!pkt)
+    {
+      m_rdsExtractor->Reset();
+      return;
+    }
+
+    std::memcpy(pkt->pData, m_rdsExtractor->GetRDSData(), rdslen);
+    pkt->iSize = rdslen;
+    pkt->iStreamId = rdsIdx;
+
+    m_pktBuffer.Push(pkt);
   }
+  m_rdsExtractor->Reset();
 }
 
 void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
@@ -683,17 +679,39 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
       stream.SetLanguage(language);
   }
 
+  /* RDS */
+  if (stream.GetCodecType() == PVR_CODEC_TYPE_RDS)
+  {
+    // Extra RDS streams have higher priority compared to RDS data enclosed in audio streams.
+    m_rdsIdx = idx;
+    m_rdsExtractor.reset();
+  }
+
   /* Audio data */
   if (stream.GetCodecType() == PVR_CODEC_TYPE_AUDIO)
   {
     stream.SetChannels(htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2));
     stream.SetSampleRate(htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000));
 
-    if (std::strcmp("MPEG2AUDIO", type) == 0)
+    if (m_rdsIdx == 0)
     {
-      // mpeg2 audio streams may contain embedded RDS data.
-      // We will find out when the first stream packet arrives.
-      m_rdsIdx = idx;
+      // MPEG2 and AAC audio streams may contain embedded RDS data.
+      // For older tvhs, which do not send the rds flag via HTSP, default
+      // to 1 and try to find RDS data in the submitted mux pakets later.
+      const uint32_t rds = htsmsg_get_u32_or_default(&f->hmf_msg, "rds_uecp", 1);
+      if (rds != 0)
+      {
+        if (std::strcmp("MPEG2AUDIO", type) == 0)
+        {
+          m_rdsIdx = idx;
+          m_rdsExtractor.reset(new utilities::RDSExtractorMP2());
+        }
+        else if (std::strcmp("AAC", type) == 0)
+        {
+          m_rdsIdx = idx;
+          m_rdsExtractor.reset(new utilities::RDSExtractorAAC());
+        }
+      }
     }
   }
 
@@ -755,6 +773,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   m_streamStat.clear();
   m_streams.clear();
   m_rdsIdx = 0;
+  m_rdsExtractor.reset();
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 

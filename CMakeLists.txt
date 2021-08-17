@@ -14,6 +14,39 @@ set(HTS_SOURCES src/addon.h
                 src/Tvheadend.cpp
                 src/Tvheadend.h)
 
+set(HTS_SOURCES_AAC
+                src/aac/BitStream.cpp
+                src/aac/BitStream.h
+                src/aac/Decoder.cpp
+                src/aac/Decoder.h
+                src/aac/Profile.h
+                src/aac/SampleFrequency.h)
+
+set(HTS_SOURCES_AAC_ELEMENTS
+                src/aac/elements/CCE.cpp
+                src/aac/elements/CCE.h
+                src/aac/elements/CPE.cpp
+                src/aac/elements/CPE.h
+                src/aac/elements/DSE.cpp
+                src/aac/elements/DSE.h
+                src/aac/elements/FIL.cpp
+                src/aac/elements/FIL.h
+                src/aac/elements/ICS.cpp
+                src/aac/elements/ICS.h
+                src/aac/elements/ICSInfo.cpp
+                src/aac/elements/ICSInfo.h
+                src/aac/elements/LFE.cpp
+                src/aac/elements/LFE.h
+                src/aac/elements/PCE.cpp
+                src/aac/elements/PCE.h
+                src/aac/elements/SCE.cpp
+                src/aac/elements/SCE.h)
+
+set(HTS_SOURCES_AAC_HUFFMAN
+                src/aac/huffman/Codebooks.h
+                src/aac/huffman/Decoder.cpp
+                src/aac/huffman/Decoder.h)
+
 set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/AutoRecordings.cpp
                 src/tvheadend/AutoRecordings.h
@@ -69,11 +102,16 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/LifetimeMapper.h
                 src/tvheadend/utilities/AsyncState.cpp
                 src/tvheadend/utilities/AsyncState.h
+                src/tvheadend/utilities/RDSExtractor.h
+                src/tvheadend/utilities/RDSExtractor.cpp
                 src/tvheadend/utilities/SyncedBuffer.h
                 src/tvheadend/utilities/TCPSocket.h
                 src/tvheadend/utilities/TCPSocket.cpp)
 
 source_group("Source Files" FILES ${HTS_SOURCES})
+source_group("Source Files\\aac" FILES ${HTS_SOURCES_AAC})
+source_group("Source Files\\aac\\elements" FILES ${HTS_SOURCES_AAC_ELEMENTS})
+source_group("Source Files\\aac\\huffman" FILES ${HTS_SOURCES_AAC_HUFFMAN})
 source_group("Source Files\\tvheadend" FILES ${HTS_SOURCES_TVHEADEND})
 source_group("Source Files\\tvheadend\\entity" FILES ${HTS_SOURCES_TVHEADEND_ENTITY})
 source_group("Source Files\\tvheadend\\status" FILES ${HTS_SOURCES_TVHEADEND_STATUS})
@@ -92,6 +130,9 @@ source_group("Resource Files" FILES ${HTS_RESOURCES})
 
 # Combine the file lists
 list(APPEND HTS_SOURCES
+            ${HTS_SOURCES_AAC}
+            ${HTS_SOURCES_AAC_ELEMENTS}
+            ${HTS_SOURCES_AAC_HUFFMAN}
             ${HTS_SOURCES_TVHEADEND}
             ${HTS_SOURCES_TVHEADEND_ENTITY}
             ${HTS_SOURCES_TVHEADEND_STATUS}
