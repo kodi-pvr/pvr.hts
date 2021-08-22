@@ -10,6 +10,7 @@
 
 #include <atomic>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <time.h>
@@ -36,6 +37,11 @@ namespace tvheadend
 
 class HTSPConnection;
 class SubscriptionSeekTime;
+
+namespace utilities
+{
+class RDSExtractor;
+}
 
 /*
  * HTSP Demuxer - live streams
@@ -121,6 +127,7 @@ private:
   std::atomic<time_t> m_lastPkt;
   std::atomic<time_t> m_startTime;
   uint32_t m_rdsIdx;
+  std::unique_ptr<utilities::RDSExtractor> m_rdsExtractor;
   int32_t m_requestedSpeed = 1000;
   int32_t m_actualSpeed = 1000;
 
