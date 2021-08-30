@@ -240,49 +240,31 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
   }
 
   const char* status = htsmsg_get_str(m, "status");
+  const char* error = htsmsg_get_str(m, "subscriptionError");
 
-  /* 'subscriptionErrors' was added in htsp v20, use 'status' for older backends */
-  if (m_conn.GetProtocol() >= 20)
+  /* This field is absent when everything is fine */
+  if (error)
   {
-    const char* error = htsmsg_get_str(m, "subscriptionError");
-
-    /* This field is absent when everything is fine */
-    if (error)
-    {
-      if (!std::strcmp("badSignal", error))
-        SetState(SUBSCRIPTION_NOSIGNAL);
-      else if (!std::strcmp("scrambled", error))
-        SetState(SUBSCRIPTION_SCRAMBLED);
-      else if (!std::strcmp("userLimit", error))
-        SetState(SUBSCRIPTION_USERLIMIT);
-      else if (!std::strcmp("noFreeAdapter", error))
-        SetState(SUBSCRIPTION_NOFREEADAPTER);
-      else if (!std::strcmp("tuningFailed", error))
-        SetState(SUBSCRIPTION_TUNINGFAILED);
-      else if (!std::strcmp("userAccess", error))
-        SetState(SUBSCRIPTION_NOACCESS);
-      else
-        SetState(SUBSCRIPTION_UNKNOWN);
-
-      /* Show an OSD message */
-      ShowStateNotification();
-    }
+    if (!std::strcmp("badSignal", error))
+      SetState(SUBSCRIPTION_NOSIGNAL);
+    else if (!std::strcmp("scrambled", error))
+      SetState(SUBSCRIPTION_SCRAMBLED);
+    else if (!std::strcmp("userLimit", error))
+      SetState(SUBSCRIPTION_USERLIMIT);
+    else if (!std::strcmp("noFreeAdapter", error))
+      SetState(SUBSCRIPTION_NOFREEADAPTER);
+    else if (!std::strcmp("tuningFailed", error))
+      SetState(SUBSCRIPTION_TUNINGFAILED);
+    else if (!std::strcmp("userAccess", error))
+      SetState(SUBSCRIPTION_NOACCESS);
     else
-      SetState(SUBSCRIPTION_RUNNING);
-  }
-  else
-  {
-    /* This field is absent when everything is fine */
-    if (status)
-    {
       SetState(SUBSCRIPTION_UNKNOWN);
 
-      /* Show an OSD message */
-      kodi::QueueNotification(QUEUE_INFO, "", status);
-    }
-    else
-      SetState(SUBSCRIPTION_RUNNING);
+    /* Show an OSD message */
+    ShowStateNotification();
   }
+  else
+    SetState(SUBSCRIPTION_RUNNING);
 }
 
 void Subscription::ShowStateNotification()

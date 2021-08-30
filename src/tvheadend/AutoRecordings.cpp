@@ -92,12 +92,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetLifetime(rec.second.GetLifetime());
     tmr.SetMaxRecordings(0); // not supported by tvh
     tmr.SetRecordingGroup(0); // not supported by tvh
-
-    if (m_conn.GetProtocol() >= 20)
-      tmr.SetPreventDuplicateEpisodes(rec.second.GetDupDetect());
-    else
-      tmr.SetPreventDuplicateEpisodes(0); // not supported by tvh
-
+    tmr.SetPreventDuplicateEpisodes(rec.second.GetDupDetect());
     tmr.SetFirstDay(0); // not supported by tvh
     tmr.SetWeekdays(rec.second.GetDaysOfWeek());
     tmr.SetEPGUid(PVR_TIMER_NO_EPG_UID); // n/a for repeating timers
@@ -143,16 +138,7 @@ PVR_ERROR AutoRecordings::SendAutorecAdd(const kodi::addon::PVRTimer& timer)
 
 PVR_ERROR AutoRecordings::SendAutorecUpdate(const kodi::addon::PVRTimer& timer)
 {
-  if (m_conn.GetProtocol() >= 25)
-    return SendAutorecAddOrUpdate(timer, true);
-
-  /* Note: there is no "updateAutorec" htsp method for htsp version < 25, thus delete + add. */
-  PVR_ERROR error = SendAutorecDelete(timer);
-
-  if (error == PVR_ERROR_NO_ERROR)
-    error = SendAutorecAdd(timer);
-
-  return error;
+  return SendAutorecAddOrUpdate(timer, true);
 }
 
 PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update)
@@ -190,34 +176,14 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /* "title" not empty && !fulltext => match strEpgSearchString against episode title only         */
   /* "title" not empty && fulltext  => match strEpgSearchString against episode title, episode     */
   /*                                   subtitle, episode summary and episode description (HTSPv19) */
-  if (m_conn.GetProtocol() >= 20)
-    htsmsg_add_u32(m, "fulltext", timer.GetFullTextEpgSearch() ? 1 : 0);
+  htsmsg_add_u32(m, "fulltext", timer.GetFullTextEpgSearch() ? 1 : 0);
 
   htsmsg_add_s64(m, "startExtra", timer.GetMarginStart());
   htsmsg_add_s64(m, "stopExtra", timer.GetMarginEnd());
-
-  if (m_conn.GetProtocol() >= 25)
-  {
-    htsmsg_add_u32(m, "removal", timer.GetLifetime()); // remove from disk
-    htsmsg_add_s64(m, "channelId",
-                   timer.GetClientChannelUid()); // channelId is signed for >= htspv25, -1 = any
-  }
-  else
-  {
-    htsmsg_add_u32(m, "retention",
-                   LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from tvh database
-
-    if (timer.GetClientChannelUid() >= 0)
-      htsmsg_add_u32(
-          m, "channelId",
-          timer.GetClientChannelUid()); // channelId is unsigned for < htspv25, not sending = any
-  }
-
+  htsmsg_add_u32(m, "removal", timer.GetLifetime()); // remove from disk
+  htsmsg_add_s64(m, "channelId", timer.GetClientChannelUid()); // -1 = any
   htsmsg_add_u32(m, "daysOfWeek", timer.GetWeekdays());
-
-  if (m_conn.GetProtocol() >= 20)
-    htsmsg_add_u32(m, "dupDetect", timer.GetPreventDuplicateEpisodes());
-
+  htsmsg_add_u32(m, "dupDetect", timer.GetPreventDuplicateEpisodes());
   htsmsg_add_u32(m, "priority", timer.GetPriority());
   htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
@@ -371,29 +337,14 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return false;
   }
 
-  if (m_conn.GetProtocol() >= 25)
+  if (!htsmsg_get_u32(msg, "removal", &u32))
   {
-    if (!htsmsg_get_u32(msg, "removal", &u32))
-    {
-      rec.SetLifetime(u32);
-    }
-    else if (bAdd)
-    {
-      Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryAdd: 'removal' missing");
-      return false;
-    }
+    rec.SetLifetime(u32);
   }
-  else
+  else if (bAdd)
   {
-    if (!htsmsg_get_u32(msg, "retention", &u32))
-    {
-      rec.SetLifetime(u32);
-    }
-    else if (bAdd)
-    {
-      Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryAdd: 'retention' missing");
-      return false;
-    }
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryAdd: 'removal' missing");
+    return false;
   }
 
   if (!htsmsg_get_u32(msg, "daysOfWeek", &u32))
@@ -462,7 +413,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
   {
     rec.SetDupDetect(u32);
   }
-  else if (bAdd && (m_conn.GetProtocol() >= 20))
+  else if (bAdd)
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "malformed autorecEntryAdd: 'dupDetect' missing");
     return false;

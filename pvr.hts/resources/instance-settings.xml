@@ -228,8 +228,8 @@
               <option label="30385">10</option> <!-- 1 year -->
               <option label="30386">11</option> <!-- 2 years -->
               <option label="30387">12</option> <!-- 3 years -->
-              <option label="30388">13</option> <!-- Until space needed (tvh 4.1+) -->
-              <option label="30389">14</option> <!-- Forever (tvh 4.1+) -->
+              <option label="30388">13</option> <!-- Until space needed -->
+              <option label="30389">14</option> <!-- Forever -->
               <option label="30390">15</option> <!-- Use backend setting -->
             </options>
           </constraints>
