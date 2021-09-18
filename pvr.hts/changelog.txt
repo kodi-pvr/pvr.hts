@@ -1,3 +1,7 @@
+v8.4.1
+- Translations updates from Weblate
+	- ko_kr
+
 v8.4.0
 - Add support for RDS data contained in AAC streams.
 - Translations updates from Weblate
