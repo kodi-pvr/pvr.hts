@@ -3,7 +3,7 @@ Upstream-Name: pvr.hts
 Source: https://github.com/kodi-pvr/pvr.hts
 
 Files: *
-Copyright: 2005-2020 Team Kodi
+Copyright: 2005-2021 Team Kodi
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ License: GPL-2+
 
 
 Files: debian/*
-Copyright: 2020 Team Kodi
+Copyright: 2020-2021 Team Kodi
            2013 Arne Morten Kvarving <arne.morten.kvarving@sintef.no>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
