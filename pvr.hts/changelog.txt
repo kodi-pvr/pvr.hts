@@ -1,3 +1,11 @@
+v19.0.0
+- Translations updates from Weblate
+  - ko_kr
+- Changed test builds to 'Kodi 19 Matrix'
+- Increased version to 19.0.0
+  - With start of Kodi 20 Nexus, takes addon as major the same version number as Kodi.
+    This done to know easier to which Kodi the addon works.
+
 v8.4.0
 - Add support for RDS data contained in AAC streams.
 - Translations updates from Weblate
