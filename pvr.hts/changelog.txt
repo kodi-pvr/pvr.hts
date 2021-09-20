@@ -1,3 +1,8 @@
+v20.1.0
+- Kodi API to 8.0.0
+  - Add supports recordings delete capability
+  - Enforce EDL limits
+
 v20.0.0
 - Translations updates from Weblate
   - ko_kr
