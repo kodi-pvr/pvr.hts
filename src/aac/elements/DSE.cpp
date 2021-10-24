@@ -9,6 +9,7 @@
 
 #include "../BitStream.h"
 
+#include <cstring>
 #include <exception>
 
 using namespace aac;
@@ -43,42 +44,53 @@ uint8_t DSE::DecodeRDS(BitStream& stream, uint8_t*& rdsdata)
   if (byteAlign)
     stream.ByteAlign();
 
-  if (count > 2) // we need at least 0xFE + some-other-byte + 0xFF
+  static constexpr int BUFFER_SIZE = 65536;
+  static uint8_t buffer[BUFFER_SIZE];
+  static int bufferpos = 0;
+
+  uint8_t ret = 0;
+
+  if (count > BUFFER_SIZE)
   {
-    const uint8_t firstElem = static_cast<uint8_t>(stream.ReadBits(8));
-    if (firstElem == 0xFE) // could be RDS data start
-    {
-      rdsdata = new uint8_t[count];
-      rdsdata[0] = firstElem;
-
-      try
-      {
-        for (int i = 1; i < count; ++i)
-          rdsdata[i] = static_cast<uint8_t>(stream.ReadBits(8));
-
-        if (rdsdata[count - 1] == 0xFF) // RDS data end
-          return count; // Note: caller has to delete the data array
-      }
-      catch (std::exception&)
-      {
-        // cleanup and rethrow
-        delete[] rdsdata;
-        rdsdata = nullptr;
-        throw;
-      }
-
-      // data start with 0xFE, but do not end with 0xFF, thus no RDS data
-      delete[] rdsdata;
-      rdsdata = nullptr;
-    }
-    else
-    {
-      stream.SkipBits(8 * (count - 1));
-    }
-  }
-  else
-  {
+    // data package too large! turn over with next package.
     stream.SkipBits(8 * count);
+    bufferpos = 0;
+    return ret;
   }
-  return 0;
+
+  if (bufferpos + count > BUFFER_SIZE)
+  {
+    // buffer overflow! turn over now.
+    bufferpos = 0;
+  }
+
+  try
+  {
+    // collect data
+    for (int i = 0; i < count; ++i)
+    {
+      buffer[bufferpos + i] = static_cast<uint8_t>(stream.ReadBits(8));
+    }
+    bufferpos += count;
+  }
+  catch (std::exception&)
+  {
+    // cleanup and rethrow
+    bufferpos = 0;
+    throw;
+  }
+
+  if (bufferpos > 0 && buffer[bufferpos - 1] == 0xFF)
+  {
+    if (buffer[0] == 0xFE)
+    {
+      // data package is complete. deliver it.
+      rdsdata = new uint8_t[bufferpos]; // Note: caller has to delete the data array
+      std::memcpy(rdsdata, buffer, bufferpos);
+      ret = bufferpos;
+    }
+    bufferpos = 0;
+  }
+
+  return ret;
 }
