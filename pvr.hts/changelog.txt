@@ -1,3 +1,7 @@
+v19.0.2
+- Translations updates from Weblate
+	- da_dk
+
 v19.0.1
 - Fix AAC RDS parser
 
