@@ -1,3 +1,6 @@
+v20.1.1
+- Fix AAC RDS parser
+
 v20.1.0
 - Kodi API to 8.0.0
   - Add supports recordings delete capability
@@ -5,11 +8,7 @@ v20.1.0
 
 v20.0.0
 - Translations updates from Weblate
-  - ko_kr
-- Changed test builds to 'Kodi 20 Nexus'
-- Increased version to 20.0.0
-  - With start of Kodi 20 Nexus, takes addon as major the same version number as Kodi.
-    This done to know easier to which Kodi the addon works.
+- Version numbering scheme change
 
 v8.4.0
 - Add support for RDS data contained in AAC streams.
