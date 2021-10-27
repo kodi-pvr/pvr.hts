@@ -21,7 +21,7 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Interfaz Kodi para Tvheadend"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
 msgstr "Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores"
 
 # settings labels

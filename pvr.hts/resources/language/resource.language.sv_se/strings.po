@@ -21,8 +21,8 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Kodi's frontend för Tvheadend"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "Tvheadend frontend; stödjer strömning av Live-TV &amp; inspelningar, EPG, Timers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
+msgstr "Tvheadend frontend; stödjer strömning av Live-TV & inspelningar, EPG, Timers"
 
 msgctxt "#30000"
 msgid "Connection settings"

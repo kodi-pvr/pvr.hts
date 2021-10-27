@@ -22,7 +22,7 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Kodis brugerflade til Tvheadend"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
 msgstr "Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere"
 
 msgctxt "#30000"

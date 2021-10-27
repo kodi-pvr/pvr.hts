@@ -21,7 +21,7 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Tvheadend için Kodi ön ucu"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
 msgstr "Tvheadend ön ucu; Canlı TV akışı ve kayıt yapabilme, EPG ve zamanlayıcıları destekler"
 
 msgctxt "#30000"
