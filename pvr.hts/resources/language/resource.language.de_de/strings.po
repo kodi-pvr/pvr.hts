@@ -22,7 +22,7 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Kodi-PVR-Client für Tvheadend"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
 msgstr "PVR-Client für Tvheadend. Unterstützt TV, Aufnahmen, Programm-Guide (EPG) und Timer"
 
 msgctxt "#30000"

@@ -22,8 +22,8 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Bahagian hadapan Kodi untuk"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "Bahagian hadapan Tvheadend; menyokong penstriman Langsung &amp; Rakaman, EPG, Pemasa TV"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
+msgstr "Bahagian hadapan Tvheadend; menyokong penstriman Langsung & Rakaman, EPG, Pemasa TV"
 
 msgctxt "#30000"
 msgid "Connection settings"
