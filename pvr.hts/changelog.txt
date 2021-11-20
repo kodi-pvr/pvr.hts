@@ -1,3 +1,7 @@
+v19.0.3
+- Translations updates from Weblate
+	- da_dk, zh_tw
+
 v19.0.2
 - Translations updates from Weblate
 	- da_dk
