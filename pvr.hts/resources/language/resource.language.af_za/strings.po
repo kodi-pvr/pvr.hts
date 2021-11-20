@@ -21,8 +21,8 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Kodi se voorprogram vir Tvheadend"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
+msgstr "Tvheadend voorprogram; ondersteun stroom van Lewendige TV & Opnames, EPG, Tydhouers"
 
 msgctxt "#30000"
 msgid "Connection settings"

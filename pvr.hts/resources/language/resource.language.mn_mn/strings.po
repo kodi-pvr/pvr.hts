@@ -21,8 +21,8 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Tvheadend зориулагдсан Kodi-ийн нүүр"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "Tvheadend нүүр; Live TV &amp; бичлэг дамжуулалт, EPG, Timer"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
+msgstr "Tvheadend нүүр; Live TV & бичлэг дамжуулалт, EPG, Timer"
 
 # settings labels
 msgctxt "#30000"

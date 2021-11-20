@@ -21,8 +21,8 @@ msgid "Kodi's frontend for Tvheadend"
 msgstr "Tvheadend కోసం కోడి యొక్క ఫ్రంటెండ్"
 
 msgctxt "Addon Description"
-msgid "Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers"
-msgstr "Tvheadend ఫ్రంటెండ్; Live TV &amp; రికార్డింగ్స్, EPG, టైమర్లు , స్ట్రీమింగ్ మద్దతు కలదు"
+msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
+msgstr "Tvheadend ఫ్రంటెండ్; Live TV & రికార్డింగ్స్, EPG, టైమర్లు , స్ట్రీమింగ్ మద్దతు కలదు"
 
 # settings labels
 msgctxt "#30000"
