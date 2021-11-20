@@ -254,6 +254,11 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
       htsmsg_add_s32(m, "start", startWindowBegin);
       htsmsg_add_s32(m, "startWindow", startWindowEnd);
     }
+    else
+    {
+      htsmsg_add_s32(m, "start", -1);
+      htsmsg_add_s32(m, "startWindow", -1);
+    }
   }
   else
   {
