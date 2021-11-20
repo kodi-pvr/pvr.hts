@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-10-21 18:30+0000\n"
+"PO-Revision-Date: 2021-11-14 14:13+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
 "Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/da_dk/>\n"
 "Language: da_dk\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.9\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -107,7 +107,7 @@ msgstr "Standard levetid"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Dubletregistrering"
+msgstr "Standard registrering af dublet"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
@@ -135,7 +135,7 @@ msgstr "Asynkron EPG-overførsel"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Foretag fejlretning"
+msgstr "Fejlfinding"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
@@ -178,37 +178,37 @@ msgstr "Ikke vigtig (lavest)"
 #. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Optag alle episoder"
+msgstr "Optag alle afsnit"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Optag hvis episodenummer er et andet"
+msgstr "Optag hvis afsnittets nummer afviger"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Optag hvis episodenavn er et andet"
+msgstr "Optag hvis afsnittets navn afviger"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Optag hvis beskrivelse er et andet"
+msgstr "Optag hvis beskrivelse afviger"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Optag maks. en gang per uge"
+msgstr "Optag maks. en gang om ugen"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Optag maks. en gang per dag"
+msgstr "Optag maks. en gang om dagen"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Kun denne regel: Optag hvis episodenummeret er et andet"
+msgstr "Kun denne regel: Optag hvis afsnittets nummer afviger"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
@@ -263,7 +263,7 @@ msgstr "Optag hvis unik afsnit i henhold til EPG/XMLTV"
 #. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
-msgstr "Indtil fri plads nødvendig"
+msgstr "Indtil påkrævet fri plads"
 
 #. Recording lifetime representation
 msgctxt "#30374"
@@ -338,7 +338,7 @@ msgstr "3 år"
 #. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
-msgstr "Indtil pladsen skal bruges (tvh 4.1+)"
+msgstr "Indtil påkrævet plads (tvh 4.1+)"
 
 #. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
@@ -356,15 +356,15 @@ msgstr "Forudsigelsesindstilling"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
-msgstr "Antallet af abonnementer at bruge"
+msgstr "Antallet af abonnementer der bruges"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Forsinkelse for ubrugt abonnementslukning (sekunder)"
+msgstr "Forsinkelse lukning ved ubrugt abonnement (sekunder)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Brug forudsigelsesindstilling for at høje hastighed ved kanalskift"
+msgstr "Brug forudsigelsesindstilling for at øge hastighed ved kanalskift"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -396,11 +396,11 @@ msgstr "Abonnementsfejl"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Udsendelsesprofil"
+msgstr "Streamingprofil"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Profil at anvende (tom = standard)"
+msgstr "Profil der anvendes (tom = standard)"
 
 #. Check streaming profile validity during startup
 msgctxt "#30502"
