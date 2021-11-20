@@ -1,6 +1,9 @@
+v19.0.3
+- Fix Unable to change existing timer rule to use any time
+- Translations updates from Weblate
+
 v19.0.2
 - Translations updates from Weblate
-	- da_dk
 
 v19.0.1
 - Fix AAC RDS parser
