@@ -5,16 +5,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/kodi-main/language/es_MX/)\n"
-"Language: es_MX\n"
+"PO-Revision-Date: 2021-12-15 06:13+0000\n"
+"Last-Translator: Edson Armando <edsonarmando78@outlook.com>\n"
+"Language-Team: Spanish (Mexico) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/es_mx/>\n"
+"Language: es_mx\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9.1\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -70,11 +71,11 @@ msgstr "Configuración del temporizador"
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr ""
+msgstr "Utilizar HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr ""
+msgstr "MAC del servidor para Wake-on-LAN"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -122,7 +123,7 @@ msgstr "Ignora duplicados (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr ""
+msgstr "Utilizar expresiones regulares (regex) para selección de programas"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -134,7 +135,7 @@ msgstr "Transferencia asíncrona de EPG"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Debugging"
+msgstr "Depuración"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
@@ -148,7 +149,7 @@ msgstr "Versión distinta de HTSP (soportado: v%d, requerido: v%d). Por favor, a
 #. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr ""
+msgstr "Una vez (programado por regla de temporizador)"
 
 #. Recording priority representation
 msgctxt "#30351"
@@ -243,7 +244,7 @@ msgstr "Por defecto"
 #. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr ""
+msgstr "Regla de temporizador (enlace de serie)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
@@ -258,7 +259,7 @@ msgstr "Esta regla solo: Graba máximo una ver por mes"
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
-msgstr ""
+msgstr "Grabar si es un episodios único de acuerdo a la guía/XMLTV"
 
 #. Recording lifetime representation
 msgctxt "#30373"
@@ -348,7 +349,7 @@ msgstr "Siempre (tvh 4.1+)"
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr ""
+msgstr "Utilizar configuración de servidor"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -413,11 +414,11 @@ msgstr "Transferencia de datos"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr ""
+msgstr "Tamaño de bloque de lectura para grabaciones (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr ""
+msgstr "Utilizar transmisiones HTTP para canales"
 
 msgctxt "#30510"
 msgid "Recordings"
