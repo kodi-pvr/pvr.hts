@@ -94,7 +94,7 @@ void Settings::ReadSettings()
       ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
 }
 
-ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingValue& value)
+ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::addon::CSettingValue& value)
 {
   /* Connection */
   if (key == "host")
@@ -184,7 +184,7 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::CSettingVa
 std::string Settings::ReadStringSetting(const std::string& key, const std::string& def)
 {
   std::string value;
-  if (kodi::CheckSettingString(key, value))
+  if (kodi::addon::CheckSettingString(key, value))
     return value;
 
   return def;
@@ -193,7 +193,7 @@ std::string Settings::ReadStringSetting(const std::string& key, const std::strin
 int Settings::ReadIntSetting(const std::string& key, int def)
 {
   int value;
-  if (kodi::CheckSettingInt(key, value))
+  if (kodi::addon::CheckSettingInt(key, value))
     return value;
 
   return def;
@@ -202,14 +202,14 @@ int Settings::ReadIntSetting(const std::string& key, int def)
 bool Settings::ReadBoolSetting(const std::string& key, bool def)
 {
   bool value;
-  if (kodi::CheckSettingBoolean(key, value))
+  if (kodi::addon::CheckSettingBoolean(key, value))
     return value;
 
   return def;
 }
 
 ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue,
-                                        const kodi::CSettingValue& newValue)
+                                        const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetString())
     return ADDON_STATUS_OK;
@@ -217,7 +217,7 @@ ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue,
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::CSettingValue& newValue)
+ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetInt())
     return ADDON_STATUS_OK;
@@ -225,7 +225,7 @@ ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::CSettingValue& ne
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const kodi::CSettingValue& newValue)
+ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetBoolean())
     return ADDON_STATUS_OK;
