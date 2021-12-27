@@ -1,3 +1,7 @@
+v19.0.4
+- Translations updates from Weblate
+	- es_mx
+
 v19.0.3
 - Fix Unable to change existing timer rule to use any time
 - Translations updates from Weblate
