@@ -54,13 +54,13 @@ typedef tvheadend::utilities::SyncedBuffer<tvheadend::HTSPMessage> HTSPMessageQu
 /*
  * Root object for Tvheadend connection
  */
-class ATTRIBUTE_HIDDEN CTvheadend : public kodi::addon::CInstancePVRClient,
-                                    public kodi::tools::CThread,
-                                    public tvheadend::IHTSPConnectionListener,
-                                    public tvheadend::IHTSPDemuxPacketHandler
+class ATTR_DLL_LOCAL CTvheadend : public kodi::addon::CInstancePVRClient,
+                                  public kodi::tools::CThread,
+                                  public tvheadend::IHTSPConnectionListener,
+                                  public tvheadend::IHTSPDemuxPacketHandler
 {
 public:
-  CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion);
+  CTvheadend(const kodi::addon::IInstanceInfo& instance);
   ~CTvheadend() override;
 
   void Start();

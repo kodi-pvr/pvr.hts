@@ -28,8 +28,8 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-CTvheadend::CTvheadend(KODI_HANDLE instance, const std::string& kodiVersion)
-  : kodi::addon::CInstancePVRClient(instance, kodiVersion),
+CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
+  : kodi::addon::CInstancePVRClient(instance),
     m_conn(new HTSPConnection(*this)),
     m_streamchange(false),
     m_vfs(new HTSPVFS(*m_conn)),
@@ -789,28 +789,28 @@ struct TimerType : kodi::addon::PVRTimerType
 void CTvheadend::GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const
 {
   lifetimeValues = {
-      {LifetimeMapper::TvhToKodi(DVR_RET_DVRCONFIG), kodi::GetLocalizedString(30390)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_1DAY), kodi::GetLocalizedString(30375)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_3DAY), kodi::GetLocalizedString(30376)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_5DAY), kodi::GetLocalizedString(30377)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_1WEEK), kodi::GetLocalizedString(30378)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_2WEEK), kodi::GetLocalizedString(30379)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_3WEEK), kodi::GetLocalizedString(30380)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_1MONTH), kodi::GetLocalizedString(30381)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_2MONTH), kodi::GetLocalizedString(30382)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_3MONTH), kodi::GetLocalizedString(30383)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_6MONTH), kodi::GetLocalizedString(30384)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_1YEAR), kodi::GetLocalizedString(30385)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_2YEARS), kodi::GetLocalizedString(30386)},
-      {LifetimeMapper::TvhToKodi(DVR_RET_3YEARS), kodi::GetLocalizedString(30387)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_DVRCONFIG), kodi::addon::GetLocalizedString(30390)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_1DAY), kodi::addon::GetLocalizedString(30375)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_3DAY), kodi::addon::GetLocalizedString(30376)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_5DAY), kodi::addon::GetLocalizedString(30377)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_1WEEK), kodi::addon::GetLocalizedString(30378)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_2WEEK), kodi::addon::GetLocalizedString(30379)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_3WEEK), kodi::addon::GetLocalizedString(30380)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_1MONTH), kodi::addon::GetLocalizedString(30381)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_2MONTH), kodi::addon::GetLocalizedString(30382)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_3MONTH), kodi::addon::GetLocalizedString(30383)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_6MONTH), kodi::addon::GetLocalizedString(30384)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_1YEAR), kodi::addon::GetLocalizedString(30385)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_2YEARS), kodi::addon::GetLocalizedString(30386)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_3YEARS), kodi::addon::GetLocalizedString(30387)},
   };
 
   if (m_conn->GetProtocol() >= 25)
   {
     lifetimeValues.emplace_back(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),
-                                kodi::GetLocalizedString(30373));
+                                kodi::addon::GetLocalizedString(30373));
     lifetimeValues.emplace_back(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER),
-                                kodi::GetLocalizedString(30374));
+                                kodi::addon::GetLocalizedString(30374));
   }
 }
 
@@ -821,51 +821,57 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
   if (priorityValues.size() == 0)
   {
     priorityValues = {
-        {DVR_PRIO_DEFAULT, kodi::GetLocalizedString(30368)},
-        {DVR_PRIO_UNIMPORTANT, kodi::GetLocalizedString(30355)},
-        {DVR_PRIO_LOW, kodi::GetLocalizedString(30354)},
-        {DVR_PRIO_NORMAL, kodi::GetLocalizedString(30353)},
-        {DVR_PRIO_HIGH, kodi::GetLocalizedString(30352)},
-        {DVR_PRIO_IMPORTANT, kodi::GetLocalizedString(30351)},
+        {DVR_PRIO_DEFAULT, kodi::addon::GetLocalizedString(30368)},
+        {DVR_PRIO_UNIMPORTANT, kodi::addon::GetLocalizedString(30355)},
+        {DVR_PRIO_LOW, kodi::addon::GetLocalizedString(30354)},
+        {DVR_PRIO_NORMAL, kodi::addon::GetLocalizedString(30353)},
+        {DVR_PRIO_HIGH, kodi::addon::GetLocalizedString(30352)},
+        {DVR_PRIO_IMPORTANT, kodi::addon::GetLocalizedString(30351)},
     };
   }
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
   std::vector<kodi::addon::PVRTypeIntValue> deDupValues = {
-      {DVR_AUTOREC_RECORD_ALL, kodi::GetLocalizedString(30356)},
-      {DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, kodi::GetLocalizedString(30357)},
-      {DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE, kodi::GetLocalizedString(30358)},
-      {DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION, kodi::GetLocalizedString(30359)},
+      {DVR_AUTOREC_RECORD_ALL, kodi::addon::GetLocalizedString(30356)},
+      {DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, kodi::addon::GetLocalizedString(30357)},
+      {DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE, kodi::addon::GetLocalizedString(30358)},
+      {DVR_AUTOREC_RECORD_DIFFERENT_DESCRIPTION, kodi::addon::GetLocalizedString(30359)},
   };
 
   if (m_conn->GetProtocol() >= 27)
-    deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_MONTH, kodi::GetLocalizedString(30370));
+    deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_MONTH,
+                             kodi::addon::GetLocalizedString(30370));
 
-  deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_WEEK, kodi::GetLocalizedString(30360));
-  deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_DAY, kodi::GetLocalizedString(30361));
+  deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_WEEK,
+                           kodi::addon::GetLocalizedString(30360));
+  deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_DAY, kodi::addon::GetLocalizedString(30361));
 
   if (m_conn->GetProtocol() >= 26)
   {
     deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER,
-                             kodi::GetLocalizedString(30362));
+                             kodi::addon::GetLocalizedString(30362));
     deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,
-                             kodi::GetLocalizedString(30363));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE, kodi::GetLocalizedString(30364));
+                             kodi::addon::GetLocalizedString(30363));
+    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,
+                             kodi::addon::GetLocalizedString(30364));
     deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,
-                             kodi::GetLocalizedString(30365));
+                             kodi::addon::GetLocalizedString(30365));
   }
 
   if (m_conn->GetProtocol() >= 27)
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_MONTH, kodi::GetLocalizedString(30371));
+    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_MONTH,
+                             kodi::addon::GetLocalizedString(30371));
 
   if (m_conn->GetProtocol() >= 26)
   {
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK, kodi::GetLocalizedString(30366));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_DAY, kodi::GetLocalizedString(30367));
+    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,
+                             kodi::addon::GetLocalizedString(30366));
+    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,
+                             kodi::addon::GetLocalizedString(30367));
   }
 
   if (m_conn->GetProtocol() >= 31)
-    deDupValues.emplace_back(DVR_AUTOREC_RECORD_UNIQUE, kodi::GetLocalizedString(30372));
+    deDupValues.emplace_back(DVR_AUTOREC_RECORD_UNIQUE, kodi::addon::GetLocalizedString(30372));
 
   /* PVR_Timer.iLifetime values and presentation.*/
   std::vector<kodi::addon::PVRTypeIntValue> lifetimeValues;
@@ -923,7 +929,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       /* Attributes. */
       TIMER_ONCE_MANUAL_ATTRIBS | PVR_TIMER_TYPE_IS_READONLY | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      kodi::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
+      kodi::addon::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -936,7 +942,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       /* Attributes. */
       TIMER_ONCE_EPG_ATTRIBS | PVR_TIMER_TYPE_IS_READONLY | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
-      kodi::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
+      kodi::addon::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -983,7 +989,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
         /* Attributes. */
         TIMER_REPEATING_SERIESLINK_ATTRIBS,
         /* Description. */
-        kodi::GetLocalizedString(30369), // "Timer rule (series link)"
+        kodi::addon::GetLocalizedString(30369), // "Timer rule (series link)"
         /* Values definitions for priorities. */
         priorityValues,
         /* Values definitions for lifetime. */
@@ -1525,7 +1531,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
 
   if (!streamingProfile.empty() && !HasStreamingProfile(streamingProfile))
   {
-    kodi::QueueFormattedNotification(QUEUE_ERROR, kodi::GetLocalizedString(30502).c_str(),
+    kodi::QueueFormattedNotification(QUEUE_ERROR, kodi::addon::GetLocalizedString(30502).c_str(),
                                      streamingProfile.c_str());
   }
   else

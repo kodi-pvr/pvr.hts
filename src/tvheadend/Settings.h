@@ -68,7 +68,7 @@ public:
   /**
    * Set a value according to key definition in settings.xml
    */
-  ADDON_STATUS SetSetting(const std::string& key, const kodi::CSettingValue& value);
+  ADDON_STATUS SetSetting(const std::string& key, const kodi::addon::CSettingValue& value);
 
   /**
    * Getters for the settings values
@@ -169,9 +169,9 @@ private:
 
   // @return ADDON_STATUS_OK if value has not changed, ADDON_STATUS_NEED_RESTART otherwise
   static ADDON_STATUS SetStringSetting(const std::string& oldValue,
-                                       const kodi::CSettingValue& newValue);
-  static ADDON_STATUS SetIntSetting(int oldValue, const kodi::CSettingValue& newValue);
-  static ADDON_STATUS SetBoolSetting(bool oldValue, const kodi::CSettingValue& newValue);
+                                       const kodi::addon::CSettingValue& newValue);
+  static ADDON_STATUS SetIntSetting(int oldValue, const kodi::addon::CSettingValue& newValue);
+  static ADDON_STATUS SetBoolSetting(bool oldValue, const kodi::addon::CSettingValue& newValue);
 
   std::string m_strHostname;
   int m_iPortHTSP;

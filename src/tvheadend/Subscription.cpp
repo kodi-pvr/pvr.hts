@@ -288,19 +288,19 @@ void Subscription::ParseSubscriptionStatus(htsmsg_t* m)
 void Subscription::ShowStateNotification()
 {
   if (GetState() == SUBSCRIPTION_NOFREEADAPTER)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30450));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30450));
   else if (GetState() == SUBSCRIPTION_SCRAMBLED)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30451));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30451));
   else if (GetState() == SUBSCRIPTION_NOSIGNAL)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30452));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30452));
   else if (GetState() == SUBSCRIPTION_TUNINGFAILED)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30453));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30453));
   else if (GetState() == SUBSCRIPTION_USERLIMIT)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30454));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30454));
   else if (GetState() == SUBSCRIPTION_NOACCESS)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30455));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30455));
   else if (GetState() == SUBSCRIPTION_UNKNOWN)
-    kodi::QueueNotification(QUEUE_WARNING, "", kodi::GetLocalizedString(30456));
+    kodi::QueueNotification(QUEUE_WARNING, "", kodi::addon::GetLocalizedString(30456));
 }
 
 uint32_t Subscription::GetNextId()
