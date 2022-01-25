@@ -2602,8 +2602,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
       rec.SetState(PVR_TIMER_STATE_ABORTED);
     else if (strstr(str, "missing") != nullptr)
       rec.SetState(PVR_TIMER_STATE_ERROR);
-    else
-      rec.SetError(str);
+
+    rec.SetError(str);
   }
 
   /* A running recording will have an active subscription assigned to it */
