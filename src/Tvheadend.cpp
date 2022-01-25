@@ -2299,6 +2299,11 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
       !htsmsg_get_u32(msg, "duplicate", &dup) && dup == 1)
     return;
 
+  /* Ignore recordings without a file (e.g. removed recordings) */
+  const char* error = htsmsg_get_str(msg, "error");
+  if (error && (strstr(error, "missing") != nullptr))
+    return;
+
   /* Get/create entry */
   Recording& rec = m_recordings[id];
   Recording comparison = rec;
@@ -2588,15 +2593,12 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Error */
-  str = htsmsg_get_str(msg, "error");
-  if (str)
+  if (error)
   {
-    if (!std::strcmp(str, "300"))
+    if (!std::strcmp(error, "300"))
       rec.SetState(PVR_TIMER_STATE_ABORTED);
-    else if (strstr(str, "missing") != nullptr)
-      rec.SetState(PVR_TIMER_STATE_ERROR);
 
-    rec.SetError(str);
+    rec.SetError(error);
   }
 
   /* A running recording will have an active subscription assigned to it */
