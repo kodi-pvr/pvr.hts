@@ -2641,11 +2641,10 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   /* Update */
   if (rec != comparison)
   {
-    std::string error = rec.GetError().empty() ? "none" : rec.GetError();
+    const std::string error = rec.GetError().empty() ? "n/a" : rec.GetError();
 
-    Logger::Log(LogLevel::LEVEL_DEBUG, "recording id:%d, state:%s, title:%s, desc:%s, error:%s",
-                rec.GetId(), state, rec.GetTitle().c_str(), rec.GetDescription().c_str(),
-                error.c_str());
+    Logger::Log(LogLevel::LEVEL_DEBUG, "recording id:%d, state:%s, title:%s, error:%s",
+                rec.GetId(), state, rec.GetTitle().c_str(), error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
     {
