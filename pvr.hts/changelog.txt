@@ -1,3 +1,10 @@
+v19.0.5
+- Translations updates from Weblate
+  - pl_pl
+- Ignore recordings without a file (e.g. removed recordings).
+- When parsing recording add/update messages, always set the correct error string.
+- Reduce debug log spam. Do not log recording descriptions.
+
 v19.0.4
 - Translations updates from Weblate
 	- es_mx
