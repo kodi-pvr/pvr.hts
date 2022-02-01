@@ -1,3 +1,6 @@
+v19.0.6
+- Fix deleted recordings not disappearing in Kodi until restart (regression introduced with v19.0.5)
+
 v19.0.5
 - Translations updates from Weblate
   - pl_pl
