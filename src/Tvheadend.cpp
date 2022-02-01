@@ -2309,7 +2309,20 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   /* Ignore recordings without a file (e.g. removed recordings) */
   const char* error = htsmsg_get_str(msg, "error");
   if (error && (strstr(error, "missing") != nullptr))
+  {
+    const auto it = m_recordings.find(id);
+    if (it != m_recordings.end())
+    {
+      m_recordings.erase(it);
+
+      if (m_asyncState.GetState() > ASYNC_DVR)
+      {
+        TriggerTimerUpdate();
+        TriggerRecordingUpdate();
+      }
+    }
     return;
+  }
 
   /* Get/create entry */
   Recording& rec = m_recordings[id];
