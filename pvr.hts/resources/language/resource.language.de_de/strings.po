@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-07-19 21:43+0000\n"
+"PO-Revision-Date: 2022-05-18 15:14+0000\n"
 "Last-Translator: Kai Sommerfeld <kai.sommerfeld@gmx.com>\n"
 "Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/de_de/>\n"
 "Language: de_de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7.1\n"
+"X-Generator: Weblate 4.12.2\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -83,7 +83,7 @@ msgstr "Auto-Aufnahmen"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Startfenster-Berechnung"
+msgstr "Startfensterberechnung"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -99,15 +99,15 @@ msgstr "Max. Startzeitspanne (Minuten)"
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Standard für Aufnahme-Priorität"
+msgstr "Standard für Aufnahmepriorität"
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Standard für Aufnahme-Lebensdauer"
+msgstr "Standard für Aufnahmelebensdauer"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Standard für Duplikat-Erkennung"
+msgstr "Standard für Duplikaterkennung"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
@@ -123,7 +123,7 @@ msgstr "Duplikate ignorieren (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr "Reguläre Ausdrücke (regex) zum Finden von Sendungen verwenden"
+msgstr "Reguläre Ausdrücke (regex) zum Finden von Programminhalten verwenden"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -148,7 +148,7 @@ msgstr "HTSP-Versionskonflikt (unterstützt: v%d, benötigt: v%d). Bitte tvheade
 #. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "Einmalig (Erzeugt von Timer-Regel)"
+msgstr "Einmalig (Erzeugt von Timerregel)"
 
 #. Recording priority representation
 msgctxt "#30351"
@@ -243,7 +243,7 @@ msgstr "Standard"
 #. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr "Timer-Regel (Serien-Link)"
+msgstr "Timerregel (Serienlink)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
@@ -364,7 +364,7 @@ msgstr "Schließen unbenutzter Subscriptions nach: (Sekunden)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Kanalwechsel beschleunigen (Predictive Tuning)"
+msgstr "Kanalwechsel beschleunigen (Voraussagendes Tuning)"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -384,7 +384,7 @@ msgstr "Tuning fehlgeschlagen"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Benutzer-Limit erreicht"
+msgstr "Benutzerlimit erreicht"
 
 msgctxt "#30455"
 msgid "No access"
@@ -396,7 +396,7 @@ msgstr "Subscription-Fehler"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Streaming-Profil"
+msgstr "Streamingprofil"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -405,7 +405,7 @@ msgstr "Profil (Leer = Standard)"
 #. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Streaming-Profil %s ist nicht verfügbar"
+msgstr "Streamingprofil %s ist nicht verfügbar"
 
 msgctxt "#30503"
 msgid "Data transfer"
@@ -413,7 +413,7 @@ msgstr "Datenübertragung"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "Blockgröße beim Lesen von Aufnahme-Streams (KB)"
+msgstr "Blockgröße beim Lesen von Aufnahmestreams (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
@@ -425,4 +425,4 @@ msgstr "Aufnahmen"
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Server-basierter Abspielstatus"
+msgstr "Serverbasierter Abspielstatus"
