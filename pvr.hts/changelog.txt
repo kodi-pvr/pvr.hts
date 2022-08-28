@@ -1,3 +1,7 @@
+v19.0.7
+- Translations updates from Weblate
+	- be_by, cs_cz, da_dk, de_de, fi_fi, hr_hr, it_it, vi_vn
+
 v19.0.6
 - Fix deleted recordings not disappearing in Kodi until restart (regression introduced with v19.0.5)
 
