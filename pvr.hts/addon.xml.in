@@ -32,7 +32,7 @@
     <summary lang="es_ES">Interfaz Kodi para Tvheadend</summary>
     <summary lang="es_MX">El frontend de Kodi para Tvheadend</summary>
     <summary lang="et_EE">Kodi liides Tvheadend&apos;ile</summary>
-    <summary lang="fi_FI">Kodin Tvheadend-asiakasohjelma</summary>
+    <summary lang="fi_FI">Tvheadend-käyttöliittymä Kodille</summary>
     <summary lang="fr_CA">Frontale Kodi pour Tvheadend</summary>
     <summary lang="fr_FR">Interface logicielle pour Tvheadend</summary>
     <summary lang="gl_ES">Interface do Kodi para Tvheadend</summary>
@@ -73,9 +73,9 @@
     <description lang="af_ZA">Tvheadend voorprogram; ondersteun stroom van Lewendige TV &amp; Opnames, EPG, Tydhouers</description>
     <description lang="bg_BG">Клиент за „Tvheadend“. Поддържа телевизия на живо, записване, електронен програмен справочник и броячи.</description>
     <description lang="ca_ES">Frontal de Tvheadend; compatible amb la transmissió de TV en directe i enregistraments, guia electrònica de programació (EPG), temporitzadors</description>
-    <description lang="cs_CZ">Rozhraní Tvheadend; podporuje streamování živého vysílání a nahrávání, televizní program, časovače.</description>
+    <description lang="cs_CZ">Rozhraní Tvheadend; podporuje streamování živého vysílání a nahrávání, televizní program, časovače</description>
     <description lang="cy_GB">Blaen Tvheadend: cefnogi ffrydio Teledu Byw a Recordio, Amserlenni, Amseryddion</description>
-    <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere</description>
+    <description lang="da_DK">Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timeroptagelser</description>
     <description lang="de_DE">PVR-Client für Tvheadend. Unterstützt TV, Aufnahmen, Programm-Guide (EPG) und Timer</description>
     <description lang="el_GR">Frontend για το Tvheadend. Υποστηρίζει ροές Live TV &amp; Εγγραφές, EPG, Χρονοδιακόπτες</description>
     <description lang="en_AU">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
@@ -86,7 +86,7 @@
     <description lang="es_ES">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
     <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend&apos;i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
-    <description lang="fi_FI">Tvheadend-asiakasohjelma. Tukee suorien tv-lähetysten ja tallennusten katsomista, ohjelmaopasta ja ohjelmien ajastamista.</description>
+    <description lang="fi_FI">Tvheadend-käyttöliittymä, joka tukee televisiolähetysten ja tallenteiden suoratoistoa, ohjelmaopasta ja ajastuksia.</description>
     <description lang="fr_CA">Frontale pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries</description>
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
