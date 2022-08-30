@@ -10,6 +10,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -28,6 +29,7 @@ namespace tvheadend
 class HTSPRegister;
 class HTSPResponse;
 class IHTSPConnectionListener;
+class Settings;
 
 namespace utilities
 {
@@ -42,7 +44,7 @@ typedef std::map<uint32_t, HTSPResponse*> HTSPResponseList;
 class HTSPConnection : public kodi::tools::CThread
 {
 public:
-  HTSPConnection(IHTSPConnectionListener& connListener);
+  HTSPConnection(const std::shared_ptr<Settings>& settings, IHTSPConnectionListener& connListener);
   ~HTSPConnection() override;
 
   void Start();
@@ -107,6 +109,7 @@ private:
     HTSPConnection* m_conn;
   };
 
+  std::shared_ptr<Settings> m_settings;
   IHTSPConnectionListener& m_connListener;
   tvheadend::utilities::TCPSocket* m_socket = nullptr;
   mutable std::recursive_mutex m_mutex;

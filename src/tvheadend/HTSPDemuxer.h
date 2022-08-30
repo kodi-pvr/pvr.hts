@@ -35,6 +35,7 @@ namespace tvheadend
 {
 
 class HTSPConnection;
+class Settings;
 class SubscriptionSeekTime;
 
 namespace utilities
@@ -48,7 +49,9 @@ class RDSExtractor;
 class HTSPDemuxer
 {
 public:
-  HTSPDemuxer(IHTSPDemuxPacketHandler& demuxPktHdl, HTSPConnection& conn);
+  HTSPDemuxer(const std::shared_ptr<Settings>& settings,
+              IHTSPDemuxPacketHandler& demuxPktHdl,
+              HTSPConnection& conn);
   ~HTSPDemuxer();
 
   bool ProcessMessage(const std::string& method, htsmsg_t* m);
@@ -112,6 +115,7 @@ private:
   void ProcessRDS(uint32_t idx, const void* bin, size_t binlen);
 
   mutable std::recursive_mutex m_mutex;
+  std::shared_ptr<Settings> m_settings;
   HTSPConnection& m_conn;
   tvheadend::utilities::SyncedBuffer<DEMUX_PACKET*> m_pktBuffer;
   std::vector<kodi::addon::PVRStreamProperties> m_streams;

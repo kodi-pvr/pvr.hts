@@ -22,7 +22,8 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-AutoRecordings::AutoRecordings(HTSPConnection& conn) : m_conn(conn)
+AutoRecordings::AutoRecordings(const std::shared_ptr<Settings>& settings, HTSPConnection& conn)
+  : m_settings(settings), m_conn(conn)
 {
 }
 
@@ -176,7 +177,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
 
   /* epg search data match string */
   std::string searchString = timer.GetEPGSearchString();
-  if (!Settings::GetInstance().GetAutorecUseRegEx())
+  if (!m_settings->GetAutorecUseRegEx())
   {
     // escape regex special chars
     static const std::regex specialChars(R"([-[\]{}()*+?.,\^$|#])");
@@ -231,9 +232,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /*                                                                                        */
   /* bAutorecApproxTime disabled: => start time in kodi = begin of starting window in tvh   */
   /*                              => end time in kodi   = end of starting window in tvh     */
-  const Settings& settings = Settings::GetInstance();
-
-  if (settings.GetAutorecApproxTime())
+  if (m_settings->GetAutorecApproxTime())
   {
     /* Not sending causes server to set start and startWindow to any time */
     if (timer.GetStartTime() > 0 && !timer.GetStartAnyTime())
@@ -241,9 +240,9 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
       time_t startTime = timer.GetStartTime();
       struct tm* tm_start = std::localtime(&startTime);
       int32_t startWindowBegin =
-          tm_start->tm_hour * 60 + tm_start->tm_min - settings.GetAutorecMaxDiff();
+          tm_start->tm_hour * 60 + tm_start->tm_min - m_settings->GetAutorecMaxDiff();
       int32_t startWindowEnd =
-          tm_start->tm_hour * 60 + tm_start->tm_min + settings.GetAutorecMaxDiff();
+          tm_start->tm_hour * 60 + tm_start->tm_min + m_settings->GetAutorecMaxDiff();
 
       /* Past midnight correction */
       if (startWindowBegin < 0)
@@ -354,6 +353,7 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
   /* Locate/create entry */
   AutoRecording& rec = m_autoRecordings[std::string(str)];
+  rec.SetSettings(m_settings);
   rec.SetStringId(std::string(str));
   rec.SetDirty(false);
 

@@ -51,19 +51,35 @@ public:
   static const int DEFAULT_STREAM_CHUNKSIZE; // KB
   static const bool DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES;
 
-  /**
-   * Singleton getter for the instance
-   */
-  static Settings& GetInstance()
+  Settings()
+    : m_strHostname(DEFAULT_HOST),
+      m_iPortHTSP(DEFAULT_HTTP_PORT),
+      m_iPortHTTP(DEFAULT_HTSP_PORT),
+      m_bUseHTTPS(DEFAULT_USE_HTTPS),
+      m_strUsername(DEFAULT_USERNAME),
+      m_strPassword(DEFAULT_PASSWORD),
+      m_strWolMac(DEFAULT_WOL_MAC),
+      m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
+      m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
+      m_bTraceDebug(DEFAULT_TRACE_DEBUG),
+      m_bAsyncEpg(DEFAULT_ASYNC_EPG),
+      m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
+      m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
+      m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
+      m_iAutorecApproxTime(DEFAULT_APPROX_TIME),
+      m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
+      m_bAutorecUseRegEx(DEFAULT_AUTOREC_USE_REGEX),
+      m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
+      m_bUseHTTPStreaming(DEFAULT_STREAMING_HTTP),
+      m_iDvrPriority(DEFAULT_DVR_PRIO),
+      m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
+      m_iDvrDupdetect(DEFAULT_DVR_DUPDETECT),
+      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
+      m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
+      m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES)
   {
-    static Settings settings;
-    return settings;
+    ReadSettings();
   }
-
-  /**
-   * Read all settings defined in settings.xml
-   */
-  void ReadSettings();
 
   /**
    * Set a value according to key definition in settings.xml
@@ -100,37 +116,13 @@ public:
   bool GetIgnoreDuplicateSchedules() const { return m_bIgnoreDuplicateSchedules; }
 
 private:
-  Settings()
-    : m_strHostname(DEFAULT_HOST),
-      m_iPortHTSP(DEFAULT_HTTP_PORT),
-      m_iPortHTTP(DEFAULT_HTSP_PORT),
-      m_bUseHTTPS(DEFAULT_USE_HTTPS),
-      m_strUsername(DEFAULT_USERNAME),
-      m_strPassword(DEFAULT_PASSWORD),
-      m_strWolMac(DEFAULT_WOL_MAC),
-      m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
-      m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
-      m_bTraceDebug(DEFAULT_TRACE_DEBUG),
-      m_bAsyncEpg(DEFAULT_ASYNC_EPG),
-      m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
-      m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
-      m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
-      m_iAutorecApproxTime(DEFAULT_APPROX_TIME),
-      m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
-      m_bAutorecUseRegEx(DEFAULT_AUTOREC_USE_REGEX),
-      m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
-      m_bUseHTTPStreaming(DEFAULT_STREAMING_HTTP),
-      m_iDvrPriority(DEFAULT_DVR_PRIO),
-      m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
-      m_iDvrDupdetect(DEFAULT_DVR_DUPDETECT),
-      m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
-      m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
-      m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES)
-  {
-  }
-
   Settings(Settings const&) = delete;
   void operator=(Settings const&) = delete;
+
+  /**
+   * Read all settings defined in settings.xml
+   */
+  void ReadSettings();
 
   /**
    * Setters

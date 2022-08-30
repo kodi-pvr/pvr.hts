@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 extern "C"
@@ -24,11 +25,12 @@ namespace tvheadend
 {
 
 class HTSPConnection;
+class Settings;
 
 class AutoRecordings
 {
 public:
-  AutoRecordings(HTSPConnection& conn);
+  AutoRecordings(const std::shared_ptr<Settings>& settings, HTSPConnection& conn);
   ~AutoRecordings();
 
   /* state updates */
@@ -55,6 +57,7 @@ private:
 
   HTSPConnection& m_conn;
   tvheadend::entity::AutoRecordingsMap m_autoRecordings;
+  std::shared_ptr<Settings> m_settings;
 };
 
 } // namespace tvheadend
