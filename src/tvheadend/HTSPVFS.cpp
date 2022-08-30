@@ -12,7 +12,8 @@ extern "C"
 #include "libhts/htsmsg_binary.h"
 }
 #include "HTSPConnection.h"
-#include "Settings.h"
+#include "HTSPTypes.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 
 #include "kodi/addon-instance/pvr/Recordings.h"
@@ -29,7 +30,7 @@ using namespace tvheadend::utilities;
 /*
  * VFS handler
  */
-HTSPVFS::HTSPVFS(const std::shared_ptr<Settings>& settings, HTSPConnection& conn)
+HTSPVFS::HTSPVFS(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn)
   : m_settings(settings),
     m_conn(conn),
     m_path(""),

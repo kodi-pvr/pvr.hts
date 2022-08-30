@@ -14,7 +14,7 @@
 
 namespace tvheadend
 {
-class Settings;
+class AddonSettings;
 }
 
 class ATTR_DLL_LOCAL CHTSAddon : public kodi::addon::CAddonBase
@@ -30,5 +30,5 @@ public:
 
 private:
   std::recursive_mutex m_mutex;
-  std::shared_ptr<tvheadend::Settings> m_settings;
+  std::shared_ptr<tvheadend::AddonSettings> m_settings;
 };

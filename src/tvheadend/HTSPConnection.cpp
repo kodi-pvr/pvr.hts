@@ -14,7 +14,7 @@ extern "C"
 }
 
 #include "IHTSPConnectionListener.h"
-#include "Settings.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 #include "utilities/TCPSocket.h"
 
@@ -86,7 +86,7 @@ private:
  * HTSP Connection handler
  */
 
-HTSPConnection::HTSPConnection(const std::shared_ptr<Settings>& settings,
+HTSPConnection::HTSPConnection(const std::shared_ptr<InstanceSettings>& settings,
                                IHTSPConnectionListener& connListener)
   : m_settings(settings),
     m_connListener(connListener),

@@ -9,7 +9,7 @@
 #include "HTSPDemuxer.h"
 
 #include "HTSPConnection.h"
-#include "Settings.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 #include "utilities/RDSExtractor.h"
 
@@ -34,7 +34,7 @@ static const int TVH_STREAM_INDEX_OFFSET = 1000;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-HTSPDemuxer::HTSPDemuxer(const std::shared_ptr<Settings>& settings,
+HTSPDemuxer::HTSPDemuxer(const std::shared_ptr<InstanceSettings>& settings,
                          IHTSPDemuxPacketHandler& demuxPktHdl,
                          HTSPConnection& conn)
   : m_settings(settings),

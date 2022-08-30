@@ -29,7 +29,7 @@ namespace tvheadend
 class HTSPRegister;
 class HTSPResponse;
 class IHTSPConnectionListener;
-class Settings;
+class InstanceSettings;
 
 namespace utilities
 {
@@ -44,7 +44,8 @@ typedef std::map<uint32_t, HTSPResponse*> HTSPResponseList;
 class HTSPConnection : public kodi::tools::CThread
 {
 public:
-  HTSPConnection(const std::shared_ptr<Settings>& settings, IHTSPConnectionListener& connListener);
+  HTSPConnection(const std::shared_ptr<InstanceSettings>& settings,
+                 IHTSPConnectionListener& connListener);
   ~HTSPConnection() override;
 
   void Start();
@@ -109,7 +110,7 @@ private:
     HTSPConnection* m_conn;
   };
 
-  std::shared_ptr<Settings> m_settings;
+  std::shared_ptr<InstanceSettings> m_settings;
   IHTSPConnectionListener& m_connListener;
   tvheadend::utilities::TCPSocket* m_socket = nullptr;
   mutable std::recursive_mutex m_mutex;

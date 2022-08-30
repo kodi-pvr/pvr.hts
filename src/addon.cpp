@@ -8,7 +8,7 @@
 #include "addon.h"
 
 #include "Tvheadend.h"
-#include "tvheadend/Settings.h"
+#include "tvheadend/AddonSettings.h"
 #include "tvheadend/utilities/Logger.h"
 
 using namespace tvheadend;
@@ -17,7 +17,7 @@ using namespace tvheadend::utilities;
 ADDON_STATUS CHTSAddon::Create()
 {
   /* Init settings */
-  m_settings.reset(new Settings());
+  m_settings.reset(new AddonSettings());
 
   /* Configure the logger */
   Logger::GetInstance().SetImplementation(
@@ -74,8 +74,8 @@ ADDON_STATUS CHTSAddon::CreateInstance(const kodi::addon::IInstanceInfo& instanc
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "%s: Creating PVR-Client instance", __FUNCTION__);
 
-    /* Connect to ARGUS TV */
-    CTvheadend* client = new CTvheadend(instance, m_settings);
+    /* Connect to TVHeadend backend */
+    CTvheadend* client = new CTvheadend(instance);
     client->Start();
     hdl = client;
 

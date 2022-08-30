@@ -11,7 +11,7 @@
 #include "tvheadend/HTSPDemuxer.h"
 #include "tvheadend/HTSPMessage.h"
 #include "tvheadend/HTSPVFS.h"
-#include "tvheadend/Settings.h"
+#include "tvheadend/InstanceSettings.h"
 #include "tvheadend/utilities/LifetimeMapper.h"
 #include "tvheadend/utilities/Logger.h"
 #include "tvheadend/utilities/Utilities.h"
@@ -28,10 +28,9 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance,
-                       const std::shared_ptr<Settings>& settings)
+CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
   : kodi::addon::CInstancePVRClient(instance),
-    m_settings(settings),
+    m_settings(new InstanceSettings(*this)),
     m_conn(new HTSPConnection(m_settings, *this)),
     m_streamchange(false),
     m_vfs(new HTSPVFS(m_settings, *m_conn)),
@@ -79,6 +78,12 @@ void CTvheadend::Stop()
 /* **************************************************************************
  * Miscellaneous
  * *************************************************************************/
+
+ADDON_STATUS CTvheadend::SetInstanceSetting(const std::string& settingName,
+                                            const kodi::addon::CSettingValue& settingValue)
+{
+  return m_settings->SetSetting(settingName, settingValue);
+}
 
 PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities)
 {
@@ -765,7 +770,7 @@ namespace
 {
 struct TimerType : kodi::addon::PVRTimerType
 {
-  TimerType(const std::shared_ptr<Settings>& settings,
+  TimerType(const std::shared_ptr<InstanceSettings>& settings,
             unsigned int id,
             unsigned int attributes,
             const std::string& description,

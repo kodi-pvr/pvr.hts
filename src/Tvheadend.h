@@ -47,7 +47,7 @@ namespace tvheadend
 class HTSPConnection;
 class HTSPDemuxer;
 class HTSPVFS;
-class Settings;
+class InstanceSettings;
 } // namespace tvheadend
 
 /* Typedefs */
@@ -62,12 +62,15 @@ class ATTR_DLL_LOCAL CTvheadend : public kodi::addon::CInstancePVRClient,
                                   public tvheadend::IHTSPDemuxPacketHandler
 {
 public:
-  CTvheadend(const kodi::addon::IInstanceInfo& instance,
-             const std::shared_ptr<tvheadend::Settings>& settings);
+  CTvheadend(const kodi::addon::IInstanceInfo& instance);
   ~CTvheadend() override;
 
   void Start();
   void Stop();
+
+  // kodi::addon::CInstancePVRClient -> kodi::addon::IAddonInstance overrides
+  ADDON_STATUS SetInstanceSetting(const std::string& settingName,
+                                  const kodi::addon::CSettingValue& settingValue) override;
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
@@ -259,7 +262,7 @@ public:
 
   std::recursive_mutex m_mutex;
 
-  std::shared_ptr<tvheadend::Settings> m_settings;
+  std::shared_ptr<tvheadend::InstanceSettings> m_settings;
 
   tvheadend::HTSPConnection* m_conn;
 

@@ -7,7 +7,7 @@
 
 #include "AutoRecording.h"
 
-#include "../Settings.h"
+#include "../InstanceSettings.h"
 
 using namespace tvheadend;
 using namespace tvheadend::entity;

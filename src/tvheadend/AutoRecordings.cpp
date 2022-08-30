@@ -8,7 +8,7 @@
 #include "AutoRecordings.h"
 
 #include "HTSPConnection.h"
-#include "Settings.h"
+#include "InstanceSettings.h"
 #include "entity/Recording.h"
 #include "utilities/LifetimeMapper.h"
 #include "utilities/Logger.h"
@@ -22,7 +22,8 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-AutoRecordings::AutoRecordings(const std::shared_ptr<Settings>& settings, HTSPConnection& conn)
+AutoRecordings::AutoRecordings(const std::shared_ptr<InstanceSettings>& settings,
+                               HTSPConnection& conn)
   : m_settings(settings), m_conn(conn)
 {
 }

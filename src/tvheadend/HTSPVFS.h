@@ -22,7 +22,7 @@ namespace tvheadend
 {
 
 class HTSPConnection;
-class Settings;
+class InstanceSettings;
 
 /*
  * HTSP VFS - recordings
@@ -30,7 +30,7 @@ class Settings;
 class HTSPVFS
 {
 public:
-  HTSPVFS(const std::shared_ptr<Settings>& settings, HTSPConnection& conn);
+  HTSPVFS(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn);
   ~HTSPVFS();
 
   void RebuildState();
@@ -49,7 +49,7 @@ private:
   int64_t SendFileRead(unsigned char* buf, unsigned int len);
   long long SendFileSeek(int64_t pos, int whence, bool force = false);
 
-  std::shared_ptr<Settings> m_settings;
+  std::shared_ptr<InstanceSettings> m_settings;
   HTSPConnection& m_conn;
   std::string m_path;
   uint32_t m_fileId;

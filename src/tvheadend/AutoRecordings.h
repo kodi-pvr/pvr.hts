@@ -25,12 +25,12 @@ namespace tvheadend
 {
 
 class HTSPConnection;
-class Settings;
+class InstanceSettings;
 
 class AutoRecordings
 {
 public:
-  AutoRecordings(const std::shared_ptr<Settings>& settings, HTSPConnection& conn);
+  AutoRecordings(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn);
   ~AutoRecordings();
 
   /* state updates */
@@ -57,7 +57,7 @@ private:
 
   HTSPConnection& m_conn;
   tvheadend::entity::AutoRecordingsMap m_autoRecordings;
-  std::shared_ptr<Settings> m_settings;
+  std::shared_ptr<InstanceSettings> m_settings;
 };
 
 } // namespace tvheadend
