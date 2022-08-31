@@ -10,6 +10,7 @@
 #include "Tvheadend.h"
 #include "tvheadend/AddonSettings.h"
 #include "tvheadend/utilities/Logger.h"
+#include "tvheadend/utilities/SettingsMigration.h"
 
 using namespace tvheadend;
 using namespace tvheadend::utilities;
@@ -76,6 +77,15 @@ ADDON_STATUS CHTSAddon::CreateInstance(const kodi::addon::IInstanceInfo& instanc
 
     /* Connect to TVHeadend backend */
     CTvheadend* client = new CTvheadend(instance);
+
+    // Try to migrate settings from a pre-multi-instance setup
+    if (SettingsMigration::MigrateSettings(*client))
+    {
+      // Initial client operated on old/incomplete settings
+      delete client;
+      client = new CTvheadend(instance);
+    }
+
     client->Start();
     hdl = client;
 

@@ -8,6 +8,7 @@
 #include "AddonSettings.h"
 
 #include "utilities/Logger.h"
+#include "utilities/SettingsMigration.h"
 
 #include "kodi/General.h"
 
@@ -53,6 +54,11 @@ ADDON_STATUS AddonSettings::SetSetting(const std::string& key,
   if (key == "trace_debug")
   {
     return SetBoolSetting(GetTraceDebug(), value);
+  }
+  else if (SettingsMigration::IsMigrationSetting(key))
+  {
+    // ignore settings from pre-multi-instance setup
+    return ADDON_STATUS_OK;
   }
 
   Logger::Log(LogLevel::LEVEL_ERROR, "AddonSettings::SetSetting - unknown setting '%s'",

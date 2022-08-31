@@ -108,7 +108,9 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/RDSExtractor.cpp
                 src/tvheadend/utilities/SyncedBuffer.h
                 src/tvheadend/utilities/TCPSocket.h
-                src/tvheadend/utilities/TCPSocket.cpp)
+                src/tvheadend/utilities/TCPSocket.cpp
+                src/tvheadend/utilities/SettingsMigration.h
+                src/tvheadend/utilities/SettingsMigration.cpp)
 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\aac" FILES ${HTS_SOURCES_AAC})

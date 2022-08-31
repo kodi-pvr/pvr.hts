@@ -1,12 +1,129 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings version="1">
   <section id="addon" label="-1" help="-1">
+
     <category id="advanced" label="30008" help="-1">
       <group id="1" label="30200">
         <setting id="trace_debug" type="boolean" label="30201" help="-1">
           <level>0</level>
           <default>false</default>
           <control type="toggle"/>
+        </setting>
+      </group>
+    </category>
+
+    <!-- Hidden category with all settings which were add-on settings before multi-instance
+         support was added to this add-on. Used for settings migration, which needs minimal
+         settings definition to work. -->
+    <category id="hidden_obsolete">
+      <group id="1" label="-1">
+        <setting id="host" type="string">
+          <level>4</level> <!-- hidden -->
+          <default>127.0.0.1</default>
+        </setting>
+        <setting id="https" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="http_port" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>9981</default>
+        </setting>
+        <setting id="htsp_port" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>9982</default>
+        </setting>
+        <setting id="user" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="pass" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="connect_timeout" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>10</default>
+        </setting>
+        <setting id="response_timeout" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>5</default>
+        </setting>
+        <setting id="wol_mac" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="streaming_profile" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="streaming_http" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="pretuner_enabled" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="total_tuners" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>2</default>
+        </setting>
+        <setting id="pretuner_closedelay" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>10</default>
+        </setting>
+        <setting id="stream_readchunksize" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>64</default>
+        </setting>
+        <setting id="autorec_approxtime" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>0</default>
+        </setting>
+        <setting id="autorec_maxdiff" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>15</default>
+        </setting>
+        <setting id="autorec_use_regex" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="dvr_ignore_duplicates" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
+        </setting>
+        <setting id="dvr_priority" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>2</default> <!-- Normal -->
+        </setting>
+        <setting id="dvr_lifetime2" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>15</default>
+        </setting>
+        <setting id="dvr_dubdetect" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>0</default>
+        </setting>
+        <setting id="epg_async" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
+        </setting>
+        <setting id="dvr_playstatus" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
         </setting>
       </group>
     </category>
