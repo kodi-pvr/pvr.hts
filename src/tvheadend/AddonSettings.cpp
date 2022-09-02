@@ -28,14 +28,6 @@ bool ReadBoolSetting(const std::string& key, bool def)
   return def;
 }
 
-ADDON_STATUS SetBoolSetting(bool oldValue, const kodi::addon::CSettingValue& newValue)
-{
-  if (oldValue == newValue.GetBoolean())
-    return ADDON_STATUS_OK;
-
-  return ADDON_STATUS_NEED_RESTART;
-}
-
 } // unnamed namespace
 
 AddonSettings::AddonSettings() : m_bTraceDebug(DEFAULT_TRACE_DEBUG)
@@ -53,7 +45,8 @@ ADDON_STATUS AddonSettings::SetSetting(const std::string& key,
 {
   if (key == "trace_debug")
   {
-    return SetBoolSetting(GetTraceDebug(), value);
+    SetTraceDebug(value.GetBoolean());
+    return ADDON_STATUS_OK;
   }
   else if (SettingsMigration::IsMigrationSetting(key))
   {
