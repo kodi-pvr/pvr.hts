@@ -144,17 +144,13 @@ ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
     return SetStringSetting(GetWolMac(), value);
   else if (key == "connect_timeout")
   {
-    if (GetConnectTimeout() == value.GetInt() * 1000)
-      return ADDON_STATUS_OK;
-    else
-      return ADDON_STATUS_NEED_RESTART;
+    SetConnectTimeout(value.GetInt() * 1000);
+    return ADDON_STATUS_OK;
   }
   else if (key == "response_timeout")
   {
-    if (GetResponseTimeout() == value.GetInt() * 1000)
-      return ADDON_STATUS_OK;
-    else
-      return ADDON_STATUS_NEED_RESTART;
+    SetResponseTimeout(value.GetInt() * 1000);
+    return ADDON_STATUS_OK;
   }
   /* Data Transfer */
   else if (key == "epg_async")
@@ -171,18 +167,22 @@ ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
   }
   else if (key == "pretuner_closedelay")
   {
-    if (!m_bPretunerEnabled)
-      return ADDON_STATUS_OK;
-    else
-      return SetIntSetting(GetPreTunerCloseDelay(), value);
+    SetPreTunerCloseDelay(value.GetInt());
+    return ADDON_STATUS_OK;
   }
   /* Auto recordings */
   else if (key == "autorec_approxtime")
     return SetIntSetting(GetAutorecApproxTime(), value);
   else if (key == "autorec_maxdiff")
-    return SetIntSetting(GetAutorecMaxDiff(), value);
+  {
+    SetAutorecMaxDiff(value.GetInt());
+    return ADDON_STATUS_OK;
+  }
   else if (key == "autorec_use_regex")
-    return SetBoolSetting(GetAutorecUseRegEx(), value);
+  {
+    SetAutorecUseRegEx(value.GetBoolean());
+    return ADDON_STATUS_OK;
+  }
   /* Streaming */
   else if (key == "streaming_profile")
     return SetStringSetting(GetStreamingProfile(), value);
@@ -201,7 +201,10 @@ ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
   else if (key == "stream_readchunksize")
     return SetIntSetting(GetStreamReadChunkSize(), value);
   else if (key == "dvr_ignore_duplicates")
-    return SetBoolSetting(GetIgnoreDuplicateSchedules(), value);
+  {
+    SetIgnoreDuplicateSchedules(value.GetBoolean());
+    return ADDON_STATUS_OK;
+  }
   else
   {
     Logger::Log(LogLevel::LEVEL_ERROR, "InstanceSettings::SetSetting - unknown setting '%s'",
