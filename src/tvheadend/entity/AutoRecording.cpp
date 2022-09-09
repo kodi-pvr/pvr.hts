@@ -7,7 +7,7 @@
 
 #include "AutoRecording.h"
 
-#include "../Settings.h"
+#include "../InstanceSettings.h"
 
 using namespace tvheadend;
 using namespace tvheadend::entity;
@@ -38,7 +38,7 @@ bool AutoRecording::operator!=(const AutoRecording& right)
 
 time_t AutoRecording::GetStart() const
 {
-  if (Settings::GetInstance().GetAutorecApproxTime())
+  if (m_settings->GetAutorecApproxTime())
   {
     /* Calculate the approximate start time from the starting window */
     if ((m_startWindowBegin == -1) ||
@@ -76,7 +76,7 @@ void AutoRecording::SetStartWindowBegin(int32_t start)
 
 time_t AutoRecording::GetStop() const
 {
-  if (Settings::GetInstance().GetAutorecApproxTime())
+  if (m_settings->GetAutorecApproxTime())
   {
     /* Tvh doesn't have an approximate stop time => "any time" */
     return 0;

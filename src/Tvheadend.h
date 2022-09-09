@@ -31,6 +31,7 @@ extern "C"
 #include "kodi/addon-instance/PVR.h"
 #include "kodi/tools/Thread.h"
 
+#include <memory>
 #include <mutex>
 #include <string>
 #include <utility>
@@ -46,6 +47,7 @@ namespace tvheadend
 class HTSPConnection;
 class HTSPDemuxer;
 class HTSPVFS;
+class InstanceSettings;
 } // namespace tvheadend
 
 /* Typedefs */
@@ -65,6 +67,10 @@ public:
 
   void Start();
   void Stop();
+
+  // kodi::addon::CInstancePVRClient -> kodi::addon::IAddonInstance overrides
+  ADDON_STATUS SetInstanceSetting(const std::string& settingName,
+                                  const kodi::addon::CSettingValue& settingValue) override;
 
   // IHTSPConnectionListener implementation
   void Disconnected() override;
@@ -255,6 +261,8 @@ public:
   tvheadend::Profiles m_profiles;
 
   std::recursive_mutex m_mutex;
+
+  std::shared_ptr<tvheadend::InstanceSettings> m_settings;
 
   tvheadend::HTSPConnection* m_conn;
 

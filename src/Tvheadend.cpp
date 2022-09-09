@@ -11,7 +11,7 @@
 #include "tvheadend/HTSPDemuxer.h"
 #include "tvheadend/HTSPMessage.h"
 #include "tvheadend/HTSPVFS.h"
-#include "tvheadend/Settings.h"
+#include "tvheadend/InstanceSettings.h"
 #include "tvheadend/utilities/LifetimeMapper.h"
 #include "tvheadend/utilities/Logger.h"
 #include "tvheadend/utilities/Utilities.h"
@@ -30,20 +30,21 @@ using namespace tvheadend::utilities;
 
 CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
   : kodi::addon::CInstancePVRClient(instance),
-    m_conn(new HTSPConnection(*this)),
+    m_settings(new InstanceSettings(*this)),
+    m_conn(new HTSPConnection(m_settings, *this)),
     m_streamchange(false),
-    m_vfs(new HTSPVFS(*m_conn)),
+    m_vfs(new HTSPVFS(m_settings, *m_conn)),
     m_queue(static_cast<size_t>(-1)),
-    m_asyncState(Settings::GetInstance().GetResponseTimeout()),
+    m_asyncState(m_settings->GetResponseTimeout()),
     m_timeRecordings(*m_conn),
-    m_autoRecordings(*m_conn),
+    m_autoRecordings(m_settings, *m_conn),
     m_epgMaxDays(EpgMaxFutureDays()),
     m_playingLiveStream(false),
     m_playingRecording(nullptr)
 {
-  for (int i = 0; i < 1 || i < Settings::GetInstance().GetTotalTuners(); i++)
+  for (int i = 0; i < 1 || i < m_settings->GetTotalTuners(); i++)
   {
-    m_dmx.emplace_back(new HTSPDemuxer(*this, *m_conn));
+    m_dmx.emplace_back(new HTSPDemuxer(m_settings, *this, *m_conn));
   }
   m_dmx_active = m_dmx[0];
 }
@@ -78,6 +79,12 @@ void CTvheadend::Stop()
  * Miscellaneous
  * *************************************************************************/
 
+ADDON_STATUS CTvheadend::SetInstanceSetting(const std::string& settingName,
+                                            const kodi::addon::CSettingValue& settingValue)
+{
+  return m_settings->SetSetting(settingName, settingValue);
+}
+
 PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities)
 {
   capabilities.SetSupportsEPG(true);
@@ -92,11 +99,11 @@ PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities
   capabilities.SetHandlesDemuxing(true);
   capabilities.SetSupportsRecordingEdl(true);
   capabilities.SetSupportsRecordingPlayCount(m_conn->GetProtocol() >= 27 &&
-                                             Settings::GetInstance().GetDvrPlayStatus());
+                                             m_settings->GetDvrPlayStatus());
   capabilities.SetSupportsLastPlayedPosition(m_conn->GetProtocol() >= 27 &&
-                                             Settings::GetInstance().GetDvrPlayStatus());
+                                             m_settings->GetDvrPlayStatus());
   capabilities.SetSupportsDescrambleInfo(true);
-  capabilities.SetSupportsAsyncEPGTransfer(Settings::GetInstance().GetAsyncEpg());
+  capabilities.SetSupportsAsyncEPGTransfer(m_settings->GetAsyncEpg());
 
   if (m_conn->GetProtocol() >= 28)
   {
@@ -367,7 +374,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
 
 PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel, std::vector<kodi::addon::PVRStreamProperty>& properties)
 {
-  if (!Settings::GetInstance().GetStreamingHTTP())
+  if (!m_settings->GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
@@ -377,7 +384,7 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
     return PVR_ERROR_FAILED;
 
   std::string path = "/stream/channelid/" + std::to_string(it->first);
-  const std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
+  const std::string streamingProfile = m_settings->GetStreamingProfile();
   if (!streamingProfile.empty())
     path += "?profile=" + streamingProfile;
 
@@ -402,8 +409,7 @@ PVR_ERROR CTvheadend::SendDvrDelete(uint32_t id, const char* method)
   htsmsg_add_u32(m, "id", id);
 
   /* Send and wait a bit longer than usual */
-  m = m_conn->SendAndWait(lock, method, m,
-                          std::max(30000, Settings::GetInstance().GetResponseTimeout()));
+  m = m_conn->SendAndWait(lock, method, m, std::max(30000, m_settings->GetResponseTimeout()));
   if (!m)
     return PVR_ERROR_SERVER_ERROR;
 
@@ -711,7 +717,7 @@ PVR_ERROR CTvheadend::SetRecordingLifetime(const kodi::addon::PVRRecording& rec)
 
 PVR_ERROR CTvheadend::SetRecordingPlayCount(const kodi::addon::PVRRecording& rec, int playCount)
 {
-  if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
+  if (m_conn->GetProtocol() < 27 || !m_settings->GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play count to %i for recording %s", playCount,
@@ -727,7 +733,7 @@ PVR_ERROR CTvheadend::SetRecordingPlayCount(const kodi::addon::PVRRecording& rec
 PVR_ERROR CTvheadend::SetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec,
                                                      int playPosition)
 {
-  if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
+  if (m_conn->GetProtocol() < 27 || !m_settings->GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "Setting play position to %i for recording %s", playPosition,
@@ -744,7 +750,7 @@ PVR_ERROR CTvheadend::SetRecordingLastPlayedPosition(const kodi::addon::PVRRecor
 PVR_ERROR CTvheadend::GetRecordingLastPlayedPosition(const kodi::addon::PVRRecording& rec,
                                                      int& playPosition)
 {
-  if (m_conn->GetProtocol() < 27 || !Settings::GetInstance().GetDvrPlayStatus())
+  if (m_conn->GetProtocol() < 27 || !m_settings->GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
@@ -764,7 +770,8 @@ namespace
 {
 struct TimerType : kodi::addon::PVRTimerType
 {
-  TimerType(unsigned int id,
+  TimerType(const std::shared_ptr<InstanceSettings>& settings,
+            unsigned int id,
             unsigned int attributes,
             const std::string& description,
             const std::vector<kodi::addon::PVRTypeIntValue>& priorityValues =
@@ -777,10 +784,9 @@ struct TimerType : kodi::addon::PVRTimerType
     SetId(id);
     SetAttributes(attributes);
     SetDescription(description);
-    SetPriorities(priorityValues, Settings::GetInstance().GetDvrPriority());
-    SetLifetimes(lifetimeValues,
-                 LifetimeMapper::TvhToKodi(Settings::GetInstance().GetDvrLifetime()));
-    SetPreventDuplicateEpisodes(dupEpisodesValues, Settings::GetInstance().GetDvrDupdetect());
+    SetPriorities(priorityValues, settings->GetDvrPriority());
+    SetLifetimes(lifetimeValues, LifetimeMapper::TvhToKodi(settings->GetDvrLifetime()));
+    SetPreventDuplicateEpisodes(dupEpisodesValues, settings->GetDvrDupdetect());
   }
 };
 
@@ -898,6 +904,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* One-shot manual (time and channel based) */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_ONCE_MANUAL,
       /* Attributes. */
@@ -911,6 +919,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* One-shot epg based */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_ONCE_EPG,
       /* Attributes. */
@@ -924,6 +934,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* Read-only one-shot for timers generated by timerec */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_ONCE_CREATED_BY_TIMEREC,
       /* Attributes. */
@@ -937,6 +949,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* Read-only one-shot for timers generated by autorec */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_ONCE_CREATED_BY_AUTOREC,
       /* Attributes. */
@@ -950,6 +964,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* Repeating manual (time and channel based) - timerec */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_REPEATING_MANUAL,
       /* Attributes. */
@@ -975,7 +991,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
         PVR_TIMER_TYPE_SUPPORTS_LIFETIME | PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS |
         PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL | PVR_TIMER_TYPE_REQUIRES_EPG_SERIESLINK_ON_CREATE;
 
-    if (!Settings::GetInstance().GetAutorecApproxTime())
+    if (!m_settings->GetAutorecApproxTime())
     {
       /* We need the end time to represent the end of the tvh starting window */
       TIMER_REPEATING_SERIESLINK_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
@@ -984,6 +1000,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
     /* Repeating epg based - series link autorec */
     types.emplace_back(TimerType(
+        /* Settings */
+        m_settings,
         /* Type id. */
         TIMER_REPEATING_SERIESLINK,
         /* Attributes. */
@@ -1010,7 +1028,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
     TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
   }
 
-  if (!Settings::GetInstance().GetAutorecApproxTime())
+  if (!m_settings->GetAutorecApproxTime())
   {
     /* We need the end time to represent the end of the tvh starting window */
     TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_END_TIME;
@@ -1019,6 +1037,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* Repeating epg based - autorec */
   types.emplace_back(TimerType(
+      /* Settings */
+      m_settings,
       /* Type id. */
       TIMER_REPEATING_EPG,
       /* Attributes. */
@@ -1501,7 +1521,7 @@ PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
     int iOldMaxDays = m_epgMaxDays;
     m_epgMaxDays = iFutureDays;
 
-    if (Settings::GetInstance().GetAsyncEpg())
+    if (m_settings->GetAsyncEpg())
     {
       Logger::Log(LogLevel::LEVEL_TRACE,
                   "reconnecting to synchronize epg data. epg max time: old = %d, new = %d",
@@ -1527,7 +1547,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   QueryAvailableProfiles(lock);
 
   /* Show a notification if the profile is not available */
-  const std::string streamingProfile = Settings::GetInstance().GetStreamingProfile();
+  const std::string streamingProfile = m_settings->GetStreamingProfile();
 
   if (!streamingProfile.empty() && !HasStreamingProfile(streamingProfile))
   {
@@ -1545,7 +1565,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
-  if (Settings::GetInstance().GetAsyncEpg())
+  if (m_settings->GetAsyncEpg())
   {
     Logger::Log(LogLevel::LEVEL_INFO, "Request async EPG (%d days)", m_epgMaxDays);
     htsmsg_add_u32(msg, "epg", 1);
@@ -1590,7 +1610,7 @@ PVR_ERROR CTvheadend::GetConnectionString(std::string& connection)
 
 PVR_ERROR CTvheadend::GetBackendHostname(std::string& hostname)
 {
-  hostname = Settings::GetInstance().GetConstCharHostname();
+  hostname = m_settings->GetConstCharHostname();
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -1672,7 +1692,7 @@ PVR_ERROR CTvheadend::GetStreamReadChunkSize(int& chunksize)
   if (!chunksize)
     return PVR_ERROR_INVALID_PARAMETERS;
 
-  chunksize = Settings::GetInstance().GetStreamReadChunkSize() * 1024;
+  chunksize = m_settings->GetStreamReadChunkSize() * 1024;
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -1738,7 +1758,7 @@ void CTvheadend::CloseExpiredSubscriptions()
   // predictive tuning active?
   if (m_dmx.size() > 1)
   {
-    int closeDelay = Settings::GetInstance().GetPreTunerCloseDelay();
+    int closeDelay = m_settings->GetPreTunerCloseDelay();
     if (closeDelay > 0)
     {
       for (auto* dmx : m_dmx)
@@ -2029,7 +2049,7 @@ void CTvheadend::SyncEpgCompleted()
   if (m_asyncState.GetState() != ASYNC_EPG)
     return;
 
-  if (!Settings::GetInstance().GetAsyncEpg())
+  if (!m_settings->GetAsyncEpg())
   {
     m_asyncState.SetState(ASYNC_DONE);
     return;
@@ -2302,8 +2322,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 
   /* Ignore duplicates */
   uint32_t dup = 0;
-  if (Settings::GetInstance().GetIgnoreDuplicateSchedules() &&
-      !htsmsg_get_u32(msg, "duplicate", &dup) && dup == 1)
+  if (m_settings->GetIgnoreDuplicateSchedules() && !htsmsg_get_u32(msg, "duplicate", &dup) &&
+      dup == 1)
     return;
 
   /* Ignore recordings without a file (e.g. removed recordings) */

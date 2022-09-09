@@ -1,3 +1,7 @@
+v20.4.0
+- Add support for multiple backends.
+- Request addon-restart only on settings changes which require a reconnect to the backend.
+
 v20.3.0
 - Inputstream API bump.
 

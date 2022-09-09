@@ -5,8 +5,9 @@
  *  See LICENSE.md for more information.
  */
 
-#include "Settings.h"
+#include "InstanceSettings.h"
 
+#include "HTSPTypes.h"
 #include "utilities/Logger.h"
 
 #include "kodi/General.h"
@@ -14,35 +15,67 @@
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-const std::string Settings::DEFAULT_HOST = "127.0.0.1";
-const bool Settings::DEFAULT_USE_HTTPS = false;
-const int Settings::DEFAULT_HTTP_PORT = 9981;
-const int Settings::DEFAULT_HTSP_PORT = 9982;
-const std::string Settings::DEFAULT_USERNAME = "";
-const std::string Settings::DEFAULT_PASSWORD = "";
-const std::string Settings::DEFAULT_WOL_MAC = "";
-const int Settings::DEFAULT_CONNECT_TIMEOUT = 10000; // millisecs
-const int Settings::DEFAULT_RESPONSE_TIMEOUT = 5000; // millisecs
-const bool Settings::DEFAULT_TRACE_DEBUG = false;
-const bool Settings::DEFAULT_ASYNC_EPG = true;
-const bool Settings::DEFAULT_PRETUNER_ENABLED = false;
-const int Settings::DEFAULT_TOTAL_TUNERS = 1; // total tuners > 1 => predictive tuning active
-const int Settings::DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
-const int Settings::DEFAULT_AUTOREC_MAXDIFF =
+namespace
+{
+const std::string DEFAULT_HOST = "127.0.0.1";
+const bool DEFAULT_USE_HTTPS = false;
+const int DEFAULT_HTTP_PORT = 9981;
+const int DEFAULT_HTSP_PORT = 9982;
+const std::string DEFAULT_USERNAME = "";
+const std::string DEFAULT_PASSWORD = "";
+const std::string DEFAULT_WOL_MAC = "";
+const int DEFAULT_CONNECT_TIMEOUT = 10000; // millisecs
+const int DEFAULT_RESPONSE_TIMEOUT = 5000; // millisecs
+const bool DEFAULT_ASYNC_EPG = true;
+const bool DEFAULT_PRETUNER_ENABLED = false;
+const int DEFAULT_TOTAL_TUNERS = 1; // total tuners > 1 => predictive tuning active
+const int DEFAULT_PRETUNER_CLOSEDELAY = 10; // secs
+const int DEFAULT_AUTOREC_MAXDIFF =
     15; // mins. Maximum difference between real and approximate start time for auto recordings
-const bool Settings::DEFAULT_AUTOREC_USE_REGEX = false;
-const int Settings::DEFAULT_APPROX_TIME =
+const bool DEFAULT_AUTOREC_USE_REGEX = false;
+const int DEFAULT_APPROX_TIME =
     0; // don't use an approximate start time, use a fixed time instead for auto recordings
-const std::string Settings::DEFAULT_STREAMING_PROFILE = "";
-const bool Settings::DEFAULT_STREAMING_HTTP = false;
-const int Settings::DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
-const int Settings::DEFAULT_DVR_LIFETIME = 15; // use backend setting
-const int Settings::DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
-const bool Settings::DEFAULT_DVR_PLAYSTATUS = true;
-const int Settings::DEFAULT_STREAM_CHUNKSIZE = 64; // KB
-const bool Settings::DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
+const std::string DEFAULT_STREAMING_PROFILE = "";
+const bool DEFAULT_STREAMING_HTTP = false;
+const int DEFAULT_DVR_PRIO = DVR_PRIO_NORMAL;
+const int DEFAULT_DVR_LIFETIME = 15; // use backend setting
+const int DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
+const bool DEFAULT_DVR_PLAYSTATUS = true;
+const int DEFAULT_STREAM_CHUNKSIZE = 64; // KB
+const bool DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
+} // namespace
 
-void Settings::ReadSettings()
+InstanceSettings::InstanceSettings(kodi::addon::IAddonInstance& instance)
+  : m_instance(instance),
+    m_strHostname(DEFAULT_HOST),
+    m_iPortHTSP(DEFAULT_HTTP_PORT),
+    m_iPortHTTP(DEFAULT_HTSP_PORT),
+    m_bUseHTTPS(DEFAULT_USE_HTTPS),
+    m_strUsername(DEFAULT_USERNAME),
+    m_strPassword(DEFAULT_PASSWORD),
+    m_strWolMac(DEFAULT_WOL_MAC),
+    m_iConnectTimeout(DEFAULT_CONNECT_TIMEOUT),
+    m_iResponseTimeout(DEFAULT_RESPONSE_TIMEOUT),
+    m_bAsyncEpg(DEFAULT_ASYNC_EPG),
+    m_bPretunerEnabled(DEFAULT_PRETUNER_ENABLED),
+    m_iTotalTuners(DEFAULT_TOTAL_TUNERS),
+    m_iPreTunerCloseDelay(DEFAULT_PRETUNER_CLOSEDELAY),
+    m_iAutorecApproxTime(DEFAULT_APPROX_TIME),
+    m_iAutorecMaxDiff(DEFAULT_AUTOREC_MAXDIFF),
+    m_bAutorecUseRegEx(DEFAULT_AUTOREC_USE_REGEX),
+    m_strStreamingProfile(DEFAULT_STREAMING_PROFILE),
+    m_bUseHTTPStreaming(DEFAULT_STREAMING_HTTP),
+    m_iDvrPriority(DEFAULT_DVR_PRIO),
+    m_iDvrLifetime(DEFAULT_DVR_LIFETIME),
+    m_iDvrDupdetect(DEFAULT_DVR_DUPDETECT),
+    m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
+    m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
+    m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES)
+{
+  ReadSettings();
+}
+
+void InstanceSettings::ReadSettings()
 {
   /* Connection */
   SetHostname(ReadStringSetting("host", DEFAULT_HOST));
@@ -56,9 +89,6 @@ void Settings::ReadSettings()
   /* Note: Timeouts in settings UI are defined in seconds but we expect them to be in milliseconds. */
   SetConnectTimeout(ReadIntSetting("connect_timeout", DEFAULT_CONNECT_TIMEOUT / 1000) * 1000);
   SetResponseTimeout(ReadIntSetting("response_timeout", DEFAULT_RESPONSE_TIMEOUT / 1000) * 1000);
-
-  /* Debug */
-  SetTraceDebug(ReadBoolSetting("trace_debug", DEFAULT_TRACE_DEBUG));
 
   /* Data Transfer */
   SetAsyncEpg(ReadBoolSetting("epg_async", DEFAULT_ASYNC_EPG));
@@ -94,7 +124,8 @@ void Settings::ReadSettings()
       ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
 }
 
-ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::addon::CSettingValue& value)
+ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
+                                          const kodi::addon::CSettingValue& value)
 {
   /* Connection */
   if (key == "host")
@@ -113,21 +144,14 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::addon::CSe
     return SetStringSetting(GetWolMac(), value);
   else if (key == "connect_timeout")
   {
-    if (GetConnectTimeout() == value.GetInt() * 1000)
-      return ADDON_STATUS_OK;
-    else
-      return ADDON_STATUS_NEED_RESTART;
+    SetConnectTimeout(value.GetInt() * 1000);
+    return ADDON_STATUS_OK;
   }
   else if (key == "response_timeout")
   {
-    if (GetResponseTimeout() == value.GetInt() * 1000)
-      return ADDON_STATUS_OK;
-    else
-      return ADDON_STATUS_NEED_RESTART;
+    SetResponseTimeout(value.GetInt() * 1000);
+    return ADDON_STATUS_OK;
   }
-  /* Debug */
-  else if (key == "trace_debug")
-    return SetBoolSetting(GetTraceDebug(), value);
   /* Data Transfer */
   else if (key == "epg_async")
     return SetBoolSetting(GetAsyncEpg(), value);
@@ -143,18 +167,22 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::addon::CSe
   }
   else if (key == "pretuner_closedelay")
   {
-    if (!m_bPretunerEnabled)
-      return ADDON_STATUS_OK;
-    else
-      return SetIntSetting(GetPreTunerCloseDelay(), value);
+    SetPreTunerCloseDelay(value.GetInt());
+    return ADDON_STATUS_OK;
   }
   /* Auto recordings */
   else if (key == "autorec_approxtime")
     return SetIntSetting(GetAutorecApproxTime(), value);
   else if (key == "autorec_maxdiff")
-    return SetIntSetting(GetAutorecMaxDiff(), value);
+  {
+    SetAutorecMaxDiff(value.GetInt());
+    return ADDON_STATUS_OK;
+  }
   else if (key == "autorec_use_regex")
-    return SetBoolSetting(GetAutorecUseRegEx(), value);
+  {
+    SetAutorecUseRegEx(value.GetBoolean());
+    return ADDON_STATUS_OK;
+  }
   /* Streaming */
   else if (key == "streaming_profile")
     return SetStringSetting(GetStreamingProfile(), value);
@@ -173,43 +201,48 @@ ADDON_STATUS Settings::SetSetting(const std::string& key, const kodi::addon::CSe
   else if (key == "stream_readchunksize")
     return SetIntSetting(GetStreamReadChunkSize(), value);
   else if (key == "dvr_ignore_duplicates")
-    return SetBoolSetting(GetIgnoreDuplicateSchedules(), value);
+  {
+    SetIgnoreDuplicateSchedules(value.GetBoolean());
+    return ADDON_STATUS_OK;
+  }
   else
   {
-    Logger::Log(LogLevel::LEVEL_ERROR, "Settings::SetSetting - unknown setting '%s'", key.c_str());
+    Logger::Log(LogLevel::LEVEL_ERROR, "InstanceSettings::SetSetting - unknown setting '%s'",
+                key.c_str());
     return ADDON_STATUS_UNKNOWN;
   }
 }
 
-std::string Settings::ReadStringSetting(const std::string& key, const std::string& def)
+std::string InstanceSettings::ReadStringSetting(const std::string& key,
+                                                const std::string& def) const
 {
   std::string value;
-  if (kodi::addon::CheckSettingString(key, value))
+  if (m_instance.CheckInstanceSettingString(key, value))
     return value;
 
   return def;
 }
 
-int Settings::ReadIntSetting(const std::string& key, int def)
+int InstanceSettings::ReadIntSetting(const std::string& key, int def) const
 {
   int value;
-  if (kodi::addon::CheckSettingInt(key, value))
+  if (m_instance.CheckInstanceSettingInt(key, value))
     return value;
 
   return def;
 }
 
-bool Settings::ReadBoolSetting(const std::string& key, bool def)
+bool InstanceSettings::ReadBoolSetting(const std::string& key, bool def) const
 {
   bool value;
-  if (kodi::addon::CheckSettingBoolean(key, value))
+  if (m_instance.CheckInstanceSettingBoolean(key, value))
     return value;
 
   return def;
 }
 
-ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue,
-                                        const kodi::addon::CSettingValue& newValue)
+ADDON_STATUS InstanceSettings::SetStringSetting(const std::string& oldValue,
+                                                const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetString())
     return ADDON_STATUS_OK;
@@ -217,7 +250,8 @@ ADDON_STATUS Settings::SetStringSetting(const std::string& oldValue,
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::addon::CSettingValue& newValue)
+ADDON_STATUS InstanceSettings::SetIntSetting(int oldValue,
+                                             const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetInt())
     return ADDON_STATUS_OK;
@@ -225,7 +259,8 @@ ADDON_STATUS Settings::SetIntSetting(int oldValue, const kodi::addon::CSettingVa
   return ADDON_STATUS_NEED_RESTART;
 }
 
-ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const kodi::addon::CSettingValue& newValue)
+ADDON_STATUS InstanceSettings::SetBoolSetting(bool oldValue,
+                                              const kodi::addon::CSettingValue& newValue)
 {
   if (oldValue == newValue.GetBoolean())
     return ADDON_STATUS_OK;
@@ -233,7 +268,7 @@ ADDON_STATUS Settings::SetBoolSetting(bool oldValue, const kodi::addon::CSetting
   return ADDON_STATUS_NEED_RESTART;
 }
 
-int Settings::GetDvrLifetime(bool asEnum) const
+int InstanceSettings::GetDvrLifetime(bool asEnum) const
 {
   if (asEnum)
     return m_iDvrLifetime;

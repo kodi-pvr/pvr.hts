@@ -1,291 +1,129 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings version="1">
   <section id="addon" label="-1" help="-1">
-    <category id="connection" label="30000" help="-1">
-      <group id="1" label="-1">
-        <setting id="host" type="string" label="30001">
-          <level>0</level>
-          <default>127.0.0.1</default>
-          <control type="edit" format="string" />
-        </setting>
-        <setting id="https" type="boolean" label="30011" help="-1">
-          <level>0</level>
-          <default>false</default>
-          <control type="toggle"/>
-        </setting>
-        <setting id="http_port" type="integer" label="30002">
-          <level>0</level>
-          <default>9981</default>
-          <constraints>
-            <minimum>1</minimum>
-            <step>1</step>
-            <maximum>65535</maximum>
-          </constraints>
-          <control type="edit" format="integer" />
-        </setting>
-        <setting id="htsp_port" type="integer" label="30003">
-          <level>0</level>
-          <default>9982</default>
-          <constraints>
-            <minimum>1</minimum>
-            <step>1</step>
-            <maximum>65535</maximum>
-          </constraints>
-          <control type="edit" format="integer" />
-        </setting>
-        <setting id="user" type="string" label="30004">
-          <level>0</level>
-          <default></default>
-          <constraints>
-            <allowempty>true</allowempty>
-          </constraints>
-          <control type="edit" format="string" />
-        </setting>
-        <setting id="pass" type="string" label="30005">
-          <level>0</level>
-          <default></default>
-          <constraints>
-            <allowempty>true</allowempty>
-          </constraints>
-          <control type="edit" format="string">
-            <hidden>true</hidden>
-          </control>
-          <dependencies>
-            <dependency type="enable" setting="user" operator="!is"></dependency>
-          </dependencies>
-        </setting>
-        <setting id="connect_timeout" type="integer" label="30006" help="-1">
-          <level>0</level>
-          <default>10</default>
-          <constraints>
-            <minimum>1</minimum>
-            <step>1</step>
-            <maximum>60</maximum>
-          </constraints>
-          <control type="slider" format="integer" />
-        </setting>
-        <setting id="response_timeout" type="integer" label="30007" help="-1">
-          <level>0</level>
-          <default>5</default>
-          <constraints>
-            <minimum>1</minimum>
-            <step>1</step>
-            <maximum>60</maximum>
-          </constraints>
-          <control type="slider" format="integer" />
-        </setting>
-        <setting id="wol_mac" type="string" label="30012" help="-1">
-          <level>0</level>
-          <default></default>
-          <constraints>
-            <allowempty>true</allowempty>
-          </constraints>
-          <control type="edit" format="string" />
-        </setting>
-      </group>
-    </category>
-
-    <!-- =================================================================== -->
-
-    <category id="streaming" label="30009" help="-1">
-      <group id="1" label="30500">
-        <setting id="streaming_profile" type="string" label="30501" help="-1">
-          <level>0</level>
-          <default></default>
-          <constraints>
-            <allowempty>true</allowempty>
-          </constraints>
-          <control type="edit" format="string" />
-        </setting>
-        <setting id="streaming_http" type="boolean" label="30505" help="-1">
-          <level>0</level>
-          <default>false</default>
-          <control type="toggle" />
-        </setting>
-      </group>
-
-      <group id="2" label="30400">
-        <setting id="pretuner_enabled" type="boolean" label="30403" help="-1">
-          <level>0</level>
-          <default>false</default>
-          <control type="toggle"/>
-        </setting>
-        <setting id="total_tuners" type="integer" label="30401" help="-1">
-          <level>0</level>
-          <default>2</default>
-          <constraints>
-            <minimum>2</minimum>
-            <step>1</step>
-            <maximum>10</maximum>
-          </constraints>
-          <dependencies>
-            <dependency type="enable" setting="pretuner_enabled">true</dependency>
-          </dependencies>
-          <control type="slider" format="integer" />
-        </setting>
-        <setting id="pretuner_closedelay" type="integer" label="30402" help="-1">
-          <level>0</level>
-          <default>10</default>
-          <constraints>
-            <minimum>5</minimum>
-            <step>5</step>
-            <maximum>60</maximum>
-          </constraints>
-          <dependencies>
-            <dependency type="enable" setting="pretuner_enabled">true</dependency>
-          </dependencies>
-          <control type="slider" format="integer" />
-        </setting>
-      </group>
-
-      <group id="3" label="30503">
-        <setting id="stream_readchunksize" type="integer" label="30504" help="-1">
-          <level>0</level>
-          <default>64</default>
-          <constraints>
-            <minimum>4</minimum>
-            <step>4</step>
-            <maximum>512</maximum>
-          </constraints>
-          <control type="slider" format="integer" />
-        </setting>
-      </group>
-    </category>
-
-    <!-- =================================================================== -->
-
-    <category id="timer" label="30010" help="-1">
-      <group id="1" label="30050">
-        <setting id="autorec_approxtime" type="integer" label="30051" help="-1">
-          <level>0</level>
-          <default>0</default> <!-- Strict (start time + end time) -->
-          <constraints>
-            <options>
-              <option label="30052">0</option> <!-- Strict (start time + end time) -->
-              <option label="30053">1</option> <!-- Relaxed (start time +/- margin) -->
-            </options>
-          </constraints>
-          <control type="list" format="string" />
-        </setting>
-        <setting id="autorec_maxdiff" type="integer" label="30054" help="-1">
-          <level>0</level>
-          <default>15</default>
-          <constraints>
-            <minimum>0</minimum>
-            <step>5</step>
-            <maximum>120</maximum>
-          </constraints>
-          <dependencies>
-            <dependency type="enable" setting="autorec_approxtime">1</dependency>
-          </dependencies>
-          <control type="slider" format="integer" />
-        </setting>
-        <setting id="autorec_use_regex" type="boolean" label="30061" help="-1">
-          <level>0</level>
-          <default>false</default>
-          <control type="toggle"/>
-        </setting>
-      </group>
-
-      <group id="2" label="30059">
-        <setting id="dvr_ignore_duplicates" type="boolean" label="30060" help="-1">
-          <level>0</level>
-          <default>true</default>
-          <control type="toggle"/>
-        </setting>
-      </group>
-
-      <group id="3" label="30058">
-        <setting id="dvr_priority" type="integer" label="30055" help="-1">
-          <level>0</level>
-          <default>2</default> <!-- Normal -->
-          <constraints>
-            <options>
-              <option label="30351">0</option> <!-- Important (Highest) -->
-              <option label="30352">1</option> <!-- High -->
-              <option label="30353">2</option> <!-- Normal -->
-              <option label="30354">3</option> <!-- Low -->
-              <option label="30355">4</option> <!-- Unimportant (Lowest) -->
-            </options>
-          </constraints>
-          <control type="list" format="string" />
-        </setting>
-        <setting id="dvr_lifetime2" type="integer" label="30056" help="-1">
-          <level>0</level>
-          <default>15</default> <!-- Use backend setting -->
-          <constraints>
-            <options>
-              <option label="30375">0</option> <!-- 1 day -->
-              <option label="30376">1</option> <!-- 3 days -->
-              <option label="30377">2</option> <!-- 5 days -->
-              <option label="30378">3</option> <!-- 1 week -->
-              <option label="30379">4</option> <!-- 2 weeks -->
-              <option label="30380">5</option> <!-- 3 weeks -->
-              <option label="30381">6</option> <!-- 1 month -->
-              <option label="30382">7</option> <!-- 2 months -->
-              <option label="30383">8</option> <!-- 3 months -->
-              <option label="30384">9</option> <!-- 6 months -->
-              <option label="30385">10</option> <!-- 1 year -->
-              <option label="30386">11</option> <!-- 2 years -->
-              <option label="30387">12</option> <!-- 3 years -->
-              <option label="30388">13</option> <!-- Until space needed (tvh 4.1+) -->
-              <option label="30389">14</option> <!-- Forever (tvh 4.1+) -->
-              <option label="30390">15</option> <!-- Use backend setting -->
-            </options>
-          </constraints>
-          <control type="list" format="string" />
-        </setting>
-        <setting id="dvr_dubdetect" type="integer" label="30057" help="-1">
-          <level>0</level>
-          <default>0</default> <!-- Record all episodes -->
-          <constraints>
-            <options>
-              <option label="30356">0</option> <!-- Record all episodes -->
-              <option label="30357">1</option> <!-- Record if episode number differs -->
-              <option label="30358">2</option> <!-- Record if episode name differs -->
-              <option label="30359">3</option> <!-- Record if description differs -->
-              <option label="30370">12</option> <!-- tvh 4.2+: Record max once per month -->
-              <option label="30360">4</option> <!-- Record max once per week -->
-              <option label="30361">5</option> <!-- Record max once per day -->
-              <option label="30362">6</option> <!-- tvh 4.2+: This rule only: Record if episode number differs -->
-              <option label="30364">8</option> <!-- tvh 4.2+: This rule only: Record if title differs -->
-              <option label="30363">7</option> <!-- tvh 4.2+: This rule only: Record if episode name differs -->
-              <option label="30365">9</option> <!-- tvh 4.2+: This rule only: Record if description differs -->
-              <option label="30371">13</option> <!-- tvh 4.2+: This rule only: Record max once per month -->
-              <option label="30366">10</option> <!-- tvh 4.2+: This rule only: Record max once per week -->
-              <option label="30367">11</option> <!-- tvh 4.2+: This rule only: Record max once per day -->
-              <option label="30372">14</option> <!-- tvh 4.3+: Record if unique episode according EPG/XMLTV -->
-            </options>
-          </constraints>
-          <control type="list" format="string" />
-        </setting>
-      </group>
-    </category>
-
-    <!-- =================================================================== -->
 
     <category id="advanced" label="30008" help="-1">
-      <group id="1" label="30100">
-        <setting id="epg_async" type="boolean" label="30101" help="-1">
-          <level>0</level>
-          <default>true</default>
-          <control type="toggle"/>
-        </setting>
-      </group>
-
-      <group id="2" label="30510">
-        <setting id="dvr_playstatus" type="boolean" label="30511" help="-1">
-          <level>0</level>
-          <default>true</default>
-          <control type="toggle"/>
-        </setting>
-      </group>
-
-      <group id="3" label="30200">
+      <group id="1" label="30200">
         <setting id="trace_debug" type="boolean" label="30201" help="-1">
           <level>0</level>
           <default>false</default>
           <control type="toggle"/>
+        </setting>
+      </group>
+    </category>
+
+    <!-- Hidden category with all settings which were add-on settings before multi-instance
+         support was added to this add-on. Used for settings migration, which needs minimal
+         settings definition to work. -->
+    <category id="hidden_obsolete">
+      <group id="1" label="-1">
+        <setting id="host" type="string">
+          <level>4</level> <!-- hidden -->
+          <default>127.0.0.1</default>
+        </setting>
+        <setting id="https" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="http_port" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>9981</default>
+        </setting>
+        <setting id="htsp_port" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>9982</default>
+        </setting>
+        <setting id="user" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="pass" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="connect_timeout" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>10</default>
+        </setting>
+        <setting id="response_timeout" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>5</default>
+        </setting>
+        <setting id="wol_mac" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="streaming_profile" type="string">
+          <level>4</level> <!-- hidden -->
+          <default></default>
+          <constraints>
+            <allowempty>true</allowempty>
+          </constraints>
+        </setting>
+        <setting id="streaming_http" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="pretuner_enabled" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="total_tuners" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>2</default>
+        </setting>
+        <setting id="pretuner_closedelay" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>10</default>
+        </setting>
+        <setting id="stream_readchunksize" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>64</default>
+        </setting>
+        <setting id="autorec_approxtime" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>0</default>
+        </setting>
+        <setting id="autorec_maxdiff" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>15</default>
+        </setting>
+        <setting id="autorec_use_regex" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>false</default>
+        </setting>
+        <setting id="dvr_ignore_duplicates" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
+        </setting>
+        <setting id="dvr_priority" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>2</default> <!-- Normal -->
+        </setting>
+        <setting id="dvr_lifetime2" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>15</default>
+        </setting>
+        <setting id="dvr_dubdetect" type="integer">
+          <level>4</level> <!-- hidden -->
+          <default>0</default>
+        </setting>
+        <setting id="epg_async" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
+        </setting>
+        <setting id="dvr_playstatus" type="boolean">
+          <level>4</level> <!-- hidden -->
+          <default>true</default>
         </setting>
       </group>
     </category>

@@ -14,7 +14,7 @@ extern "C"
 }
 
 #include "IHTSPConnectionListener.h"
-#include "Settings.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 #include "utilities/TCPSocket.h"
 
@@ -86,8 +86,10 @@ private:
  * HTSP Connection handler
  */
 
-HTSPConnection::HTSPConnection(IHTSPConnectionListener& connListener)
-  : m_connListener(connListener),
+HTSPConnection::HTSPConnection(const std::shared_ptr<InstanceSettings>& settings,
+                               IHTSPConnectionListener& connListener)
+  : m_settings(settings),
+    m_connListener(connListener),
     m_regThread(new HTSPRegister(this)),
     m_ready(false),
     m_seq(0),
@@ -155,20 +157,18 @@ bool IsIPv6NumericHost(const std::string& str)
 
 std::string HTSPConnection::GetWebURL(const char* fmt, ...) const
 {
-  const Settings& settings = Settings::GetInstance();
-
   // Generate the authentication string (user:pass@)
-  std::string auth = settings.GetUsername();
-  if (!(auth.empty() || settings.GetPassword().empty()))
-    auth += ":" + settings.GetPassword();
+  std::string auth = m_settings->GetUsername();
+  if (!(auth.empty() || m_settings->GetPassword().empty()))
+    auth += ":" + m_settings->GetPassword();
   if (!auth.empty())
     auth += "@";
 
-  const char* proto = settings.GetUseHTTPS() ? "https" : "http";
-  bool isIPv6 = IsIPv6NumericHost(settings.GetHostname());
+  const char* proto = m_settings->GetUseHTTPS() ? "https" : "http";
+  bool isIPv6 = IsIPv6NumericHost(m_settings->GetHostname());
   std::string url = kodi::tools::StringUtils::Format(
-      "%s://%s%s%s%s:%d", proto, auth.c_str(), isIPv6 ? "[" : "", settings.GetHostname().c_str(),
-      isIPv6 ? "]" : "", settings.GetPortHTTP());
+      "%s://%s%s%s%s:%d", proto, auth.c_str(), isIPv6 ? "[" : "", m_settings->GetHostname().c_str(),
+      isIPv6 ? "]" : "", m_settings->GetPortHTTP());
 
   va_list va;
 
@@ -186,7 +186,7 @@ bool HTSPConnection::WaitForConnection(std::unique_lock<std::recursive_mutex>& l
   if (!m_ready)
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "waiting for registration...");
-    m_regCond.wait_for(lock, std::chrono::milliseconds(Settings::GetInstance().GetConnectTimeout()),
+    m_regCond.wait_for(lock, std::chrono::milliseconds(m_settings->GetConnectTimeout()),
                        [this] { return m_ready == true; });
   }
   return m_ready;
@@ -212,11 +212,9 @@ std::string HTSPConnection::GetServerVersion() const
 
 std::string HTSPConnection::GetServerString() const
 {
-  const Settings& settings = Settings::GetInstance();
-
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  return kodi::tools::StringUtils::Format("%s:%d", settings.GetHostname().c_str(),
-                                          settings.GetPortHTSP());
+  return kodi::tools::StringUtils::Format("%s:%d", m_settings->GetHostname().c_str(),
+                                          m_settings->GetPortHTSP());
 }
 
 bool HTSPConnection::HasCapability(const std::string& capability) const
@@ -313,7 +311,7 @@ bool HTSPConnection::ReadMessage()
   size_t cnt = 0;
   while (cnt < len)
   {
-    int64_t r = m_socket->Read(buf + cnt, len - cnt, Settings::GetInstance().GetResponseTimeout());
+    int64_t r = m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout());
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
@@ -414,7 +412,7 @@ htsmsg_t* HTSPConnection::SendAndWait0(std::unique_lock<std::recursive_mutex>& l
                                        int iResponseTimeout)
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
+    iResponseTimeout = m_settings->GetResponseTimeout();
 
   /* Add Sequence number */
   uint32_t seq = ++m_seq;
@@ -475,7 +473,7 @@ htsmsg_t* HTSPConnection::SendAndWait(std::unique_lock<std::recursive_mutex>& lo
                                       int iResponseTimeout)
 {
   if (iResponseTimeout == -1)
-    iResponseTimeout = Settings::GetInstance().GetResponseTimeout();
+    iResponseTimeout = m_settings->GetResponseTimeout();
 
   if (!WaitForConnection(lock))
     return nullptr;
@@ -591,8 +589,8 @@ bool HTSPConnection::SendAuth(std::unique_lock<std::recursive_mutex>& lock,
  */
 void HTSPConnection::Register()
 {
-  std::string user = Settings::GetInstance().GetUsername();
-  std::string pass = Settings::GetInstance().GetPassword();
+  std::string user = m_settings->GetUsername();
+  std::string pass = m_settings->GetPassword();
 
   {
     std::unique_lock<std::recursive_mutex> lock(m_mutex);
@@ -654,15 +652,14 @@ void HTSPConnection::Process()
 {
   static bool log = false;
   static unsigned int retryAttempt = 0;
-  const Settings& settings = Settings::GetInstance();
 
   while (!ShouldStopProcessing())
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "new connection requested");
 
-    std::string host = settings.GetHostname();
-    int port = settings.GetPortHTSP();
-    int timeout = settings.GetConnectTimeout();
+    std::string host = m_settings->GetHostname();
+    int port = m_settings->GetPortHTSP();
+    int timeout = m_settings->GetConnectTimeout();
 
     /* Create socket (ensure mutex protection) */
     {
@@ -701,7 +698,7 @@ void HTSPConnection::Process()
     }
 
     /* wakeup server */
-    std::string wol_mac = settings.GetWolMac();
+    std::string wol_mac = m_settings->GetWolMac();
     if (!wol_mac.empty())
     {
       Logger::Log(LogLevel::LEVEL_TRACE, "send wol packet...");

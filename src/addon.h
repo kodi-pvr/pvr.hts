@@ -9,7 +9,13 @@
 
 #include "kodi/AddonBase.h"
 
+#include <memory>
 #include <mutex>
+
+namespace tvheadend
+{
+class AddonSettings;
+}
 
 class ATTR_DLL_LOCAL CHTSAddon : public kodi::addon::CAddonBase
 {
@@ -24,4 +30,5 @@ public:
 
 private:
   std::recursive_mutex m_mutex;
+  std::shared_ptr<tvheadend::AddonSettings> m_settings;
 };

@@ -9,7 +9,7 @@
 #include "HTSPDemuxer.h"
 
 #include "HTSPConnection.h"
-#include "Settings.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 #include "utilities/RDSExtractor.h"
 
@@ -34,8 +34,11 @@ static const int TVH_STREAM_INDEX_OFFSET = 1000;
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
-HTSPDemuxer::HTSPDemuxer(IHTSPDemuxPacketHandler& demuxPktHdl, HTSPConnection& conn)
-  : m_conn(conn),
+HTSPDemuxer::HTSPDemuxer(const std::shared_ptr<InstanceSettings>& settings,
+                         IHTSPDemuxPacketHandler& demuxPktHdl,
+                         HTSPConnection& conn)
+  : m_settings(settings),
+    m_conn(conn),
     m_pktBuffer(static_cast<size_t>(-1)),
     m_seektime(nullptr),
     m_subscription(conn),
@@ -233,7 +236,7 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
     return false;
 
   /* Wait for time */
-  int64_t seekedTo = (*m_seektime).Get(lock, Settings::GetInstance().GetResponseTimeout());
+  int64_t seekedTo = (*m_seektime).Get(lock, m_settings->GetResponseTimeout());
   m_seektime = nullptr;
 
   if (seekedTo == INVALID_SEEKTIME)

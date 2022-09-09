@@ -48,6 +48,8 @@ set(HTS_SOURCES_AAC_HUFFMAN
                 src/aac/huffman/Decoder.h)
 
 set(HTS_SOURCES_TVHEADEND
+                src/tvheadend/AddonSettings.cpp 
+                src/tvheadend/AddonSettings.h   
                 src/tvheadend/AutoRecordings.cpp
                 src/tvheadend/AutoRecordings.h
                 src/tvheadend/ChannelTuningPredictor.h
@@ -60,11 +62,11 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/HTSPTypes.h
                 src/tvheadend/HTSPVFS.h
                 src/tvheadend/HTSPVFS.cpp
+                src/tvheadend/InstanceSettings.h
+                src/tvheadend/InstanceSettings.cpp
                 src/tvheadend/IHTSPConnectionListener.h
                 src/tvheadend/IHTSPDemuxPacketHandler.h
                 src/tvheadend/Profile.h
-                src/tvheadend/Settings.cpp
-                src/tvheadend/Settings.h
                 src/tvheadend/Subscription.cpp
                 src/tvheadend/Subscription.h
                 src/tvheadend/TimeRecordings.cpp
@@ -106,7 +108,9 @@ set(HTS_SOURCES_TVHEADEND_UTILITIES
                 src/tvheadend/utilities/RDSExtractor.cpp
                 src/tvheadend/utilities/SyncedBuffer.h
                 src/tvheadend/utilities/TCPSocket.h
-                src/tvheadend/utilities/TCPSocket.cpp)
+                src/tvheadend/utilities/TCPSocket.cpp
+                src/tvheadend/utilities/SettingsMigration.h
+                src/tvheadend/utilities/SettingsMigration.cpp)
 
 source_group("Source Files" FILES ${HTS_SOURCES})
 source_group("Source Files\\aac" FILES ${HTS_SOURCES_AAC})

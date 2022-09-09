@@ -10,9 +10,12 @@
 #include "RecordingBase.h"
 
 #include <map>
+#include <memory>
 
 namespace tvheadend
 {
+class InstanceSettings;
+
 namespace entity
 {
 
@@ -23,6 +26,8 @@ public:
 
   bool operator==(const AutoRecording& right);
   bool operator!=(const AutoRecording& right);
+
+  void SetSettings(const std::shared_ptr<InstanceSettings>& settings) { m_settings = settings; }
 
   time_t GetStart() const;
   void SetStartWindowBegin(int32_t begin);
@@ -46,6 +51,8 @@ public:
   void SetSeriesLink(const std::string& seriesLink);
 
 private:
+  std::shared_ptr<InstanceSettings> m_settings;
+
   int32_t m_startWindowBegin; // Begin of the starting window (minutes from midnight).
   int32_t m_startWindowEnd; // End of the starting window (minutes from midnight).
   int64_t m_startExtra; // Extra start minutes (pre-time).

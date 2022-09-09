@@ -12,7 +12,8 @@ extern "C"
 #include "libhts/htsmsg_binary.h"
 }
 #include "HTSPConnection.h"
-#include "Settings.h"
+#include "HTSPTypes.h"
+#include "InstanceSettings.h"
 #include "utilities/Logger.h"
 
 #include "kodi/addon-instance/pvr/Recordings.h"
@@ -29,8 +30,9 @@ using namespace tvheadend::utilities;
 /*
  * VFS handler
  */
-HTSPVFS::HTSPVFS(HTSPConnection& conn)
-  : m_conn(conn),
+HTSPVFS::HTSPVFS(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn)
+  : m_settings(settings),
+    m_conn(conn),
     m_path(""),
     m_fileId(0),
     m_offset(0),
@@ -264,8 +266,8 @@ void HTSPVFS::SendFileClose()
   /* If setting set, we will increase play count with CTvheadend::SetPlayCount */
   if (m_conn.GetProtocol() >= 27)
     htsmsg_add_u32(m, "playcount",
-                   Settings::GetInstance().GetDvrPlayStatus() ? HTSP_DVR_PLAYCOUNT_KEEP
-                                                              : HTSP_DVR_PLAYCOUNT_INCR);
+                   m_settings->GetDvrPlayStatus() ? HTSP_DVR_PLAYCOUNT_KEEP
+                                                  : HTSP_DVR_PLAYCOUNT_INCR);
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "vfs close id=%d", m_fileId);
 
