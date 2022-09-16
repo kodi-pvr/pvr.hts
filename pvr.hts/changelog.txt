@@ -1,3 +1,7 @@
+v20.5.0
+- Kodi inputstream API update to version 3.2.0
+- Kodi PVR API update to version 8.0.2
+
 v20.4.0
 - Add support for multiple backends.
 - Request addon-restart only on settings changes which require a reconnect to the backend.
