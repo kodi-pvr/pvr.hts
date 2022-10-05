@@ -1,3 +1,6 @@
+v20.6.0
+- Drop support for Tvheadend < 4.2.0
+
 v20.5.0
 - Kodi inputstream API update to version 3.2.0
 - Kodi PVR API update to version 8.0.2
