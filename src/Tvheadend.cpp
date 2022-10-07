@@ -705,12 +705,7 @@ PVR_ERROR CTvheadend::SetRecordingLifetime(const kodi::addon::PVRRecording& rec)
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", std::stoul(rec.GetRecordingId()));
-
-  if (m_conn->GetProtocol() >= 25)
-    htsmsg_add_u32(m, "removal", LifetimeMapper::KodiToTvh(rec.GetLifetime())); // remove from disk
-  else
-    htsmsg_add_u32(m, "retention",
-                   LifetimeMapper::KodiToTvh(rec.GetLifetime())); // remove from tvh database
+  htsmsg_add_u32(m, "removal", LifetimeMapper::KodiToTvh(rec.GetLifetime())); // remove from disk
 
   return SendDvrUpdate(m);
 }
@@ -809,15 +804,9 @@ void CTvheadend::GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& li
       {LifetimeMapper::TvhToKodi(DVR_RET_1YEAR), kodi::addon::GetLocalizedString(30385)},
       {LifetimeMapper::TvhToKodi(DVR_RET_2YEARS), kodi::addon::GetLocalizedString(30386)},
       {LifetimeMapper::TvhToKodi(DVR_RET_3YEARS), kodi::addon::GetLocalizedString(30387)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_SPACE), kodi::addon::GetLocalizedString(30388)},
+      {LifetimeMapper::TvhToKodi(DVR_RET_FOREVER), kodi::addon::GetLocalizedString(30389)},
   };
-
-  if (m_conn->GetProtocol() >= 25)
-  {
-    lifetimeValues.emplace_back(LifetimeMapper::TvhToKodi(DVR_RET_SPACE),
-                                kodi::addon::GetLocalizedString(30373));
-    lifetimeValues.emplace_back(LifetimeMapper::TvhToKodi(DVR_RET_FOREVER),
-                                kodi::addon::GetLocalizedString(30374));
-  }
 }
 
 PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& types)
@@ -852,29 +841,23 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
                            kodi::addon::GetLocalizedString(30360));
   deDupValues.emplace_back(DVR_AUTOREC_RECORD_ONCE_PER_DAY, kodi::addon::GetLocalizedString(30361));
 
-  if (m_conn->GetProtocol() >= 26)
-  {
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER,
-                             kodi::addon::GetLocalizedString(30362));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,
-                             kodi::addon::GetLocalizedString(30363));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,
-                             kodi::addon::GetLocalizedString(30364));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,
-                             kodi::addon::GetLocalizedString(30365));
-  }
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER,
+                           kodi::addon::GetLocalizedString(30362));
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE,
+                           kodi::addon::GetLocalizedString(30363));
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_TITLE,
+                           kodi::addon::GetLocalizedString(30364));
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_DIFFERENT_DESCRIPTION,
+                           kodi::addon::GetLocalizedString(30365));
 
   if (m_conn->GetProtocol() >= 27)
     deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_MONTH,
                              kodi::addon::GetLocalizedString(30371));
 
-  if (m_conn->GetProtocol() >= 26)
-  {
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,
-                             kodi::addon::GetLocalizedString(30366));
-    deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,
-                             kodi::addon::GetLocalizedString(30367));
-  }
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_WEEK,
+                           kodi::addon::GetLocalizedString(30366));
+  deDupValues.emplace_back(DVR_AUTOREC_LRECORD_ONCE_PER_DAY,
+                           kodi::addon::GetLocalizedString(30367));
 
   if (m_conn->GetProtocol() >= 31)
     deDupValues.emplace_back(DVR_AUTOREC_RECORD_UNIQUE, kodi::addon::GetLocalizedString(30372));
@@ -886,19 +869,14 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
   unsigned int TIMER_ONCE_MANUAL_ATTRIBS =
       PVR_TIMER_TYPE_IS_MANUAL | PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
       PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_END_TIME |
-      PVR_TIMER_TYPE_SUPPORTS_PRIORITY | PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
+      PVR_TIMER_TYPE_SUPPORTS_PRIORITY | PVR_TIMER_TYPE_SUPPORTS_LIFETIME |
+      PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
 
   unsigned int TIMER_ONCE_EPG_ATTRIBS =
       PVR_TIMER_TYPE_SUPPORTS_CHANNELS | PVR_TIMER_TYPE_SUPPORTS_START_TIME |
       PVR_TIMER_TYPE_SUPPORTS_END_TIME | PVR_TIMER_TYPE_REQUIRES_EPG_TAG_ON_CREATE |
       PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN | PVR_TIMER_TYPE_SUPPORTS_PRIORITY |
-      PVR_TIMER_TYPE_SUPPORTS_LIFETIME;
-
-  if (m_conn->GetProtocol() >= 23)
-  {
-    TIMER_ONCE_MANUAL_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
-    TIMER_ONCE_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
-  }
+      PVR_TIMER_TYPE_SUPPORTS_LIFETIME | PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE;
 
   /* Timer types definition. */
 
@@ -1020,13 +998,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_START_ANYTIME |
       PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS | PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN |
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY | PVR_TIMER_TYPE_SUPPORTS_LIFETIME |
-      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS | PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL;
-
-  if (m_conn->GetProtocol() >= 20)
-  {
-    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH;
-    TIMER_REPEATING_EPG_ATTRIBS |= PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
-  }
+      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS | PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL |
+      PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH | PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
 
   if (!m_settings->GetAutorecApproxTime())
   {
@@ -1084,12 +1057,7 @@ bool CTvheadend::CreateTimer(const Recording& tvhTmr, kodi::addon::PVRTimer& tmr
   tmr.SetEPGSearchString(""); // n/a for one-shot timers
   tmr.SetDirectory(""); // n/a for one-shot timers
   tmr.SetSummary(tvhTmr.GetDescription());
-
-  if (m_conn->GetProtocol() >= 23)
-    tmr.SetState(!tvhTmr.IsEnabled() ? PVR_TIMER_STATE_DISABLED : tvhTmr.GetState());
-  else
-    tmr.SetState(tvhTmr.GetState());
-
+  tmr.SetState(!tvhTmr.IsEnabled() ? PVR_TIMER_STATE_DISABLED : tvhTmr.GetState());
   tmr.SetPriority(tvhTmr.GetPriority());
   tmr.SetLifetime(tvhTmr.GetLifetime());
   tmr.SetTimerType(tvhTmr.GetTimerType());
@@ -1185,19 +1153,11 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
       htsmsg_add_str(m, "description", timer.GetSummary().c_str());
     }
 
-    if (m_conn->GetProtocol() >= 23)
-      htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
-
+    htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
     htsmsg_add_s64(m, "startExtra", timer.GetMarginStart());
     htsmsg_add_s64(m, "stopExtra", timer.GetMarginEnd());
-
-    if (m_conn->GetProtocol() >= 25)
-      htsmsg_add_u32(m, "removal",
-                     LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
-    else
-      htsmsg_add_u32(m, "retention",
-                     LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from tvh database
-
+    htsmsg_add_u32(m, "removal",
+                   LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
     htsmsg_add_u32(m, "priority", timer.GetPriority());
 
     /* Send and Wait */
@@ -1247,18 +1207,8 @@ PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
     const auto& it = m_recordings.find(timer.GetClientIndex());
     if (it != m_recordings.end() && it->second.IsRecording())
     {
-      // This is a request to stop an active recording.
-      if (m_conn->GetProtocol() >= 26)
-      {
-        // gracefully stop the recording (mark as success in tvh)
-        return SendDvrDelete(timer.GetClientIndex(), "stopDvrEntry");
-      }
-      else
-      {
-        // abort the recording (mark as failure in tvh) - no other choice,
-        // because graceful stop HTSP method was not available before HTSP v26.
-        return SendDvrDelete(timer.GetClientIndex(), "cancelDvrEntry");
-      }
+      // gracefully stop the recording (mark as success in tvh)
+      return SendDvrDelete(timer.GetClientIndex(), "stopDvrEntry");
     }
   }
 
@@ -1302,36 +1252,9 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
     /* Build message */
     htsmsg_t* m = htsmsg_create_map();
     htsmsg_add_u32(m, "id", timer.GetClientIndex());
-
-    if (m_conn->GetProtocol() >= 22)
-    {
-      /* support for updating the channel was added very late to the htsp protocol. */
-      htsmsg_add_u32(m, "channelId", timer.GetClientChannelUid());
-    }
-    else
-    {
-      std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-      const auto& it = m_recordings.find(timer.GetClientIndex());
-      if (it == m_recordings.end())
-      {
-        Logger::Log(LogLevel::LEVEL_ERROR, "cannot find the timer to update");
-        return PVR_ERROR_INVALID_PARAMETERS;
-      }
-
-      if (it->second.GetChannel() != static_cast<uint32_t>(timer.GetClientChannelUid()))
-      {
-        Logger::Log(LogLevel::LEVEL_ERROR,
-                    "updating channels of one-shot timers not supported by HTSP v%d",
-                    m_conn->GetProtocol());
-        return PVR_ERROR_NOT_IMPLEMENTED;
-      }
-    }
-
+    htsmsg_add_u32(m, "channelId", timer.GetClientChannelUid());
     htsmsg_add_str(m, "title", timer.GetTitle().c_str());
-
-    if (m_conn->GetProtocol() >= 23)
-      htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+    htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
 
     int64_t start = timer.GetStartTime();
     if (start == 0)
@@ -1345,14 +1268,8 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
     htsmsg_add_str(m, "description", timer.GetSummary().c_str());
     htsmsg_add_s64(m, "startExtra", timer.GetMarginStart());
     htsmsg_add_s64(m, "stopExtra", timer.GetMarginEnd());
-
-    if (m_conn->GetProtocol() >= 25)
-      htsmsg_add_u32(m, "removal",
-                     LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
-    else
-      htsmsg_add_u32(m, "retention",
-                     LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from tvh database
-
+    htsmsg_add_u32(m, "removal",
+                   LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
     htsmsg_add_u32(m, "priority", timer.GetPriority());
 
     return SendDvrUpdate(m);
@@ -1371,21 +1288,18 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
   else if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
            (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
-    if (m_conn->GetProtocol() >= 23)
-    {
-      /* Read-only timer created by autorec or timerec */
-      std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    /* Read-only timer created by autorec or timerec */
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-      const auto& it = m_recordings.find(timer.GetClientIndex());
-      if (it != m_recordings.end() &&
-          (it->second.IsEnabled() == (timer.GetState() == PVR_TIMER_STATE_DISABLED)))
-      {
-        /* This is actually a request to enable/disable a timer. */
-        htsmsg_t* m = htsmsg_create_map();
-        htsmsg_add_u32(m, "id", timer.GetClientIndex());
-        htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
-        return SendDvrUpdate(m);
-      }
+    const auto& it = m_recordings.find(timer.GetClientIndex());
+    if (it != m_recordings.end() &&
+        (it->second.IsEnabled() == (timer.GetState() == PVR_TIMER_STATE_DISABLED)))
+    {
+      /* This is actually a request to enable/disable a timer. */
+      htsmsg_t* m = htsmsg_create_map();
+      htsmsg_add_u32(m, "id", timer.GetClientIndex());
+      htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+      return SendDvrUpdate(m);
     }
 
     Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
@@ -2246,22 +2160,8 @@ void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
         continue;
 
       /* Channel type */
-      if (m_conn->GetProtocol() >= 26)
-      {
-        if (!htsmsg_get_u32(&f->hmf_msg, "content", &u32))
-          channel.SetType(u32);
-      }
-      else
-      {
-        str = htsmsg_get_str(&f->hmf_msg, "type");
-        if (str)
-        {
-          if (!std::strcmp(str, "Radio"))
-            channel.SetType(CHANNEL_TYPE_RADIO);
-          else if (!std::strcmp(str, "SDTV") || !std::strcmp(str, "HDTV"))
-            channel.SetType(CHANNEL_TYPE_TV);
-        }
-      }
+      if (!htsmsg_get_u32(&f->hmf_msg, "content", &u32))
+        channel.SetType(u32);
 
       /* CAID */
       if (caid == 0)
@@ -2398,7 +2298,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   htsmsg_t* files = htsmsg_get_list(msg, "files");
   if (files)
   {
-    bool needChannelType = !rec.GetChannelType() && m_conn->GetProtocol() >= 25;
+    bool needChannelType = !rec.GetChannelType();
     bool hasAudio = false;
     bool hasVideo = false;
 
@@ -2465,7 +2365,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Channel name fallback (in case channel was deleted) */
-  if (rec.GetChannelName().empty() && m_conn->GetProtocol() >= 25)
+  if (rec.GetChannelName().empty())
   {
     const char* str = htsmsg_get_str(msg, "channelName");
     if (str)
@@ -2490,31 +2390,15 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     return;
   }
 
-  if (m_conn->GetProtocol() >= 25)
+  uint32_t removal = 0;
+  if (!htsmsg_get_u32(msg, "removal", &removal))
   {
-    uint32_t removal = 0;
-    if (!htsmsg_get_u32(msg, "removal", &removal))
-    {
-      rec.SetLifetime(removal);
-    }
-    else if (bAdd)
-    {
-      Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'removal' missing");
-      return;
-    }
+    rec.SetLifetime(removal);
   }
-  else
+  else if (bAdd)
   {
-    uint32_t retention = 0;
-    if (!htsmsg_get_u32(msg, "retention", &retention))
-    {
-      rec.SetLifetime(retention);
-    }
-    else if (bAdd)
-    {
-      Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'retention' missing");
-      return;
-    }
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed dvrEntryAdd: 'removal' missing");
+    return;
   }
 
   uint32_t priority = 0;

@@ -32,9 +32,9 @@ using namespace tvheadend::utilities;
 #define FAST_RECONNECT_INTERVAL (500) // ms
 #define SLOW_RECONNECT_INTERVAL (5000) // ms
 
-#define HTSP_MIN_SERVER_VERSION (19) // Server must support at least this htsp version
+#define HTSP_MIN_SERVER_VERSION (26) // Server must support at least this htsp version
 #define HTSP_CLIENT_VERSION \
-  (34) // Client uses HTSP features up to this version. If the respective \
+  (35) // Client uses HTSP features up to this version. If the respective \
       // addon feature requires htsp features introduced after \
       // HTSP_MIN_SERVER_VERSION this feature will only be available if the \
       // actual server HTSP version matches (runtime htsp version check).

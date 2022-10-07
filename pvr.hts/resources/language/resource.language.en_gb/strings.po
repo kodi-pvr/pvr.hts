@@ -294,17 +294,7 @@ msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr ""
 
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30374"
-msgid "Forever"
-msgstr ""
+#empty strings from id 30373 to 30374
 
 #. Recording lifetime representation
 #: src/Tvheadend.cpp
@@ -384,14 +374,14 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
+msgid "Until space needed"
 msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
+msgid "Forever"
 msgstr ""
 
 #. Recording lifetime representation
