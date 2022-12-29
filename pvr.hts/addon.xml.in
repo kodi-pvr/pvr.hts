@@ -37,7 +37,7 @@
     <summary lang="fr_FR">Interface logicielle pour Tvheadend</summary>
     <summary lang="gl_ES">Interface do Kodi para Tvheadend</summary>
     <summary lang="he_IL">לקוח טלוויזיה חיה עבור Tvheadend</summary>
-    <summary lang="hr_HR">Kodi sučelje za Tvheadend</summary>
+    <summary lang="hr_HR">Kodi pozadinski softver za Tvheadend</summary>
     <summary lang="hu_HU">Kodi előtét a TVHeadend-hez</summary>
     <summary lang="id_ID">Frontend Kodi untuk Tvheadend</summary>
     <summary lang="is_IS">Kodi framendi fyrir Tvheadend</summary>
@@ -88,7 +88,7 @@
     <description lang="et_EE">Tvheadend&apos;i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend-käyttöliittymä, joka tukee televisiolähetysten ja tallenteiden suoratoistoa, ohjelmaopasta ja ajastuksia.</description>
     <description lang="fr_CA">Frontale pour Tvheadend, prenant en charge la diffusion en continu des télés en direct et les enregistrements, le GÉP et les minuteries</description>
-    <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations.</description>
+    <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et les enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
     <description lang="hr_HR">Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje.</description>
