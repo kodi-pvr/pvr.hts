@@ -41,7 +41,7 @@
     <summary lang="hu_HU">Kodi előtét a TVHeadend-hez</summary>
     <summary lang="id_ID">Frontend Kodi untuk Tvheadend</summary>
     <summary lang="is_IS">Kodi framendi fyrir Tvheadend</summary>
-    <summary lang="it_IT">Frontend di Kodi per Tvheadend</summary>
+    <summary lang="it_IT">Frontend Kodi per Tvheadend</summary>
     <summary lang="ja_JP">TVheadend 用 Kodi フロントエンド</summary>
     <summary lang="ko_KR">Tvheadend 을 위한 Kodi 프론트엔드</summary>
     <summary lang="lt_LT">Kodi naudotojo sąsaja skirta Tvheadend</summary>
@@ -91,11 +91,11 @@
     <description lang="fr_FR">Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et les enregistrements, le guide électronique des programmes TV et les programmations.</description>
     <description lang="gl_ES">Interface Tvheadend; soporta a transmisión de TV en directo e Gravacións, Guía, temporizadores</description>
     <description lang="he_IL">לקוח טלוויזיה חיה של Tvheadend. תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
-    <description lang="hr_HR">Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje.</description>
+    <description lang="hr_HR">Tvheadend sučelje podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje</description>
     <description lang="hu_HU">TVHeadend előtét. Élő adások és felvételek támogatása EPG-vel és időzítéssel</description>
     <description lang="id_ID">Frontend Tvheadend; mendukung menangkap siaran TV Live &amp; Rekaman, EPG, Timer</description>
     <description lang="is_IS">Tvheadend framendi; styður streymingu á beinum útsendingum og upptökum, rafrænum sjónvarpsvísum (EGP), tímatökur</description>
-    <description lang="it_IT">Frontend di Tvheadend; supporta lo streaming di Live TV &amp; Registrazione, EPG, Timers</description>
+    <description lang="it_IT">Frontend Tvheadend; supporta lo stream e la registrazione di Live TV, EPG, timer</description>
     <description lang="ja_JP">TVheadend フロントエンドです。ライブTVストリーミング、録画、EPG、タイマーをサポートしています。</description>
     <description lang="ko_KR">Tvheadend 프론트엔드; TV 시청 &amp; 녹화, EPG, 타이머 지원</description>
     <description lang="lt_LT">Tvheadend naudotojo sąsaja; palaiko televizijos transliacijas ir įrašus, EPG, laikmačius</description>
