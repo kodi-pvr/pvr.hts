@@ -5,16 +5,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: French (France) (http://www.transifex.com/projects/p/kodi-main/language/fr_FR/)\n"
-"Language: fr_FR\n"
+"PO-Revision-Date: 2022-12-28 16:23+0000\n"
+"Last-Translator: skypichat <skypichat@hotmail.fr>\n"
+"Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/fr_fr/>\n"
+"Language: fr_fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -22,7 +23,7 @@ msgstr "Interface logicielle pour Tvheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et des enregistrements, le guide électronique des programmes TV et les programmations."
+msgstr "Interface logicielle pour Tvheadend gérant la lecture en continu de la TV en direct et les enregistrements, le guide électronique des programmes TV et les programmations."
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -70,15 +71,15 @@ msgstr "Paramètres de la programmation"
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr ""
+msgstr "Utiliser HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr ""
+msgstr "Serveur MAC pour Wake-on-LAN"
 
 msgctxt "#30050"
 msgid "Auto recordings"
-msgstr "Enregistrements auto."
+msgstr "Enregistrements auto"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
@@ -122,7 +123,7 @@ msgstr "Ignorer les doublons (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr ""
+msgstr "Utiliser des expressions régulières (regex) pour la correspondance de programme"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -202,7 +203,7 @@ msgstr "Enregistrer max. une fois pas semaine"
 #. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Enregistrer max. une fois par jour"
+msgstr "Enregistrer au maximum une fois par jour"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
@@ -347,7 +348,7 @@ msgstr "Indéfiniment (tvh 4.1+)"
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr ""
+msgstr "Utiliser le paramètre principal"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -404,7 +405,7 @@ msgstr "Profil à utiliser (vide = prédéfini)"
 #. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Le profil %s de diffusion par flux n'est pas disponible."
+msgstr "Le profil %s de diffusion par flux n'est pas disponible"
 
 msgctxt "#30503"
 msgid "Data transfer"
@@ -416,7 +417,7 @@ msgstr "Taille des blocs de flux de lecture des enregistrements (ko)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr ""
+msgstr "Utiliser le streaming HTTP pour les chaînes"
 
 msgctxt "#30510"
 msgid "Recordings"

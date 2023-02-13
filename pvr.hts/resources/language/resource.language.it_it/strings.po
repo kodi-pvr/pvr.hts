@@ -5,32 +5,33 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Italian (Italy) (http://www.transifex.com/projects/p/kodi-main/language/it_IT/)\n"
-"Language: it_IT\n"
+"PO-Revision-Date: 2023-01-23 13:25+0000\n"
+"Last-Translator: Massimo Pissarello <mapi68@gmail.com>\n"
+"Language-Team: Italian <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/it_it/>\n"
+"Language: it_it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
-msgstr "Frontend di Kodi per Tvheadend"
+msgstr "Frontend Kodi per Tvheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Frontend di Tvheadend; supporta lo streaming di Live TV & Registrazione, EPG, Timers"
+msgstr "Frontend Tvheadend; supporta lo stream e la registrazione di Live TV, EPG, timer"
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Impostazioni di connessione"
+msgstr "Impostazioni connessione"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend hostname o indirizzo IP"
+msgstr "Nome host Tvheadend o indirizzo IP"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -50,7 +51,7 @@ msgstr "Password"
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Timeout Connessione (secondi)"
+msgstr "Timeout connessione (secondi)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
@@ -62,31 +63,31 @@ msgstr "Impostazioni avanzate"
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Impostazioni Streaming"
+msgstr "Impostazioni streaming"
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Impostazioni Timer"
+msgstr "Impostazioni timer"
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr ""
+msgstr "Usa HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr ""
+msgstr "Server MAC per Wake-on-LAN"
 
 msgctxt "#30050"
 msgid "Auto recordings"
-msgstr "Registrazioni Automatiche"
+msgstr "Registrazioni automatiche"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Avvia calcolo della finestra temporale"
+msgstr "Avvia calcolo finestra temporale"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
-msgstr "Stretto necessario (ora inizio + ora fine)"
+msgstr "Ristretto (ora inizio + ora fine)"
 
 msgctxt "#30053"
 msgid "Relaxed (start time +/- margin)"
@@ -94,7 +95,7 @@ msgstr "Rilassato (ora inizio +/- margine)"
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Massimo margine di tempo (minuti)"
+msgstr "Margine massimo orario d'inizio (minuti)"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -110,11 +111,11 @@ msgstr "Rilevamento dei duplicati predefinito"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Preimpostazione per nuovi timer"
+msgstr "Impostazioni predefinite per i nuovi timer"
 
 msgctxt "#30059"
 msgid "Scheduled recordings"
-msgstr "Registrazioni programmate"
+msgstr "Registrazioni pianificate"
 
 msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
@@ -122,7 +123,7 @@ msgstr "Ignora duplicati (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr ""
+msgstr "Usa le espressioni regolari (regex) per la corrispondenza dei programmi"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -134,7 +135,7 @@ msgstr "Trasferimento EPG asincrono"
 
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Debugging"
+msgstr "Debug"
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
@@ -142,17 +143,17 @@ msgstr "Traccia (dettagliata)"
 
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "La versione di HTSP non corrisponde (supportata: v%d, necessaria: v&d). Aggiorna tvheadend, per favore."
+msgstr "Mancata corrispondenza della versione HTSP (supportata: v%d, richiesta: v%d). Si prega di aggiornare Tvheadend."
 
 #. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "Una volta (Pianificato da timer)"
+msgstr "Una volta (pianificato da regola timer)"
 
 #. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
-msgstr "Importante (Maggiore)"
+msgstr "Importante (più alta)"
 
 #. Recording priority representation
 msgctxt "#30352"
@@ -172,7 +173,7 @@ msgstr "Bassa"
 #. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
-msgstr "Meno importante (Minore)"
+msgstr "Non importante (più bassa)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30356"
@@ -182,22 +183,22 @@ msgstr "Registra tutti gli episodi"
 #. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Registra se il numero dell'episodio è differente"
+msgstr "Registra se il numero dell'episodio è diverso"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Registra se il nome dell'episodio è differente"
+msgstr "Registra se il nome dell'episodio è diverso"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Registra se la descrizione è differente"
+msgstr "Registra se la descrizione è diversa"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Registra al massimo una volta a settimana"
+msgstr "Registra al massimo una volta alla settimana"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30361"
@@ -207,32 +208,32 @@ msgstr "Registra al massimo una volta al giorno"
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Solo questa regola: Registra se il numero dell'episodio è differente"
+msgstr "Unica regola: registra se il numero dell'episodio è diverso"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Solo questa regola: Registra se il nome dell'episodio è differente"
+msgstr "Unica regola: registra se il nome dell'episodio è diverso"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Solo questa regola: Registra se il titolo è differente"
+msgstr "Unica regola: registra se il titolo è diverso"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Solo questa regola: Registra se la descrizione è differente"
+msgstr "Unica regola: registra se la descrizione è diversa"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Solo questa regola: Registra al massimo una volta a settimana"
+msgstr "Unica regola: registra massimo una volta alla settimana"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Solo questa regola: Registra al massimo una volta al giorno"
+msgstr "Unica regola: registra massimo una volta al giorno"
 
 #. Recording priority representation
 msgctxt "#30368"
@@ -252,17 +253,17 @@ msgstr "Registra al massimo una volta al mese"
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Solo questa regola: Registra al massimo una volta al mese"
+msgstr "Unica regola: registra al massimo una volta al mese"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
-msgstr "Registra se unico episodio in base a EPG/XMLTV"
+msgstr "Registra se episodio unico secondo EPG/XMLTV"
 
 #. Recording lifetime representation
 msgctxt "#30373"
 msgid "Until space needed"
-msgstr "Fino a spazio necessario"
+msgstr "Fino allo spazio necessario"
 
 #. Recording lifetime representation
 msgctxt "#30374"
@@ -287,7 +288,7 @@ msgstr "5 giorni"
 #. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
-msgstr "una settimana"
+msgstr "1 settimana"
 
 #. Recording lifetime representation
 msgctxt "#30379"
@@ -302,7 +303,7 @@ msgstr "3 settimane"
 #. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
-msgstr "un mese"
+msgstr "1 mese"
 
 #. Recording lifetime representation
 msgctxt "#30382"
@@ -322,7 +323,7 @@ msgstr "6 mesi"
 #. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
-msgstr "un anno"
+msgstr "1 anno"
 
 #. Recording lifetime representation
 msgctxt "#30386"
@@ -337,7 +338,7 @@ msgstr "3 anni"
 #. Recording lifetime representation (for setting dialog only)
 msgctxt "#30388"
 msgid "Until space needed (tvh 4.1+)"
-msgstr "Fino a richiesta di spazio (tvh 4.1+)"
+msgstr "Fino allo spazio necessario (tvh 4.1+)"
 
 #. Recording lifetime representation (for setting dialog only)
 msgctxt "#30389"
@@ -347,11 +348,11 @@ msgstr "Per sempre (tvh 4.1+)"
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr ""
+msgstr "Usa impostazione del backend"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
-msgstr "Sintonizzazione predittiva"
+msgstr "Prevedi sintonizzazione"
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
@@ -359,11 +360,11 @@ msgstr "Numero di sottoscrizioni da usare"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Ritardo nella chiusura della sottoscrizioni inutilizzate (secondi)"
+msgstr "Ritardo chiusura sottoscrizione inutilizzata (secondi)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Usa sintonizzazione predittiva per accelerare il cambio canale"
+msgstr "Usa prevedi sintonizzazione per accelerare il cambio canale"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -371,7 +372,7 @@ msgstr "Nessun adattatore libero disponibile"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
-msgstr "Canale codificato"
+msgstr "Canale criptato"
 
 msgctxt "#30452"
 msgid "No signal"
@@ -383,7 +384,7 @@ msgstr "Sintonizzazione fallita"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Raggiunto limite utente"
+msgstr "Limite utenti raggiunto"
 
 msgctxt "#30455"
 msgid "No access"
@@ -395,7 +396,7 @@ msgstr "Errore di sottoscrizione"
 
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Profilo di streaming"
+msgstr "Profilo streaming"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
@@ -404,7 +405,7 @@ msgstr "Profilo da usare (vuoto = predefinito)"
 #. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Profilo di streaming %s non disponibile"
+msgstr "Il profilo di streaming %s non è disponibile"
 
 msgctxt "#30503"
 msgid "Data transfer"
@@ -416,7 +417,7 @@ msgstr "Dimensione blocco lettura stream per registrazioni (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr ""
+msgstr "Usa lo streaming HTTP per i canali"
 
 msgctxt "#30510"
 msgid "Recordings"
@@ -424,4 +425,4 @@ msgstr "Registrazioni"
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Stato di riproduzione basato su server"
+msgstr "Stato riproduzione basato su server"
