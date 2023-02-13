@@ -1,3 +1,7 @@
+v20.6.1
+- Translations updates from Weblate
+	- ast_es, be_by, cs_cz, da_dk, de_de, es_es, fi_fi, fr_fr, hr_hr, it_it, pl_pl, vi_vn
+
 v20.6.0
 - Drop support for Tvheadend < 4.2.0
 
