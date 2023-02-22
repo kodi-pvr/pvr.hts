@@ -328,8 +328,8 @@ PVR_ERROR CTvheadend::GetChannelsAmount(int& amount)
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return PVR_ERROR_FAILED;
 
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   amount = m_channels.size();
-
   return PVR_ERROR_NO_ERROR;
 }
 
