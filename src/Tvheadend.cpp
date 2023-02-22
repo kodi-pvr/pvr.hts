@@ -377,6 +377,9 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
   if (!m_settings->GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
 
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
+
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   auto it = m_channels.find(channel.GetUniqueId());
@@ -747,6 +750,9 @@ PVR_ERROR CTvheadend::GetRecordingLastPlayedPosition(const kodi::addon::PVRRecor
 {
   if (m_conn->GetProtocol() < 27 || !m_settings->GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
+
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1201,6 +1207,9 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
 
 PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
 {
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_FAILED;
+
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1288,6 +1297,9 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
   else if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
            (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
+    if (!m_asyncState.WaitForState(ASYNC_EPG))
+      return PVR_ERROR_FAILED;
+
     /* Read-only timer created by autorec or timerec */
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1556,6 +1568,9 @@ PVR_ERROR CTvheadend::OnSystemWake()
 
 bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& rec)
 {
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return false;
+
   bool ret = m_vfs->Open(rec);
 
   if (ret)
