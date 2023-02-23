@@ -1452,7 +1452,6 @@ PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
 
 void CTvheadend::Disconnected()
 {
-  m_asyncState.SetState(ASYNC_NONE);
 }
 
 bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
@@ -1476,7 +1475,8 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   }
 
   /* Request Async data, first is init (which rebuilds state) */
-  m_asyncState.SetState(ASYNC_INIT);
+  if (m_asyncState.GetState() == ASYNC_NONE)
+    m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (m_settings->GetAsyncEpg())
@@ -1859,18 +1859,6 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
     m_events.emplace_back(event);
 }
 
-void CTvheadend::SyncCompleted()
-{
-  Logger::Log(LogLevel::LEVEL_INFO, "Async updates initialised");
-
-  /* The complete calls are probably redundant, but its a safety feature */
-  SyncInitCompleted();
-  SyncChannelsCompleted();
-  SyncDvrCompleted();
-  SyncEpgCompleted();
-  m_asyncState.SetState(ASYNC_DONE);
-}
-
 void CTvheadend::SyncInitCompleted()
 {
   /* check state engine */
@@ -1878,10 +1866,6 @@ void CTvheadend::SyncInitCompleted()
     return;
 
   /* Rebuild state */
-  for (auto* dmx : m_dmx)
-    dmx->RebuildState();
-
-  m_vfs->RebuildState();
   m_timeRecordings.RebuildState();
   m_autoRecordings.RebuildState();
 
@@ -1901,6 +1885,8 @@ void CTvheadend::SyncInitCompleted()
 
 void CTvheadend::SyncChannelsCompleted()
 {
+  SyncInitCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_CHN)
     return;
@@ -1922,6 +1908,8 @@ void CTvheadend::SyncChannelsCompleted()
 
 void CTvheadend::SyncDvrCompleted()
 {
+  SyncChannelsCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_DVR)
     return;
@@ -1959,6 +1947,8 @@ void CTvheadend::SyncDvrCompleted()
 
 void CTvheadend::SyncEpgCompleted()
 {
+  SyncDvrCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_EPG)
     return;
@@ -2008,6 +1998,20 @@ void CTvheadend::SyncEpgCompleted()
 
   /* Next */
   m_asyncState.SetState(ASYNC_DONE);
+}
+
+void CTvheadend::SyncCompleted()
+{
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  m_vfs->RebuildState();
+
+  SyncEpgCompleted();
+
+  m_asyncState.SetState(ASYNC_DONE);
+
+  Logger::Log(LogLevel::LEVEL_INFO, "Async updates initialised");
 }
 
 void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
@@ -2206,9 +2210,6 @@ void CTvheadend::ParseChannelDelete(htsmsg_t* msg)
 
 void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  /* Rebuild state upon arrival of first async data */
-  SyncInitCompleted();
-
   /* Channels complete */
   SyncChannelsCompleted();
 
@@ -2608,9 +2609,6 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
 
 bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
 {
-  /* Rebuild state upon arrival of first async data */
-  SyncInitCompleted();
-
   /* Recordings complete */
   SyncDvrCompleted();
 
@@ -2790,7 +2788,7 @@ void CTvheadend::ParseEventAddOrUpdate(htsmsg_t* msg, bool bAdd)
   EventUids& events = sched.GetEvents();
 
   bool bUpdated = false;
-  if (bAdd && m_asyncState.GetState() < ASYNC_DONE)
+  if (bAdd && m_asyncState.GetState() == ASYNC_DONE)
   {
     // After a reconnect, during processing of "enableAsyncMetadata" htsp
     // method, tvheadend sends all events as "added". Check whether we
