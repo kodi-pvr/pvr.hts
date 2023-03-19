@@ -328,8 +328,8 @@ PVR_ERROR CTvheadend::GetChannelsAmount(int& amount)
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return PVR_ERROR_FAILED;
 
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   amount = m_channels.size();
-
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -376,6 +376,9 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& 
 {
   if (!m_settings->GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
+
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -747,6 +750,9 @@ PVR_ERROR CTvheadend::GetRecordingLastPlayedPosition(const kodi::addon::PVRRecor
 {
   if (m_conn->GetProtocol() < 27 || !m_settings->GetDvrPlayStatus())
     return PVR_ERROR_NOT_IMPLEMENTED;
+
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1201,6 +1207,9 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
 
 PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
 {
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_FAILED;
+
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1288,6 +1297,9 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
   else if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
            (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
+    if (!m_asyncState.WaitForState(ASYNC_EPG))
+      return PVR_ERROR_FAILED;
+
     /* Read-only timer created by autorec or timerec */
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -1452,7 +1464,6 @@ PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
 
 void CTvheadend::Disconnected()
 {
-  m_asyncState.SetState(ASYNC_NONE);
 }
 
 bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
@@ -1476,7 +1487,8 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   }
 
   /* Request Async data, first is init (which rebuilds state) */
-  m_asyncState.SetState(ASYNC_INIT);
+  if (m_asyncState.GetState() == ASYNC_NONE)
+    m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (m_settings->GetAsyncEpg())
@@ -1556,6 +1568,9 @@ PVR_ERROR CTvheadend::OnSystemWake()
 
 bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& rec)
 {
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return false;
+
   bool ret = m_vfs->Open(rec);
 
   if (ret)
@@ -1859,18 +1874,6 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
     m_events.emplace_back(event);
 }
 
-void CTvheadend::SyncCompleted()
-{
-  Logger::Log(LogLevel::LEVEL_INFO, "Async updates initialised");
-
-  /* The complete calls are probably redundant, but its a safety feature */
-  SyncInitCompleted();
-  SyncChannelsCompleted();
-  SyncDvrCompleted();
-  SyncEpgCompleted();
-  m_asyncState.SetState(ASYNC_DONE);
-}
-
 void CTvheadend::SyncInitCompleted()
 {
   /* check state engine */
@@ -1878,10 +1881,6 @@ void CTvheadend::SyncInitCompleted()
     return;
 
   /* Rebuild state */
-  for (auto* dmx : m_dmx)
-    dmx->RebuildState();
-
-  m_vfs->RebuildState();
   m_timeRecordings.RebuildState();
   m_autoRecordings.RebuildState();
 
@@ -1901,6 +1900,8 @@ void CTvheadend::SyncInitCompleted()
 
 void CTvheadend::SyncChannelsCompleted()
 {
+  SyncInitCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_CHN)
     return;
@@ -1922,6 +1923,8 @@ void CTvheadend::SyncChannelsCompleted()
 
 void CTvheadend::SyncDvrCompleted()
 {
+  SyncChannelsCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_DVR)
     return;
@@ -1959,6 +1962,8 @@ void CTvheadend::SyncDvrCompleted()
 
 void CTvheadend::SyncEpgCompleted()
 {
+  SyncDvrCompleted();
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_EPG)
     return;
@@ -2008,6 +2013,20 @@ void CTvheadend::SyncEpgCompleted()
 
   /* Next */
   m_asyncState.SetState(ASYNC_DONE);
+}
+
+void CTvheadend::SyncCompleted()
+{
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  m_vfs->RebuildState();
+
+  SyncEpgCompleted();
+
+  m_asyncState.SetState(ASYNC_DONE);
+
+  Logger::Log(LogLevel::LEVEL_INFO, "Async updates initialised");
 }
 
 void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
@@ -2206,9 +2225,6 @@ void CTvheadend::ParseChannelDelete(htsmsg_t* msg)
 
 void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
 {
-  /* Rebuild state upon arrival of first async data */
-  SyncInitCompleted();
-
   /* Channels complete */
   SyncChannelsCompleted();
 
@@ -2608,9 +2624,6 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
 
 bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
 {
-  /* Rebuild state upon arrival of first async data */
-  SyncInitCompleted();
-
   /* Recordings complete */
   SyncDvrCompleted();
 
@@ -2790,7 +2803,7 @@ void CTvheadend::ParseEventAddOrUpdate(htsmsg_t* msg, bool bAdd)
   EventUids& events = sched.GetEvents();
 
   bool bUpdated = false;
-  if (bAdd && m_asyncState.GetState() < ASYNC_DONE)
+  if (bAdd && m_asyncState.GetState() == ASYNC_DONE)
   {
     // After a reconnect, during processing of "enableAsyncMetadata" htsp
     // method, tvheadend sends all events as "added". Check whether we
