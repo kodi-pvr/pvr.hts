@@ -1,3 +1,6 @@
+v21.1.0
+- Kodi inputstream API update to version 3.3.0
+
 v21.0.1
 - Fixed cases where existing channels were treated by Kodi as deleted from backend.
   (Info in Kodi log: "Removed stale channel foo from group bar")
