@@ -1,3 +1,7 @@
+v20.6.3
+- Translations updates from Weblate
+	- fi_fi
+
 v20.6.2
 - Fixed cases where existing channels were treated by Kodi as deleted from backend.
   (Info in Kodi log: "Removed stale channel foo from group bar")
