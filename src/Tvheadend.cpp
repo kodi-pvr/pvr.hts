@@ -1881,6 +1881,10 @@ void CTvheadend::SyncInitCompleted()
     return;
 
   /* Rebuild state */
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  m_vfs->RebuildState();
   m_timeRecordings.RebuildState();
   m_autoRecordings.RebuildState();
 
@@ -2017,11 +2021,6 @@ void CTvheadend::SyncEpgCompleted()
 
 void CTvheadend::SyncCompleted()
 {
-  for (auto* dmx : m_dmx)
-    dmx->RebuildState();
-
-  m_vfs->RebuildState();
-
   SyncEpgCompleted();
 
   m_asyncState.SetState(ASYNC_DONE);
