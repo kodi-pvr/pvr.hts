@@ -1,3 +1,6 @@
+v21.1.1
+- Fix TV channels stuttering after wake from suspend
+
 v21.1.0
 - Kodi inputstream API update to version 3.3.0
 
