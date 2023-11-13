@@ -590,6 +590,15 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
           break;
       }
 
+      /* parental age rating */
+      rec.SetParentalRating(recording.GetAgeRating());
+
+      /* parental age rating code*/
+      rec.SetParentalRatingCode(recording.GetRatingLabel());
+
+      /* parental age rating icon URL*/
+      rec.SetParentalRatingIcon(recording.GetRatingIcon());
+
       recs.emplace_back(rec);
     }
   }
@@ -1358,6 +1367,8 @@ void CTvheadend::CreateEvent(const Event& event, kodi::addon::PVREPGTag& epg)
   }
   epg.SetFirstAired(event.GetAired());
   epg.SetParentalRating(event.GetAge());
+  epg.SetParentalRatingCode(event.GetRatingLabel());
+  epg.SetParentalRatingIcon(event.GetRatingIcon());
   epg.SetStarRating(event.GetStars());
   epg.SetSeriesNumber(event.GetSeason());
   epg.SetEpisodeNumber(event.GetEpisode());
@@ -2516,6 +2527,20 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   if (str)
     rec.SetFanartImage(GetImageURL(str));
 
+  uint32_t ageRating = 0;
+  if (!htsmsg_get_u32(msg, "ageRating", &ageRating))
+    rec.SetAgeRating(ageRating);
+
+  str = htsmsg_get_str(msg, "ratingLabel");
+  if (str){
+    rec.SetRatingLabel(str);
+  }
+
+  str = htsmsg_get_str(msg, "ratingIcon");
+  if (str){
+    rec.SetRatingIcon(GetImageURL(str));
+  }
+
   if (m_conn->GetProtocol() >= 32)
   {
     if (rec.GetDescription().empty() && !rec.GetSubtitle().empty())
@@ -2691,6 +2716,14 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
     evt.SetStars(u32);
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
     evt.SetAge(u32);
+
+  str = htsmsg_get_str(msg, "ratingLabel");  // HTSP v36 required
+  if (str)
+    evt.SetRatingLabel(str);
+
+  str = htsmsg_get_str(msg, "ratingIcon");  // HTSP v36 required
+  if (str)
+    evt.SetRatingIcon(GetImageURL(str));
 
   int64_t s64 = 0;
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
