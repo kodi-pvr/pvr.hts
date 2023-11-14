@@ -145,15 +145,6 @@ DEMUX_PACKET* HTSPDemuxer::Read()
     m_lastPkt.store(m_lastUse.load());
     return pkt;
   }
-  Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
-
-  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > 10 && !IsPaused())
-  {
-    Logger::Log(LogLevel::LEVEL_WARNING,
-                "demux read no data for at least 10 secs; restarting connection");
-    m_lastPkt = 0;
-    m_conn.Disconnect();
-  }
   return m_demuxPktHdl.AllocateDemuxPacket(0);
 }
 
