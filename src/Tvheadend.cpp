@@ -1503,6 +1503,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   else
     htsmsg_add_u32(msg, "epg", 0);
 
+  m_stateRebuilt = false;
   msg = m_conn->SendAndWait0(lock, "enableAsyncMetadata", msg);
   if (!msg)
   {
@@ -1876,15 +1877,21 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
 
 void CTvheadend::SyncInitCompleted()
 {
+  if (!m_stateRebuilt)
+  {
+    m_stateRebuilt = true;
+
+    for (auto* dmx : m_dmx)
+      dmx->RebuildState();
+
+    m_vfs->RebuildState();
+  }
+
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_INIT)
     return;
 
   /* Rebuild state */
-  for (auto* dmx : m_dmx)
-    dmx->RebuildState();
-
-  m_vfs->RebuildState();
   m_timeRecordings.RebuildState();
   m_autoRecordings.RebuildState();
 
