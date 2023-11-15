@@ -270,6 +270,7 @@ public:
   tvheadend::HTSPDemuxer* m_dmx_active;
   bool m_streamchange;
   tvheadend::HTSPVFS* m_vfs;
+  bool m_stateRebuilt{false};
 
   HTSPMessageQueue m_queue;
 
