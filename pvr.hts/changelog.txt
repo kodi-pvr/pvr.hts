@@ -1,3 +1,6 @@
+v21.1.2
+- Fix TV channels stuttering after wake from suspend - take 2
+
 v21.1.1
 - Fix TV channels stuttering after wake from suspend
 

@@ -62,6 +62,8 @@ void HTSPDemuxer::RebuildState()
     Logger::Log(LogLevel::LEVEL_DEBUG, "demux re-starting stream");
 
     std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+
+    m_subscription.SendUnsubscribe(lock);
     m_subscription.SendSubscribe(lock, 0, 0, true);
     m_subscription.SendSpeed(lock, 0, true);
 
