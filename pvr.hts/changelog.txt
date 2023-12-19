@@ -1,3 +1,6 @@
+v21.2.0
+- Add setting for threshold for reconnect on stalled streams
+
 v21.1.2
 - Fix TV channels stuttering after wake from suspend - take 2
 

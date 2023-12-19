@@ -149,6 +149,16 @@
           </constraints>
           <control type="slider" format="integer" />
         </setting>
+        <setting id="stream_stalled_threshold" type="integer" label="30013" help="-1">
+          <level>0</level>
+          <default>10</default>
+          <constraints>
+            <minimum>1</minimum>
+            <step>1</step>
+            <maximum>60</maximum>
+          </constraints>
+          <control type="slider" format="integer" />
+        </setting>
       </group>
     </category>
 
