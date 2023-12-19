@@ -53,6 +53,7 @@ public:
   bool GetDvrPlayStatus() const { return m_bDvrPlayStatus; }
   int GetStreamReadChunkSize() const { return m_iStreamReadChunkSizeKB; }
   bool GetIgnoreDuplicateSchedules() const { return m_bIgnoreDuplicateSchedules; }
+  int GetStreamStalledThreshold() const { return m_streamStalledThreshold; }
 
 private:
   InstanceSettings(const InstanceSettings&) = delete;
@@ -89,6 +90,7 @@ private:
   void SetDvrPlayStatus(bool value) { m_bDvrPlayStatus = value; }
   void SetStreamReadChunkSizeKB(int value) { m_iStreamReadChunkSizeKB = value; }
   void SetIgnoreDuplicateSchedules(bool value) { m_bIgnoreDuplicateSchedules = value; }
+  void SetStreamStalledThreshold(int value) { m_streamStalledThreshold = value; }
 
   /**
    * Read/Set values according to definition in settings.xml
@@ -129,6 +131,7 @@ private:
   bool m_bDvrPlayStatus;
   int m_iStreamReadChunkSizeKB;
   bool m_bIgnoreDuplicateSchedules;
+  int m_streamStalledThreshold; // seconds
 };
 
 } // namespace tvheadend

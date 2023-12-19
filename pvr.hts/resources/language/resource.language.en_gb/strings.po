@@ -78,7 +78,11 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
-#empty strings from id 30013 to 30049
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
+#empty strings from id 30014 to 30049
 
 msgctxt "#30050"
 msgid "Auto recordings"

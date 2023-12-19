@@ -149,10 +149,12 @@ DEMUX_PACKET* HTSPDemuxer::Read()
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
 
-  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > 10 && !IsPaused())
+  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > m_settings->GetStreamStalledThreshold() &&
+      !IsPaused())
   {
     Logger::Log(LogLevel::LEVEL_WARNING,
-                "demux read no data for at least 10 secs; restarting connection");
+                "demux read no data for at least %d secs; restarting connection",
+                m_settings->GetStreamStalledThreshold());
     m_lastPkt = 0;
     m_conn.Disconnect();
   }
