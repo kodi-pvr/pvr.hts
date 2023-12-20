@@ -43,6 +43,8 @@ const int DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
 const bool DEFAULT_DVR_PLAYSTATUS = true;
 const int DEFAULT_STREAM_CHUNKSIZE = 64; // KB
 const bool DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
+const bool DEFAULT_STREAM_STALLED_THRESHOLD = 10; // seconds
+
 } // namespace
 
 InstanceSettings::InstanceSettings(kodi::addon::IAddonInstance& instance)
@@ -70,7 +72,8 @@ InstanceSettings::InstanceSettings(kodi::addon::IAddonInstance& instance)
     m_iDvrDupdetect(DEFAULT_DVR_DUPDETECT),
     m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
     m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
-    m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES)
+    m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES),
+    m_streamStalledThreshold(DEFAULT_STREAM_STALLED_THRESHOLD)
 {
   ReadSettings();
 }
@@ -107,6 +110,8 @@ void InstanceSettings::ReadSettings()
   /* Streaming */
   SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
   SetStreamingHTTP(ReadBoolSetting("streaming_http", DEFAULT_STREAMING_HTTP));
+  SetStreamStalledThreshold(ReadIntSetting("stream_stalled_threshold",
+                                           DEFAULT_STREAM_STALLED_THRESHOLD));
 
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
@@ -188,6 +193,8 @@ ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
     return SetStringSetting(GetStreamingProfile(), value);
   else if (key == "streaming_http")
     return SetBoolSetting(GetStreamingHTTP(), value);
+  else if (key == "stream_stalled_threshold")
+    return SetIntSetting(GetStreamStalledThreshold(), value);
   /* Default dvr settings */
   else if (key == "dvr_priority")
     return SetIntSetting(GetDvrPriority(), value);
