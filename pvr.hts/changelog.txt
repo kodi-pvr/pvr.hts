@@ -1,3 +1,7 @@
+v20.7.1
+- Translations updates from Weblate
+	- en_gb
+
 v20.7.0
 - Add setting for threshold for reconnect on stalled streams
 
