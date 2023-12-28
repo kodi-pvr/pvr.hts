@@ -77,6 +77,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "自動錄影"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "根據獨特情節錄製 EPG/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "直到空間不足"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "無限"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1天"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3年"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "直到空間不足 (tvh 4.1以上)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "無限 (tvh 4.1以上)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "錄影檔"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "伺服器端的播放狀態"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "直到空間不足"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "無限"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "直到空間不足 (tvh 4.1以上)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "無限 (tvh 4.1以上)"

@@ -76,6 +76,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Autoopptak"
@@ -260,16 +264,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Ta opp dersom unik episode i henhold til EPG/XLMTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Frem til plass trengs"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Alltid"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "Én dag"
@@ -334,15 +328,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "Tre år"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Frem til plass trengs (tvh 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "For alltid (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -425,3 +419,19 @@ msgstr "Opptak"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Tjenerbasert avspillingsstatus"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Frem til plass trengs"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Alltid"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Frem til plass trengs (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "For alltid (tvh 4.1+)"
