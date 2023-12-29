@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2023-02-11 10:41+0000\n"
+"PO-Revision-Date: 2023-12-28 00:11+0000\n"
 "Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
 "Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/es_es/>\n"
 "Language: es_es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.2\n"
+"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -76,6 +76,10 @@ msgstr "Usar HTTPS"
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr "MAC del servidor para Wake-on-LAN"
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr "Umbral para reconexión de transmisiones bloqueadas (segundos)"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Grabar si es episodio único según EPG/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Hasta que necesite espacio"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Siempre"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 día"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 años"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Hasta que se necesite espacio (tvh 4.1+)"
+msgid "Until space needed"
+msgstr "Hasta que necesite espacio"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Para siempre (tvh 4.1+)"
+msgid "Forever"
+msgstr "Para siempre"
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "Grabaciones"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Estado de reproducción basado en servidor"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Hasta que necesite espacio"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Siempre"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Hasta que se necesite espacio (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Para siempre (tvh 4.1+)"

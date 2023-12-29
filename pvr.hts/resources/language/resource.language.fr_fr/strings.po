@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2022-12-28 16:23+0000\n"
 "Last-Translator: skypichat <skypichat@hotmail.fr>\n"
@@ -76,6 +76,10 @@ msgstr "Utiliser HTTPS"
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr "Serveur MAC pour Wake-on-LAN"
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Enregistrer si épisode unique selon le guide/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Jusqu'à ce qu'il y ait besoin d'espace"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Indéfiniment"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 jour"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 ans"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Jusqu'à ce qu'il y ait besoin d'espace (tvh 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Indéfiniment (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "Enregistrements"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "État de lecture basé sur le serveur"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Jusqu'à ce qu'il y ait besoin d'espace"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Indéfiniment"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Jusqu'à ce qu'il y ait besoin d'espace (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Indéfiniment (tvh 4.1+)"

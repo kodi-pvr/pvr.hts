@@ -76,6 +76,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Gravações automáticas"
@@ -260,16 +264,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Gravar se for um episódio único de acordo com o EPG/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Até ser necessário espaço"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Para sempre"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dia"
@@ -334,15 +328,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 anos"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Até ser necessário espaço (TVH 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Para sempre (TVH 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -425,3 +419,19 @@ msgstr "Gravações"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Estado de reprodução baseado no servidor"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Até ser necessário espaço"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Para sempre"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Até ser necessário espaço (TVH 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Para sempre (TVH 4.1+)"

@@ -77,6 +77,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr "Wake-on-LAN용 서버 MAC"
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "자동 녹화"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "EPG/XMLTV에 따라 유일한 에피소드라면 녹화"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "저장공간이 더 필요할 때까지"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "영원히"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1일"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3년"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "저장공간이 더 필요할 때까지 (tvh 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "영원히 (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "녹화"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "서버 기반의 재생 상태"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "저장공간이 더 필요할 때까지"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "영원히"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "저장공간이 더 필요할 때까지 (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "영원히 (tvh 4.1+)"

@@ -24,7 +24,7 @@ msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
 msgstr ""
 
-#settings labels
+# settings labels
 msgctxt "#30000"
 msgid "Connection settings"
 msgstr ""
@@ -77,7 +77,11 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
-#empty strings from id 30013 to 30049
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
+# empty strings from id 30013 to 30049
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr ""
@@ -126,7 +130,7 @@ msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
 msgstr ""
 
-#empty strings from id 30062 to 30099
+# empty strings from id 30062 to 30099
 msgctxt "#30100"
 msgid "Data transfer"
 msgstr ""
@@ -135,7 +139,7 @@ msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
 msgstr ""
 
-#empty strings from id 30102 to 30199
+# empty strings from id 30102 to 30199
 msgctxt "#30200"
 msgid "Debugging"
 msgstr ""
@@ -144,248 +148,200 @@ msgctxt "#30201"
 msgid "Trace (detailed)"
 msgstr ""
 
-#empty strings from id 30202 to 30299
+# empty strings from id 30202 to 30299
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
 msgstr ""
 
-#empty strings from id 30301 to 30349
+# empty strings from id 30301 to 30349
 #. Timer type representation
-#: src/Tvheadend.cpp
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30351"
 msgid "Important (Highest)"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30352"
 msgid "High"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30353"
 msgid "Normal"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30354"
 msgid "Low"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30356"
 msgid "Record all episodes"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30357"
 msgid "Record if episode number differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30358"
 msgid "Record if episode name differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30359"
 msgid "Record if description differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30360"
 msgid "Record max once per week"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30361"
 msgid "Record max once per day"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
 msgstr ""
 
 #. Recording priority representation
-#: src/Tvheadend.cpp
 msgctxt "#30368"
 msgid "Default"
 msgstr ""
 
 #. Timer type representation
-#: src/Tvheadend.cpp
 msgctxt "#30369"
 msgid "Timer rule (series link)"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30370"
 msgid "Record max once per month"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
 msgstr ""
 
 #. Prevent duplicate episodes representation
-#: src/Tvheadend.cpp
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
-msgctxt "#30374"
-msgid "Forever"
-msgstr ""
-
-#. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30375"
 msgid "1 day"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30376"
 msgid "3 days"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30377"
 msgid "5 days"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30378"
 msgid "1 week"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30379"
 msgid "2 weeks"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30380"
 msgid "3 weeks"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30381"
 msgid "1 month"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30382"
 msgid "2 months"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30383"
 msgid "3 months"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30384"
 msgid "6 months"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30385"
 msgid "1 year"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30386"
 msgid "2 years"
 msgstr ""
 
 #. Recording lifetime representation
-#: src/Tvheadend.cpp
 msgctxt "#30387"
 msgid "3 years"
 msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
+msgid "Until space needed"
 msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
+msgid "Forever"
 msgstr ""
 
 #. Recording lifetime representation
@@ -393,7 +349,7 @@ msgctxt "#30390"
 msgid "Use backend setting"
 msgstr ""
 
-#empty strings from id 30391 to 30399
+# empty strings from id 30391 to 30399
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr ""
@@ -410,7 +366,7 @@ msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
 msgstr ""
 
-#empty strings from id 30404 to 30449
+# empty strings from id 30404 to 30449
 msgctxt "#30450"
 msgid "No free adapter available"
 msgstr ""
@@ -439,7 +395,7 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr ""
 
-#empty strings from id 30457 to 30499
+# empty strings from id 30457 to 30499
 msgctxt "#30500"
 msgid "Streaming profile"
 msgstr ""
@@ -449,7 +405,6 @@ msgid "Profile to use (empty = default)"
 msgstr ""
 
 #. Check streaming profile validity during startup
-#: src/client.cpp
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr ""
@@ -466,7 +421,7 @@ msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
 msgstr ""
 
-#empty strings from id 30506 to 30509
+# empty strings from id 30506 to 30509
 msgctxt "#30510"
 msgid "Recordings"
 msgstr ""

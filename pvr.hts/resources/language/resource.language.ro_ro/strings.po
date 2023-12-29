@@ -76,6 +76,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Înregistrări automate"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr ""
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Până este nevoie de spațiu"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Pentru totdeauna"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 zi"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 ani"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Până când e nevoie de spațiu (tvh 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Totdeauna (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "Înregistrări"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr ""
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Până este nevoie de spațiu"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Pentru totdeauna"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Până când e nevoie de spațiu (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Totdeauna (tvh 4.1+)"
