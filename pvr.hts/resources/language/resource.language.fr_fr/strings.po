@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2022-12-28 16:23+0000\n"
+"PO-Revision-Date: 2024-02-21 16:13+0000\n"
 "Last-Translator: skypichat <skypichat@hotmail.fr>\n"
 "Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/fr_fr/>\n"
 "Language: fr_fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.4\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -79,7 +79,7 @@ msgstr "Serveur MAC pour Wake-on-LAN"
 
 msgctxt "#30013"
 msgid "Threshold for reconnect on stalled streams (seconds)"
-msgstr ""
+msgstr "Seuil de reconnexion sur les flux bloqués (secondes)"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -332,12 +332,12 @@ msgstr "3 ans"
 #. Recording lifetime representation
 msgctxt "#30388"
 msgid "Until space needed"
-msgstr ""
+msgstr "Jusqu'à ce qu'il y ait besoin d'espace"
 
 #. Recording lifetime representation
 msgctxt "#30389"
 msgid "Forever"
-msgstr ""
+msgstr "Pour toujours"
 
 #. Recording lifetime representation
 msgctxt "#30390"
