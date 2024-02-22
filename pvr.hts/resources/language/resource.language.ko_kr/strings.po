@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-08-27 01:29+0000\n"
+"PO-Revision-Date: 2024-01-02 08:54+0000\n"
 "Last-Translator: Minho Park <parkmino@gmail.com>\n"
 "Language-Team: Korean <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/ko_kr/>\n"
 "Language: ko_kr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -79,7 +79,7 @@ msgstr "Wake-on-LAN용 서버 MAC"
 
 msgctxt "#30013"
 msgid "Threshold for reconnect on stalled streams (seconds)"
-msgstr ""
+msgstr "정지된 스트림에 다시 연결하기 (초)"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -332,12 +332,12 @@ msgstr "3년"
 #. Recording lifetime representation
 msgctxt "#30388"
 msgid "Until space needed"
-msgstr ""
+msgstr "저장공간이 더 필요할 때까지"
 
 #. Recording lifetime representation
 msgctxt "#30389"
 msgid "Forever"
-msgstr ""
+msgstr "계속"
 
 #. Recording lifetime representation
 msgctxt "#30390"
