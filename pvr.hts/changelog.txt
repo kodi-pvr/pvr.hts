@@ -1,3 +1,7 @@
+v21.2.1
+- Predictive tuning: Fix crash when starting playback of a channel which has no unique channel number
+  (tvh does not prevent duplicate channel numbers).
+
 v21.2.0
 - Add setting for threshold for reconnect on stalled streams
 

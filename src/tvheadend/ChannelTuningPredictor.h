@@ -68,7 +68,11 @@ struct SortChannelPair
 {
   bool operator()(const ChannelPair& left, const ChannelPair& right) const
   {
-    return left.second < right.second;
+    if (left.second < right.second)
+      return true;
+
+    // if channel numbers are equal, consider channel id (which is unique)
+    return left.first < right.first;
   }
 };
 } // namespace predictivetune
