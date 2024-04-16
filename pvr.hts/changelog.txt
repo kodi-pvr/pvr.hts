@@ -1,3 +1,7 @@
+v20.7.3
+- Translations updates from Weblate
+	- ja_jp, ms_my
+
 v20.7.2
 - Predictive tuning: Fix crash when starting playback of a channel which has no unique channel number
   (tvh does not prevent duplicate channel numbers).
