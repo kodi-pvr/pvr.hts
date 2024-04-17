@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-06-28 13:56+0000\n"
+"PO-Revision-Date: 2024-01-23 10:13+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
 "Language-Team: Croatian <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/hr_hr/>\n"
 "Language: hr_hr\n"
@@ -15,15 +15,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7\n"
+"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
-msgstr "Kodi sučelje za Tvheadend"
+msgstr "Kodi pozadinski softver za Tvheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Tvheadend pozadinski softver podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje."
+msgstr "Tvheadend sučelje podržava gledanje i snimanje TV programa, elektronski programski vodič (EPG) i zakazano snimanje"
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -71,10 +71,14 @@ msgstr "Zakazana snimanja"
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr ""
+msgstr "Koristi HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
+msgstr "MAC poslužitelja za Probudi putem LAN-a"
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
 msgstr ""
 
 msgctxt "#30050"
@@ -123,7 +127,7 @@ msgstr "Zanemari duplikate (tvh 4.3+)"
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr ""
+msgstr "Koristi uobičajene izraze (regex) za podudaranje programa"
 
 msgctxt "#30100"
 msgid "Data transfer"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Snimi ako je epizoda jedinstvena prema EPG/XMLTV vodiču"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Dok ima slobodnog prostora"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Zauvijek"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dan"
@@ -335,20 +329,20 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 godine"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Dok ima slobodnog prostora (tvh 4.1+)"
+msgid "Until space needed"
+msgstr "Dok ima slobodnog prostora"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Zauvijek (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr ""
+msgstr "Koristi postavke pozadinskog softvera"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -417,7 +411,7 @@ msgstr "Veličina čitanja dijela strujanja za snimanja (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr ""
+msgstr "Koristi HTTP strujanja za programe"
 
 msgctxt "#30510"
 msgid "Recordings"
@@ -426,3 +420,19 @@ msgstr "Snimke"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Status reprodukcije temeljen poslužiteljem"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Dok ima slobodnog prostora"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Zauvijek"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Dok ima slobodnog prostora (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Zauvijek (tvh 4.1+)"

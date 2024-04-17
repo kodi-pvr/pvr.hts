@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-08-27 01:29+0000\n"
+"PO-Revision-Date: 2024-01-02 08:54+0000\n"
 "Last-Translator: Minho Park <parkmino@gmail.com>\n"
 "Language-Team: Korean <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/ko_kr/>\n"
 "Language: ko_kr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -76,6 +76,10 @@ msgstr "HTTPS 사용"
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr "Wake-on-LAN용 서버 MAC"
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr "정지된 스트림에 다시 연결하기 (초)"
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "EPG/XMLTV에 따라 유일한 에피소드라면 녹화"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "저장공간이 더 필요할 때까지"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "영원히"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1일"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3년"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "저장공간이 더 필요할 때까지 (tvh 4.1+)"
+msgid "Until space needed"
+msgstr "저장공간이 더 필요할 때까지"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "영원히 (tvh 4.1+)"
+msgid "Forever"
+msgstr "계속"
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "녹화"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "서버 기반의 재생 상태"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "저장공간이 더 필요할 때까지"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "영원히"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "저장공간이 더 필요할 때까지 (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "영원히 (tvh 4.1+)"

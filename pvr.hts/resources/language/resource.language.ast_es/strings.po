@@ -5,334 +5,339 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2024-01-23 10:13+0000\n"
-"Last-Translator: Christian Gade <gade@kodi.tv>\n"
-"Language-Team: Finnish <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/fi_fi/>\n"
-"Language: fi_fi\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ast_es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
-msgstr "Tvheadend-käyttöliittymä Kodille"
+msgstr ""
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Tvheadend-käyttöliittymä, joka tukee televisiolähetysten ja tallenteiden suoratoistoa, ohjelmaopasta ja ajastuksia."
+msgstr ""
 
+# settings labels
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Yhteysasetukset"
+msgstr ""
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend-palvelimen nimi tai IP-osoite"
+msgstr ""
 
 msgctxt "#30002"
 msgid "HTTP port"
-msgstr "HTTP-portti"
+msgstr ""
 
 msgctxt "#30003"
 msgid "HTSP port"
-msgstr "HTSP-portti"
+msgstr ""
 
 msgctxt "#30004"
 msgid "Username"
-msgstr "Käyttäjänimi"
+msgstr ""
 
 msgctxt "#30005"
 msgid "Password"
-msgstr "Salasana"
+msgstr ""
 
 msgctxt "#30006"
 msgid "Connection timeout (seconds)"
-msgstr "Yhteyden aikakatkaisu (sekuntia)"
+msgstr ""
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Vastauksen aikakatkaisu (sekuntia)"
+msgstr ""
 
 msgctxt "#30008"
 msgid "Advanced settings"
-msgstr "Lisäasetukset"
+msgstr ""
 
 msgctxt "#30009"
 msgid "Streaming settings"
-msgstr "Suoratoistoasetukset"
+msgstr ""
 
 msgctxt "#30010"
 msgid "Timer settings"
-msgstr "Ajastuksen asetukset"
+msgstr ""
 
 msgctxt "#30011"
 msgid "Use HTTPS"
-msgstr "Käytä HTTPS-protokollaa"
+msgstr ""
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr "Palvelimen MAC-osoite Wake-on-LAN-käyttöön"
+msgstr ""
 
 msgctxt "#30013"
 msgid "Threshold for reconnect on stalled streams (seconds)"
 msgstr ""
 
+# empty strings from id 30013 to 30049
 msgctxt "#30050"
 msgid "Auto recordings"
-msgstr "Automaattiset tallennukset"
+msgstr ""
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Aloitusajan määrittely"
+msgstr ""
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
-msgstr "Tarkka (aloitusaika + lopetusaika)"
+msgstr ""
 
 msgctxt "#30053"
 msgid "Relaxed (start time +/- margin)"
-msgstr "Joustava (aloitusaika +/- marginaali)"
+msgstr ""
 
 msgctxt "#30054"
 msgid "Maximum start time margin (minutes)"
-msgstr "Aloitusajan enimmäismarginaali (minuuttia)"
+msgstr ""
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Tärkeys"
+msgstr ""
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Oletusarvoinen elinaika"
+msgstr ""
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Oletusarvoinen kaksoiskappaleiden tunnistus"
+msgstr ""
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Ajastusten oletusasetukset"
+msgstr ""
 
 msgctxt "#30059"
 msgid "Scheduled recordings"
-msgstr "Ajastukset"
+msgstr ""
 
 msgctxt "#30060"
 msgid "Ignore duplicates (tvh 4.3+)"
-msgstr "Älä huomioi tuplia (tvh 4.3+)"
+msgstr ""
 
 msgctxt "#30061"
 msgid "Use regular expressions (regex) for programme matching"
-msgstr "Käytä säännöllisiä lauseita (regex) ohjelmien täsmäykseen"
+msgstr ""
 
+# empty strings from id 30062 to 30099
 msgctxt "#30100"
 msgid "Data transfer"
-msgstr "Tiedonsiirto"
+msgstr ""
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Epäsynkroninen ohjelmaoppaan lataus"
+msgstr ""
 
+# empty strings from id 30102 to 30199
 msgctxt "#30200"
 msgid "Debugging"
-msgstr "Vianselvitys"
+msgstr ""
 
 msgctxt "#30201"
 msgid "Trace (detailed)"
-msgstr "Tallenna yksityiskohtaiset virheenkorjaustiedot"
+msgstr ""
 
+# empty strings from id 30202 to 30299
 msgctxt "#30300"
 msgid "HTSP version mismatch (supported: v%d, required: v%d). Please update tvheadend."
-msgstr "HTSP-versio on yhteensopimaton (tuettu: v%d, vaadittu: v%d). Ole hyvä ja päivitä tvheadend."
+msgstr ""
 
+# empty strings from id 30301 to 30349
 #. Timer type representation
 msgctxt "#30350"
 msgid "One Time (Scheduled by timer rule)"
-msgstr "Kerran (luotu ajastussäännöllä)"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30351"
 msgid "Important (Highest)"
-msgstr "Tärkeä (korkein)"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30352"
 msgid "High"
-msgstr "Korkea"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
-msgstr "Normaali"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
-msgstr "Matala"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
-msgstr "Ei tärkeä (matalin)"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Tallenna kaikki jaksot"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Tallenna, jos on eri jaksonumero"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Tallenna, jos on eri jaksonimi"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Tallenna, jos on eri kuvaus"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Tallenna enintään kerran viikossa"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Tallenna enintään kerran päivässä"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Vain tämä sääntö: tallenna, jos on eri jaksonumero"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Vain tämä sääntö: tallenna, jos on eri jaksonimi"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Vain tämä sääntö: tallenna, jos on eri nimi"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Vain tämä sääntö: tallenna, jos on eri kuvaus"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Vain tämä sääntö: tallenna enintään kerran viikossa"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Vain tämä sääntö: tallenna enintään kerran päivässä"
+msgstr ""
 
 #. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
-msgstr "Oletus"
+msgstr ""
 
 #. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr "Ajastussääntö (sarjalinkki)"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
-msgstr "Tallenna enintään kerran kuukaudessa"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Vain tämä sääntö: tallenna enintään kerran kuukaudessa"
+msgstr ""
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
-msgstr "Tallenna, jos on uniikki jakso EPG:n/XMLTV:n mukaan"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
-msgstr "1 päivä"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30376"
 msgid "3 days"
-msgstr "3 päivää"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30377"
 msgid "5 days"
-msgstr "5 päivää"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30378"
 msgid "1 week"
-msgstr "1 viikko"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30379"
 msgid "2 weeks"
-msgstr "2 viikkoa"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30380"
 msgid "3 weeks"
-msgstr "3 viikkoa"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30381"
 msgid "1 month"
-msgstr "1 kuukausi"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30382"
 msgid "2 months"
-msgstr "2 kuukautta"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30383"
 msgid "3 months"
-msgstr "3 kuukautta"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30384"
 msgid "6 months"
-msgstr "6 kuukautta"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30385"
 msgid "1 year"
-msgstr "1 vuosi"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30386"
 msgid "2 years"
-msgstr "2 vuotta"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30387"
 msgid "3 years"
-msgstr "3 vuotta"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30388"
 msgid "Until space needed"
-msgstr "Kunnes tarvetta lisätilalle"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30389"
@@ -342,97 +347,85 @@ msgstr ""
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr "Käytä taustajärjestelmän asetuksia"
+msgstr ""
 
+# empty strings from id 30391 to 30399
 msgctxt "#30400"
 msgid "Predictive tuning"
-msgstr "Ennakoiva viritys"
+msgstr ""
 
 msgctxt "#30401"
 msgid "Number of subscriptions to use"
-msgstr "Viritettävien kanavien määrä"
+msgstr ""
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Viive virityksen poistamiselle (sekuntia)"
+msgstr ""
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Nopeuta kanavanvaihtoa ennakoivalla virityksellä"
+msgstr ""
 
+# empty strings from id 30404 to 30449
 msgctxt "#30450"
 msgid "No free adapter available"
-msgstr "Yhtään viritintä ei ole vapaana"
+msgstr ""
 
 msgctxt "#30451"
 msgid "Scrambled channel"
-msgstr "Salattu kanava"
+msgstr ""
 
 msgctxt "#30452"
 msgid "No signal"
-msgstr "Ei signaalia"
+msgstr ""
 
 msgctxt "#30453"
 msgid "Tuning failed"
-msgstr "Viritys epäonnistui"
+msgstr ""
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Käyttäjäraja saavutettu"
+msgstr ""
 
 msgctxt "#30455"
 msgid "No access"
-msgstr "Ei pääsyä"
+msgstr ""
 
 msgctxt "#30456"
 msgid "Subscription error"
-msgstr "Tilausvirhe"
+msgstr ""
 
+# empty strings from id 30457 to 30499
 msgctxt "#30500"
 msgid "Streaming profile"
-msgstr "Suoratoistoprofiili"
+msgstr ""
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Käytettävä profiili (tyhjä = oletus)"
+msgstr ""
 
 #. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
-msgstr "Suoratoistoprofiili %s ei ole saatavilla"
+msgstr ""
 
 msgctxt "#30503"
 msgid "Data transfer"
-msgstr "Tiedonsiirto"
+msgstr ""
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "Tallenteita toistettaessa käytettävä pakettikoko (kt)"
+msgstr ""
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr "Käytä kanaville HTTP-suoratoistoa"
+msgstr ""
 
+# empty strings from id 30506 to 30509
 msgctxt "#30510"
 msgid "Recordings"
-msgstr "Tallenteet"
+msgstr ""
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Palvelinpohjainen katsottujen tallenteiden merkintä"
-
-#~ msgctxt "#30373"
-#~ msgid "Until space needed"
-#~ msgstr "Kunnes tarvetta lisätilalle"
-
-#~ msgctxt "#30374"
-#~ msgid "Forever"
-#~ msgstr "Ikuisesti"
-
-#~ msgctxt "#30388"
-#~ msgid "Until space needed (tvh 4.1+)"
-#~ msgstr "Kunnes tarvitaan lisätilaa (tvh 4.1+)"
-
-#~ msgctxt "#30389"
-#~ msgid "Forever (tvh 4.1+)"
-#~ msgstr "Ikuisesti (tvh 4.1+)"
+msgstr ""

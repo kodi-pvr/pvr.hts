@@ -77,6 +77,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "በራሱ መቅረጫ"
@@ -264,16 +268,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr ""
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr ""
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "ለ ሁልጊዜ"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 ቀን"
@@ -338,15 +332,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 አመቶች"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
+msgid "Until space needed"
 msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "ለ ሁልጊዜ (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -432,3 +426,11 @@ msgstr "መቅረጫ"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr ""
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "ለ ሁልጊዜ"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "ለ ሁልጊዜ (tvh 4.1+)"

@@ -76,6 +76,10 @@ msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr ""
 
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
+
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Автоматични записи"
@@ -260,16 +264,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Запис само, ако епизодът е уникален според справочника или XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Докато няма недостиг на място"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Завинаги"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 ден"
@@ -334,15 +328,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 години"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Докато няма недостиг на място (tvh 4.1+)"
+msgid "Until space needed"
+msgstr ""
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Завинаги (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -425,3 +419,19 @@ msgstr "Записи"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Състояние на възпроизвеждане според сървъра"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Докато няма недостиг на място"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Завинаги"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Докато няма недостиг на място (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Завинаги (tvh 4.1+)"
