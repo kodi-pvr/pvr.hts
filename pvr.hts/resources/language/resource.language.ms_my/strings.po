@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-08-06 17:29+0000\n"
+"PO-Revision-Date: 2024-04-13 20:53+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
 "Language-Team: Malay <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/ms_my/>\n"
 "Language: ms_my\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.7.2\n"
+"X-Generator: Weblate 5.4.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -75,6 +75,10 @@ msgstr ""
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
 msgstr ""
 
 msgctxt "#30050"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Rakam jika episod unik berdasarkan EPG/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Sehingga ruang diperlukan"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Selama-lamanya"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 hari"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 tahun"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Sehingga ruang diperlukan (tvh 4.1+)"
+msgid "Until space needed"
+msgstr "Sehingga ruang diperlukan"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Selamanya (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "Rakaman"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Pelayar berdasarkan status main"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Sehingga ruang diperlukan"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Selama-lamanya"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Sehingga ruang diperlukan (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Selamanya (tvh 4.1+)"

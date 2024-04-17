@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-11-14 14:13+0000\n"
+"PO-Revision-Date: 2024-01-23 10:13+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
 "Language-Team: Danish <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/da_dk/>\n"
 "Language: da_dk\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9\n"
+"X-Generator: Weblate 5.3\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -23,7 +23,7 @@ msgstr "Kodis brugerflade til Tvheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timere"
+msgstr "Tvheadend-brugerflade; understøtter streaming af direkte tv og optagelser, EPG og timeroptagelser"
 
 msgctxt "#30000"
 msgid "Connection settings"
@@ -76,6 +76,10 @@ msgstr "Anvend HTTPS"
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
 msgstr "Server MAC-adresse til Wake-on-LAN"
+
+msgctxt "#30013"
+msgid "Threshold for reconnect on stalled streams (seconds)"
+msgstr ""
 
 msgctxt "#30050"
 msgid "Auto recordings"
@@ -261,16 +265,6 @@ msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Optag hvis unik afsnit i henhold til EPG/XMLTV"
 
 #. Recording lifetime representation
-msgctxt "#30373"
-msgid "Until space needed"
-msgstr "Indtil påkrævet fri plads"
-
-#. Recording lifetime representation
-msgctxt "#30374"
-msgid "Forever"
-msgstr "Altid"
-
-#. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
 msgstr "1 dag"
@@ -335,15 +329,15 @@ msgctxt "#30387"
 msgid "3 years"
 msgstr "3 år"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30388"
-msgid "Until space needed (tvh 4.1+)"
-msgstr "Indtil påkrævet plads (tvh 4.1+)"
+msgid "Until space needed"
+msgstr "Indtil påkrævet fri plads"
 
-#. Recording lifetime representation (for setting dialog only)
+#. Recording lifetime representation
 msgctxt "#30389"
-msgid "Forever (tvh 4.1+)"
-msgstr "Altid (tvh 4.1+)"
+msgid "Forever"
+msgstr ""
 
 #. Recording lifetime representation
 msgctxt "#30390"
@@ -426,3 +420,19 @@ msgstr "Optagelser"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Serverbaseret afspilningsstatus"
+
+#~ msgctxt "#30373"
+#~ msgid "Until space needed"
+#~ msgstr "Indtil påkrævet fri plads"
+
+#~ msgctxt "#30374"
+#~ msgid "Forever"
+#~ msgstr "Altid"
+
+#~ msgctxt "#30388"
+#~ msgid "Until space needed (tvh 4.1+)"
+#~ msgstr "Indtil påkrævet plads (tvh 4.1+)"
+
+#~ msgctxt "#30389"
+#~ msgid "Forever (tvh 4.1+)"
+#~ msgstr "Altid (tvh 4.1+)"
