@@ -2049,6 +2049,12 @@ void CTvheadend::ParseTagAddOrUpdate(htsmsg_t* msg, bool bAdd)
   }
 
   /* Locate object */
+  if (bAdd && m_tags.find(u32) != m_tags.cend())
+  {
+    Logger::Log(LogLevel::LEVEL_DEBUG, "Ignoring 'addTag' for existing tag with id %d", u32);
+    return;
+  }
+
   auto& existingTag = m_tags[u32];
   existingTag.SetDirty(false);
 
