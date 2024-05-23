@@ -1,3 +1,6 @@
+v21.2.4
+-  Async updates: Ignore 'add' events for existing tags (happens on wake after suspend).
+
 v21.2.3
 - Predictive tuning: Fix crash while sorting channels.
 
