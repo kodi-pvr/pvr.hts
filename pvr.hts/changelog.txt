@@ -1,3 +1,7 @@
+v21.2.5
+- Translations updates from Weblate
+	- et_ee, it_it
+
 v21.2.4
 -  Async updates: Ignore 'add' events for existing tags (happens on wake after suspend).
 
