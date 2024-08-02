@@ -754,15 +754,18 @@ PVR_ERROR CTvheadend::GetRecordingLastPlayedPosition(const kodi::addon::PVRRecor
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return PVR_ERROR_FAILED;
 
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  Logger::Log(LogLevel::LEVEL_INFO, "xxxx");
+  playPosition = 0;
 
-  const auto& it = m_recordings.find(std::stoul(rec.GetRecordingId()));
-  if (it != m_recordings.end() && it->second.IsRecording())
-  {
-    Logger::Log(LogLevel::LEVEL_DEBUG, "Getting play position %i for recording %s",
-                it->second.GetPlayPosition(), rec.GetTitle().c_str());
-    playPosition = it->second.GetPlayPosition();
-  }
+//  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+//
+//  const auto& it = m_recordings.find(std::stoul(rec.GetRecordingId()));
+//  if (it != m_recordings.end() && it->second.IsRecording())
+//  {
+//    Logger::Log(LogLevel::LEVEL_DEBUG, "Getting play position %i for recording %s",
+//                it->second.GetPlayPosition(), rec.GetTitle().c_str());
+//    playPosition = it->second.GetPlayPosition();
+//  }
 
   return PVR_ERROR_NO_ERROR;
 }
