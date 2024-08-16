@@ -372,7 +372,9 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel, std::vector<kodi::addon::PVRStreamProperty>& properties)
+PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
+                                                 PVR_SOURCE source,
+                                                 std::vector<kodi::addon::PVRStreamProperty>& properties)
 {
   if (!m_settings->GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
