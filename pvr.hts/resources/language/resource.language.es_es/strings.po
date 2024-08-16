@@ -7,31 +7,31 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2024-01-02 08:54+0000\n"
-"Last-Translator: José Antonio Alvarado <jalvarado0.eses@gmail.com>\n"
+"PO-Revision-Date: 2024-08-16 14:26+0000\n"
+"Last-Translator: roliverosc <roliverosc@hotmail.com>\n"
 "Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/es_es/>\n"
 "Language: es_es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3\n"
+"X-Generator: Weblate 5.6.2\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
-msgstr "Interfaz Kodi para Tvheadend"
+msgstr "Interfaz de Kodi para TVheadend"
 
 msgctxt "Addon Description"
 msgid "Tvheadend frontend; supporting streaming of Live TV & Recordings, EPG, Timers"
-msgstr "Interfaz Tvheadend; transmisión de TV en directo y grabaciones, EPG, temporizadores"
+msgstr "Interfaz para TVheadend; compatible con transmisión de TV en directo y grabaciones, EPG, temporizadores"
 
 msgctxt "#30000"
 msgid "Connection settings"
-msgstr "Ajustes de Conexión"
+msgstr "Ajustes de conexión"
 
 msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend nombre o dirección IP"
+msgstr "Nombre de host o dirección IP de TVheadend"
 
 msgctxt "#30002"
 msgid "HTTP port"
@@ -55,7 +55,7 @@ msgstr "Tiempo de espera para conexión (segundos)"
 
 msgctxt "#30007"
 msgid "Response timeout (seconds)"
-msgstr "Tiempo de espera de respuesta (en segundos)"
+msgstr "Tiempo de espera para respuesta (en segundos)"
 
 msgctxt "#30008"
 msgid "Advanced settings"
@@ -75,7 +75,7 @@ msgstr "Usar HTTPS"
 
 msgctxt "#30012"
 msgid "Server MAC for Wake-on-LAN"
-msgstr "MAC del servidor para Wake-on-LAN"
+msgstr "MAC de servidor para Wake-on-LAN"
 
 msgctxt "#30013"
 msgid "Threshold for reconnect on stalled streams (seconds)"
@@ -87,7 +87,7 @@ msgstr "Grabaciones automáticas"
 
 msgctxt "#30051"
 msgid "Start time window calculation"
-msgstr "Iniciar cálculo de tiempo"
+msgstr "Iniciar cálculo de ventana de tiempo"
 
 msgctxt "#30052"
 msgid "Strict (start time + end time)"
@@ -197,7 +197,7 @@ msgstr "Grabar si el nombre del episodio es diferente"
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Grabar si la descipción es diferente"
+msgstr "Grabar si la descripción es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
@@ -212,22 +212,22 @@ msgstr "Grabar máximo una vez al día"
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Solo esta regla: Grabar si el número de episodio difiere"
+msgstr "Solo esta regla: Grabar si el número de episodio es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Solo esta regla: Grabar si el nombre de episodio difiere"
+msgstr "Solo esta regla: Grabar si el nombre de episodio es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Solo esta regla: Grabar si el título difiere"
+msgstr "Solo esta regla: Grabar si el título es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Solo esta regla: Grabar si la descripción difiere"
+msgstr "Solo esta regla: Grabar si la descripción es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
@@ -247,17 +247,17 @@ msgstr "Por defecto"
 #. Timer type representation
 msgctxt "#30369"
 msgid "Timer rule (series link)"
-msgstr "Regla Programación (enlace series)"
+msgstr "Regla de temporizador (enlace series)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
-msgstr "Grabar una vez al mes máx"
+msgstr "Grabar una vez al mes máximo"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Solo esta regla: Grabar una vez al mes máx"
+msgstr "Solo esta regla: Grabar una vez al mes máximo"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
@@ -342,7 +342,7 @@ msgstr "Para siempre"
 #. Recording lifetime representation
 msgctxt "#30390"
 msgid "Use backend setting"
-msgstr "Usar ajuste de servidor"
+msgstr "Usar configuración del backend"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -354,7 +354,7 @@ msgstr "Número de suscripciones a usar"
 
 msgctxt "#30402"
 msgid "Unused subscription close delay (seconds)"
-msgstr "Demora al cerrar suscripción sin usar (segundos)"
+msgstr "Demora en el cierre de suscripción no usada (segundos)"
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
@@ -362,7 +362,7 @@ msgstr "Usar sintonización predictiva para acelerar cambio de canales"
 
 msgctxt "#30450"
 msgid "No free adapter available"
-msgstr "Sin adaptador libre disponible"
+msgstr "No hay ningún adaptador libre disponible"
 
 msgctxt "#30451"
 msgid "Scrambled channel"
@@ -374,11 +374,11 @@ msgstr "Sin señal"
 
 msgctxt "#30453"
 msgid "Tuning failed"
-msgstr "Fallo en la sintonía"
+msgstr "Error en la sintonización"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Alcanzado número máximo de usuarios"
+msgstr "Se alcanzó el límite de usuarios"
 
 msgctxt "#30455"
 msgid "No access"
@@ -411,7 +411,7 @@ msgstr "Tamaño de los fragmentos de lectura para grabaciones (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
-msgstr "Utilizar transmisión HTTP para los canales"
+msgstr "Usar transmisión HTTP para los canales"
 
 msgctxt "#30510"
 msgid "Recordings"
@@ -419,7 +419,7 @@ msgstr "Grabaciones"
 
 msgctxt "#30511"
 msgid "Server based play status"
-msgstr "Estado de reproducción basado en servidor"
+msgstr "Estado de reproducción basado en el servidor"
 
 #~ msgctxt "#30373"
 #~ msgid "Until space needed"
