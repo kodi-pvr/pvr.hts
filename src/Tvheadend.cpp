@@ -283,7 +283,7 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     // Find the tag
-    const auto it = std::find_if(m_tags.cbegin(), m_tags.cend(), [group](const TagMapEntry& tag)
+    const auto it = std::find_if(m_tags.cbegin(), m_tags.cend(), [&group](const TagMapEntry& tag)
                                  { return tag.second.GetName() == group.GetGroupName(); });
 
     if (it != m_tags.cend())
