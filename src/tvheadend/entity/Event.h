@@ -56,7 +56,10 @@ public:
            m_recordingId == other.m_recordingId && m_seriesLink == other.m_seriesLink &&
            m_year == other.m_year && m_writers == other.m_writers &&
            m_directors == other.m_directors && m_cast == other.m_cast &&
-           m_categories == other.m_categories;
+           m_categories == other.m_categories &&
+           m_ratingLabel == other.m_ratingLabel &&
+           m_ratingIcon == other.m_ratingIcon &&
+           m_ratingSource == other.m_ratingSource;
   }
 
   bool operator!=(const Event& other) const { return !(*this == other); }
@@ -83,6 +86,15 @@ public:
 
   uint32_t GetAge() const { return m_age; }
   void SetAge(uint32_t age) { m_age = age; }
+
+  const std::string& GetRatingLabel() const { return m_ratingLabel; }
+  void SetRatingLabel(const std::string& ratingLabel) { m_ratingLabel = ratingLabel; }
+
+  const std::string& GetRatingIcon() const { return m_ratingIcon; }
+  void SetRatingIcon(const std::string& ratingIcon) { m_ratingIcon = ratingIcon; }
+
+  const std::string& GetRatingSource() const { return m_ratingSource; }
+  void SetRatingSource(const std::string& ratingSource) { m_ratingSource = ratingSource; }
 
   int32_t GetSeason() const { return m_season; }
   void SetSeason(int32_t season) { m_season = season; }
@@ -157,6 +169,9 @@ private:
   std::string m_cast;
   std::string m_categories;
   std::string m_aired;
+  std::string m_ratingLabel;  // Label like 'PG' or 'FSK 12'
+  std::string m_ratingIcon;   // Path to graphic for the above label.
+  std::string m_ratingSource; // Parental rating source.
 };
 
 } // namespace entity
