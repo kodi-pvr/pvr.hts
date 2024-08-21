@@ -62,7 +62,8 @@ public:
       m_contentType(0),
       m_season(-1),
       m_episode(-1),
-      m_part(0)
+      m_part(0),
+      m_ageRating(0)
   {
   }
 
@@ -80,7 +81,10 @@ public:
            m_error == other.m_error && m_lifetime == other.m_lifetime &&
            m_priority == other.m_priority && m_playCount == other.m_playCount &&
            m_playPosition == other.m_playPosition && m_contentType == other.m_contentType &&
-           m_season == other.m_season && m_episode == other.m_episode && m_part == other.m_part;
+           m_season == other.m_season && m_episode == other.m_episode && m_part == other.m_part &&
+           m_ageRating == other.m_ageRating && m_ratingLabel == other.m_ratingLabel &&
+           m_ratingIcon == other.m_ratingIcon;
+           m_ratingSource == other.m_ratingSource;
   }
 
   bool operator!=(const Recording& other) const { return !(*this == other); }
@@ -210,6 +214,18 @@ public:
   uint32_t GetPart() const { return m_part; }
   void SetPart(uint32_t part) { m_part = part; }
 
+  void SetAgeRating(uint32_t content) { m_ageRating = content; }
+  uint32_t GetAgeRating() const { return m_ageRating; }
+
+  const std::string& GetRatingLabel() const { return m_ratingLabel; }
+  void SetRatingLabel(const std::string& ratingLabel) { m_ratingLabel = ratingLabel; }
+
+  const std::string& GetRatingIcon() const { return m_ratingIcon; }
+  void SetRatingIcon(const std::string& ratingIcon) { m_ratingIcon = ratingIcon; }
+
+  const std::string& GetRatingSource() const { return m_ratingSource; }
+  void SetRatingSource(const std::string& ratingSource) { m_ratingSource = ratingSource; }
+
 private:
   uint32_t m_enabled;
   uint32_t m_channel;
@@ -241,6 +257,10 @@ private:
   int32_t m_season;
   int32_t m_episode;
   uint32_t m_part;
+  uint32_t m_ageRating;
+  std::string m_ratingLabel;
+  std::string m_ratingIcon;
+  std::string m_ratingSource;
 };
 
 } // namespace entity
