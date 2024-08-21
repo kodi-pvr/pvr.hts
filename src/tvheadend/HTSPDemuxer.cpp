@@ -630,7 +630,7 @@ bool HTSPDemuxer::AddRDSStream(uint32_t audioIdx, uint32_t rdsIdx)
     if (m_streams.size() < PVR_STREAM_MAX_STREAMS)
     {
       Logger::Log(LogLevel::LEVEL_DEBUG, "Adding rds stream. id: %d", rdsIdx);
-      m_streams.emplace_back(rdsStream);
+      m_streams.emplace_back(std::move(rdsStream));
       return true;
     }
     else
@@ -753,7 +753,7 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type,
                 stream.GetCodecId());
-    m_streams.emplace_back(stream);
+    m_streams.emplace_back(std::move(stream));
     return true;
   }
   else

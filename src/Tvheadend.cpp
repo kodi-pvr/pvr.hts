@@ -209,7 +209,7 @@ void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& 
     Logger::Log(LogLevel::LEVEL_INFO, "  Name: %s, Comment: %s", profile.GetName().c_str(),
                 profile.GetComment().c_str());
 
-    m_profiles.emplace_back(profile);
+    m_profiles.emplace_back(std::move(profile));
   }
 
   htsmsg_destroy(m);
@@ -259,7 +259,7 @@ PVR_ERROR CTvheadend::GetChannelGroups(bool radio, kodi::addon::PVRChannelGroups
       tag.SetIsRadio(radio);
       tag.SetPosition(entry.second.GetIndex());
 
-      tags.emplace_back(tag);
+      tags.emplace_back(std::move(tag));
     }
   }
 
@@ -302,7 +302,7 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
           gm.SetChannelNumber(cit->second.GetNum());
           gm.SetSubChannelNumber(cit->second.GetNumMinor());
 
-          gms.emplace_back(gm);
+          gms.emplace_back(std::move(gm));
         }
       }
     }
@@ -357,7 +357,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
       chn.SetChannelName(channel.GetName());
       chn.SetIconPath(channel.GetIcon());
 
-      channels.emplace_back(chn);
+      channels.emplace_back(std::move(chn));
     }
   }
 
@@ -603,7 +603,7 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
       /* parental age rating source*/
       rec.SetParentalRatingSource(recording.GetRatingSource());
 
-      recs.emplace_back(rec);
+      recs.emplace_back(std::move(rec));
     }
   }
 
@@ -683,7 +683,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl(const kodi::addon::PVRRecording& rec,
         entry.SetType(PVR_EDL_TYPE_COMBREAK);
         break;
     }
-    edl.emplace_back(entry);
+    edl.emplace_back(std::move(entry));
 
     Logger::Log(LogLevel::LEVEL_DEBUG, "edl start:%d end:%d action:%d", start, end, type);
   }
@@ -1119,7 +1119,7 @@ PVR_ERROR CTvheadend::GetTimers(kodi::addon::PVRTimersResultSet& results)
       /* Setup entry */
       kodi::addon::PVRTimer tmr;
       if (CreateTimer(recording, tmr))
-        timers.emplace_back(tmr);
+        timers.emplace_back(std::move(tmr));
     }
 
     /* Time-based repeating timers */
@@ -1887,7 +1887,7 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
   SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, epg, state);
 
   if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
-    m_events.emplace_back(event);
+    m_events.emplace_back(std::move(event));
 }
 
 void CTvheadend::SyncInitCompleted()

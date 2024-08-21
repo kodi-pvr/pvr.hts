@@ -103,7 +103,7 @@ void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetFullTextEpgSearch(rec.second.GetFulltext());
     tmr.SetParentClientIndex(0);
 
-    timers.emplace_back(tmr);
+    timers.emplace_back(std::move(tmr));
   }
 }
 

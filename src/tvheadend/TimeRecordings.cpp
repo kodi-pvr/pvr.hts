@@ -79,7 +79,7 @@ void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetFullTextEpgSearch(false); // n/a for manual timers
     tmr.SetParentClientIndex(0);
 
-    timers.emplace_back(tmr);
+    timers.emplace_back(std::move(tmr));
   }
 }
 
