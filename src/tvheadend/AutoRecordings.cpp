@@ -52,6 +52,8 @@ int AutoRecordings::GetAutorecTimerCount() const
 
 void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers)
 {
+  timers.reserve(timers.size() + m_autoRecordings.size());
+
   for (const auto& rec : m_autoRecordings)
   {
     /* Setup entry */

@@ -42,6 +42,7 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
     m_playingLiveStream(false),
     m_playingRecording(nullptr)
 {
+  m_dmx.reserve(m_settings->GetTotalTuners());
   for (int i = 0; i < 1 || i < m_settings->GetTotalTuners(); i++)
   {
     m_dmx.emplace_back(new HTSPDemuxer(m_settings, *this, *m_conn));
@@ -245,6 +246,7 @@ PVR_ERROR CTvheadend::GetChannelGroups(bool radio, kodi::addon::PVRChannelGroups
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+    tags.reserve(m_tags.size());
     for (const auto& entry : m_tags)
     {
       /* Does group contain channels of the requested type?             */
@@ -289,6 +291,7 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
     if (it != m_tags.cend())
     {
       // Find all channels in this group that are of the correct type
+      gms.reserve(it->second.GetChannels().size());
       for (const auto& channelId : it->second.GetChannels())
       {
         auto cit = m_channels.find(channelId);
@@ -340,6 +343,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+    channels.reserve(m_channels.size());
     for (const auto& entry : m_channels)
     {
       const auto& channel = entry.second;
@@ -475,6 +479,7 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     char buf[128];
 
+    recs.reserve(m_recordings.size());
     for (const auto& entry : m_recordings)
     {
       const auto& recording = entry.second;
@@ -1109,6 +1114,7 @@ PVR_ERROR CTvheadend::GetTimers(kodi::addon::PVRTimersResultSet& results)
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     /* One-shot timers */
+    timers.reserve(m_recordings.size());
     for (const auto& entry : m_recordings)
     {
       const auto& recording = entry.second;

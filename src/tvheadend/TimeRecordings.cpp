@@ -48,6 +48,8 @@ int TimeRecordings::GetTimerecTimerCount() const
 
 void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers)
 {
+  timers.reserve(timers.size() + m_timeRecordings.size());
+
   for (const auto& rec : m_timeRecordings)
   {
     /* Setup entry */
