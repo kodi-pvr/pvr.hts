@@ -83,8 +83,7 @@ public:
            m_playPosition == other.m_playPosition && m_contentType == other.m_contentType &&
            m_season == other.m_season && m_episode == other.m_episode && m_part == other.m_part &&
            m_ageRating == other.m_ageRating && m_ratingLabel == other.m_ratingLabel &&
-           m_ratingIcon == other.m_ratingIcon;
-           m_ratingSource == other.m_ratingSource;
+           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource;
   }
 
   bool operator!=(const Recording& other) const { return !(*this == other); }

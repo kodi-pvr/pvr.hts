@@ -36,7 +36,7 @@ class AsyncState
 public:
   AsyncState(int timeout);
 
-  virtual ~AsyncState(){};
+  virtual ~AsyncState() {}
 
   /**
    * @return the current state
