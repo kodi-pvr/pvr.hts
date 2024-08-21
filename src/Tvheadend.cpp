@@ -268,7 +268,7 @@ PVR_ERROR CTvheadend::GetChannelGroups(bool radio, kodi::addon::PVRChannelGroups
   for (const auto& tag : tags)
   {
     /* Callback. */
-    results.Add(tag);
+    results.Add(std::move(tag));
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -314,7 +314,7 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
   for (const auto& gm : gms)
   {
     /* Callback. */
-    results.Add(gm);
+    results.Add(std::move(gm));
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -368,7 +368,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   for (const auto& channel : channels)
   {
     /* Callback. */
-    results.Add(channel);
+    results.Add(std::move(channel));
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -615,7 +615,7 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
   for (const auto& rec : recs)
   {
     /* Callback. */
-    results.Add(rec);
+    results.Add(std::move(rec));
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -1138,7 +1138,7 @@ PVR_ERROR CTvheadend::GetTimers(kodi::addon::PVRTimersResultSet& results)
   for (const auto& timer : timers)
   {
     /* Callback. */
-    results.Add(timer);
+    results.Add(std::move(timer));
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -1405,7 +1405,7 @@ void CTvheadend::TransferEvent(kodi::addon::PVREPGTagsResultSet& results, const 
   CreateEvent(event, tag);
 
   /* Transfer event to Kodi */
-  results.Add(tag);
+  results.Add(std::move(tag));
 }
 
 PVR_ERROR CTvheadend::GetEPGForChannel(int channelUid,
