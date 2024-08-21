@@ -56,10 +56,8 @@ public:
            m_recordingId == other.m_recordingId && m_seriesLink == other.m_seriesLink &&
            m_year == other.m_year && m_writers == other.m_writers &&
            m_directors == other.m_directors && m_cast == other.m_cast &&
-           m_categories == other.m_categories &&
-           m_ratingLabel == other.m_ratingLabel &&
-           m_ratingIcon == other.m_ratingIcon &&
-           m_ratingSource == other.m_ratingSource;
+           m_categories == other.m_categories && m_ratingLabel == other.m_ratingLabel &&
+           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource;
   }
 
   bool operator!=(const Event& other) const { return !(*this == other); }
@@ -169,8 +167,8 @@ private:
   std::string m_cast;
   std::string m_categories;
   std::string m_aired;
-  std::string m_ratingLabel;  // Label like 'PG' or 'FSK 12'
-  std::string m_ratingIcon;   // Path to graphic for the above label.
+  std::string m_ratingLabel; // Label like 'PG' or 'FSK 12'
+  std::string m_ratingIcon; // Path to graphic for the above label.
   std::string m_ratingSource; // Parental rating source.
 };
 

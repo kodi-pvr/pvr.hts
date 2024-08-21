@@ -70,7 +70,7 @@ struct SortChannelPair
   {
     if (left.second < right.second)
       return true;
-    
+
     if (right.second < left.second)
       return false;
 

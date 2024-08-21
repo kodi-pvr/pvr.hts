@@ -20,7 +20,7 @@ namespace entity
 class Entity
 {
 public:
-  Entity() : m_id(0), m_dirty(false){};
+  Entity() : m_id(0), m_dirty(false) {}
   virtual ~Entity() = default;
 
   /**

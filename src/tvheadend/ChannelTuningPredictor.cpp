@@ -39,9 +39,9 @@ ChannelPair ChannelTuningPredictor::MakeChannelPair(const entity::Channel& chann
 
 ChannelPairIterator ChannelTuningPredictor::GetIterator(uint32_t channelId) const
 {
-  return std::find_if(
-      m_channels.cbegin(), m_channels.cend(),
-      [channelId](const ChannelPair& channel) { return channel.first == channelId; });
+  return std::find_if(m_channels.cbegin(), m_channels.cend(),
+                      [channelId](const ChannelPair& channel)
+                      { return channel.first == channelId; });
 }
 
 uint32_t ChannelTuningPredictor::PredictNextChannelId(uint32_t tuningFrom, uint32_t tuningTo) const

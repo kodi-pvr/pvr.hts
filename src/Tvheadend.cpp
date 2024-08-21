@@ -206,8 +206,8 @@ void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& 
     if (str)
       profile.SetComment(str);
 
-    Logger::Log(LogLevel::LEVEL_INFO, "  Name: %s, Comment: %s",
-                profile.GetName().c_str(), profile.GetComment().c_str());
+    Logger::Log(LogLevel::LEVEL_INFO, "  Name: %s, Comment: %s", profile.GetName().c_str(),
+                profile.GetComment().c_str());
 
     m_profiles.emplace_back(profile);
   }
@@ -218,9 +218,8 @@ void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& 
 bool CTvheadend::HasStreamingProfile(const std::string& streamingProfile) const
 {
   return std::find_if(m_profiles.cbegin(), m_profiles.cend(),
-                      [&streamingProfile](const Profile& profile) {
-                        return profile.GetName() == streamingProfile;
-                      }) != m_profiles.cend();
+                      [&streamingProfile](const Profile& profile)
+                      { return profile.GetName() == streamingProfile; }) != m_profiles.cend();
 }
 
 /* **************************************************************************
@@ -284,9 +283,8 @@ PVR_ERROR CTvheadend::GetChannelGroupMembers(const kodi::addon::PVRChannelGroup&
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     // Find the tag
-    const auto it = std::find_if(m_tags.cbegin(), m_tags.cend(), [group](const TagMapEntry& tag) {
-      return tag.second.GetName() == group.GetGroupName();
-    });
+    const auto it = std::find_if(m_tags.cbegin(), m_tags.cend(), [group](const TagMapEntry& tag)
+                                 { return tag.second.GetName() == group.GetGroupName(); });
 
     if (it != m_tags.cend())
     {
@@ -372,9 +370,10 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR CTvheadend::GetChannelStreamProperties(const kodi::addon::PVRChannel& channel,
-                                                 PVR_SOURCE source,
-                                                 std::vector<kodi::addon::PVRStreamProperty>& properties)
+PVR_ERROR CTvheadend::GetChannelStreamProperties(
+    const kodi::addon::PVRChannel& channel,
+    PVR_SOURCE source,
+    std::vector<kodi::addon::PVRStreamProperty>& properties)
 {
   if (!m_settings->GetStreamingHTTP())
     return PVR_ERROR_NO_ERROR;
@@ -1092,12 +1091,11 @@ bool CTvheadend::CreateTimer(const Recording& tvhTmr, kodi::addon::PVRTimer& tmr
   tmr.SetGenreType(0); // not supported by tvh?
   tmr.SetGenreSubType(0); // not supported by tvh?
   tmr.SetFullTextEpgSearch(false); // n/a for one-shot timers
-  tmr.SetParentClientIndex(
-      tmr.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC
-          ? m_timeRecordings.GetTimerIntIdFromStringId(tvhTmr.GetTimerecId())
-          : tmr.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC
-                ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.GetAutorecId())
-                : 0);
+  tmr.SetParentClientIndex(tmr.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC
+                               ? m_timeRecordings.GetTimerIntIdFromStringId(tvhTmr.GetTimerecId())
+                           : tmr.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC
+                               ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.GetAutorecId())
+                               : 0);
   return true;
 }
 
@@ -2004,30 +2002,36 @@ void CTvheadend::SyncEpgCompleted()
 
   /* Schedules */
   std::vector<std::pair<uint32_t, uint32_t>> deletedEvents;
-  utilities::erase_if(m_schedules, [&](const ScheduleMapEntry& entry) {
-    if (entry.second.IsDirty())
-    {
-      // all events are dirty too!
-      for (auto& evt : entry.second.GetEvents())
-        deletedEvents.emplace_back(std::make_pair(evt.second.GetId() /* event uid */,
-                                                  entry.second.GetId() /* channel uid */));
-      return true;
-    }
-    return false;
-  });
+  utilities::erase_if(m_schedules,
+                      [&](const ScheduleMapEntry& entry)
+                      {
+                        if (entry.second.IsDirty())
+                        {
+                          // all events are dirty too!
+                          for (auto& evt : entry.second.GetEvents())
+                            deletedEvents.emplace_back(
+                                std::make_pair(evt.second.GetId() /* event uid */,
+                                               entry.second.GetId() /* channel uid */));
+                          return true;
+                        }
+                        return false;
+                      });
 
   /* Events */
   for (auto& entry : m_schedules)
   {
-    utilities::erase_if(entry.second.GetEvents(), [&](const EventUidsMapEntry& mapEntry) {
-      if (mapEntry.second.IsDirty())
-      {
-        deletedEvents.emplace_back(std::make_pair(mapEntry.second.GetId() /* event uid */,
-                                                  entry.second.GetId() /* channel uid */));
-        return true;
-      }
-      return false;
-    });
+    utilities::erase_if(entry.second.GetEvents(),
+                        [&](const EventUidsMapEntry& mapEntry)
+                        {
+                          if (mapEntry.second.IsDirty())
+                          {
+                            deletedEvents.emplace_back(
+                                std::make_pair(mapEntry.second.GetId() /* event uid */,
+                                               entry.second.GetId() /* channel uid */));
+                            return true;
+                          }
+                          return false;
+                        });
   }
 
   for (auto& entry : deletedEvents)
@@ -2552,7 +2556,7 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   str = htsmsg_get_str(msg, "ratingLabel");
   if (str)
     rec.SetRatingLabel(str);
-  
+
   str = htsmsg_get_str(msg, "ratingIcon");
   if (str)
     rec.SetRatingIcon(GetImageURL(str));
@@ -2638,8 +2642,8 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   {
     const std::string error = rec.GetError().empty() ? "n/a" : rec.GetError();
 
-    Logger::Log(LogLevel::LEVEL_DEBUG, "recording id:%d, state:%s, title:%s, error:%s",
-                rec.GetId(), state, rec.GetTitle().c_str(), error.c_str());
+    Logger::Log(LogLevel::LEVEL_DEBUG, "recording id:%d, state:%s, title:%s, error:%s", rec.GetId(),
+                state, rec.GetTitle().c_str(), error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
     {
@@ -2745,14 +2749,14 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
     evt.SetAge(u32);
 
-  str = htsmsg_get_str(msg, "ratingLabel");  // HTSP v36 required
+  str = htsmsg_get_str(msg, "ratingLabel"); // HTSP v36 required
   if (str)
     evt.SetRatingLabel(str);
 
-  str = htsmsg_get_str(msg, "ratingIcon");  // HTSP v36 required
+  str = htsmsg_get_str(msg, "ratingIcon"); // HTSP v36 required
   if (str)
     evt.SetRatingIcon(GetImageURL(str));
-  
+
   str = htsmsg_get_str(msg, "ratingAuthority");
   if (str)
   {
@@ -3143,7 +3147,8 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
     {
       if (m_playingRecording->GetFilesStart() > 0)
       {
-        times.SetPTSEnd((std::time(nullptr) - m_playingRecording->GetFilesStart()) * STREAM_TIME_BASE);
+        times.SetPTSEnd((std::time(nullptr) - m_playingRecording->GetFilesStart()) *
+                        STREAM_TIME_BASE);
       }
       else
       {

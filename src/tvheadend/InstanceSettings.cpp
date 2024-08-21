@@ -110,8 +110,8 @@ void InstanceSettings::ReadSettings()
   /* Streaming */
   SetStreamingProfile(ReadStringSetting("streaming_profile", DEFAULT_STREAMING_PROFILE));
   SetStreamingHTTP(ReadBoolSetting("streaming_http", DEFAULT_STREAMING_HTTP));
-  SetStreamStalledThreshold(ReadIntSetting("stream_stalled_threshold",
-                                           DEFAULT_STREAM_STALLED_THRESHOLD));
+  SetStreamStalledThreshold(
+      ReadIntSetting("stream_stalled_threshold", DEFAULT_STREAM_STALLED_THRESHOLD));
 
   /* Default dvr settings */
   SetDvrPriority(ReadIntSetting("dvr_priority", DEFAULT_DVR_PRIO));
