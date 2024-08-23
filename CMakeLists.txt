@@ -79,6 +79,7 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/Entity.h
                 src/tvheadend/entity/Event.h
                 src/tvheadend/entity/Event.cpp
+                src/tvheadend/entity/Provider.h
                 src/tvheadend/entity/Recording.h
                 src/tvheadend/entity/RecordingBase.h
                 src/tvheadend/entity/RecordingBase.cpp

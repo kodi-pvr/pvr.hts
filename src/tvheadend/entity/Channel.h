@@ -37,7 +37,7 @@ public:
   {
     return m_id == other.m_id && m_num == other.m_num && m_numMinor == other.m_numMinor &&
            m_type == other.m_type && m_caid == other.m_caid && m_name == other.m_name &&
-           m_icon == other.m_icon;
+           m_icon == other.m_icon && m_providerUid == other.m_providerUid;
   }
 
   bool operator!=(const Channel& other) const { return !(*this == other); }
@@ -60,6 +60,9 @@ public:
   const std::string& GetIcon() const { return m_icon; }
   void SetIcon(const std::string& icon) { m_icon = icon; }
 
+  int32_t GetProviderUid() const { return m_providerUid; }
+  void SetProviderUid(int32_t providerUid) { m_providerUid = providerUid; }
+
 private:
   uint32_t m_num;
   uint32_t m_numMinor;
@@ -67,6 +70,7 @@ private:
   uint32_t m_caid;
   std::string m_name;
   std::string m_icon;
+  int32_t m_providerUid{PVR_PROVIDER_INVALID_UID};
 };
 } // namespace entity
 } // namespace tvheadend
