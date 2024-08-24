@@ -29,7 +29,7 @@
     <summary lang="en_NZ">Kodi&apos;s frontend for Tvheadend</summary>
     <summary lang="en_US">Kodi&apos;s frontend for Tvheadend</summary>
     <summary lang="es_AR">Interfaz Kodi para Tvheadend</summary>
-    <summary lang="es_ES">Interfaz Kodi para Tvheadend</summary>
+    <summary lang="es_ES">Interfaz de Kodi para TVheadend</summary>
     <summary lang="es_MX">El frontend de Kodi para Tvheadend</summary>
     <summary lang="et_EE">Kodi liides Tvheadend&apos;ile</summary>
     <summary lang="fi_FI">Tvheadend-käyttöliittymä Kodille</summary>
@@ -83,7 +83,7 @@
     <description lang="en_NZ">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="en_US">Tvheadend frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="es_AR">Interfaz Tvheadend; soporta la reproducción de TV en vivo, grabación, guía de programación, temporizadores</description>
-    <description lang="es_ES">Interfaz Tvheadend; transmisión de TV en directo y grabaciones, EPG, temporizadores</description>
+    <description lang="es_ES">Interfaz para TVheadend; compatible con transmisión de TV en directo y grabaciones, EPG, temporizadores</description>
     <description lang="es_MX">Frontend de Tvheadend; Compatible con la transmisión de TV en directo y Grabaciones, EPG, Temporizadores</description>
     <description lang="et_EE">Tvheadend&apos;i liides. Toetab telekanalite striimimist ja salvestamist ning elektroonilist saatekava.</description>
     <description lang="fi_FI">Tvheadend-käyttöliittymä, joka tukee televisiolähetysten ja tallenteiden suoratoistoa, ohjelmaopasta ja ajastuksia.</description>
