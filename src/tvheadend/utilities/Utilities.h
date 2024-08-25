@@ -26,7 +26,29 @@ void erase_if(ContainerT& items, const PredicateT& predicate)
     else
       ++it;
   }
-};
+}
+
+/**
+ * Simple hash function. Borrowed from:
+ * https://stackoverflow.com/questions/16075271/hashing-a-string-to-an-integer-in-c
+ */
+static int32_t hash_str_int32(const std::string& str)
+{
+  int32_t hash = 0x811c9dc5;
+  int32_t prime = 0x1000193;
+
+  for (size_t i = 0; i < str.size(); ++i)
+  {
+    uint8_t value = str[i];
+    hash = hash ^ value;
+    hash *= prime;
+  }
+
+  if (hash < 0)
+    hash = -hash;
+
+  return hash;
+}
 
 } // namespace utilities
 } // namespace tvheadend

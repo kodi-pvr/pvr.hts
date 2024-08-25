@@ -119,6 +119,7 @@ PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities
   }
 
   capabilities.SetSupportsRecordingSize(m_conn->GetProtocol() >= 35);
+  capabilities.SetSupportsProviders(m_conn->GetProtocol() >= 38);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -221,6 +222,46 @@ bool CTvheadend::HasStreamingProfile(const std::string& streamingProfile) const
   return std::find_if(m_profiles.cbegin(), m_profiles.cend(),
                       [&streamingProfile](const Profile& profile)
                       { return profile.GetName() == streamingProfile; }) != m_profiles.cend();
+}
+
+/* **************************************************************************
+ * Providers
+ * *************************************************************************/
+
+PVR_ERROR CTvheadend::GetProvidersAmount(int& amount)
+{
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
+
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  amount = m_providers.size();
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR CTvheadend::GetProviders(kodi::addon::PVRProvidersResultSet& results)
+{
+  std::vector<kodi::addon::PVRProvider> providers;
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    providers.reserve(m_providers.size());
+    for (const auto& entry : m_providers)
+    {
+      kodi::addon::PVRProvider provider;
+      provider.SetUniqueId(entry.second.GetId());
+      provider.SetName(entry.second.GetName());
+
+      providers.emplace_back(std::move(provider));
+    }
+  }
+
+  for (const auto& provider : providers)
+  {
+    /* Callback. */
+    results.Add(std::move(provider));
+  }
+
+  return PVR_ERROR_NO_ERROR;
 }
 
 /* **************************************************************************
@@ -360,6 +401,7 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
       chn.SetIsHidden(false);
       chn.SetChannelName(channel.GetName());
       chn.SetIconPath(channel.GetIcon());
+      chn.SetClientProviderUid(channel.GetProviderUid());
 
       channels.emplace_back(std::move(chn));
     }
@@ -490,10 +532,15 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
       /* Setup entry */
       kodi::addon::PVRRecording rec;
 
-      /* Channel icon */
       const auto& cit = m_channels.find(recording.GetChannel());
       if (cit != m_channels.end())
+      {
+        /* Channel icon */
         rec.SetIconPath(cit->second.GetIcon());
+
+        /* Provider */
+        rec.SetClientProviderUid(cit->second.GetProviderUid());
+      }
 
       /* Channel name */
       rec.SetChannelName(recording.GetChannelName());
@@ -1848,6 +1895,9 @@ void CTvheadend::Process()
     {
       switch (event.m_type)
       {
+        case HTSP_EVENT_PRV_UPDATE:
+          kodi::addon::CInstancePVRClient::TriggerProvidersUpdate();
+          break;
         case HTSP_EVENT_TAG_UPDATE:
           kodi::addon::CInstancePVRClient::TriggerChannelGroupsUpdate();
           break;
@@ -1866,6 +1916,11 @@ void CTvheadend::Process()
       }
     }
   }
+}
+
+void CTvheadend::TriggerProviderUpdate()
+{
+  m_events.emplace_back(SHTSPEvent(HTSP_EVENT_PRV_UPDATE));
 }
 
 void CTvheadend::TriggerChannelGroupsUpdate()
@@ -1919,6 +1974,8 @@ void CTvheadend::SyncInitCompleted()
   /* Flag all async fields in case they've been deleted */
   for (auto& entry : m_channels)
     entry.second.SetDirty(true);
+  for (auto& entry : m_providers)
+    entry.second.SetDirty(true);
   for (auto& entry : m_tags)
     entry.second.SetDirty(true);
   for (auto& entry : m_schedules)
@@ -1948,6 +2005,12 @@ void CTvheadend::SyncChannelsCompleted()
                       [](const ChannelMapEntry& entry) { return entry.second.IsDirty(); });
 
   TriggerChannelUpdate();
+
+  /* Providers */
+  utilities::erase_if(m_providers,
+                      [](const ProviderMapEntry& entry) { return entry.second.IsDirty(); });
+
+  TriggerProvidersUpdate();
 
   /* Next */
   m_asyncState.SetState(ASYNC_DVR);
@@ -2224,6 +2287,31 @@ void CTvheadend::ParseChannelAddOrUpdate(htsmsg_t* msg, bool bAdd)
       /* CAID */
       if (caid == 0)
         htsmsg_get_u32(&f->hmf_msg, "caid", &caid);
+
+      /* Service provider */
+      str = htsmsg_get_str(&f->hmf_msg, "providername");
+      if (str && strlen(str) > 0)
+      {
+        const int32_t uid{utilities::hash_str_int32(str)};
+        channel.SetProviderUid(uid);
+
+        /* Locate/create provider object */
+        Provider& provider = m_providers[uid];
+        Provider comparison = provider;
+        provider.SetId(uid);
+        provider.SetDirty(false);
+
+        provider.SetName(str);
+
+        if (provider != comparison)
+        {
+          Logger::Log(LogLevel::LEVEL_DEBUG, "provider %s id:%u, name:%s",
+                      (bAdd ? "added" : "updated"), provider.GetId(), provider.GetName().c_str());
+
+          if (m_asyncState.GetState() > ASYNC_CHN)
+            TriggerProvidersUpdate();
+        }
+      }
     }
 
     channel.SetCaid(caid);
@@ -2256,10 +2344,29 @@ void CTvheadend::ParseChannelDelete(htsmsg_t* msg)
   }
   Logger::Log(LogLevel::LEVEL_DEBUG, "delete channel %u", u32);
 
-  /* Erase */
+  /* We need to check and update providers. May be the deleted channel is the last channel with this provider */
+  int32_t providerUid{PVR_PROVIDER_INVALID_UID};
+  const auto it = m_channels.find(u32);
+  if (it != m_channels.cend())
+    providerUid = (*it).second.GetProviderUid();
+
+  /* Erase channel */
   m_channels.erase(u32);
   m_channelTuningPredictor.RemoveChannel(u32);
   TriggerChannelUpdate();
+
+  if (providerUid != PVR_PROVIDER_INVALID_UID)
+  {
+    const auto it2 = m_providers.find(providerUid);
+    if (std::none_of(m_channels.cbegin(), m_channels.cend(),
+                     [providerUid](const ChannelMapEntry& entry)
+                     { return entry.second.GetProviderUid() == providerUid; }))
+    {
+      /* Erase provider */
+      m_providers.erase(it2);
+      TriggerProvidersUpdate();
+    }
+  }
 }
 
 void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)

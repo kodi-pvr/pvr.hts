@@ -34,7 +34,7 @@ using namespace tvheadend::utilities;
 
 #define HTSP_MIN_SERVER_VERSION (26) // Server must support at least this htsp version
 #define HTSP_CLIENT_VERSION \
-  (37) // Client uses HTSP features up to this version. If the respective \
+ (38) // Client uses HTSP features up to this version. If the respective \
       // addon feature requires htsp features introduced after \
       // HTSP_MIN_SERVER_VERSION this feature will only be available if the \
       // actual server HTSP version matches (runtime htsp version check).

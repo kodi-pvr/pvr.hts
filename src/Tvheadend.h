@@ -22,6 +22,7 @@ extern "C"
 #include "tvheadend/Profile.h"
 #include "tvheadend/TimeRecordings.h"
 #include "tvheadend/entity/Channel.h"
+#include "tvheadend/entity/Provider.h"
 #include "tvheadend/entity/Recording.h"
 #include "tvheadend/entity/Schedule.h"
 #include "tvheadend/entity/Tag.h"
@@ -89,6 +90,9 @@ public:
 
   PVR_ERROR GetCapabilities(kodi::addon::PVRCapabilities& capabilities) override;
   PVR_ERROR GetDriveSpace(uint64_t& total, uint64_t& used) override;
+
+  PVR_ERROR GetProvidersAmount(int& amount) override;
+  PVR_ERROR GetProviders(kodi::addon::PVRProvidersResultSet& results) override;
 
   PVR_ERROR GetChannelGroupsAmount(int& amount) override;
   PVR_ERROR GetChannelGroups(bool radio, kodi::addon::PVRChannelGroupsResultSet& results) override;
@@ -161,6 +165,7 @@ private:
   /*
    * Event handling
    */
+  void TriggerProviderUpdate();
   void TriggerChannelGroupsUpdate();
   void TriggerChannelUpdate();
   void TriggerRecordingUpdate();
@@ -277,6 +282,7 @@ public:
   HTSPMessageQueue m_queue;
 
   tvheadend::entity::Channels m_channels;
+  tvheadend::entity::Providers m_providers;
   tvheadend::entity::Tags m_tags;
   tvheadend::entity::Recordings m_recordings;
   tvheadend::entity::Schedules m_schedules;
