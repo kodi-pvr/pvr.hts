@@ -54,6 +54,8 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/AutoRecordings.h
                 src/tvheadend/ChannelTuningPredictor.h
                 src/tvheadend/ChannelTuningPredictor.cpp
+                src/tvheadend/CustomTimerProperties.h
+                src/tvheadend/CustomTimerProperties.cpp
                 src/tvheadend/HTSPConnection.h
                 src/tvheadend/HTSPConnection.cpp
                 src/tvheadend/HTSPDemuxer.h

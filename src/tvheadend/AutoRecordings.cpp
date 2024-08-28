@@ -7,6 +7,7 @@
 
 #include "AutoRecordings.h"
 
+#include "CustomTimerProperties.h"
 #include "HTSPConnection.h"
 #include "InstanceSettings.h"
 #include "entity/Recording.h"
@@ -23,8 +24,14 @@ using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
 AutoRecordings::AutoRecordings(const std::shared_ptr<InstanceSettings>& settings,
-                               HTSPConnection& conn)
-  : m_settings(settings), m_conn(conn)
+                               HTSPConnection& conn,
+                               Profiles& dvrConfigs)
+  : m_settings(settings),
+    m_conn(conn),
+    m_customTimerProps({CUSTOM_PROP_ID_DVR_CONFIGURATION, CUSTOM_PROP_ID_AUTOREC_BROADCASTTYPE,
+                        CUSTOM_PROP_ID_DVR_COMMENT},
+                       conn,
+                       dvrConfigs)
 {
 }
 
@@ -105,6 +112,9 @@ void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetFullTextEpgSearch(rec.second.GetFulltext());
     tmr.SetParentClientIndex(0);
 
+    /* Custom props. */
+    tmr.SetCustomProperties(m_customTimerProps.GetProperties(rec.second));
+
     timers.emplace_back(std::move(tmr));
   }
 }
@@ -131,6 +141,12 @@ const std::string AutoRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Autorec: Unable to obtain string id for int id %s", intId);
   return "";
+}
+
+const std::vector<kodi::addon::PVRSettingDefinition> AutoRecordings::GetCustomSettingDefinitions()
+    const
+{
+  return m_customTimerProps.GetSettingDefinitions();
 }
 
 PVR_ERROR AutoRecordings::SendAutorecAdd(const kodi::addon::PVRTimer& timer)
@@ -258,6 +274,9 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /* series link */
   if (timer.GetTimerType() == TIMER_REPEATING_SERIESLINK)
     htsmsg_add_str(m, "serieslinkUri", timer.GetSeriesLink().c_str());
+
+  /* Custom props. */
+  m_customTimerProps.AppendPropertiesToHTSPMessage(timer.GetCustomProperties(), m);
 
   /* Send and Wait */
   {
@@ -443,20 +462,27 @@ bool AutoRecordings::ParseAutorecAddOrUpdate(htsmsg_t* msg, bool bAdd)
     rec.SetCreator(str);
 
   if (!htsmsg_get_u32(msg, "channel", &u32))
-  {
     rec.SetChannel(u32);
-  }
   else
     rec.SetChannel(PVR_TIMER_ANY_CHANNEL); // an empty channel field = any channel
 
   if (!htsmsg_get_u32(msg, "fulltext", &u32))
-  {
     rec.SetFulltext(u32);
-  }
 
   str = htsmsg_get_str(msg, "serieslinkUri");
   if (str)
     rec.SetSeriesLink(str);
+
+  if (!htsmsg_get_u32(msg, "broadcastType", &u32))
+    rec.SetBroadcastType(u32);
+
+  str = htsmsg_get_str(msg, "configId");
+  if (str)
+    rec.SetConfigUuid(str);
+
+  str = htsmsg_get_str(msg, "comment");
+  if (str)
+    rec.SetComment(str);
 
   return true;
 }

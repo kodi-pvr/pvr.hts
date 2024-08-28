@@ -37,7 +37,6 @@ typedef enum
   DVR_ACTION_TYPE_MUTE,
   DVR_ACTION_TYPE_SCENE,
   DVR_ACTION_TYPE_COMBREAK,
-
 } dvr_action_type_t;
 
 typedef enum
@@ -50,6 +49,7 @@ typedef enum
   DVR_AUTOREC_RECORD_ONCE_PER_MONTH = 12,
   DVR_AUTOREC_RECORD_ONCE_PER_WEEK = 4,
   DVR_AUTOREC_RECORD_ONCE_PER_DAY = 5,
+  DVR_AUTOREC_RECORD_DVR_PROFILE = 15, // Use DVR configuration
   DVR_AUTOREC_LRECORD_DIFFERENT_EPISODE_NUMBER = 6,
   DVR_AUTOREC_LRECORD_DIFFERENT_TITLE = 7,
   DVR_AUTOREC_LRECORD_DIFFERENT_SUBTITLE = 8,
@@ -80,11 +80,10 @@ typedef enum
   DVR_RET_1YEAR = 366,
   DVR_RET_2YEARS = 731,
   DVR_RET_3YEARS = 1096,
-  DVR_RET_SPACE =
-      INT32_MAX -
-      1, // the server may delete this recording if space for a new recording is needed (removal only)
-  DVR_RET_FOREVER =
-      INT32_MAX // the server should never delete this recording or database entry, only the user can do this
+  // the server may delete this recording if space for a new recording is needed (removal only)
+  DVR_RET_SPACE = (INT32_MAX - 1),
+  // the server should never delete this recording or database entry, only the user can do this
+  DVR_RET_FOREVER = (INT32_MAX)
 } dvr_retention_t;
 
 typedef enum
@@ -93,6 +92,15 @@ typedef enum
   CHANNEL_TYPE_TV = 1,
   CHANNEL_TYPE_RADIO = 2
 } channel_type_t;
+
+// Autorecs: Broadcast type
+typedef enum
+{
+  DVR_AUTOREC_BTYPE_ALL = 0, // "Any"
+  DVR_AUTOREC_BTYPE_NEW_OR_UNKNOWN = 1, // "New / premiere / unknown"
+  DVR_AUTOREC_BTYPE_REPEAT = 2, // "Repeated"
+  DVR_AUTOREC_BTYPE_NEW = 3, // "New / premiere"
+} dvr_autorec_btype_t;
 
 typedef enum
 {

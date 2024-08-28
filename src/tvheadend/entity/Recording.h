@@ -58,7 +58,8 @@ public:
            m_contentType == other.m_contentType && m_season == other.m_season &&
            m_episode == other.m_episode && m_part == other.m_part &&
            m_ageRating == other.m_ageRating && m_ratingLabel == other.m_ratingLabel &&
-           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource;
+           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource &&
+           m_configUuid == other.m_configUuid;
   }
 
   bool operator!=(const Recording& other) { return !(*this == other); }
@@ -72,7 +73,7 @@ public:
   bool IsTimer() const
   {
     return m_state == PVR_TIMER_STATE_SCHEDULED || m_state == PVR_TIMER_STATE_RECORDING ||
-           m_state == PVR_TIMER_STATE_CONFLICT_NOK;
+           m_state == PVR_TIMER_STATE_CONFLICT_OK;
   }
 
   /**
@@ -185,6 +186,9 @@ public:
   const std::string& GetRatingSource() const { return m_ratingSource; }
   void SetRatingSource(const std::string& ratingSource) { m_ratingSource = ratingSource; }
 
+  const std::string& GetConfigUuid() const { return m_configUuid; }
+  void SetConfigUuid(const std::string& uuid) { m_configUuid = uuid; }
+
 private:
   uint32_t m_channelType{0};
   std::string m_channelName;
@@ -215,6 +219,7 @@ private:
   std::string m_ratingLabel;
   std::string m_ratingIcon;
   std::string m_ratingSource;
+  std::string m_configUuid; // DVR configuration UUID.
 };
 
 } // namespace tvheadend::entity

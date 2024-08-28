@@ -16,6 +16,8 @@ extern "C"
 #include <sys/types.h>
 }
 
+#include "CustomTimerProperties.h"
+#include "Profile.h"
 #include "entity/TimeRecording.h"
 
 #include "kodi/addon-instance/pvr/Timers.h"
@@ -28,7 +30,7 @@ class HTSPConnection;
 class TimeRecordings
 {
 public:
-  TimeRecordings(HTSPConnection& conn);
+  TimeRecordings(HTSPConnection& conn, Profiles& dvrConfigs);
   ~TimeRecordings();
 
   /* state updates */
@@ -39,6 +41,7 @@ public:
   int GetTimerecTimerCount() const;
   void GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers);
   const unsigned int GetTimerIntIdFromStringId(const std::string& strId) const;
+  const std::vector<kodi::addon::PVRSettingDefinition> GetCustomSettingDefinitions() const;
 
   /* client to server messages */
   PVR_ERROR SendTimerecAdd(const kodi::addon::PVRTimer& timer);
@@ -54,6 +57,7 @@ private:
   PVR_ERROR SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update);
 
   HTSPConnection& m_conn;
+  const tvheadend::CustomTimerProperties m_customTimerProps;
   tvheadend::entity::TimeRecordingsMap m_timeRecordings;
 };
 

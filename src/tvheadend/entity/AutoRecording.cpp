@@ -21,7 +21,8 @@ bool AutoRecording::operator==(const AutoRecording& right)
   return SeriesRecordingBase::operator==(right) && m_startWindowBegin == right.m_startWindowBegin &&
          m_startWindowEnd == right.m_startWindowEnd && m_startExtra == right.m_startExtra &&
          m_stopExtra == right.m_stopExtra && m_dupDetect == right.m_dupDetect &&
-         m_fulltext == right.m_fulltext && m_seriesLink == right.m_seriesLink;
+         m_fulltext == right.m_fulltext && m_broadcastType == right.m_broadcastType &&
+         m_seriesLink == right.m_seriesLink;
 }
 
 bool AutoRecording::operator!=(const AutoRecording& right)
@@ -126,6 +127,15 @@ bool AutoRecording::GetFulltext() const
 void AutoRecording::SetFulltext(uint32_t fulltext)
 {
   m_fulltext = fulltext;
+}
+
+uint32_t AutoRecording::GetBroadcastType() const
+{
+  return m_broadcastType;
+}
+void AutoRecording::SetBroadcastType(uint32_t broadcastType)
+{
+  m_broadcastType = broadcastType;
 }
 
 const std::string& AutoRecording::GetSeriesLink() const

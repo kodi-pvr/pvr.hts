@@ -16,6 +16,7 @@ extern "C"
 
 #include "tvheadend/AutoRecordings.h"
 #include "tvheadend/ChannelTuningPredictor.h"
+#include "tvheadend/CustomTimerProperties.h"
 #include "tvheadend/HTSPMessage.h"
 #include "tvheadend/IHTSPConnectionListener.h"
 #include "tvheadend/IHTSPDemuxPacketHandler.h"
@@ -140,8 +141,12 @@ private:
   std::string GetImageURL(const char* str);
 
   /**
-   * Queries the server for available streaming profiles and populates
-   * m_profiles
+   * Queries the server for available DVR configurations and populates m_dvrConfigs
+   */
+  void QueryAvailableDvrConfigurations(std::unique_lock<std::recursive_mutex>& lock);
+
+  /**
+   * Queries the server for available streaming profiles and populates m_profiles
    */
   void QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& lock);
 
@@ -263,6 +268,11 @@ public:
   PVR_ERROR GetStreamTimes(kodi::addon::PVRStreamTimes& times) override;
 
   /**
+   * The DVR configurations available on the server
+   */
+  tvheadend::Profiles m_dvrConfigs;
+
+  /**
    * The streaming profiles available on the server
    */
   tvheadend::Profiles m_profiles;
@@ -272,6 +282,8 @@ public:
   std::shared_ptr<tvheadend::InstanceSettings> m_settings;
 
   tvheadend::HTSPConnection* m_conn;
+
+  const tvheadend::CustomTimerProperties m_customTimerProps;
 
   std::vector<tvheadend::HTSPDemuxer*> m_dmx;
   tvheadend::HTSPDemuxer* m_dmx_active;

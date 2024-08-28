@@ -50,6 +50,9 @@ public:
   bool GetFulltext() const;
   void SetFulltext(uint32_t fulltext);
 
+  uint32_t GetBroadcastType() const;
+  void SetBroadcastType(uint32_t broadcastType);
+
   const std::string& GetSeriesLink() const;
   void SetSeriesLink(const std::string& seriesLink);
 
@@ -62,6 +65,7 @@ private:
   int64_t m_stopExtra{0}; // Extra stop minutes (post-time).
   uint32_t m_dupDetect{0}; // duplicate episode detect (numeric values: see dvr_autorec_dedup_t).
   uint32_t m_fulltext{0}; // Fulltext epg search.
+  uint32_t m_broadcastType{0}; // Broadcast type (numeric values: see dvr_autorec_btype_t).
   std::string m_seriesLink; // Series link.
 };
 
