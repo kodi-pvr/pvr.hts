@@ -3,6 +3,7 @@ v22.4.0
 - Add support for Autorec property "Broadcast type" (HTSPv39+)
 - Add support for DVR entry property "DVR configuration" (HTSPv40+)
 - Add support for DVR entry property "Comment" (HTSPv42+)
+- Make timers created by autorec and timerec editable
 
 v22.3.0
 - Add support for PVR Providers (HTSPv38+)
