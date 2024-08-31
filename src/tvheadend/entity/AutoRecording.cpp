@@ -12,20 +12,13 @@
 using namespace tvheadend;
 using namespace tvheadend::entity;
 
-AutoRecording::AutoRecording(const std::string& id /*= ""*/)
-  : RecordingBase(id),
-    m_startWindowBegin(0),
-    m_startWindowEnd(0),
-    m_startExtra(0),
-    m_stopExtra(0),
-    m_dupDetect(0),
-    m_fulltext(0)
+AutoRecording::AutoRecording(const std::string& id /*= ""*/) : SeriesRecordingBase(id)
 {
 }
 
 bool AutoRecording::operator==(const AutoRecording& right)
 {
-  return RecordingBase::operator==(right) && m_startWindowBegin == right.m_startWindowBegin &&
+  return SeriesRecordingBase::operator==(right) && m_startWindowBegin == right.m_startWindowBegin &&
          m_startWindowEnd == right.m_startWindowEnd && m_startExtra == right.m_startExtra &&
          m_stopExtra == right.m_stopExtra && m_dupDetect == right.m_dupDetect &&
          m_fulltext == right.m_fulltext && m_seriesLink == right.m_seriesLink;

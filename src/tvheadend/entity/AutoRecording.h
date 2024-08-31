@@ -7,10 +7,13 @@
 
 #pragma once
 
-#include "RecordingBase.h"
+#include "SeriesRecordingBase.h"
 
+#include <cstdint>
 #include <map>
 #include <memory>
+#include <string>
+#include <utility>
 
 namespace tvheadend
 {
@@ -19,7 +22,7 @@ class InstanceSettings;
 namespace entity
 {
 
-class AutoRecording : public RecordingBase
+class AutoRecording : public SeriesRecordingBase
 {
 public:
   AutoRecording(const std::string& id = "");
@@ -53,12 +56,12 @@ public:
 private:
   std::shared_ptr<InstanceSettings> m_settings;
 
-  int32_t m_startWindowBegin; // Begin of the starting window (minutes from midnight).
-  int32_t m_startWindowEnd; // End of the starting window (minutes from midnight).
-  int64_t m_startExtra; // Extra start minutes (pre-time).
-  int64_t m_stopExtra; // Extra stop minutes (post-time).
-  uint32_t m_dupDetect; // duplicate episode detect (numeric values: see dvr_autorec_dedup_t).
-  uint32_t m_fulltext; // Fulltext epg search.
+  int32_t m_startWindowBegin{0}; // Begin of the starting window (minutes from midnight).
+  int32_t m_startWindowEnd{0}; // End of the starting window (minutes from midnight).
+  int64_t m_startExtra{0}; // Extra start minutes (pre-time).
+  int64_t m_stopExtra{0}; // Extra stop minutes (post-time).
+  uint32_t m_dupDetect{0}; // duplicate episode detect (numeric values: see dvr_autorec_dedup_t).
+  uint32_t m_fulltext{0}; // Fulltext epg search.
   std::string m_seriesLink; // Series link.
 };
 
