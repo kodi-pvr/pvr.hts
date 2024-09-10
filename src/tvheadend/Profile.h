@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 
@@ -17,11 +18,16 @@ class Profile;
 typedef std::vector<Profile> Profiles;
 
 /**
- * Represents a single streaming profile
+ * Represents a single streaming profile or a single DVR configuration
  */
 class Profile
 {
 public:
+  Profile() : m_id(GetNextIntId()) {}
+
+  uint32_t GetId() const { return m_id; }
+  void SetId(uint32_t profileId) { m_id = profileId; }
+
   std::string GetUuid() const { return m_uuid; }
   void SetUuid(const std::string& uuid) { m_uuid = uuid; }
 
@@ -32,19 +38,15 @@ public:
   void SetComment(const std::string& comment) { m_comment = comment; }
 
 private:
-  /**
-   * The profile UUID
-   */
+  static unsigned int GetNextIntId()
+  {
+    static unsigned int intId = 0;
+    return ++intId;
+  }
+
+  uint32_t m_id{0};
   std::string m_uuid;
-
-  /**
-   * The profile name
-   */
   std::string m_name;
-
-  /**
-   * The profile comment
-   */
   std::string m_comment;
 };
 

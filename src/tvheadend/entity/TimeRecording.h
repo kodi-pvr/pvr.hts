@@ -7,16 +7,17 @@
 
 #pragma once
 
-#include "RecordingBase.h"
+#include "SeriesRecordingBase.h"
 
+#include <cstdint>
+#include <ctime>
 #include <map>
+#include <utility>
 
-namespace tvheadend
-{
-namespace entity
+namespace tvheadend::entity
 {
 
-class TimeRecording : public RecordingBase
+class TimeRecording : public SeriesRecordingBase
 {
 public:
   TimeRecording(const std::string& id = "");
@@ -31,12 +32,11 @@ public:
   void SetStop(int32_t stop);
 
 private:
-  int32_t m_start; // Start time in minutes from midnight (up to 24*60).
-  int32_t m_stop; // Stop time in minutes from midnight (up to 24*60).
+  int32_t m_start{0}; // Start time in minutes from midnight (up to 24*60).
+  int32_t m_stop{0}; // Stop time in minutes from midnight (up to 24*60).
 };
 
 typedef std::map<std::string, TimeRecording> TimeRecordingsMap;
 typedef std::pair<std::string, TimeRecording> TimeRecordingMapEntry;
 
-} // namespace entity
-} // namespace tvheadend
+} // namespace tvheadend::entity

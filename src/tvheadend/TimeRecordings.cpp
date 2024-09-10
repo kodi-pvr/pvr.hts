@@ -7,6 +7,7 @@
 
 #include "TimeRecordings.h"
 
+#include "CustomTimerProperties.h"
 #include "HTSPConnection.h"
 #include "entity/Recording.h"
 #include "utilities/LifetimeMapper.h"
@@ -20,7 +21,10 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-TimeRecordings::TimeRecordings(HTSPConnection& conn) : m_conn(conn)
+TimeRecordings::TimeRecordings(HTSPConnection& conn, Profiles& dvrConfigs)
+  : m_conn(conn),
+    m_customTimerProps(
+        {CUSTOM_PROP_ID_DVR_CONFIGURATION, CUSTOM_PROP_ID_DVR_COMMENT}, conn, dvrConfigs)
 {
 }
 
@@ -81,6 +85,9 @@ void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers
     tmr.SetFullTextEpgSearch(false); // n/a for manual timers
     tmr.SetParentClientIndex(0);
 
+    /* Custom props. */
+    tmr.SetCustomProperties(m_customTimerProps.GetProperties(rec.second));
+
     timers.emplace_back(std::move(tmr));
   }
 }
@@ -107,6 +114,12 @@ const std::string TimeRecordings::GetTimerStringIdFromIntId(unsigned int intId) 
 
   Logger::Log(LogLevel::LEVEL_ERROR, "Timerec: Unable to obtain string id for int id %s", intId);
   return "";
+}
+
+const std::vector<kodi::addon::PVRSettingDefinition> TimeRecordings::GetCustomSettingDefinitions()
+    const
+{
+  return m_customTimerProps.GetSettingDefinitions();
 }
 
 PVR_ERROR TimeRecordings::SendTimerecAdd(const kodi::addon::PVRTimer& timer)
@@ -163,6 +176,9 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /*       but ugly.                                                         */
   if (timer.GetDirectory() != "/")
     htsmsg_add_str(m, "directory", timer.GetDirectory().c_str());
+
+  /* Custom props. */
+  m_customTimerProps.AppendPropertiesToHTSPMessage(timer.GetCustomProperties(), m);
 
   /* Send and Wait */
   {
@@ -327,6 +343,14 @@ bool TimeRecordings::ParseTimerecAddOrUpdate(htsmsg_t* msg, bool bAdd)
      * note: "any channel" will be interpreted as "no channel" for timerecs by kodi */
     rec.SetChannel(PVR_TIMER_ANY_CHANNEL);
   }
+
+  str = htsmsg_get_str(msg, "configId");
+  if (str)
+    rec.SetConfigUuid(str);
+
+  str = htsmsg_get_str(msg, "comment");
+  if (str)
+    rec.SetComment(str);
 
   return true;
 }

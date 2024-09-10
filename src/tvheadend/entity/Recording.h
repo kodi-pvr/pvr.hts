@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include "../utilities/LifetimeMapper.h"
-#include "Entity.h"
+#include "RecordingBase.h"
 
 #include "kodi/addon-instance/pvr/Timers.h"
 
-#include <algorithm>
+#include <cstdint>
 #include <map>
 #include <string>
+#include <utility>
 
 // Timer types
 #define TIMER_ONCE_MANUAL (PVR_TIMER_TYPE_NONE + 1)
@@ -25,9 +25,7 @@
 #define TIMER_REPEATING_EPG (PVR_TIMER_TYPE_NONE + 6)
 #define TIMER_REPEATING_SERIESLINK (PVR_TIMER_TYPE_NONE + 7)
 
-namespace tvheadend
-{
-namespace entity
+namespace tvheadend::entity
 {
 
 class Recording;
@@ -39,54 +37,32 @@ typedef std::map<uint32_t, Recording> Recordings;
  * TODO: Create separate classes for recordings and timers since a
  * recording obviously can't have a "timer type"
  */
-class Recording : public Entity
+class Recording : public RecordingBase
 {
 public:
-  Recording()
-    : m_enabled(0),
-      m_channel(0),
-      m_channelType(0),
-      m_eventId(0),
-      m_start(0),
-      m_stop(0),
-      m_startExtra(0),
-      m_stopExtra(0),
-      m_filesStart(0),
-      m_filesStop(0),
-      m_filesSize(0),
-      m_state(PVR_TIMER_STATE_ERROR),
-      m_lifetime(0),
-      m_priority(50), // Kodi default - "normal"
-      m_playCount(0),
-      m_playPosition(0),
-      m_contentType(0),
-      m_season(-1),
-      m_episode(-1),
-      m_part(0),
-      m_ageRating(0)
-  {
-  }
+  Recording() = default;
 
-  bool operator==(const Recording& other) const
+  bool operator==(const Recording& other)
   {
-    return m_id == other.m_id && m_enabled == other.m_enabled && m_channel == other.m_channel &&
-           m_channelType == other.m_channelType && m_channelName == other.m_channelName &&
-           m_eventId == other.m_eventId && m_start == other.m_start && m_stop == other.m_stop &&
+    return RecordingBase::operator==(other) && m_channelType == other.m_channelType &&
+           m_channelName == other.m_channelName && m_eventId == other.m_eventId &&
+           m_start == other.m_start && m_stop == other.m_stop &&
            m_startExtra == other.m_startExtra && m_stopExtra == other.m_stopExtra &&
            m_filesStart == other.m_filesStart && m_filesStop == other.m_filesStop &&
-           m_filesSize == other.m_filesSize && m_title == other.m_title && m_path == other.m_path &&
-           m_description == other.m_description && m_image == other.m_image &&
-           m_fanartImage == other.m_fanartImage && m_timerecId == other.m_timerecId &&
-           m_autorecId == other.m_autorecId && m_state == other.m_state &&
-           m_error == other.m_error && m_lifetime == other.m_lifetime &&
-           m_priority == other.m_priority && m_playCount == other.m_playCount &&
-           m_playPosition == other.m_playPosition && m_contentType == other.m_contentType &&
-           m_season == other.m_season && m_episode == other.m_episode && m_part == other.m_part &&
+           m_filesSize == other.m_filesSize && m_subtitle == other.m_subtitle &&
+           m_path == other.m_path && m_description == other.m_description &&
+           m_image == other.m_image && m_fanartImage == other.m_fanartImage &&
+           m_timerecId == other.m_timerecId && m_autorecId == other.m_autorecId &&
+           m_state == other.m_state && m_error == other.m_error &&
+           m_playCount == other.m_playCount && m_playPosition == other.m_playPosition &&
+           m_contentType == other.m_contentType && m_season == other.m_season &&
+           m_episode == other.m_episode && m_part == other.m_part &&
            m_ageRating == other.m_ageRating && m_ratingLabel == other.m_ratingLabel &&
-           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource;
+           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource &&
+           m_configUuid == other.m_configUuid;
   }
 
-  bool operator!=(const Recording& other) const { return !(*this == other); }
+  bool operator!=(const Recording& other) { return !(*this == other); }
 
   bool IsRecording() const
   {
@@ -97,7 +73,7 @@ public:
   bool IsTimer() const
   {
     return m_state == PVR_TIMER_STATE_SCHEDULED || m_state == PVR_TIMER_STATE_RECORDING ||
-           m_state == PVR_TIMER_STATE_CONFLICT_NOK;
+           m_state == PVR_TIMER_STATE_CONFLICT_OK;
   }
 
   /**
@@ -115,12 +91,6 @@ public:
       return TIMER_ONCE_MANUAL;
   }
 
-  bool IsEnabled() const { return m_enabled > 0; }
-  void SetEnabled(uint32_t enabled) { m_enabled = enabled; }
-
-  uint32_t GetChannel() const { return m_channel; }
-  void SetChannel(uint32_t channel) { m_channel = channel; }
-
   uint32_t GetChannelType() const { return m_channelType; }
   void SetChannelType(uint32_t channelType) { m_channelType = channelType; }
 
@@ -130,19 +100,19 @@ public:
   uint32_t GetEventId() const { return m_eventId; }
   void SetEventId(uint32_t eventId) { m_eventId = eventId; }
 
-  // TODO: Change to time_t
+  //! @todo Change to time_t
   int64_t GetStart() const { return m_start; }
   void SetStart(int64_t start) { m_start = start; }
 
-  // TODO: Change to time_t
+  //! @todo Change to time_t
   int64_t GetStop() const { return m_stop; }
   void SetStop(int64_t stop) { m_stop = stop; }
 
-  // TODO: Change to time_t
+  //! @todo Change to time_t
   int64_t GetStartExtra() const { return m_startExtra; }
   void SetStartExtra(int64_t startExtra) { m_startExtra = startExtra; }
 
-  // TODO: Change to time_t
+  //! @todo Change to time_t
   int64_t GetStopExtra() const { return m_stopExtra; }
   void SetStopExtra(int64_t stopExtra) { m_stopExtra = stopExtra; }
 
@@ -154,9 +124,6 @@ public:
 
   int64_t GetFilesSize() const { return m_filesSize; }
   void SetFilesSize(int64_t size) { m_filesSize = size; }
-
-  const std::string& GetTitle() const { return m_title; }
-  void SetTitle(const std::string& title) { m_title = title; }
 
   const std::string& GetSubtitle() const { return m_subtitle; }
   void SetSubtitle(const std::string& subtitle) { m_subtitle = subtitle; }
@@ -184,12 +151,6 @@ public:
 
   const std::string& GetError() const { return m_error; }
   void SetError(const std::string& error) { m_error = error; }
-
-  int GetLifetime() const { return utilities::LifetimeMapper::TvhToKodi(m_lifetime); }
-  void SetLifetime(uint32_t lifetime) { m_lifetime = lifetime; }
-
-  uint32_t GetPriority() const { return m_priority; }
-  void SetPriority(uint32_t priority) { m_priority = priority; }
 
   uint32_t GetPlayCount() const { return m_playCount; }
   void SetPlayCount(uint32_t playCount) { m_playCount = playCount; }
@@ -225,20 +186,20 @@ public:
   const std::string& GetRatingSource() const { return m_ratingSource; }
   void SetRatingSource(const std::string& ratingSource) { m_ratingSource = ratingSource; }
 
+  const std::string& GetConfigUuid() const { return m_configUuid; }
+  void SetConfigUuid(const std::string& uuid) { m_configUuid = uuid; }
+
 private:
-  uint32_t m_enabled;
-  uint32_t m_channel;
-  uint32_t m_channelType;
+  uint32_t m_channelType{0};
   std::string m_channelName;
-  uint32_t m_eventId;
-  int64_t m_start;
-  int64_t m_stop;
-  int64_t m_startExtra;
-  int64_t m_stopExtra;
-  int64_t m_filesStart;
-  int64_t m_filesStop;
-  int64_t m_filesSize;
-  std::string m_title;
+  uint32_t m_eventId{0};
+  int64_t m_start{0};
+  int64_t m_stop{0};
+  int64_t m_startExtra{0};
+  int64_t m_stopExtra{0};
+  int64_t m_filesStart{0};
+  int64_t m_filesStop{0};
+  int64_t m_filesSize{0};
   std::string m_subtitle;
   std::string m_path;
   std::string m_description;
@@ -246,21 +207,19 @@ private:
   std::string m_fanartImage;
   std::string m_timerecId;
   std::string m_autorecId;
-  PVR_TIMER_STATE m_state;
+  PVR_TIMER_STATE m_state{PVR_TIMER_STATE_ERROR};
   std::string m_error;
-  uint32_t m_lifetime;
-  uint32_t m_priority;
-  uint32_t m_playCount;
-  uint32_t m_playPosition;
-  uint32_t m_contentType;
-  int32_t m_season;
-  int32_t m_episode;
-  uint32_t m_part;
-  uint32_t m_ageRating;
+  uint32_t m_playCount{0};
+  uint32_t m_playPosition{0};
+  uint32_t m_contentType{0};
+  int32_t m_season{-1};
+  int32_t m_episode{-1};
+  uint32_t m_part{0};
+  uint32_t m_ageRating{0};
   std::string m_ratingLabel;
   std::string m_ratingIcon;
   std::string m_ratingSource;
+  std::string m_configUuid; // DVR configuration UUID.
 };
 
-} // namespace entity
-} // namespace tvheadend
+} // namespace tvheadend::entity

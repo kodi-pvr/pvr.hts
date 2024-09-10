@@ -9,14 +9,14 @@
 
 using namespace tvheadend::entity;
 
-TimeRecording::TimeRecording(const std::string& id /*= ""*/)
-  : RecordingBase(id), m_start(0), m_stop(0)
+TimeRecording::TimeRecording(const std::string& id /*= ""*/) : SeriesRecordingBase(id)
 {
 }
 
 bool TimeRecording::operator==(const TimeRecording& right)
 {
-  return RecordingBase::operator==(right) && m_start == right.m_start && m_stop == right.m_stop;
+  return SeriesRecordingBase::operator==(right) && m_start == right.m_start &&
+         m_stop == right.m_stop;
 }
 
 bool TimeRecording::operator!=(const TimeRecording& right)

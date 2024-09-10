@@ -7,6 +7,7 @@
 
 #include "Tvheadend.h"
 
+#include "tvheadend/CustomTimerProperties.h"
 #include "tvheadend/HTSPConnection.h"
 #include "tvheadend/HTSPDemuxer.h"
 #include "tvheadend/HTSPMessage.h"
@@ -32,12 +33,14 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
   : kodi::addon::CInstancePVRClient(instance),
     m_settings(new InstanceSettings(*this)),
     m_conn(new HTSPConnection(m_settings, *this)),
+    m_customTimerProps(
+        {CUSTOM_PROP_ID_DVR_CONFIGURATION, CUSTOM_PROP_ID_DVR_COMMENT}, *m_conn, m_dvrConfigs),
     m_streamchange(false),
     m_vfs(new HTSPVFS(m_settings, *m_conn)),
     m_queue(static_cast<size_t>(-1)),
     m_asyncState(m_settings->GetResponseTimeout()),
-    m_timeRecordings(*m_conn),
-    m_autoRecordings(m_settings, *m_conn),
+    m_timeRecordings(*m_conn, m_dvrConfigs),
+    m_autoRecordings(m_settings, *m_conn, m_dvrConfigs),
     m_epgMaxDays(EpgMaxFutureDays()),
     m_playingLiveStream(false),
     m_playingRecording(nullptr)
@@ -165,6 +168,56 @@ std::string CTvheadend::GetImageURL(const char* str)
   {
     return m_conn->GetWebURL("%s", str);
   }
+}
+
+void CTvheadend::QueryAvailableDvrConfigurations(std::unique_lock<std::recursive_mutex>& lock)
+{
+  /* Build message */
+  htsmsg_t* m = htsmsg_create_map();
+
+  /* Send */
+  m = m_conn->SendAndWait0(lock, "getDvrConfigs", m);
+
+  /* Validate */
+  if (!m)
+    return;
+
+  htsmsg_t* l = htsmsg_get_list(m, "dvrconfigs");
+
+  if (!l)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed getDvrConfigs: 'dvrconfigs' missing");
+    htsmsg_destroy(m);
+    return;
+  }
+
+  /* Process */
+  Logger::Log(LogLevel::LEVEL_INFO, "  Available DVR configurations:");
+
+  htsmsg_field_t* f = nullptr;
+  HTSMSG_FOREACH(f, l)
+  {
+    Profile profile;
+
+    const char* str = htsmsg_get_str(&f->hmf_msg, "uuid");
+    if (str)
+      profile.SetUuid(str);
+
+    str = htsmsg_get_str(&f->hmf_msg, "name");
+    if (str)
+      profile.SetName(str);
+
+    str = htsmsg_get_str(&f->hmf_msg, "comment");
+    if (str)
+      profile.SetComment(str);
+
+    Logger::Log(LogLevel::LEVEL_INFO, "  Name: %s, Comment: %s", profile.GetName().c_str(),
+                profile.GetComment().c_str());
+
+    m_dvrConfigs.emplace_back(std::move(profile));
+  }
+
+  htsmsg_destroy(m);
 }
 
 void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& lock)
@@ -840,16 +893,16 @@ struct TimerType : kodi::addon::PVRTimerType
             unsigned int id,
             unsigned int attributes,
             const std::string& description,
-            const std::vector<kodi::addon::PVRTypeIntValue>& priorityValues =
-                std::vector<kodi::addon::PVRTypeIntValue>(),
-            const std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues =
-                std::vector<kodi::addon::PVRTypeIntValue>(),
+            const std::vector<kodi::addon::PVRSettingDefinition>& customSettingDefs,
+            const std::vector<kodi::addon::PVRTypeIntValue>& priorityValues,
+            const std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues,
             const std::vector<kodi::addon::PVRTypeIntValue>& dupEpisodesValues =
                 std::vector<kodi::addon::PVRTypeIntValue>())
   {
     SetId(id);
     SetAttributes(attributes);
     SetDescription(description);
+    SetCustomSettingDefinitions(customSettingDefs);
     SetPriorities(priorityValues, settings->GetDvrPriority());
     SetLifetimes(lifetimeValues, LifetimeMapper::TvhToKodi(settings->GetDvrLifetime()));
     SetPreventDuplicateEpisodes(dupEpisodesValues, settings->GetDvrDupdetect());
@@ -898,6 +951,7 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* PVR_Timer.iPreventDuplicateEpisodes values and presentation.*/
   std::vector<kodi::addon::PVRTypeIntValue> deDupValues = {
+      {DVR_AUTOREC_RECORD_DVR_PROFILE, kodi::addon::GetLocalizedString(30373)},
       {DVR_AUTOREC_RECORD_ALL, kodi::addon::GetLocalizedString(30356)},
       {DVR_AUTOREC_RECORD_DIFFERENT_EPISODE_NUMBER, kodi::addon::GetLocalizedString(30357)},
       {DVR_AUTOREC_RECORD_DIFFERENT_SUBTITLE, kodi::addon::GetLocalizedString(30358)},
@@ -951,6 +1005,10 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
 
   /* Timer types definition. */
 
+  /* Custom setting definitions */
+  const std::vector<kodi::addon::PVRSettingDefinition> customSettingDefs{
+      m_customTimerProps.GetSettingDefinitions()};
+
   /* One-shot manual (time and channel based) */
   types.emplace_back(TimerType(
       /* Settings */
@@ -961,6 +1019,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       TIMER_ONCE_MANUAL_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
+      /* Custom settings definitions. */
+      customSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -976,40 +1036,50 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       TIMER_ONCE_EPG_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
+      /* Custom settings definitions. */
+      customSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
       lifetimeValues));
 
-  /* Read-only one-shot for timers generated by timerec */
+  /* One-shot for timers generated by timerec */
   types.emplace_back(TimerType(
       /* Settings */
       m_settings,
       /* Type id. */
       TIMER_ONCE_CREATED_BY_TIMEREC,
       /* Attributes. */
-      TIMER_ONCE_MANUAL_ATTRIBS | PVR_TIMER_TYPE_IS_READONLY | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      TIMER_ONCE_MANUAL_ATTRIBS | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
       kodi::addon::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
+      /* Custom settings definitions. */
+      customSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
       lifetimeValues));
 
-  /* Read-only one-shot for timers generated by autorec */
+  /* One-shot for timers generated by autorec */
   types.emplace_back(TimerType(
       /* Settings */
       m_settings,
       /* Type id. */
       TIMER_ONCE_CREATED_BY_AUTOREC,
       /* Attributes. */
-      TIMER_ONCE_EPG_ATTRIBS | PVR_TIMER_TYPE_IS_READONLY | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
+      TIMER_ONCE_EPG_ATTRIBS | PVR_TIMER_TYPE_FORBIDS_NEW_INSTANCES,
       /* Description. */
       kodi::addon::GetLocalizedString(30350), // "One Time (Scheduled by timer rule)"
+      /* Custom settings definitions. */
+      customSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
       lifetimeValues));
+
+  /* Custom Timerec setting definitions */
+  const std::vector<kodi::addon::PVRSettingDefinition> customTimeRecSettingDefs{
+      m_timeRecordings.GetCustomSettingDefinitions()};
 
   /* Repeating manual (time and channel based) - timerec */
   types.emplace_back(TimerType(
@@ -1025,10 +1095,16 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
           PVR_TIMER_TYPE_SUPPORTS_LIFETIME | PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
       /* Let Kodi generate the description. */
       "",
+      /* Custom settings definitions. */
+      customTimeRecSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
       lifetimeValues));
+
+  /* Custom Autorec setting definitions */
+  const std::vector<kodi::addon::PVRSettingDefinition> customAutoRecSettingDefs{
+      m_autoRecordings.GetCustomSettingDefinitions()};
 
   if (m_conn->GetProtocol() >= 29)
   {
@@ -1057,6 +1133,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
         TIMER_REPEATING_SERIESLINK_ATTRIBS,
         /* Description. */
         kodi::addon::GetLocalizedString(30369), // "Timer rule (series link)"
+        /* Custom settings definitions. */
+        customAutoRecSettingDefs,
         /* Values definitions for priorities. */
         priorityValues,
         /* Values definitions for lifetime. */
@@ -1089,6 +1167,8 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       TIMER_REPEATING_EPG_ATTRIBS,
       /* Let Kodi generate the description. */
       "",
+      /* Custom settings definitions. */
+      customAutoRecSettingDefs,
       /* Values definitions for priorities. */
       priorityValues,
       /* Values definitions for lifetime. */
@@ -1148,6 +1228,10 @@ bool CTvheadend::CreateTimer(const Recording& tvhTmr, kodi::addon::PVRTimer& tmr
                            : tmr.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC
                                ? m_autoRecordings.GetTimerIntIdFromStringId(tvhTmr.GetAutorecId())
                                : 0);
+
+  /* Custom props */
+  tmr.SetCustomProperties(m_customTimerProps.GetProperties(tvhTmr));
+
   return true;
 }
 
@@ -1231,6 +1315,9 @@ PVR_ERROR CTvheadend::AddTimer(const kodi::addon::PVRTimer& timer)
                    LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
     htsmsg_add_u32(m, "priority", timer.GetPriority());
 
+    /* Custom props. */
+    m_customTimerProps.AppendPropertiesToHTSPMessage(timer.GetCustomProperties(), m);
+
     /* Send and Wait */
     {
       std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
@@ -1286,7 +1373,9 @@ PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
     }
   }
 
-  if ((timer.GetTimerType() == TIMER_ONCE_MANUAL) || (timer.GetTimerType() == TIMER_ONCE_EPG))
+  if ((timer.GetTimerType() == TIMER_ONCE_MANUAL) || (timer.GetTimerType() == TIMER_ONCE_EPG) ||
+      (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
+      (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
     /* one shot timer */
     return SendDvrDelete(timer.GetClientIndex(), "cancelDvrEntry");
@@ -1302,13 +1391,6 @@ PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
     /* EPG-query-based repeating timer */
     return m_autoRecordings.SendAutorecDelete(timer);
   }
-  else if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
-           (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
-  {
-    /* Read-only timer created by autorec or timerec */
-    Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
-    return PVR_ERROR_INVALID_PARAMETERS;
-  }
   else
   {
     /* unknown timer */
@@ -1319,7 +1401,30 @@ PVR_ERROR CTvheadend::DeleteTimer(const kodi::addon::PVRTimer& timer, bool)
 
 PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
 {
-  if ((timer.GetTimerType() == TIMER_ONCE_MANUAL) || (timer.GetTimerType() == TIMER_ONCE_EPG))
+  if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
+      (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
+  {
+    if (!m_asyncState.WaitForState(ASYNC_EPG))
+      return PVR_ERROR_FAILED;
+
+    /* Timer created by autorec or timerec */
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    const auto& it = m_recordings.find(timer.GetClientIndex());
+    if (it != m_recordings.end() &&
+        (it->second.IsEnabled() == (timer.GetState() == PVR_TIMER_STATE_DISABLED)))
+    {
+      /* This is actually a request to enable/disable a timer. */
+      htsmsg_t* m = htsmsg_create_map();
+      htsmsg_add_u32(m, "id", timer.GetClientIndex());
+      htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
+      return SendDvrUpdate(m);
+    }
+  }
+
+  if ((timer.GetTimerType() == TIMER_ONCE_MANUAL) || (timer.GetTimerType() == TIMER_ONCE_EPG) ||
+      (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
+      (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
   {
     /* one shot timer */
 
@@ -1346,6 +1451,9 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
                    LifetimeMapper::KodiToTvh(timer.GetLifetime())); // remove from disk
     htsmsg_add_u32(m, "priority", timer.GetPriority());
 
+    /* Custom props. */
+    m_customTimerProps.AppendPropertiesToHTSPMessage(timer.GetCustomProperties(), m);
+
     return SendDvrUpdate(m);
   }
   else if (timer.GetTimerType() == TIMER_REPEATING_MANUAL)
@@ -1358,29 +1466,6 @@ PVR_ERROR CTvheadend::UpdateTimer(const kodi::addon::PVRTimer& timer)
   {
     /* EPG-query-based repeating timers */
     return m_autoRecordings.SendAutorecUpdate(timer);
-  }
-  else if ((timer.GetTimerType() == TIMER_ONCE_CREATED_BY_TIMEREC) ||
-           (timer.GetTimerType() == TIMER_ONCE_CREATED_BY_AUTOREC))
-  {
-    if (!m_asyncState.WaitForState(ASYNC_EPG))
-      return PVR_ERROR_FAILED;
-
-    /* Read-only timer created by autorec or timerec */
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    const auto& it = m_recordings.find(timer.GetClientIndex());
-    if (it != m_recordings.end() &&
-        (it->second.IsEnabled() == (timer.GetState() == PVR_TIMER_STATE_DISABLED)))
-    {
-      /* This is actually a request to enable/disable a timer. */
-      htsmsg_t* m = htsmsg_create_map();
-      htsmsg_add_u32(m, "id", timer.GetClientIndex());
-      htsmsg_add_u32(m, "enabled", timer.GetState() == PVR_TIMER_STATE_DISABLED ? 0 : 1);
-      return SendDvrUpdate(m);
-    }
-
-    Logger::Log(LogLevel::LEVEL_ERROR, "timer is read-only");
-    return PVR_ERROR_INVALID_PARAMETERS;
   }
   else
   {
@@ -1538,6 +1623,9 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Query the server for available streaming profiles */
   QueryAvailableProfiles(lock);
+
+  /* Query the server for available DVR configurations */
+  QueryAvailableDvrConfigurations(lock);
 
   /* Show a notification if the profile is not available */
   const std::string streamingProfile = m_settings->GetStreamingProfile();
@@ -2685,6 +2773,14 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
     if (str)
       rec.SetRatingSource(str);
   }
+
+  str = htsmsg_get_str(msg, "configId");
+  if (str)
+    rec.SetConfigUuid(str);
+
+  str = htsmsg_get_str(msg, "comment");
+  if (str)
+    rec.SetComment(str);
 
   if (m_conn->GetProtocol() >= 32)
   {

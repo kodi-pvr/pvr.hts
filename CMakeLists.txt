@@ -54,6 +54,8 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/AutoRecordings.h
                 src/tvheadend/ChannelTuningPredictor.h
                 src/tvheadend/ChannelTuningPredictor.cpp
+                src/tvheadend/CustomTimerProperties.h
+                src/tvheadend/CustomTimerProperties.cpp
                 src/tvheadend/HTSPConnection.h
                 src/tvheadend/HTSPConnection.cpp
                 src/tvheadend/HTSPDemuxer.h
@@ -83,6 +85,8 @@ set(HTS_SOURCES_TVHEADEND_ENTITY
                 src/tvheadend/entity/Recording.h
                 src/tvheadend/entity/RecordingBase.h
                 src/tvheadend/entity/RecordingBase.cpp
+                src/tvheadend/entity/SeriesRecordingBase.h
+                src/tvheadend/entity/SeriesRecordingBase.cpp
                 src/tvheadend/entity/Schedule.h
                 src/tvheadend/entity/Schedule.cpp
                 src/tvheadend/entity/Tag.h

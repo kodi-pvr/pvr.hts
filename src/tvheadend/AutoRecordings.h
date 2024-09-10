@@ -17,6 +17,8 @@ extern "C"
 #include <sys/types.h>
 }
 
+#include "CustomTimerProperties.h"
+#include "Profile.h"
 #include "entity/AutoRecording.h"
 
 #include "kodi/addon-instance/pvr/Timers.h"
@@ -30,7 +32,9 @@ class InstanceSettings;
 class AutoRecordings
 {
 public:
-  AutoRecordings(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn);
+  AutoRecordings(const std::shared_ptr<InstanceSettings>& settings,
+                 HTSPConnection& conn,
+                 Profiles& dvrConfigs);
   ~AutoRecordings();
 
   /* state updates */
@@ -41,6 +45,7 @@ public:
   int GetAutorecTimerCount() const;
   void GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers);
   const unsigned int GetTimerIntIdFromStringId(const std::string& strId) const;
+  const std::vector<kodi::addon::PVRSettingDefinition> GetCustomSettingDefinitions() const;
 
   /* client to server messages */
   PVR_ERROR SendAutorecAdd(const kodi::addon::PVRTimer& timer);
@@ -56,6 +61,7 @@ private:
   PVR_ERROR SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& timer, bool update);
 
   HTSPConnection& m_conn;
+  const tvheadend::CustomTimerProperties m_customTimerProps;
   tvheadend::entity::AutoRecordingsMap m_autoRecordings;
   std::shared_ptr<InstanceSettings> m_settings;
 };

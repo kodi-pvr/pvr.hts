@@ -7,74 +7,60 @@
 
 #pragma once
 
+#include "../HTSPTypes.h"
 #include "Entity.h"
 
 #include <cstdint>
-#include <ctime>
 #include <string>
 
-namespace tvheadend
-{
-namespace entity
+namespace tvheadend::entity
 {
 
 class RecordingBase : public Entity
 {
 protected:
-  RecordingBase(const std::string& id = "");
-  bool operator==(const RecordingBase& right);
-  bool operator!=(const RecordingBase& right);
+  RecordingBase() = default;
+
+  bool operator==(const RecordingBase& right)
+  {
+    return Entity::operator==(right) && m_enabled == right.m_enabled &&
+           m_lifetime == right.m_lifetime && m_priority == right.m_priority &&
+           m_title == right.m_title && m_channel == right.m_channel &&
+           m_configUuid == right.m_configUuid && m_comment == right.m_comment;
+  }
+
+  bool operator!=(const RecordingBase& right) { return !(*this == right); }
 
 public:
-  std::string GetStringId() const;
-  void SetStringId(const std::string& id);
-
-  bool IsEnabled() const;
-  void SetEnabled(uint32_t enabled);
-
-  int GetDaysOfWeek() const;
-  void SetDaysOfWeek(uint32_t daysOfWeek);
+  bool IsEnabled() const { return m_enabled != 0; }
+  void SetEnabled(uint32_t enabled) { m_enabled = enabled; }
 
   int GetLifetime() const;
-  void SetLifetime(uint32_t retention);
+  void SetLifetime(uint32_t lifetime) { m_lifetime = lifetime; }
 
-  uint32_t GetPriority() const;
-  void SetPriority(uint32_t priority);
+  uint32_t GetPriority() const { return m_priority; }
+  void SetPriority(uint32_t priority) { m_priority = priority; }
 
-  const std::string& GetTitle() const;
-  void SetTitle(const std::string& title);
+  const std::string& GetTitle() const { return m_title; }
+  void SetTitle(const std::string& title) { m_title = title; }
 
-  const std::string& GetName() const;
-  void SetName(const std::string& name);
+  uint32_t GetChannel() const { return m_channel; }
+  void SetChannel(uint32_t channel) { m_channel = channel; }
 
-  const std::string& GetDirectory() const;
-  void SetDirectory(const std::string& directory);
+  const std::string& GetConfigUuid() const { return m_configUuid; }
+  void SetConfigUuid(const std::string& uuid) { m_configUuid = uuid; }
 
-  void SetOwner(const std::string& owner);
-  void SetCreator(const std::string& creator);
-
-  uint32_t GetChannel() const;
-  void SetChannel(uint32_t channel);
-
-protected:
-  static time_t LocaltimeToUTC(int32_t lctime);
+  const std::string& GetComment() const { return m_comment; }
+  void SetComment(const std::string& comment) { m_comment = comment; }
 
 private:
-  static unsigned int GetNextIntId();
-
-  std::string m_sid; // ID (string!) of dvr[Time|Auto]recEntry.
-  uint32_t m_enabled; // If [time|auto]rec entry is enabled (activated).
-  uint32_t
-      m_daysOfWeek; // Bitmask - Days of week (0x01 = Monday, 0x40 = Sunday, 0x7f = Whole Week, 0 = Not set).
-  uint32_t m_lifetime; // Lifetime (in days).
-  uint32_t m_priority; // Priority (0 = Important, 1 = High, 2 = Normal, 3 = Low, 4 = Unimportant).
+  uint32_t m_enabled{0}; // If [time|auto]rec entry is enabled (activated).
+  uint32_t m_lifetime{0}; // Lifetime (in days).
+  uint32_t m_priority{DVR_PRIO_DEFAULT}; // Priority.
   std::string m_title; // Title (pattern) for the recording files.
-  std::string m_name; // Name.
-  std::string m_directory; // Directory for the recording files.
-  std::string m_owner; // Owner.
-  std::string m_creator; // Creator.
-  uint32_t m_channel; // Channel ID.
+  uint32_t m_channel{0}; // Channel ID.
+  std::string m_configUuid; // DVR configuration UUID.
+  std::string m_comment; // user supplied comment
 };
 
-} // namespace entity
-} // namespace tvheadend
+} // namespace tvheadend::entity

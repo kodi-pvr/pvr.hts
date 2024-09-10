@@ -9,9 +9,7 @@
 
 #include <cstdint>
 
-namespace tvheadend
-{
-namespace entity
+namespace tvheadend::entity
 {
 
 /**
@@ -20,8 +18,12 @@ namespace entity
 class Entity
 {
 public:
-  Entity() : m_id(0), m_dirty(false) {}
+  Entity() = default;
   virtual ~Entity() = default;
+
+  bool operator==(const Entity& right) { return m_id == right.m_id; }
+
+  bool operator!=(const Entity& right) { return !(*this == right); }
 
   /**
    * @return if the entity is dirty
@@ -30,7 +32,7 @@ public:
 
   /**
    * Marks the entity as dirty or not
-   * @param dirty
+   * @param dirty The new dirty state
    */
   virtual void SetDirty(bool dirty) { m_dirty = dirty; }
 
@@ -41,16 +43,15 @@ public:
 
   /**
    * Sets the entity ID
-   * @param id
+   * @param id The entity id
    */
   void SetId(uint32_t id) { m_id = id; }
 
 protected:
-  uint32_t m_id;
+  uint32_t m_id{0};
 
 private:
-  bool m_dirty;
+  bool m_dirty{false};
 };
 
-} // namespace entity
-} // namespace tvheadend
+} // namespace tvheadend::entity
