@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2024-08-16 14:26+0000\n"
+"PO-Revision-Date: 2024-09-11 09:26+0000\n"
 "Last-Translator: roliverosc <roliverosc@hotmail.com>\n"
 "Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/es_es/>\n"
 "Language: es_es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.7.2\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -212,32 +212,32 @@ msgstr "Grabar máximo una vez al día"
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Solo esta regla: Grabar si el número de episodio es diferente"
+msgstr "Sólo esta regla: Grabar si el número de episodio es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Solo esta regla: Grabar si el nombre de episodio es diferente"
+msgstr "Sólo esta regla: Grabar si el nombre de episodio es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Solo esta regla: Grabar si el título es diferente"
+msgstr "Sólo esta regla: Grabar si el título es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Solo esta regla: Grabar si la descripción es diferente"
+msgstr "Sólo esta regla: Grabar si la descripción es diferente"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Solo esta regla: Grabar una vez por semana máximo"
+msgstr "Sólo esta regla: Grabar una vez por semana máximo"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Solo esta regla: Grabar una vez al día máximo"
+msgstr "Sólo esta regla: Grabar una vez al día máximo"
 
 #. Recording priority representation
 msgctxt "#30368"
@@ -257,7 +257,7 @@ msgstr "Grabar una vez al mes máximo"
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Solo esta regla: Grabar una vez al mes máximo"
+msgstr "Sólo esta regla: Grabar una vez al mes máximo"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
