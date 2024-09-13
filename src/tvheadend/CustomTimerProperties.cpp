@@ -33,6 +33,10 @@ std::vector<kodi::addon::PVRSettingKeyValuePair> CustomTimerProperties::GetPrope
 {
   std::vector<kodi::addon::PVRSettingKeyValuePair> customProps;
   GetCommonProperties(customProps, rec);
+
+  if (customProps.size() < m_propIds.size())
+    Logger::Log(LogLevel::LEVEL_ERROR, "Not all properties handled!");
+
   return customProps;
 }
 
@@ -55,10 +59,13 @@ std::vector<kodi::addon::PVRSettingKeyValuePair> CustomTimerProperties::GetPrope
         break;
       }
       default:
-        Logger::Log(LogLevel::LEVEL_ERROR, "Unknown property %u", propId);
         break;
     }
   }
+
+  if (customProps.size() < m_propIds.size())
+    Logger::Log(LogLevel::LEVEL_ERROR, "Not all properties handled!");
+
   return customProps;
 }
 
@@ -85,14 +92,11 @@ void CustomTimerProperties::GetCommonProperties(
       {
         // User comment
         if (m_conn.GetProtocol() >= 42)
-        {
-          /* user comment */
           props.emplace_back(CUSTOM_PROP_ID_DVR_COMMENT, rec.GetComment());
-          break;
-        }
+
+        break;
       }
       default:
-        Logger::Log(LogLevel::LEVEL_ERROR, "Unknown property %u", propId);
         break;
     }
   }
@@ -189,7 +193,6 @@ const std::vector<kodi::addon::PVRTypeIntValue> CustomTimerProperties::GetPossib
       // DVR configuration
       if (m_conn.GetProtocol() >= 40)
       {
-        // DVR configuration
         std::vector<kodi::addon::PVRTypeIntValue> dvrConfigValues;
         for (const auto& entry : m_dvrConfigs)
         {
