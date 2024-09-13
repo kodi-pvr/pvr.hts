@@ -1,5 +1,6 @@
 v22.4.1
 - Fix pointless "Unknown property" log spam introduced with v22.4.0
+- Fix update of "DVR configuration" property not working
 
 v22.4.0
 - PVR Add-on API v9.1.0
