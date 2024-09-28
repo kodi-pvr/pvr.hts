@@ -34,9 +34,6 @@ std::vector<kodi::addon::PVRSettingKeyValuePair> CustomTimerProperties::GetPrope
   std::vector<kodi::addon::PVRSettingKeyValuePair> customProps;
   GetCommonProperties(customProps, rec);
 
-  if (customProps.size() < m_propIds.size())
-    Logger::Log(LogLevel::LEVEL_ERROR, "Not all properties handled!");
-
   return customProps;
 }
 
@@ -62,9 +59,6 @@ std::vector<kodi::addon::PVRSettingKeyValuePair> CustomTimerProperties::GetPrope
         break;
     }
   }
-
-  if (customProps.size() < m_propIds.size())
-    Logger::Log(LogLevel::LEVEL_ERROR, "Not all properties handled!");
 
   return customProps;
 }
