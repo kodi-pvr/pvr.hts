@@ -36,14 +36,12 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
     m_customTimerProps(
         {CUSTOM_PROP_ID_DVR_CONFIGURATION, CUSTOM_PROP_ID_DVR_COMMENT}, *m_conn, m_dvrConfigs),
     m_streamchange(false),
-    m_vfs(new HTSPVFS(m_settings, *m_conn)),
     m_queue(static_cast<size_t>(-1)),
     m_asyncState(m_settings->GetResponseTimeout()),
     m_timeRecordings(*m_conn, m_dvrConfigs),
     m_autoRecordings(m_settings, *m_conn, m_dvrConfigs),
     m_epgMaxDays(EpgMaxFutureDays()),
-    m_playingLiveStream(false),
-    m_playingRecording(nullptr)
+    m_playingLiveStream(false)
 {
   m_dmx.reserve(m_settings->GetTotalTuners());
   for (int i = 0; i < 1 || i < m_settings->GetTotalTuners(); i++)
@@ -61,7 +59,6 @@ CTvheadend::~CTvheadend()
     delete dmx;
 
   delete m_conn;
-  delete m_vfs;
 }
 
 void CTvheadend::Start()
@@ -123,6 +120,7 @@ PVR_ERROR CTvheadend::GetCapabilities(kodi::addon::PVRCapabilities& capabilities
 
   capabilities.SetSupportsRecordingSize(m_conn->GetProtocol() >= 35);
   capabilities.SetSupportsProviders(m_conn->GetProtocol() >= 38);
+  capabilities.SetSupportsMultipleRecordedStreams(true);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -611,7 +609,12 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
       rec.SetTitle(recording.GetTitle());
 
       /* Subtitle */
-      rec.SetEpisodeName(recording.GetSubtitle());
+      rec.SetTitleExtraInfo(recording.GetSubtitle());
+
+      /* Episode name - not directly supported by TVH. Assume subtitle containing episode name */
+      /* if episode number is present. */
+      if (recording.GetEpisode() > 0)
+        rec.SetEpisodeName(recording.GetSubtitle());
 
       /* season/episode (tvh 4.3+) */
       rec.SetSeriesNumber(recording.GetSeason());
@@ -1513,9 +1516,11 @@ void CTvheadend::CreateEvent(const Event& event, kodi::addon::PVREPGTag& epg)
   epg.SetParentalRatingSource(event.GetRatingSource());
   epg.SetStarRating(event.GetStars());
   epg.SetSeriesNumber(event.GetSeason());
+  epg.SetTitleExtraInfo(event.GetSubtitle());
+  if (event.GetEpisode() > 0)
+    epg.SetEpisodeName(event.GetSubtitle());
   epg.SetEpisodeNumber(event.GetEpisode());
   epg.SetEpisodePartNumber(event.GetPart());
-  epg.SetEpisodeName(event.GetSubtitle());
   epg.SetFlags(EPG_TAG_FLAG_UNDEFINED);
   epg.SetSeriesLink(event.GetSeriesLink());
 }
@@ -1723,54 +1728,128 @@ PVR_ERROR CTvheadend::OnSystemWake()
  * VFS
  * *************************************************************************/
 
-bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& rec)
+bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& recording, int64_t& streamId)
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_SERVER_TIMEOUT;
+
+  const auto vfs{std::make_shared<HTSPVFS>(m_settings, *m_conn)};
+  if (!vfs->Open(recording))
     return false;
 
-  bool ret = m_vfs->Open(rec);
+  streamId = vfs->GetFileId();
 
-  if (ret)
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  m_vfs.insert({streamId, vfs});
+  return true;
+}
+
+void CTvheadend::CloseRecordedStream(int64_t streamId)
+{
+  std::shared_ptr<HTSPVFS> vfs;
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    const auto& it = m_recordings.find(std::stoul(rec.GetRecordingId()));
-    if (it != m_recordings.end())
-    {
-      m_playingRecording = &(it->second);
-    }
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return;
+
+    vfs = (*it).second;
+    m_vfs.erase(it);
   }
 
-  return ret;
+  vfs->Close();
 }
 
-void CTvheadend::CloseRecordedStream()
+int CTvheadend::ReadRecordedStream(int64_t streamId, unsigned char* buffer, unsigned int size)
 {
-  m_vfs->Close();
+  std::shared_ptr<HTSPVFS> vfs;
+  bool isRecordingInProgress{false};
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  m_playingRecording = nullptr;
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return 0;
+
+    vfs = (*it).second;
+
+    auto it2 = m_recordings.find(std::stoul(vfs->GetRecordingId()));
+    if (it2 == m_recordings.end())
+      return 0;
+
+    isRecordingInProgress = ((*it2).second.GetState() == PVR_TIMER_STATE_RECORDING);
+  }
+
+  const int bytesRead = vfs->Read(buffer, size, isRecordingInProgress);
+  return bytesRead < 0 ? 0 : bytesRead;
 }
 
-int CTvheadend::ReadRecordedStream(unsigned char* buf, unsigned int len)
+int64_t CTvheadend::SeekRecordedStream(int64_t streamId, int64_t position, int whence)
 {
-  return m_vfs->Read(buf, len, VfsIsActiveRecording());
+  std::shared_ptr<HTSPVFS> vfs;
+  bool isRecordingInProgress{false};
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return 0;
+
+    vfs = (*it).second;
+
+    auto it2 = m_recordings.find(std::stoul(vfs->GetRecordingId()));
+    if (it2 == m_recordings.end())
+      return 0;
+
+    isRecordingInProgress = ((*it2).second.GetState() == PVR_TIMER_STATE_RECORDING);
+  }
+
+  const int64_t newPos = vfs->Seek(position, whence, isRecordingInProgress);
+  return newPos < 0 ? 0 : newPos;
 }
 
-int64_t CTvheadend::SeekRecordedStream(int64_t position, int whence)
+int64_t CTvheadend::LengthRecordedStream(int64_t streamId)
 {
-  return m_vfs->Seek(position, whence, VfsIsActiveRecording());
+  std::shared_ptr<HTSPVFS> vfs;
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return 0;
+
+    vfs = (*it).second;
+  }
+
+  const int64_t size = vfs->Size();
+  return size < 0 ? 0 : size;
 }
 
-int64_t CTvheadend::LengthRecordedStream()
+PVR_ERROR CTvheadend::PauseRecordedStream(int64_t streamId, bool paused)
 {
-  return m_vfs->Size();
-}
+  std::shared_ptr<HTSPVFS> vfs;
+  bool isRecordingInProgress{false};
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-void CTvheadend::PauseStream(bool paused)
-{
-  if (VfsIsActiveRecording())
-    m_vfs->PauseStream(paused);
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    vfs = (*it).second;
+
+    auto it2 = m_recordings.find(std::stoul(vfs->GetRecordingId()));
+    if (it2 == m_recordings.end())
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    isRecordingInProgress = ((*it2).second.GetState() == PVR_TIMER_STATE_RECORDING);
+  }
+
+  if (isRecordingInProgress)
+    vfs->PauseStream(paused);
+
+  return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR CTvheadend::GetStreamReadChunkSize(int& chunksize)
@@ -1784,10 +1863,24 @@ PVR_ERROR CTvheadend::GetStreamReadChunkSize(int& chunksize)
 
 bool CTvheadend::IsRealTimeStream()
 {
-  if (m_playingRecording)
-    return m_vfs->IsRealTimeStream();
-  else
-    return m_dmx_active->IsRealTimeStream();
+  return m_dmx_active->IsRealTimeStream();
+}
+
+PVR_ERROR CTvheadend::IsRecordedStreamRealTime(int64_t streamId, bool& isRealTime)
+{
+  std::shared_ptr<HTSPVFS> vfs;
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    vfs = (*it).second;
+  }
+
+  isRealTime = vfs->IsRealTimeStream();
+  return PVR_ERROR_NO_ERROR;
 }
 
 /* **************************************************************************
@@ -2048,7 +2141,8 @@ void CTvheadend::SyncInitCompleted()
     for (auto* dmx : m_dmx)
       dmx->RebuildState();
 
-    m_vfs->RebuildState();
+    for (const auto& vfs : m_vfs)
+      vfs.second->RebuildState();
   }
 
   /* check state engine */
@@ -2113,22 +2207,8 @@ void CTvheadend::SyncDvrCompleted()
     return;
 
   /* Recordings */
-  {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    // save id of currently playing recording, if any
-    uint32_t id = m_playingRecording ? m_playingRecording->GetId() : 0;
-
-    utilities::erase_if(m_recordings,
-                        [](const RecordingMapEntry& entry) { return entry.second.IsDirty(); });
-
-    if (m_playingRecording)
-    {
-      const auto& it = m_recordings.find(id);
-      if (it == m_recordings.end())
-        m_playingRecording = nullptr;
-    }
-  }
+  utilities::erase_if(m_recordings,
+                      [](const RecordingMapEntry& entry) { return entry.second.IsDirty(); });
 
   /* Time-based repeating timers */
   m_timeRecordings.SyncDvrCompleted();
@@ -2500,13 +2580,6 @@ void CTvheadend::ParseRecordingAddOrUpdate(htsmsg_t* msg, bool bAdd)
   rec.SetId(id);
   rec.SetDirty(false);
 
-  {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    if (m_playingRecording && m_playingRecording->GetId() == id)
-      m_playingRecording = &rec;
-  }
-
   // Set the time the recording was scheduled to start. This may differ from the actual start.
   int64_t start = 0;
   if (!htsmsg_get_s64(msg, "start", &start))
@@ -2876,10 +2949,6 @@ void CTvheadend::ParseRecordingDelete(htsmsg_t* msg)
   /* Erase */
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    if (m_playingRecording && m_playingRecording->GetId() == u32)
-      m_playingRecording = nullptr;
-
     m_recordings.erase(u32);
   }
 
@@ -3348,43 +3417,56 @@ PVR_ERROR CTvheadend::GetStreamTimes(kodi::addon::PVRStreamTimes& times)
     return m_dmx_active->GetStreamTimes(times);
   }
 
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  return PVR_ERROR_INVALID_PARAMETERS;
+}
 
-  if (m_playingRecording)
+PVR_ERROR CTvheadend::GetRecordedStreamTimes(int64_t streamId, kodi::addon::PVRStreamTimes& times)
+{
+  Recording recording;
   {
-    if (m_playingRecording->GetState() == PVR_TIMER_STATE_RECORDING)
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    auto it = m_vfs.find(streamId);
+    if (it == m_vfs.end())
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    auto it2 = m_recordings.find(std::stoul((*it).second->GetRecordingId()));
+    if (it2 == m_recordings.end())
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    recording = (*it2).second;
+  }
+
+  if (recording.GetState() == PVR_TIMER_STATE_RECORDING)
+  {
+    if (recording.GetFilesStart() > 0)
     {
-      if (m_playingRecording->GetFilesStart() > 0)
-      {
-        times.SetPTSEnd((std::time(nullptr) - m_playingRecording->GetFilesStart()) *
-                        STREAM_TIME_BASE);
-      }
-      else
-      {
-        // Older tvh versions do not expose real recording start/stop time.
-        // Remark: Following calculation does not always work. Returned end time might be to large, as the
-        // recording might actually have started later than scheduled start time (server came up too late etc).
-        times.SetPTSEnd((m_playingRecording->GetStartExtra() * 60 + std::time(nullptr) -
-                         m_playingRecording->GetStart()) *
-                        STREAM_TIME_BASE);
-      }
+      times.SetPTSEnd((std::time(nullptr) - recording.GetFilesStart()) * STREAM_TIME_BASE);
     }
     else
     {
-      if (m_playingRecording->GetFilesStart() > 0 && m_playingRecording->GetFilesStop() > 0)
-      {
-        times.SetPTSEnd((m_playingRecording->GetFilesStop() - m_playingRecording->GetFilesStart()) *
-                        STREAM_TIME_BASE);
-      }
-      else
-      {
-        // Older tvh versions do not expose real recording start/stop time.
-        // Remark: Kodi is handling finished recording's times very well on its own - in difference to
-        // in-progress recording's times. Returning not implemented will make Kodi handle the stream times.
-        return PVR_ERROR_NOT_IMPLEMENTED;
-      }
+      // Older tvh versions do not expose real recording start/stop time.
+      // Remark: Following calculation does not always work. Returned end time might be to large,
+      // as the recording might actually have started later than scheduled start time (server came
+      // up too late etc).
+      times.SetPTSEnd((recording.GetStartExtra() * 60 + std::time(nullptr) - recording.GetStart()) *
+                      STREAM_TIME_BASE);
     }
-    return PVR_ERROR_NO_ERROR;
   }
-  return PVR_ERROR_INVALID_PARAMETERS;
+  else
+  {
+    if (recording.GetFilesStart() > 0 && recording.GetFilesStop() > 0)
+    {
+      times.SetPTSEnd((recording.GetFilesStop() - recording.GetFilesStart()) * STREAM_TIME_BASE);
+    }
+    else
+    {
+      // Older tvh versions do not expose real recording start/stop time.
+      // Remark: Kodi is handling finished recording's times very well on its own - in difference to
+      // in-progress recording's times. Returning not implemented will make Kodi handle the stream
+      // times.
+      return PVR_ERROR_NOT_IMPLEMENTED;
+    }
+  }
+  return PVR_ERROR_NO_ERROR;
 }

@@ -209,14 +209,6 @@ private:
   void ParseEventDelete(htsmsg_t* m);
   bool ParseEvent(htsmsg_t* msg, bool bAdd, tvheadend::entity::Event& evt);
 
-  /*
-   * VFS
-   */
-  bool VfsIsActiveRecording() const
-  {
-    return m_playingRecording && m_playingRecording->GetState() == PVR_TIMER_STATE_RECORDING;
-  }
-
 public:
   /*
    * Connection (pass-thru)
@@ -252,14 +244,16 @@ public:
   void CloseExpiredSubscriptions();
 
   /*
-   * VFS (pass-thru)
+   * VFS
    */
-  bool OpenRecordedStream(const kodi::addon::PVRRecording& rec) override;
-  void CloseRecordedStream() override;
-  int ReadRecordedStream(unsigned char* buf, unsigned int len) override;
-  int64_t SeekRecordedStream(int64_t position, int whence) override;
-  int64_t LengthRecordedStream() override;
-  void PauseStream(bool paused) override;
+  bool OpenRecordedStream(const kodi::addon::PVRRecording& recording, int64_t& streamId) override;
+  void CloseRecordedStream(int64_t streamId) override;
+  int ReadRecordedStream(int64_t streamId, unsigned char* buf, unsigned int len) override;
+  int64_t SeekRecordedStream(int64_t streamId, int64_t position, int whence) override;
+  int64_t LengthRecordedStream(int64_t streamId) override;
+  PVR_ERROR IsRecordedStreamRealTime(int64_t streamId, bool& isRealTime) override;
+  PVR_ERROR PauseRecordedStream(int64_t streamId, bool paused) override;
+  PVR_ERROR GetRecordedStreamTimes(int64_t streamId, kodi::addon::PVRStreamTimes& times) override;
   PVR_ERROR GetStreamReadChunkSize(int& chunksize) override;
 
   /*
@@ -288,7 +282,7 @@ public:
   std::vector<tvheadend::HTSPDemuxer*> m_dmx;
   tvheadend::HTSPDemuxer* m_dmx_active;
   bool m_streamchange;
-  tvheadend::HTSPVFS* m_vfs;
+  std::map<uint32_t, std::shared_ptr<tvheadend::HTSPVFS>> m_vfs;
   bool m_stateRebuilt{false};
 
   HTSPMessageQueue m_queue;
@@ -311,5 +305,4 @@ public:
   int m_epgMaxDays;
 
   bool m_playingLiveStream;
-  tvheadend::entity::Recording* m_playingRecording;
 };
