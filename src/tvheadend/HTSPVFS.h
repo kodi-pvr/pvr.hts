@@ -33,6 +33,9 @@ public:
   HTSPVFS(const std::shared_ptr<InstanceSettings>& settings, HTSPConnection& conn);
   ~HTSPVFS();
 
+  uint32_t GetFileId() const { return m_fileId; }
+  const std::string& GetRecordingId() const { return m_recordingId; }
+
   void RebuildState();
 
   bool Open(const kodi::addon::PVRRecording& rec);
@@ -51,6 +54,7 @@ private:
 
   std::shared_ptr<InstanceSettings> m_settings;
   HTSPConnection& m_conn;
+  std::string m_recordingId;
   std::string m_path;
   uint32_t m_fileId;
   int64_t m_offset;
