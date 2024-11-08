@@ -1,3 +1,7 @@
+v22.6.1
+- Translations updates from Weblate
+	- en_gb
+
 v22.6.0
 - Add support for Autorec properties "Start after" and "Start before"
 
