@@ -1,5 +1,6 @@
 v22.6.2
 - Code cleanup: Fix several compiler warnings
+- Code cleanup: Remove unused settings
 
 v22.6.1
 - Translations updates from Weblate
