@@ -23,12 +23,12 @@ public:
   int GetBitsLeft() const;
 
   int ReadBit();
-  int ReadBits(int n);
+  int ReadBits(unsigned int n);
 
   bool ReadBool() { return (ReadBit() & 0x1) != 0; }
 
   void SkipBit();
-  void SkipBits(int n);
+  void SkipBits(unsigned int n);
 
   void ByteAlign();
 

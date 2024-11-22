@@ -300,7 +300,7 @@ bool HTSPConnection::ReadMessage()
 {
   /* Read 4 byte len */
   uint8_t lb[4];
-  size_t len = m_socket->Read(&lb, sizeof(lb));
+  size_t len = static_cast<size_t>(m_socket->Read(&lb, sizeof(lb)));
   if (len != sizeof(lb))
     return false;
 
@@ -311,7 +311,8 @@ bool HTSPConnection::ReadMessage()
   size_t cnt = 0;
   while (cnt < len)
   {
-    int64_t r = m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout());
+    size_t r =
+        static_cast<size_t>(m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout()));
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
@@ -523,7 +524,7 @@ bool HTSPConnection::SendHello(std::unique_lock<std::recursive_mutex>& lock)
   if (chal && chal_len)
   {
     m_challenge = malloc(chal_len);
-    m_challengeLen = chal_len;
+    m_challengeLen = static_cast<int>(chal_len);
     std::memcpy(m_challenge, chal, chal_len);
   }
 
@@ -543,7 +544,8 @@ bool HTSPConnection::SendAuth(std::unique_lock<std::recursive_mutex>& lock,
   struct HTSSHA1* sha = static_cast<struct HTSSHA1*>(malloc(hts_sha1_size));
   uint8_t d[20];
   hts_sha1_init(sha);
-  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()), pass.length());
+  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()),
+                  static_cast<unsigned int>(pass.length()));
   if (m_challenge)
     hts_sha1_update(sha, static_cast<const uint8_t*>(m_challenge), m_challengeLen);
   hts_sha1_final(sha, d);
