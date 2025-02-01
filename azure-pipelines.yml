@@ -39,11 +39,11 @@ jobs:
           ARCHITECTURE: x64
           CONFIGURATION: Release
           WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.17763.0"
-        ARM32-UWP:
-          GENERATOR: "Visual Studio 17 2022"
-          ARCHITECTURE: ARM
-          CONFIGURATION: Release
-          WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.17763.0"
+        #ARM32-UWP:
+        #  GENERATOR: "Visual Studio 17 2022"
+        #  ARCHITECTURE: ARM
+        #  CONFIGURATION: Release
+        #  WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.17763.0"
         #ARM64-UWP:
         #  GENERATOR: "Visual Studio 17 2022"
         #  ARCHITECTURE: ARM64
