@@ -283,7 +283,6 @@ public:
   tvheadend::HTSPDemuxer* m_dmx_active;
   bool m_streamchange;
   std::map<int64_t, std::shared_ptr<tvheadend::HTSPVFS>> m_vfs;
-  bool m_stateRebuilt{false};
 
   HTSPMessageQueue m_queue;
 

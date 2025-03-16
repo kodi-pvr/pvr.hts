@@ -32,7 +32,7 @@ TimeRecordings::~TimeRecordings()
 {
 }
 
-void TimeRecordings::RebuildState()
+void TimeRecordings::SetDirty()
 {
   /* Flag all async fields in case they've been deleted */
   for (auto& rec : m_timeRecordings)

@@ -40,7 +40,7 @@ AutoRecordings::~AutoRecordings()
 {
 }
 
-void AutoRecordings::RebuildState()
+void AutoRecordings::SetDirty()
 {
   /* Flag all async fields in case they've been deleted */
   for (auto& rec : m_autoRecordings)

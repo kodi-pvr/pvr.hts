@@ -34,7 +34,7 @@ public:
   ~TimeRecordings();
 
   /* state updates */
-  void RebuildState();
+  void SetDirty();
   void SyncDvrCompleted();
 
   /* data access */

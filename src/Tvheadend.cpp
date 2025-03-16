@@ -1607,6 +1607,7 @@ PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
 
 void CTvheadend::Disconnected()
 {
+  m_asyncState.SetState(ASYNC_NONE);
 }
 
 bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
@@ -1633,8 +1634,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   }
 
   /* Request Async data, first is init (which rebuilds state) */
-  if (m_asyncState.GetState() == ASYNC_NONE)
-    m_asyncState.SetState(ASYNC_INIT);
+  m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (m_settings->GetAsyncEpg())
@@ -1649,7 +1649,6 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   else
     htsmsg_add_u32(msg, "epg", 0);
 
-  m_stateRebuilt = false;
   msg = m_conn->SendAndWait0(lock, "enableAsyncMetadata", msg);
   if (!msg)
   {
@@ -2119,24 +2118,16 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
 
 void CTvheadend::SyncInitCompleted()
 {
-  if (!m_stateRebuilt)
-  {
-    m_stateRebuilt = true;
-
-    for (auto* dmx : m_dmx)
-      dmx->RebuildState();
-
-    for (const auto& vfs : m_vfs)
-      vfs.second->RebuildState();
-  }
-
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_INIT)
     return;
 
   /* Rebuild state */
-  m_timeRecordings.RebuildState();
-  m_autoRecordings.RebuildState();
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  for (const auto& vfs : m_vfs)
+    vfs.second->RebuildState();
 
   /* Flag all async fields in case they've been deleted */
   for (auto& entry : m_channels)
@@ -2149,6 +2140,9 @@ void CTvheadend::SyncInitCompleted()
     entry.second.SetDirty(true);
   for (auto& entry : m_recordings)
     entry.second.SetDirty(true);
+
+  m_timeRecordings.SetDirty();
+  m_autoRecordings.SetDirty();
 
   /* Next */
   m_asyncState.SetState(ASYNC_CHN);
