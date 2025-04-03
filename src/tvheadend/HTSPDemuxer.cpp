@@ -336,11 +336,11 @@ PVR_ERROR HTSPDemuxer::CurrentDescrambleInfo(kodi::addon::PVRDescrambleInfo& inf
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-  info.SetPID(m_descrambleInfo.GetPid());
-  info.SetCAID(m_descrambleInfo.GetCaid());
-  info.SetProviderID(m_descrambleInfo.GetProvid());
-  info.SetECMTime(m_descrambleInfo.GetEcmTime());
-  info.SetHops(m_descrambleInfo.GetHops());
+  info.SetPID(static_cast<int>(m_descrambleInfo.GetPid()));
+  info.SetCAID(static_cast<int>(m_descrambleInfo.GetCaid()));
+  info.SetProviderID(static_cast<int>(m_descrambleInfo.GetProvid()));
+  info.SetECMTime(static_cast<int>(m_descrambleInfo.GetEcmTime()));
+  info.SetHops(static_cast<int>(m_descrambleInfo.GetHops()));
 
   info.SetCardSystem(m_descrambleInfo.GetCardSystem());
   info.SetReader(m_descrambleInfo.GetReader());
@@ -382,8 +382,8 @@ PVR_ERROR HTSPDemuxer::GetStreamTimes(kodi::addon::PVRStreamTimes& times) const
 
   times.SetStartTime(m_startTime);
   times.SetPTSStart(0);
-  times.SetPTSBegin(TVH_TO_DVD_TIME(m_timeshiftStatus.start));
-  times.SetPTSEnd(TVH_TO_DVD_TIME(m_timeshiftStatus.end));
+  times.SetPTSBegin(static_cast<int64_t>(TVH_TO_DVD_TIME(m_timeshiftStatus.start)));
+  times.SetPTSEnd(static_cast<int64_t>(TVH_TO_DVD_TIME(m_timeshiftStatus.end)));
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -551,12 +551,12 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
   m_streamStat[idx]++;
 
   /* Allocate buffer */
-  DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(binlen);
+  DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(static_cast<int>(binlen));
   if (!pkt)
     return;
 
   std::memcpy(pkt->pData, bin, binlen);
-  pkt->iSize = binlen;
+  pkt->iSize = static_cast<int>(binlen);
   pkt->iStreamId = idx;
 
   /* Duration */

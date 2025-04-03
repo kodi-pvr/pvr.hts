@@ -32,7 +32,7 @@ TimeRecordings::~TimeRecordings()
 {
 }
 
-void TimeRecordings::RebuildState()
+void TimeRecordings::SetDirty()
 {
   /* Flag all async fields in case they've been deleted */
   for (auto& rec : m_timeRecordings)
@@ -47,7 +47,7 @@ void TimeRecordings::SyncDvrCompleted()
 
 int TimeRecordings::GetTimerecTimerCount() const
 {
-  return m_timeRecordings.size();
+  return static_cast<int>(m_timeRecordings.size());
 }
 
 void TimeRecordings::GetTimerecTimers(std::vector<kodi::addon::PVRTimer>& timers)

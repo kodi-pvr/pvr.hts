@@ -89,14 +89,6 @@
           <level>4</level> <!-- hidden -->
           <default>64</default>
         </setting>
-        <setting id="autorec_approxtime" type="integer">
-          <level>4</level> <!-- hidden -->
-          <default>0</default>
-        </setting>
-        <setting id="autorec_maxdiff" type="integer">
-          <level>4</level> <!-- hidden -->
-          <default>15</default>
-        </setting>
         <setting id="autorec_use_regex" type="boolean">
           <level>4</level> <!-- hidden -->
           <default>false</default>

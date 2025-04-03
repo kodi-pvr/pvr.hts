@@ -38,7 +38,7 @@ public:
   ~AutoRecordings();
 
   /* state updates */
-  void RebuildState();
+  void SetDirty();
   void SyncDvrCompleted();
 
   /* data access */

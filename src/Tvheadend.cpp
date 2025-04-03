@@ -285,7 +285,7 @@ PVR_ERROR CTvheadend::GetProvidersAmount(int& amount)
     return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  amount = m_providers.size();
+  amount = static_cast<int>(m_providers.size());
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -325,7 +325,7 @@ PVR_ERROR CTvheadend::GetChannelGroupsAmount(int& amount)
     return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  amount = m_tags.size();
+  amount = static_cast<int>(m_tags.size());
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -422,7 +422,7 @@ PVR_ERROR CTvheadend::GetChannelsAmount(int& amount)
     return PVR_ERROR_FAILED;
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  amount = m_channels.size();
+  amount = static_cast<int>(m_channels.size());
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -557,8 +557,9 @@ PVR_ERROR CTvheadend::GetRecordingsAmount(bool deleted, int& amount)
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-  amount = std::count_if(m_recordings.cbegin(), m_recordings.cend(),
-                         [](const RecordingMapEntry& entry) { return entry.second.IsRecording(); });
+  amount = static_cast<int>(std::count_if(m_recordings.cbegin(), m_recordings.cend(),
+                                          [](const RecordingMapEntry& entry)
+                                          { return entry.second.IsRecording(); }));
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -570,7 +571,6 @@ PVR_ERROR CTvheadend::GetRecordings(bool deleted, kodi::addon::PVRRecordingsResu
   std::vector<kodi::addon::PVRRecording> recs;
   {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    char buf[128];
 
     recs.reserve(m_recordings.size());
     for (const auto& entry : m_recordings)
@@ -1174,8 +1174,9 @@ PVR_ERROR CTvheadend::GetTimersAmount(int& amount)
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   // Normal timers
-  amount = std::count_if(m_recordings.cbegin(), m_recordings.cend(),
-                         [](const RecordingMapEntry& entry) { return entry.second.IsTimer(); });
+  amount = static_cast<int>(std::count_if(m_recordings.cbegin(), m_recordings.cend(),
+                                          [](const RecordingMapEntry& entry)
+                                          { return entry.second.IsTimer(); }));
 
   // Repeating timers
   amount += m_timeRecordings.GetTimerecTimerCount();
@@ -1606,6 +1607,7 @@ PVR_ERROR CTvheadend::SetEPGMaxFutureDays(int iFutureDays)
 
 void CTvheadend::Disconnected()
 {
+  m_asyncState.SetState(ASYNC_NONE);
 }
 
 bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
@@ -1632,8 +1634,7 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   }
 
   /* Request Async data, first is init (which rebuilds state) */
-  if (m_asyncState.GetState() == ASYNC_NONE)
-    m_asyncState.SetState(ASYNC_INIT);
+  m_asyncState.SetState(ASYNC_INIT);
 
   htsmsg_t* msg = htsmsg_create_map();
   if (m_settings->GetAsyncEpg())
@@ -1648,7 +1649,6 @@ bool CTvheadend::Connected(std::unique_lock<std::recursive_mutex>& lock)
   else
     htsmsg_add_u32(msg, "epg", 0);
 
-  m_stateRebuilt = false;
   msg = m_conn->SendAndWait0(lock, "enableAsyncMetadata", msg);
   if (!msg)
   {
@@ -1715,7 +1715,7 @@ PVR_ERROR CTvheadend::OnSystemWake()
 bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& recording, int64_t& streamId)
 {
   if (!m_asyncState.WaitForState(ASYNC_EPG))
-    return PVR_ERROR_SERVER_TIMEOUT;
+    return false;
 
   const auto vfs{std::make_shared<HTSPVFS>(m_settings, *m_conn)};
   if (!vfs->Open(recording))
@@ -1765,7 +1765,7 @@ int CTvheadend::ReadRecordedStream(int64_t streamId, unsigned char* buffer, unsi
     isRecordingInProgress = ((*it2).second.GetState() == PVR_TIMER_STATE_RECORDING);
   }
 
-  const int bytesRead = vfs->Read(buffer, size, isRecordingInProgress);
+  const int bytesRead = static_cast<int>(vfs->Read(buffer, size, isRecordingInProgress));
   return bytesRead < 0 ? 0 : bytesRead;
 }
 
@@ -2118,24 +2118,16 @@ void CTvheadend::PushEpgEventUpdate(const Event& epg, EPG_EVENT_STATE state)
 
 void CTvheadend::SyncInitCompleted()
 {
-  if (!m_stateRebuilt)
-  {
-    m_stateRebuilt = true;
-
-    for (auto* dmx : m_dmx)
-      dmx->RebuildState();
-
-    for (const auto& vfs : m_vfs)
-      vfs.second->RebuildState();
-  }
-
   /* check state engine */
   if (m_asyncState.GetState() != ASYNC_INIT)
     return;
 
   /* Rebuild state */
-  m_timeRecordings.RebuildState();
-  m_autoRecordings.RebuildState();
+  for (auto* dmx : m_dmx)
+    dmx->RebuildState();
+
+  for (const auto& vfs : m_vfs)
+    vfs.second->RebuildState();
 
   /* Flag all async fields in case they've been deleted */
   for (auto& entry : m_channels)
@@ -2148,6 +2140,9 @@ void CTvheadend::SyncInitCompleted()
     entry.second.SetDirty(true);
   for (auto& entry : m_recordings)
     entry.second.SetDirty(true);
+
+  m_timeRecordings.SetDirty();
+  m_autoRecordings.SetDirty();
 
   /* Next */
   m_asyncState.SetState(ASYNC_CHN);

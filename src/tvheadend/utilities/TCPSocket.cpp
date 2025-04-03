@@ -82,7 +82,7 @@ void TCPSocket::Close()
   }
 }
 
-int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
+int64_t TCPSocket::Read(void* data, int64_t len, uint64_t iTimeoutMs /*= 0*/)
 {
   auto socket = GetSocket();
   if (!socket)
@@ -117,8 +117,9 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
 
       const auto [iReadResult, status] =
           (iTimeoutMs > 0) ? socket->recv(static_cast<std::byte*>(data) + iBytesRead,
-                                          len - iBytesRead, false /* no wait */)
-                           : socket->recv(static_cast<std::byte*>(data), len, true /* wait */);
+                                          static_cast<size_t>(len - iBytesRead), false /* no wait */)
+                           : socket->recv(static_cast<std::byte*>(data), static_cast<size_t>(len),
+                                          true /* wait */);
 
       if (iTimeoutMs > 0)
         iNow = MillisecondsSinceEpoch();
@@ -147,7 +148,7 @@ int64_t TCPSocket::Read(void* data, size_t len, uint64_t iTimeoutMs /*= 0*/)
   }
 }
 
-int64_t TCPSocket::Write(void* data, size_t len)
+int64_t TCPSocket::Write(void* data, int64_t len)
 {
   auto socket = GetSocket();
   if (!socket)
@@ -155,7 +156,8 @@ int64_t TCPSocket::Write(void* data, size_t len)
 
   try
   {
-    const auto [data_size, status] = socket->send(static_cast<std::byte*>(data), len);
+    const auto [data_size, status] = socket->send(static_cast<std::byte*>(data),
+                                                  static_cast<size_t>(len));
     return data_size;
   }
   catch (std::runtime_error const&)

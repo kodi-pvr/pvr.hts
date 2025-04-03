@@ -40,7 +40,7 @@ uint8_t RDSExtractorAAC::Decode(const uint8_t* data, size_t len)
 
   try
   {
-    aac::Decoder decoder(data, len);
+    aac::Decoder decoder(data, static_cast<unsigned int>(len));
     m_rdsLen = decoder.DecodeRDS(m_rdsData);
   }
   catch (std::exception& e)

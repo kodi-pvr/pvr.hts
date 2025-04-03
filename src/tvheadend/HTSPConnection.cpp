@@ -32,12 +32,13 @@ using namespace tvheadend::utilities;
 #define FAST_RECONNECT_INTERVAL (500) // ms
 #define SLOW_RECONNECT_INTERVAL (5000) // ms
 
-#define HTSP_MIN_SERVER_VERSION (26) // Server must support at least this htsp version
-#define HTSP_CLIENT_VERSION \
- (38) // Client uses HTSP features up to this version. If the respective \
-      // addon feature requires htsp features introduced after \
-      // HTSP_MIN_SERVER_VERSION this feature will only be available if the \
-      // actual server HTSP version matches (runtime htsp version check).
+// Server must support at least this HTSP version.
+#define HTSP_MIN_SERVER_VERSION (26)
+
+// Client uses HTSP features up to this version. If the respective addon feature requires HTSP
+// features introduced after HTSP_MIN_SERVER_VERSION this feature will only be available if the
+// actual server HTSP version matches (runtime HTSP version check).
+#define HTSP_CLIENT_VERSION (38)
 
 namespace tvheadend
 {
@@ -300,7 +301,7 @@ bool HTSPConnection::ReadMessage()
 {
   /* Read 4 byte len */
   uint8_t lb[4];
-  size_t len = m_socket->Read(&lb, sizeof(lb));
+  size_t len = static_cast<size_t>(m_socket->Read(&lb, sizeof(lb)));
   if (len != sizeof(lb))
     return false;
 
@@ -311,7 +312,8 @@ bool HTSPConnection::ReadMessage()
   size_t cnt = 0;
   while (cnt < len)
   {
-    int64_t r = m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout());
+    size_t r =
+        static_cast<size_t>(m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout()));
     if (r < 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
@@ -523,7 +525,7 @@ bool HTSPConnection::SendHello(std::unique_lock<std::recursive_mutex>& lock)
   if (chal && chal_len)
   {
     m_challenge = malloc(chal_len);
-    m_challengeLen = chal_len;
+    m_challengeLen = static_cast<int>(chal_len);
     std::memcpy(m_challenge, chal, chal_len);
   }
 
@@ -543,7 +545,8 @@ bool HTSPConnection::SendAuth(std::unique_lock<std::recursive_mutex>& lock,
   struct HTSSHA1* sha = static_cast<struct HTSSHA1*>(malloc(hts_sha1_size));
   uint8_t d[20];
   hts_sha1_init(sha);
-  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()), pass.length());
+  hts_sha1_update(sha, reinterpret_cast<const uint8_t*>(pass.c_str()),
+                  static_cast<unsigned int>(pass.length()));
   if (m_challenge)
     hts_sha1_update(sha, static_cast<const uint8_t*>(m_challenge), m_challengeLen);
   hts_sha1_final(sha, d);

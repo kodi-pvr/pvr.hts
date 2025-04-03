@@ -40,7 +40,7 @@ AutoRecordings::~AutoRecordings()
 {
 }
 
-void AutoRecordings::RebuildState()
+void AutoRecordings::SetDirty()
 {
   /* Flag all async fields in case they've been deleted */
   for (auto& rec : m_autoRecordings)
@@ -55,7 +55,7 @@ void AutoRecordings::SyncDvrCompleted()
 
 int AutoRecordings::GetAutorecTimerCount() const
 {
-  return m_autoRecordings.size();
+  return static_cast<int>(m_autoRecordings.size());
 }
 
 void AutoRecordings::GetAutorecTimers(std::vector<kodi::addon::PVRTimer>& timers)

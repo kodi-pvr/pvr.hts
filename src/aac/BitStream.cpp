@@ -40,7 +40,7 @@ int BitStream::ReadBit()
   return result;
 }
 
-int BitStream::ReadBits(int n)
+int BitStream::ReadBits(unsigned int n)
 {
   if (n > 32)
     throw std::invalid_argument("aac::BitStream::ReadBits - Attempt to read more than 32 bits");
@@ -80,7 +80,7 @@ void BitStream::SkipBit()
   }
 }
 
-void BitStream::SkipBits(int n)
+void BitStream::SkipBits(unsigned int n)
 {
   m_bitsRead += n;
   if (n <= m_bitsCached)

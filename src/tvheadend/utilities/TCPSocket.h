@@ -31,9 +31,9 @@ public:
 
   void Close();
 
-  int64_t Read(void* data, size_t len, uint64_t iTimeoutMs = 0);
+  int64_t Read(void* data, int64_t len, uint64_t iTimeoutMs = 0);
 
-  int64_t Write(void* data, size_t len);
+  int64_t Write(void* data, int64_t len);
 
 private:
   std::shared_ptr<kissnet::tcp_socket> GetSocket(bool bCreate = false);
