@@ -1,3 +1,7 @@
+v22.6.3
+- Translations updates from Weblate
+	- fa_AF, fr_fr, it_it, prs, sv_se, zh_cn
+
 v22.6.2
 - Code cleanup: Fix several compiler warnings
 - Code cleanup: Remove unused settings
