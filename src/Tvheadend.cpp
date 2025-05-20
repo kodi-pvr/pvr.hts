@@ -18,6 +18,7 @@
 #include "tvheadend/utilities/Utilities.h"
 
 #include "kodi/General.h"
+#include "kodi/Network.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -487,7 +488,7 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(
   std::string path = "/stream/channelid/" + std::to_string(it->first);
   const std::string streamingProfile = m_settings->GetStreamingProfile();
   if (!streamingProfile.empty())
-    path += "?profile=" + streamingProfile;
+    path += "?profile=" + kodi::network::URLEncode(streamingProfile);
 
   const std::string url = m_conn->GetWebURL("%s", path.c_str());
 
