@@ -1,3 +1,6 @@
+v22.7.0
+- Add support for isNew flag on EPG events
+
 v22.6.3
 - Fix profile parameter not encoded in http(s) URLs
 
