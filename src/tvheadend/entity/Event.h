@@ -41,7 +41,8 @@ public:
       m_episode(-1),
       m_part(-1),
       m_recordingId(0),
-      m_year(0)
+      m_year(0),
+      m_isnew(0)
   {
   }
 
@@ -57,7 +58,8 @@ public:
            m_year == other.m_year && m_writers == other.m_writers &&
            m_directors == other.m_directors && m_cast == other.m_cast &&
            m_categories == other.m_categories && m_ratingLabel == other.m_ratingLabel &&
-           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource;
+           m_ratingIcon == other.m_ratingIcon && m_ratingSource == other.m_ratingSource &&
+           m_isnew == other.m_isnew;
   }
 
   bool operator!=(const Event& other) const { return !(*this == other); }
@@ -143,6 +145,9 @@ public:
   const std::string& GetAired() const { return m_aired; }
   void SetAired(time_t aired);
 
+  uint32_t GetIsNew() const { return m_isnew; }
+  void SetIsNew(uint32_t isnew) { m_isnew = isnew; }
+
 private:
   uint32_t m_next;
   uint32_t m_channel;
@@ -170,6 +175,7 @@ private:
   std::string m_ratingLabel; // Label like 'PG' or 'FSK 12'
   std::string m_ratingIcon; // Path to graphic for the above label.
   std::string m_ratingSource; // Parental rating source.
+  uint32_t m_isnew;
 };
 
 } // namespace entity

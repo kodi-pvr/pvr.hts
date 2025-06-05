@@ -1508,6 +1508,9 @@ void CTvheadend::CreateEvent(const Event& event, kodi::addon::PVREPGTag& epg)
   epg.SetEpisodeNumber(event.GetEpisode());
   epg.SetEpisodePartNumber(event.GetPart());
   epg.SetFlags(EPG_TAG_FLAG_UNDEFINED);
+  if (event.GetIsNew())
+    epg.SetFlags(EPG_TAG_FLAG_IS_NEW);
+
   epg.SetSeriesLink(event.GetSeriesLink());
 }
 
@@ -3036,6 +3039,8 @@ bool CTvheadend::ParseEvent(htsmsg_t* msg, bool bAdd, Event& evt)
     evt.SetEpisode(static_cast<int32_t>(u32));
   if (!htsmsg_get_u32(msg, "partNumber", &u32))
     evt.SetPart(u32);
+  if (!htsmsg_get_u32(msg, "isNew", &u32))
+    evt.SetIsNew(u32);
 
   str = htsmsg_get_str(msg, "serieslinkUri");
   if (str)
