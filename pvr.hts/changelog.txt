@@ -1,3 +1,7 @@
+v22.7.1
+- Translations updates from Weblate
+	- fa_AF
+
 v22.7.0
 - Add support for isNew flag on EPG events
 
