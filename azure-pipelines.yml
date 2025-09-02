@@ -5,7 +5,6 @@ trigger:
   branches:
     include:
     - Piers
-    - Omega
     - releases/*
   paths:
     include:
@@ -37,12 +36,12 @@ jobs:
           GENERATOR: "Visual Studio 17 2022"
           ARCHITECTURE: Win32
           CONFIGURATION: Release
-          WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0.22621.0
+          WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.22621.0"
         Win64-UWP:
           GENERATOR: "Visual Studio 17 2022"
           ARCHITECTURE: x64
           CONFIGURATION: Release
-          WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0.22621.0
+          WINSTORE: -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION="10.0.22621.0"
 
     workspace:
       clean: all
