@@ -1,54 +1,53 @@
-name: Build and run tests
+name: Build
 on: [push, pull_request]
 env:
   app_id: pvr.hts
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-        - name: "Debian package test"
-          os: ubuntu-latest
-          CC: gcc
-          CXX: g++
-  #        DEBIAN_BUILD: true
+          - name: "GCC build"
+            CC: gcc
+            CXX: g++
+          - name: "Clang build"
+            CC: clang
+            CXX: clang++
     steps:
-    - name: Install needed ubuntu depends
-      env:
-        DEBIAN_BUILD: ${{ matrix.DEBIAN_BUILD }}
-      run: |
-        if [[ $DEBIAN_BUILD == true ]]; then sudo add-apt-repository -y ppa:team-xbmc/xbmc-nightly; fi
-        if [[ $DEBIAN_BUILD == true ]]; then sudo apt-get update; fi
-        if [[ $DEBIAN_BUILD == true ]]; then sudo apt-get install fakeroot; fi
     - name: Checkout Kodi repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: xbmc/xbmc
         ref: Omega
         path: xbmc
     - name: Checkout add-on repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: ${{ env.app_id }}
+    - name: Prepare
+      run: |
+        mkdir -p ${{ github.workspace }}/xbmc/cmake/addons/addons/${app_id}
+        echo ${app_id} ${{ github.workspace }}/${app_id} > ${{ github.workspace }}/xbmc/cmake/addons/addons/${app_id}/${app_id}.txt
     - name: Configure
       env:
         CC: ${{ matrix.CC }}
         CXX: ${{ matrix.CXX }}
-        DEBIAN_BUILD: ${{ matrix.DEBIAN_BUILD }}
       run: |
-        if [[ $DEBIAN_BUILD != true ]]; then cd ${app_id} && mkdir -p build && cd build; fi
-        if [[ $DEBIAN_BUILD != true ]]; then cmake -DADDONS_TO_BUILD=${app_id} -DADDON_SRC_PREFIX=${{ github.workspace }} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/xbmc/addons -DPACKAGE_ZIP=1 ${{ github.workspace }}/xbmc/cmake/addons; fi
-        if [[ $DEBIAN_BUILD == true ]]; then wget https://raw.githubusercontent.com/xbmc/xbmc/Omega/xbmc/addons/kodi-dev-kit/tools/debian-addon-package-test.sh && chmod +x ./debian-addon-package-test.sh; fi
-        if [[ $DEBIAN_BUILD == true ]]; then sudo apt-get build-dep ${{ github.workspace }}/${app_id}; fi
+        cmake \
+          -B ${app_id}/build \
+          -DADDONS_TO_BUILD=${app_id} \
+          -DADDON_SRC_PREFIX=${{ github.workspace }} \
+          -DADDONS_DEFINITION_DIR=${{ github.workspace }}/xbmc/cmake/addons/addons \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/xbmc/addons \
+          -DPACKAGE_ZIP=1 \
+          ${{ github.workspace }}/xbmc/cmake/addons
     - name: Build
       env:
         CC: ${{ matrix.CC }}
         CXX: ${{ matrix.CXX }}
-        DEBIAN_BUILD: ${{ matrix.DEBIAN_BUILD }}
       run: |
-        if [[ $DEBIAN_BUILD != true ]]; then cd ${app_id}/build; fi
-        if [[ $DEBIAN_BUILD != true ]]; then make; fi
-        if [[ $DEBIAN_BUILD == true ]]; then ./debian-addon-package-test.sh ${{ github.workspace }}/${app_id}; fi
+        make -C ${app_id}/build -j$(getconf _NPROCESSORS_ONLN)
