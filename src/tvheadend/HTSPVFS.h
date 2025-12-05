@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <cstdint>
 #include <string>
 
 namespace kodi
