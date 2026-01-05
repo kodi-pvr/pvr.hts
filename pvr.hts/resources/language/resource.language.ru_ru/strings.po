@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-12-27 20:13+0000\n"
+"PO-Revision-Date: 2026-01-05 09:13+0000\n"
 "Last-Translator: Alexey <signfinder@gmail.com>\n"
 "Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/ru_ru/>\n"
 "Language: ru_ru\n"
@@ -103,19 +103,19 @@ msgstr "Максимальный отступ начального времен�
 
 msgctxt "#30055"
 msgid "Default priority"
-msgstr "Приоритет по-умолчанию"
+msgstr "Приоритет по умолчанию"
 
 msgctxt "#30056"
 msgid "Default lifetime"
-msgstr "Хранение по-умолчанию"
+msgstr "Срок жизни по умолчанию"
 
 msgctxt "#30057"
 msgid "Default duplicate detection"
-msgstr "Определение повторов по-умолчанию"
+msgstr "Определение повторов по умолчанию"
 
 msgctxt "#30058"
 msgid "Defaults for new timers"
-msgstr "Настройки по-умолчанию для новых таймеров"
+msgstr "Настройки по умолчанию для новых таймеров"
 
 msgctxt "#30059"
 msgid "Scheduled recordings"
@@ -135,7 +135,7 @@ msgstr "Передача данных"
 
 msgctxt "#30101"
 msgid "Asynchronous EPG transfer"
-msgstr "Асинхронная получение EPG"
+msgstr "Асинхронная передача EPG"
 
 msgctxt "#30200"
 msgid "Debugging"
@@ -162,87 +162,87 @@ msgstr "Важный (Наивысший)"
 #. Recording priority representation
 msgctxt "#30352"
 msgid "High"
-msgstr "Высокое"
+msgstr "Высокий"
 
 #. Recording priority representation
 msgctxt "#30353"
 msgid "Normal"
-msgstr "Нормальное"
+msgstr "Средний"
 
 #. Recording priority representation
 msgctxt "#30354"
 msgid "Low"
-msgstr "Низкое"
+msgstr "Низкий"
 
 #. Recording priority representation
 msgctxt "#30355"
 msgid "Unimportant (Lowest)"
-msgstr "Не важный (наименьший)"
+msgstr "Неважный (наименьший)"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30356"
 msgid "Record all episodes"
-msgstr "Запись всех эпизодов"
+msgstr "Запись всех серий"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Записывать если номер серии отличается"
+msgstr "Записывать, если номер серии отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Записывать если имя серии отличается"
+msgstr "Записывать, если название серии отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Записывать если описание отличается"
+msgstr "Записывать, если описание отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
 msgid "Record max once per week"
-msgstr "Записывать максимум раз в неделю"
+msgstr "Записывать максимум один раз в неделю"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30361"
 msgid "Record max once per day"
-msgstr "Записывать максимум раз в день"
+msgstr "Записывать максимум один раз в день"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Это правило только: запись, если номер эпизода отличается"
+msgstr "Только это правило: записывать, если номер серии отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Это правило только: запись, если имя эпизода отличается"
+msgstr "Только это правило: записывать, если название серии отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Это правило только: запись, если название отличается"
+msgstr "Только это правило: записывать, если название отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Это правило только: запись, если описание отличается"
+msgstr "Только это правило: записывать, если описание отличается"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
 msgid "This rule only: Record max once per week"
-msgstr "Это правило только: запись максимальной раз в неделю"
+msgstr "Только это правило: записывать максимум один раз в неделю"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30367"
 msgid "This rule only: Record max once per day"
-msgstr "Это правило только: запись макс один раз в день"
+msgstr "Только это правило: записывать максимум один раз в день"
 
 #. Recording priority representation
 msgctxt "#30368"
 msgid "Default"
-msgstr "По-умолчанию"
+msgstr "По умолчанию"
 
 #. Timer type representation
 msgctxt "#30369"
@@ -252,17 +252,17 @@ msgstr "Правило таймера (серия ссылок)"
 #. Prevent duplicate episodes representation
 msgctxt "#30370"
 msgid "Record max once per month"
-msgstr "Максимальное количество записей в месяц"
+msgstr "Записывать максимум один раз в месяц"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30371"
 msgid "This rule only: Record max once per month"
-msgstr "Это правило только: запись максимальной раз в месяц"
+msgstr "Только это правило: записывать максимум один раз в месяц"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
-msgstr "Запись, если уникальный эпизод согласно EPG / XMLTV"
+msgstr "Записывать, если эпизод уникальный согласно EPG / XMLTV"
 
 #. Recording lifetime representation
 msgctxt "#30375"
@@ -332,7 +332,7 @@ msgstr "3 года"
 #. Recording lifetime representation
 msgctxt "#30388"
 msgid "Until space needed"
-msgstr "Пока не будет нужно свободное место"
+msgstr "Пока не понадобится свободное место"
 
 #. Recording lifetime representation
 msgctxt "#30389"
@@ -358,7 +358,7 @@ msgstr "Задержка закрытия неиспользуемой подп�
 
 msgctxt "#30403"
 msgid "Use predictive tuning to speedup channel switches"
-msgstr "Использовать интеллектуальную регулировку для ускорения переключений каналов"
+msgstr "Использовать интеллектуальную регулировку для ускорения переключения каналов"
 
 msgctxt "#30450"
 msgid "No free adapter available"
@@ -378,7 +378,7 @@ msgstr "Не удалось настроить"
 
 msgctxt "#30454"
 msgid "User limit reached"
-msgstr "Исчерпан лимит пользователей"
+msgstr "Достигнут лимит пользователей"
 
 msgctxt "#30455"
 msgid "No access"
@@ -394,7 +394,7 @@ msgstr "Профиль потока"
 
 msgctxt "#30501"
 msgid "Profile to use (empty = default)"
-msgstr "Использовать профиль (пустой = по-умолчанию)"
+msgstr "Использовать профиль (по умолчанию = пустой)"
 
 #. Check streaming profile validity during startup
 msgctxt "#30502"
@@ -407,7 +407,7 @@ msgstr "Передача данных"
 
 msgctxt "#30504"
 msgid "Stream read chunk size for recordings (KB)"
-msgstr "Поток читает размер блока для записей (KB)"
+msgstr "Размер фрагмента для чтения потока при записи (KB)"
 
 msgctxt "#30505"
 msgid "Use HTTP streaming for channels"
