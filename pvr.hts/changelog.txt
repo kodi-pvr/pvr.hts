@@ -1,3 +1,11 @@
+v22.8.2
+- Translations updates from Weblate
+- Fix compilation on armv7 with gcc15
+- Fix hang on channel unpause
+
+v22.8.1
+- recompie for new API
+
 v22.8.0
 - Kodi inputstream API update to version 3.4.0
 
