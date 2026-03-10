@@ -3390,6 +3390,11 @@ PVR_ERROR CTvheadend::GetDescrambleInfo(int channelUid, kodi::addon::PVRDescramb
   return m_dmx_active->CurrentDescrambleInfo(info);
 }
 
+void CTvheadend::PauseStream(bool paused)
+{
+  m_dmx_active->Pause(paused);
+}
+
 bool CTvheadend::IsTimeshifting()
 {
   return m_dmx_active->IsTimeShifting();

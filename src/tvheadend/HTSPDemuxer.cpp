@@ -417,6 +417,12 @@ bool HTSPDemuxer::IsPaused() const
   return false;
 }
 
+void HTSPDemuxer::Pause(bool paused)
+{
+  if (!paused)
+    m_lastPkt = 0;
+}
+
 void HTSPDemuxer::SetStreamingProfile(const std::string& profile)
 {
   m_subscription.SetProfile(profile);

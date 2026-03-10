@@ -237,6 +237,7 @@ public:
   PVR_ERROR GetSignalStatus(int channelUid, kodi::addon::PVRSignalStatus& sig) override;
   PVR_ERROR GetDescrambleInfo(int channelUid, kodi::addon::PVRDescrambleInfo& info) override;
   bool CanPauseStream() override { return HasCapability("timeshift"); }
+  void PauseStream(bool paused) override;
   bool CanSeekStream() override { return HasCapability("timeshift"); }
   bool IsTimeshifting();
   bool IsRealTimeStream() override;
