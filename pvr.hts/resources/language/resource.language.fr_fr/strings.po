@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-10-26 06:00+0000\n"
+"PO-Revision-Date: 2026-03-25 01:13+0000\n"
 "Last-Translator: Cutter <CutterXYZ@users.noreply.github.com>\n"
 "Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/fr_fr/>\n"
 "Language: fr_fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -187,17 +187,17 @@ msgstr "Enregistrer tous les épisodes"
 #. Prevent duplicate episodes representation
 msgctxt "#30357"
 msgid "Record if episode number differs"
-msgstr "Enregistrer si le numéro de l'épisode est différent"
+msgstr "Enregistrer si le numéro de l'épisode diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30358"
 msgid "Record if episode name differs"
-msgstr "Enregistrer si le nom de l'épisode est différent"
+msgstr "Enregistrer si le nom de l'épisode diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30359"
 msgid "Record if description differs"
-msgstr "Enregistrer si la description est différente"
+msgstr "Enregistrer si la description diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30360"
@@ -212,22 +212,22 @@ msgstr "Enregistrer au maximum une fois par jour"
 #. Prevent duplicate episodes representation
 msgctxt "#30362"
 msgid "This rule only: Record if episode number differs"
-msgstr "Cette règle seulement : enregistrer si le numéro de l'épisode est différent"
+msgstr "Cette règle seulement : enregistrer si le numéro de l'épisode diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30363"
 msgid "This rule only: Record if episode name differs"
-msgstr "Cette règle seulement : enregistrer si le nom de l'épisode est différent"
+msgstr "Cette règle seulement : enregistrer si le nom de l'épisode diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30364"
 msgid "This rule only: Record if title differs"
-msgstr "Cette règle seulement : enregistrer si le titre est différent"
+msgstr "Cette règle seulement : enregistrer si le titre diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30365"
 msgid "This rule only: Record if description differs"
-msgstr "Cette règle seulement : enregistrer si la description est différente"
+msgstr "Cette règle seulement : enregistrer si la description diffère"
 
 #. Prevent duplicate episodes representation
 msgctxt "#30366"
