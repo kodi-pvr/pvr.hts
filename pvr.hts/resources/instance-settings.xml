@@ -245,6 +245,11 @@
           </constraints>
           <control type="list" format="string" />
         </setting>
+        <setting id="dvr_use_backend_folder_creation" type="boolean" label="30391" help="-1">
+          <level>0</level>
+          <default>false</default>
+          <control type="toggle"/>
+        </setting>
       </group>
     </category>
 

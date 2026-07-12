@@ -39,6 +39,7 @@ const int DEFAULT_DVR_DUPDETECT = DVR_AUTOREC_RECORD_ALL;
 const bool DEFAULT_DVR_PLAYSTATUS = true;
 const int DEFAULT_STREAM_CHUNKSIZE = 64; // KB
 const bool DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES = true;
+const bool DEFAULT_DVR_USE_BACKEND_FOLDER_CREATION = false;
 const int DEFAULT_STREAM_STALLED_THRESHOLD = 10; // seconds
 
 } // namespace
@@ -67,6 +68,7 @@ InstanceSettings::InstanceSettings(kodi::addon::IAddonInstance& instance)
     m_bDvrPlayStatus(DEFAULT_DVR_PLAYSTATUS),
     m_iStreamReadChunkSizeKB(DEFAULT_STREAM_CHUNKSIZE),
     m_bIgnoreDuplicateSchedules(DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES),
+    m_bDvrUseBackendFolderCreation(DEFAULT_DVR_USE_BACKEND_FOLDER_CREATION),
     m_streamStalledThreshold(DEFAULT_STREAM_STALLED_THRESHOLD)
 {
   ReadSettings();
@@ -119,6 +121,9 @@ void InstanceSettings::ReadSettings()
   /* Scheduled recordings */
   SetIgnoreDuplicateSchedules(
       ReadBoolSetting("dvr_ignore_duplicates", DEFAULT_DVR_IGNORE_DUPLICATE_SCHEDULES));
+
+  SetDvrUseBackendFolderCreation(
+      ReadBoolSetting("dvr_use_backend_folder_creation", DEFAULT_DVR_USE_BACKEND_FOLDER_CREATION));
 }
 
 ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
@@ -192,6 +197,8 @@ ADDON_STATUS InstanceSettings::SetSetting(const std::string& key,
     return SetBoolSetting(GetDvrPlayStatus(), value);
   else if (key == "stream_readchunksize")
     return SetIntSetting(GetStreamReadChunkSize(), value);
+  else if (key == "dvr_use_backend_folder_creation")
+    return SetBoolSetting(GetDvrUseBackendFolderCreation(), value);
   else if (key == "dvr_ignore_duplicates")
   {
     SetIgnoreDuplicateSchedules(value.GetBoolean());

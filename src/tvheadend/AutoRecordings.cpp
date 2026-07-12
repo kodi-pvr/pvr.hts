@@ -192,7 +192,7 @@ PVR_ERROR AutoRecordings::SendAutorecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (timer.GetDirectory() != "/")
+  if (timer.GetDirectory() != "/" && !m_settings->GetDvrUseBackendFolderCreation())
     htsmsg_add_str(m, "directory", timer.GetDirectory().c_str());
 
   /* series link */

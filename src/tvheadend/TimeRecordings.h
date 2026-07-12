@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 extern "C"
@@ -26,11 +27,14 @@ namespace tvheadend
 {
 
 class HTSPConnection;
+class InstanceSettings;
 
 class TimeRecordings
 {
 public:
-  TimeRecordings(HTSPConnection& conn, Profiles& dvrConfigs);
+  TimeRecordings(const std::shared_ptr<InstanceSettings>& settings,
+                 HTSPConnection& conn,
+                 Profiles& dvrConfigs);
   ~TimeRecordings();
 
   /* state updates */
@@ -59,6 +63,7 @@ private:
   HTSPConnection& m_conn;
   const tvheadend::CustomTimerProperties m_customTimerProps;
   tvheadend::entity::TimeRecordingsMap m_timeRecordings;
+  std::shared_ptr<InstanceSettings> m_settings;
 };
 
 } // namespace tvheadend

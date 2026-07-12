@@ -383,7 +383,12 @@ msgctxt "#30390"
 msgid "Use backend setting"
 msgstr ""
 
-#empty strings from id 30391 to 30399
+#. When enabled, do not send recording folder to backend, let it use its own folder settings
+msgctxt "#30391"
+msgid "Use backend settings for recording folder creation"
+msgstr ""
+
+#empty strings from id 30392 to 30399
 
 msgctxt "#30400"
 msgid "Predictive tuning"
