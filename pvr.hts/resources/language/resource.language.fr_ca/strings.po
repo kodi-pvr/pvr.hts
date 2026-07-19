@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2025-10-26 06:00+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
@@ -84,22 +84,6 @@ msgstr ""
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Enregistrements automatiques"
-
-msgctxt "#30051"
-msgid "Start time window calculation"
-msgstr "Calcul de la fenêtre d’heure de début"
-
-msgctxt "#30052"
-msgid "Strict (start time + end time)"
-msgstr "Stricte (heure de début + heure de fin)"
-
-msgctxt "#30053"
-msgid "Relaxed (start time +/- margin)"
-msgstr "Tolérant (heure de début +/- marge)"
-
-msgctxt "#30054"
-msgid "Maximum start time margin (minutes)"
-msgstr "Marge maximale d’heure de début (minutes)"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -264,6 +248,11 @@ msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Enregistrer si l’épisode est unique d’après le GÉP ou XMLTV"
 
+#. Prevent duplicate episodes representation
+msgctxt "#30373"
+msgid "Use DVR configuration"
+msgstr ""
+
 #. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
@@ -344,6 +333,11 @@ msgctxt "#30390"
 msgid "Use backend setting"
 msgstr ""
 
+#. When enabled, do not send recording folder to backend, let it use its own folder settings
+msgctxt "#30391"
+msgid "Use backend settings for recording folder creation"
+msgstr ""
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Syntonisation prévisionnelle"
@@ -388,6 +382,14 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Erreur d’abonnement"
 
+msgctxt "#30457"
+msgid "DVR configuration"
+msgstr ""
+
+msgctxt "#30458"
+msgid "Comment"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Streaming profile"
 msgstr "Profil de diffusion en continu"
@@ -396,7 +398,6 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Profil à utiliser (vide = valeur par défaut)"
 
-#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Le profil de diffusion en continu %s n’est pas disponible"
@@ -420,6 +421,55 @@ msgstr "Enregistrements"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "État de lecture d’après le serveur"
+
+# empty strings from id 30512 to 30599
+msgctxt "#30600"
+msgid "Broadcast type"
+msgstr ""
+
+msgctxt "#30601"
+msgid "Any"
+msgstr ""
+
+msgctxt "#30602"
+msgid "New / premiere / unknown"
+msgstr ""
+
+msgctxt "#30603"
+msgid "Repeated"
+msgstr ""
+
+msgctxt "#30604"
+msgid "New / premiere"
+msgstr ""
+
+msgctxt "#30605"
+msgid "(Default profile)"
+msgstr ""
+
+msgctxt "#30606"
+msgid "Start after"
+msgstr ""
+
+msgctxt "#30607"
+msgid "Start before"
+msgstr ""
+
+#~ msgctxt "#30051"
+#~ msgid "Start time window calculation"
+#~ msgstr "Calcul de la fenêtre d’heure de début"
+
+#~ msgctxt "#30052"
+#~ msgid "Strict (start time + end time)"
+#~ msgstr "Stricte (heure de début + heure de fin)"
+
+#~ msgctxt "#30053"
+#~ msgid "Relaxed (start time +/- margin)"
+#~ msgstr "Tolérant (heure de début +/- marge)"
+
+#~ msgctxt "#30054"
+#~ msgid "Maximum start time margin (minutes)"
+#~ msgstr "Marge maximale d’heure de début (minutes)"
 
 #~ msgctxt "#30373"
 #~ msgid "Until space needed"

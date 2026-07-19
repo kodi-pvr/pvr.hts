@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Main\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-10-26 05:59+0000\n"
+"PO-Revision-Date: 2026-07-19 20:45+0000\n"
 "Last-Translator: Kai Sommerfeld <ksooo@users.noreply.kodi.weblate.cloud>\n"
 "Language-Team: German <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/de_de/>\n"
 "Language: de_de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 2026.7.1\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -84,22 +84,6 @@ msgstr "Schwellwert für Verbindungsneuaufbau bei Streams ohne Daten (Sekunden)"
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "Auto-Aufnahmen"
-
-msgctxt "#30051"
-msgid "Start time window calculation"
-msgstr "Startfensterberechnung"
-
-msgctxt "#30052"
-msgid "Strict (start time + end time)"
-msgstr "Strikt (Start- + Endzeit)"
-
-msgctxt "#30053"
-msgid "Relaxed (start time +/- margin)"
-msgstr "Entspannt (Startzeit +/- Zeitspanne)"
-
-msgctxt "#30054"
-msgid "Maximum start time margin (minutes)"
-msgstr "Max. Startzeitspanne (Minuten)"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -264,6 +248,11 @@ msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "Aufnehmen, wenn einzigartige Episode lt. EPG/XMLTV"
 
+#. Prevent duplicate episodes representation
+msgctxt "#30373"
+msgid "Use DVR configuration"
+msgstr "DVR-Konfiguration verwenden"
+
 #. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
@@ -344,6 +333,11 @@ msgctxt "#30390"
 msgid "Use backend setting"
 msgstr "Wert des Backends verwenden"
 
+#. When enabled, do not send recording folder to backend, let it use its own folder settings
+msgctxt "#30391"
+msgid "Use backend settings for recording folder creation"
+msgstr "Backend-Einstellungen für Erstellung von Aufnahmeordnern verwenden"
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "Voraussagendes Tuning"
@@ -388,6 +382,14 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr "Subscription-Fehler"
 
+msgctxt "#30457"
+msgid "DVR configuration"
+msgstr "DVR-Konfiguration"
+
+msgctxt "#30458"
+msgid "Comment"
+msgstr "Kommentar"
+
 msgctxt "#30500"
 msgid "Streaming profile"
 msgstr "Streamingprofil"
@@ -396,7 +398,6 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "Profil (Leer = Standard)"
 
-#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "Streamingprofil %s ist nicht verfügbar"
@@ -420,6 +421,55 @@ msgstr "Aufnahmen"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "Serverbasierter Abspielstatus"
+
+# empty strings from id 30512 to 30599
+msgctxt "#30600"
+msgid "Broadcast type"
+msgstr "Übertragungstyp"
+
+msgctxt "#30601"
+msgid "Any"
+msgstr "Beliebig"
+
+msgctxt "#30602"
+msgid "New / premiere / unknown"
+msgstr "Neu / Premiere / Unbekannt"
+
+msgctxt "#30603"
+msgid "Repeated"
+msgstr "Wiederholt"
+
+msgctxt "#30604"
+msgid "New / premiere"
+msgstr "Neu / Premiere"
+
+msgctxt "#30605"
+msgid "(Default profile)"
+msgstr "(Standardprofil)"
+
+msgctxt "#30606"
+msgid "Start after"
+msgstr "Start später als"
+
+msgctxt "#30607"
+msgid "Start before"
+msgstr "Start früher als"
+
+#~ msgctxt "#30051"
+#~ msgid "Start time window calculation"
+#~ msgstr "Startfensterberechnung"
+
+#~ msgctxt "#30052"
+#~ msgid "Strict (start time + end time)"
+#~ msgstr "Strikt (Start- + Endzeit)"
+
+#~ msgctxt "#30053"
+#~ msgid "Relaxed (start time +/- margin)"
+#~ msgstr "Entspannt (Startzeit +/- Zeitspanne)"
+
+#~ msgctxt "#30054"
+#~ msgid "Maximum start time margin (minutes)"
+#~ msgstr "Max. Startzeitspanne (Minuten)"
 
 #~ msgctxt "#30373"
 #~ msgid "Until space needed"

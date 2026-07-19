@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: translations@kodi.tv\n"
+"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2025-10-26 06:00+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
@@ -84,22 +84,6 @@ msgstr "停滞流重新连接阈值（秒）"
 msgctxt "#30050"
 msgid "Auto recordings"
 msgstr "自动录像"
-
-msgctxt "#30051"
-msgid "Start time window calculation"
-msgstr "开始时间窗口计算"
-
-msgctxt "#30052"
-msgid "Strict (start time + end time)"
-msgstr "严格（开始时间+结束时间）"
-
-msgctxt "#30053"
-msgid "Relaxed (start time +/- margin)"
-msgstr "宽松（开始时间+/-余量）"
-
-msgctxt "#30054"
-msgid "Maximum start time margin (minutes)"
-msgstr "最大开始时间余量（分钟）"
 
 msgctxt "#30055"
 msgid "Default priority"
@@ -264,6 +248,11 @@ msgctxt "#30372"
 msgid "Record if unique episode according EPG/XMLTV"
 msgstr "如果根据 EPG/XMLTV 为唯一的剧集则录制"
 
+#. Prevent duplicate episodes representation
+msgctxt "#30373"
+msgid "Use DVR configuration"
+msgstr ""
+
 #. Recording lifetime representation
 msgctxt "#30375"
 msgid "1 day"
@@ -344,6 +333,11 @@ msgctxt "#30390"
 msgid "Use backend setting"
 msgstr "使用后端设置"
 
+#. When enabled, do not send recording folder to backend, let it use its own folder settings
+msgctxt "#30391"
+msgid "Use backend settings for recording folder creation"
+msgstr ""
+
 msgctxt "#30400"
 msgid "Predictive tuning"
 msgstr "预测调台"
@@ -388,6 +382,14 @@ msgctxt "#30456"
 msgid "Subscription error"
 msgstr "订阅错误"
 
+msgctxt "#30457"
+msgid "DVR configuration"
+msgstr ""
+
+msgctxt "#30458"
+msgid "Comment"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Streaming profile"
 msgstr "流媒体配置"
@@ -396,7 +398,6 @@ msgctxt "#30501"
 msgid "Profile to use (empty = default)"
 msgstr "使用配置（空 =默认）"
 
-#. Check streaming profile validity during startup
 msgctxt "#30502"
 msgid "Streaming profile %s is not available"
 msgstr "流媒体配置 %s 不可用"
@@ -420,6 +421,55 @@ msgstr "录像"
 msgctxt "#30511"
 msgid "Server based play status"
 msgstr "基于服务器的播放状态"
+
+# empty strings from id 30512 to 30599
+msgctxt "#30600"
+msgid "Broadcast type"
+msgstr ""
+
+msgctxt "#30601"
+msgid "Any"
+msgstr ""
+
+msgctxt "#30602"
+msgid "New / premiere / unknown"
+msgstr ""
+
+msgctxt "#30603"
+msgid "Repeated"
+msgstr ""
+
+msgctxt "#30604"
+msgid "New / premiere"
+msgstr ""
+
+msgctxt "#30605"
+msgid "(Default profile)"
+msgstr ""
+
+msgctxt "#30606"
+msgid "Start after"
+msgstr ""
+
+msgctxt "#30607"
+msgid "Start before"
+msgstr ""
+
+#~ msgctxt "#30051"
+#~ msgid "Start time window calculation"
+#~ msgstr "开始时间窗口计算"
+
+#~ msgctxt "#30052"
+#~ msgid "Strict (start time + end time)"
+#~ msgstr "严格（开始时间+结束时间）"
+
+#~ msgctxt "#30053"
+#~ msgid "Relaxed (start time +/- margin)"
+#~ msgstr "宽松（开始时间+/-余量）"
+
+#~ msgctxt "#30054"
+#~ msgid "Maximum start time margin (minutes)"
+#~ msgstr "最大开始时间余量（分钟）"
 
 #~ msgctxt "#30373"
 #~ msgid "Until space needed"
