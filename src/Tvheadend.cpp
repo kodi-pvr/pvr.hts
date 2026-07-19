@@ -39,7 +39,7 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
     m_streamchange(false),
     m_queue(static_cast<size_t>(-1)),
     m_asyncState(m_settings->GetResponseTimeout()),
-    m_timeRecordings(*m_conn, m_dvrConfigs),
+    m_timeRecordings(m_settings, *m_conn, m_dvrConfigs),
     m_autoRecordings(m_settings, *m_conn, m_dvrConfigs),
     m_epgMaxDays(EpgMaxFutureDays()),
     m_playingLiveStream(false)
@@ -1096,7 +1096,10 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
           PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE | PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
           PVR_TIMER_TYPE_SUPPORTS_START_TIME | PVR_TIMER_TYPE_SUPPORTS_END_TIME |
           PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS | PVR_TIMER_TYPE_SUPPORTS_PRIORITY |
-          PVR_TIMER_TYPE_SUPPORTS_LIFETIME | PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS,
+          PVR_TIMER_TYPE_SUPPORTS_LIFETIME |
+          (m_settings->GetDvrUseBackendFolderCreation()
+               ? 0
+               : PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS),
       /* Let Kodi generate the description. */
       "",
       /* Custom settings definitions. */
@@ -1116,7 +1119,9 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
         PVR_TIMER_TYPE_IS_REPEATING | PVR_TIMER_TYPE_SUPPORTS_ENABLE_DISABLE |
         PVR_TIMER_TYPE_SUPPORTS_CHANNELS | PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS |
         PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN | PVR_TIMER_TYPE_SUPPORTS_PRIORITY |
-        PVR_TIMER_TYPE_SUPPORTS_LIFETIME | PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS |
+        PVR_TIMER_TYPE_SUPPORTS_LIFETIME |
+        (m_settings->GetDvrUseBackendFolderCreation() ? 0
+                                                      : PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS) |
         PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL | PVR_TIMER_TYPE_REQUIRES_EPG_SERIESLINK_ON_CREATE;
 
     /* Repeating epg based - series link autorec */
@@ -1142,8 +1147,10 @@ PVR_ERROR CTvheadend::GetTimerTypes(std::vector<kodi::addon::PVRTimerType>& type
       PVR_TIMER_TYPE_SUPPORTS_TITLE_EPG_MATCH | PVR_TIMER_TYPE_SUPPORTS_CHANNELS |
       PVR_TIMER_TYPE_SUPPORTS_WEEKDAYS | PVR_TIMER_TYPE_SUPPORTS_START_END_MARGIN |
       PVR_TIMER_TYPE_SUPPORTS_PRIORITY | PVR_TIMER_TYPE_SUPPORTS_LIFETIME |
-      PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS | PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL |
-      PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH | PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
+      (m_settings->GetDvrUseBackendFolderCreation() ? 0
+                                                    : PVR_TIMER_TYPE_SUPPORTS_RECORDING_FOLDERS) |
+      PVR_TIMER_TYPE_SUPPORTS_ANY_CHANNEL | PVR_TIMER_TYPE_SUPPORTS_FULLTEXT_EPG_MATCH |
+      PVR_TIMER_TYPE_SUPPORTS_RECORD_ONLY_NEW_EPISODES;
 
   /* Repeating epg based - autorec */
   types.emplace_back(TimerType(

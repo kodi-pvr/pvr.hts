@@ -1,3 +1,7 @@
+v22.9.0
+- Add setting "Use backend settings for recording folder creation"
+  When enabled, do not send recording folder to backend for autorecs and timerecs
+
 v22.8.2
 - Translations updates from Weblate
 - Fix compilation on armv7 with gcc15

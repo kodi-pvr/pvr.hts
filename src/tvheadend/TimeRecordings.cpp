@@ -9,6 +9,7 @@
 
 #include "CustomTimerProperties.h"
 #include "HTSPConnection.h"
+#include "InstanceSettings.h"
 #include "entity/Recording.h"
 #include "utilities/LifetimeMapper.h"
 #include "utilities/Logger.h"
@@ -21,8 +22,11 @@ using namespace tvheadend;
 using namespace tvheadend::entity;
 using namespace tvheadend::utilities;
 
-TimeRecordings::TimeRecordings(HTSPConnection& conn, Profiles& dvrConfigs)
-  : m_conn(conn),
+TimeRecordings::TimeRecordings(const std::shared_ptr<InstanceSettings>& settings,
+                               HTSPConnection& conn,
+                               Profiles& dvrConfigs)
+  : m_settings(settings),
+    m_conn(conn),
     m_customTimerProps(
         {CUSTOM_PROP_ID_DVR_CONFIGURATION, CUSTOM_PROP_ID_DVR_COMMENT}, conn, dvrConfigs)
 {
@@ -174,7 +178,7 @@ PVR_ERROR TimeRecordings::SendTimerecAddOrUpdate(const kodi::addon::PVRTimer& ti
   /* Note: As a result of internal filename cleanup, for "directory" == "/", */
   /*       tvh would put recordings into a folder named "-". Not a big issue */
   /*       but ugly.                                                         */
-  if (timer.GetDirectory() != "/")
+  if (timer.GetDirectory() != "/" && !m_settings->GetDvrUseBackendFolderCreation())
     htsmsg_add_str(m, "directory", timer.GetDirectory().c_str());
 
   /* Custom props. */

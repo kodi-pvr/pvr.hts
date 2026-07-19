@@ -51,6 +51,7 @@ public:
   bool GetDvrPlayStatus() const { return m_bDvrPlayStatus; }
   int GetStreamReadChunkSize() const { return m_iStreamReadChunkSizeKB; }
   bool GetIgnoreDuplicateSchedules() const { return m_bIgnoreDuplicateSchedules; }
+  bool GetDvrUseBackendFolderCreation() const { return m_bDvrUseBackendFolderCreation; }
   int GetStreamStalledThreshold() const { return m_streamStalledThreshold; }
 
 private:
@@ -86,6 +87,7 @@ private:
   void SetDvrPlayStatus(bool value) { m_bDvrPlayStatus = value; }
   void SetStreamReadChunkSizeKB(int value) { m_iStreamReadChunkSizeKB = value; }
   void SetIgnoreDuplicateSchedules(bool value) { m_bIgnoreDuplicateSchedules = value; }
+  void SetDvrUseBackendFolderCreation(bool value) { m_bDvrUseBackendFolderCreation = value; }
   void SetStreamStalledThreshold(int value) { m_streamStalledThreshold = value; }
 
   /**
@@ -125,6 +127,7 @@ private:
   bool m_bDvrPlayStatus;
   int m_iStreamReadChunkSizeKB;
   bool m_bIgnoreDuplicateSchedules;
+  bool m_bDvrUseBackendFolderCreation;
   int m_streamStalledThreshold; // seconds
 };
 
