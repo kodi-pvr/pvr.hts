@@ -190,6 +190,8 @@ void CTvheadend::QueryAvailableDvrConfigurations(std::unique_lock<std::recursive
     return;
   }
 
+  m_dvrConfigs.clear();
+
   /* Process */
   Logger::Log(LogLevel::LEVEL_INFO, "  Available DVR configurations:");
 
@@ -239,6 +241,8 @@ void CTvheadend::QueryAvailableProfiles(std::unique_lock<std::recursive_mutex>& 
     htsmsg_destroy(m);
     return;
   }
+
+  m_profiles.clear();
 
   /* Process */
   Logger::Log(LogLevel::LEVEL_INFO, "  Available streaming profiles:");
