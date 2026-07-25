@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-10-26 06:00+0000\n"
+"PO-Revision-Date: 2026-07-25 05:16+0000\n"
 "Last-Translator: Alfonso Cachero <alfonso.cachero@gmail.com>\n"
 "Language-Team: Spanish (Spain) <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/es_es/>\n"
 "Language: es_es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 2026.7.1\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -251,7 +251,7 @@ msgstr "Grabar si es episodio único según EPG/XMLTV"
 #. Prevent duplicate episodes representation
 msgctxt "#30373"
 msgid "Use DVR configuration"
-msgstr ""
+msgstr "Usar configuración DVR"
 
 #. Recording lifetime representation
 msgctxt "#30375"
@@ -336,7 +336,7 @@ msgstr "Usar ajuste de servidor"
 #. When enabled, do not send recording folder to backend, let it use its own folder settings
 msgctxt "#30391"
 msgid "Use backend settings for recording folder creation"
-msgstr ""
+msgstr "Usar ajustes del servidor para la creación de carpetas de grabaciones"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -384,11 +384,11 @@ msgstr "Error de suscripción"
 
 msgctxt "#30457"
 msgid "DVR configuration"
-msgstr ""
+msgstr "Configuración DVR"
 
 msgctxt "#30458"
 msgid "Comment"
-msgstr ""
+msgstr "Comentario"
 
 msgctxt "#30500"
 msgid "Streaming profile"
@@ -425,35 +425,35 @@ msgstr "Estado de reproducción basado en servidor"
 # empty strings from id 30512 to 30599
 msgctxt "#30600"
 msgid "Broadcast type"
-msgstr ""
+msgstr "Tipo de emisión"
 
 msgctxt "#30601"
 msgid "Any"
-msgstr ""
+msgstr "Cualquiera"
 
 msgctxt "#30602"
 msgid "New / premiere / unknown"
-msgstr ""
+msgstr "Nuevo / estreno / desconocido"
 
 msgctxt "#30603"
 msgid "Repeated"
-msgstr ""
+msgstr "Repetido"
 
 msgctxt "#30604"
 msgid "New / premiere"
-msgstr ""
+msgstr "Nuevo / estreno"
 
 msgctxt "#30605"
 msgid "(Default profile)"
-msgstr ""
+msgstr "(Perfil por defecto)"
 
 msgctxt "#30606"
 msgid "Start after"
-msgstr ""
+msgstr "Empezar después"
 
 msgctxt "#30607"
 msgid "Start before"
-msgstr ""
+msgstr "Empezar antes"
 
 #~ msgctxt "#30051"
 #~ msgid "Start time window calculation"
