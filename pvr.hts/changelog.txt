@@ -1,3 +1,7 @@
+v22.9.1
+- Fix duplicate DVR Configuration entries, which were exposed to Kodi's PVR timer settings dialog
+- Fix duplicate Streaming Profile entries, which were not exposed to Kodi
+
 v22.9.0
 - Add setting "Use backend settings for recording folder creation"
   When enabled, do not send recording folder to backend for autorecs and timerecs
