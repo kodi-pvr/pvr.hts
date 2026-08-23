@@ -5,17 +5,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KODI Main\n"
-"Report-Msgid-Bugs-To: https://github.com/xbmc/xbmc/issues/\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-01-05 09:13+0000\n"
-"Last-Translator: Alexey <signfinder@gmail.com>\n"
+"PO-Revision-Date: 2026-08-23 01:16+0000\n"
+"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-pvr-clients/pvr-hts/ru_ru/>\n"
 "Language: ru_ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 msgctxt "Addon Summary"
 msgid "Kodi's frontend for Tvheadend"
@@ -251,7 +251,7 @@ msgstr "Записывать, если эпизод уникальный сог�
 #. Prevent duplicate episodes representation
 msgctxt "#30373"
 msgid "Use DVR configuration"
-msgstr ""
+msgstr "Использовать конфигурацию DVR"
 
 #. Recording lifetime representation
 msgctxt "#30375"
@@ -336,7 +336,7 @@ msgstr "Использовать настройки сервера"
 #. When enabled, do not send recording folder to backend, let it use its own folder settings
 msgctxt "#30391"
 msgid "Use backend settings for recording folder creation"
-msgstr ""
+msgstr "Использовать настройки сервера для создания папки записей"
 
 msgctxt "#30400"
 msgid "Predictive tuning"
@@ -384,11 +384,11 @@ msgstr "Ошибка подписки"
 
 msgctxt "#30457"
 msgid "DVR configuration"
-msgstr ""
+msgstr "Конфигурация DVR"
 
 msgctxt "#30458"
 msgid "Comment"
-msgstr ""
+msgstr "Комментарий"
 
 msgctxt "#30500"
 msgid "Streaming profile"
@@ -425,35 +425,35 @@ msgstr "Состояние воспроизведения на основе се
 # empty strings from id 30512 to 30599
 msgctxt "#30600"
 msgid "Broadcast type"
-msgstr ""
+msgstr "Тип трансляции"
 
 msgctxt "#30601"
 msgid "Any"
-msgstr ""
+msgstr "Любой"
 
 msgctxt "#30602"
 msgid "New / premiere / unknown"
-msgstr ""
+msgstr "Новое / премьера / неизвестно"
 
 msgctxt "#30603"
 msgid "Repeated"
-msgstr ""
+msgstr "Повтор"
 
 msgctxt "#30604"
 msgid "New / premiere"
-msgstr ""
+msgstr "Новое / премьера"
 
 msgctxt "#30605"
 msgid "(Default profile)"
-msgstr ""
+msgstr "(Профиль по умолчанию)"
 
 msgctxt "#30606"
 msgid "Start after"
-msgstr ""
+msgstr "Начать после"
 
 msgctxt "#30607"
 msgid "Start before"
-msgstr ""
+msgstr "Начать до"
 
 #~ msgctxt "#30051"
 #~ msgid "Start time window calculation"
