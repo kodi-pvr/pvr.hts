@@ -243,6 +243,8 @@ void HTSPConnection::OnWake()
 
   /* recreate connection */
   m_suspended = false;
+
+  m_wakeCond.notify_all();
 }
 
 void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
@@ -681,10 +683,12 @@ void HTSPConnection::Process()
       }
     }
 
-    while (m_suspended && !ShouldStopProcessing())
     {
-      /* Wait for wakeup */
-      Sleep(1000);
+      std::unique_lock<std::recursive_mutex> lock(m_mutex);
+      while (m_suspended && !ShouldStopProcessing())
+      {
+        m_wakeCond.wait_for(lock, std::chrono::milliseconds(1000));
+      }
     }
 
     if (ShouldStopProcessing())
