@@ -102,6 +102,7 @@ private:
   void ParseMuxPacket(htsmsg_t* m);
   void ParseSourceInfo(htsmsg_t* m);
   void ParseSubscriptionStart(htsmsg_t* m);
+  void ProcessSubscriptionStatus(htsmsg_t* m);
   void ParseSubscriptionStop(htsmsg_t* m);
   void ParseSubscriptionSkip(htsmsg_t* m);
   void ParseSubscriptionSpeed(htsmsg_t* m);

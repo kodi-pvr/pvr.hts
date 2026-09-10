@@ -447,13 +447,31 @@ void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
  * Parse incoming data
  * *************************************************************************/
 
+void HTSPDemuxer::ProcessSubscriptionStatus(htsmsg_t* m)
+{
+  const eSubsriptionState prevState = m_subscription.GetState();
+
+  m_subscription.ParseSubscriptionStatus(m);
+
+  if (prevState != SUBSCRIPTION_RUNNING && m_subscription.GetState() == SUBSCRIPTION_RUNNING)
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    Logger::Log(LogLevel::LEVEL_DEBUG, "demux stream change (subscription recovered)");
+
+    DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
+    pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
+    m_pktBuffer.Push(pkt);
+  }
+}
+
 bool HTSPDemuxer::ProcessMessage(const std::string& method, htsmsg_t* m)
 {
   /* Subscription messages */
   if (method == "muxpkt")
     ParseMuxPacket(m);
   else if (method == "subscriptionStatus")
-    m_subscription.ParseSubscriptionStatus(m);
+    ProcessSubscriptionStatus(m);
   else if (method == "queueStatus")
     ParseQueueStatus(m);
   else if (method == "signalStatus")
