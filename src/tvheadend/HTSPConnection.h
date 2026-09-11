@@ -116,6 +116,7 @@ private:
   mutable std::recursive_mutex m_mutex;
   HTSPRegister* m_regThread;
   std::condition_variable_any m_regCond;
+  std::condition_variable_any m_wakeCond;
   bool m_ready;
   uint32_t m_seq;
   std::string m_serverName;

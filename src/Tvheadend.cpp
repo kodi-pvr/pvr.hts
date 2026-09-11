@@ -1564,7 +1564,7 @@ PVR_ERROR CTvheadend::GetEPGForChannel(int channelUid,
   {
     std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
 
-    msg = m_conn->SendAndWait0(lock, "getEvents", msg);
+    msg = m_conn->SendAndWait(lock, "getEvents", msg);
     if (!msg)
       return PVR_ERROR_SERVER_ERROR;
   }
