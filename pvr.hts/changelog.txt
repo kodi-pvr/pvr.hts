@@ -1,3 +1,8 @@
+v22.9.3
+- Fixed crash when resuming Kodi from sleep or standby
+- Restored stream information after subscription recovery to prevent missing video
+- Updated translations
+
 v22.9.2
 - Fix crash when resuming Kodi from sleep/standby
 - Fix playback stuck in radio mode (no picture) after a temporary signal loss
@@ -26,6 +31,9 @@ v22.8.0
 v22.7.2
 - Translations updates from Weblate
 	- bs_ba, fr_fr, pl_pl
+
+v22.7.1
+- Updated translations and removed invalid translation file
 
 v22.7.0
 - Add support for isNew flag on EPG events
