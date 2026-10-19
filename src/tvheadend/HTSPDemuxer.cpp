@@ -237,7 +237,10 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
   m_seektime = &seekTime;
 
   if (!m_subscription.SendSeek(lock, time))
+  {
+    m_seektime = nullptr;
     return false;
+  }
 
   /* Wait for time */
   int64_t seekedTo = (*m_seektime).Get(lock, m_settings->GetResponseTimeout());
