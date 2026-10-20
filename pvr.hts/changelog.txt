@@ -1,3 +1,8 @@
+v22.9.4
+- Fix playback getting stuck after a failed seek
+- Translations updates from Weblate
+	- ru_ru
+
 v22.9.3
 - Fixed crash when resuming Kodi from sleep or standby
 - Restored stream information after subscription recovery to prevent missing video
