@@ -234,6 +234,7 @@ std::string HTSPConnection::GetServerString() const
 
 bool HTSPConnection::HasCapability(const std::string& capability) const
 {
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return std::find(m_capabilities.begin(), m_capabilities.end(), capability) !=
          m_capabilities.end();
 }
@@ -533,6 +534,7 @@ bool HTSPConnection::SendHello(std::unique_lock<std::recursive_mutex>& lock)
               m_serverVersion.c_str(), m_htspVersion);
 
   /* Capabilities */
+  m_capabilities.clear();
   htsmsg_t* cap = htsmsg_get_list(msg, "servercapability");
   if (cap)
   {
