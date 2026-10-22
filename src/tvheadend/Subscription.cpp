@@ -134,17 +134,19 @@ void Subscription::SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %d", GetChannelId());
 
+  /* The receive thread can see START immediately after the subscribe reply. */
+  SetState(SUBSCRIPTION_STARTING);
   /* Send and Wait for response */
   if (restart)
     m = m_conn.SendAndWait0(lock, "subscribe", m);
   else
     m = m_conn.SendAndWait(lock, "subscribe", m);
   if (!m)
+  {
+    SetState(SUBSCRIPTION_STOPPED);
     return;
-
+  }
   htsmsg_destroy(m);
-
-  SetState(SUBSCRIPTION_STARTING);
   Logger::Log(LogLevel::LEVEL_DEBUG,
               "demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(),
               GetId());
@@ -178,7 +180,7 @@ bool Subscription::SendSeek(std::unique_lock<std::recursive_mutex>& lock, double
   htsmsg_add_u32(m, "subscriptionId", GetId());
   htsmsg_add_s64(m, "time", static_cast<int64_t>(time * 1000LL));
   htsmsg_add_u32(m, "absolute", 1);
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %d", time);
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %.0f", time);
 
   /* Send and Wait */
   m = m_conn.SendAndWait(lock, "subscriptionSeek", m);
