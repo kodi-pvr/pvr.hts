@@ -92,6 +92,7 @@ public:
 private:
   void Close0(std::unique_lock<std::recursive_mutex>& lock);
   void Abort0();
+  void CancelSeek();
 
   /**
    * Resets the signal, quality, timeshift info and optionally the starttime
