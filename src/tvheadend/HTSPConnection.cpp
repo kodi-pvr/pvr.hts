@@ -68,6 +68,17 @@ public:
     return r;
   }
 
+  bool Aborted() const { return m_aborted; }
+
+  void Abort()
+  {
+    if (!m_flag)
+    {
+      m_aborted = true;
+      Set(nullptr);
+    }
+  }
+
   void Set(htsmsg_t* msg)
   {
     m_msg = msg;
@@ -78,6 +89,7 @@ public:
 private:
   std::condition_variable_any m_cond;
   bool m_flag = false;
+  bool m_aborted = false;
   htsmsg_t* m_msg = nullptr;
 };
 
@@ -278,6 +290,13 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
   }
 }
 
+void HTSPConnection::AbortPendingRequests()
+{
+  for (const auto& response : m_messages)
+    response.second->Abort();
+  m_messages.clear();
+}
+
 /*
  * Close the connection
  */
@@ -293,7 +312,7 @@ void HTSPConnection::Disconnect()
   }
 
   /* Signal all waiters and erase messages */
-  m_messages.clear();
+  AbortPendingRequests();
 }
 
 /*
@@ -440,6 +459,11 @@ htsmsg_t* HTSPConnection::SendAndWait0(std::unique_lock<std::recursive_mutex>& l
   m_messages.erase(seq);
   if (!msg)
   {
+    if (resp.Aborted())
+    {
+      Logger::Log(LogLevel::LEVEL_DEBUG, "Command %s aborted by connection reset", method);
+      return nullptr;
+    }
     Logger::Log(LogLevel::LEVEL_ERROR, "Command %s failed: No response received", method);
     if (!m_suspended)
       Disconnect();
@@ -671,13 +695,13 @@ void HTSPConnection::Process()
     /* Create socket (ensure mutex protection) */
     {
       std::lock_guard<std::recursive_mutex> lock(m_mutex);
+      AbortPendingRequests();
       if (m_socket)
         delete m_socket;
 
       m_connListener.Disconnected();
       m_socket = new TCPSocket(host, port);
       m_ready = false;
-      m_seq = 0;
       if (m_challenge)
       {
         free(m_challenge);
