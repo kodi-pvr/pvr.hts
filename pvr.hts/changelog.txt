@@ -1,3 +1,6 @@
+v22.9.5
+- Fix exiting Kodi taking up to two seconds longer per Tvheadend connection
+
 v22.9.4
 - Fix playback getting stuck after a failed seek
 - Translations updates from Weblate
