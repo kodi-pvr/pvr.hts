@@ -55,11 +55,12 @@ public:
     std::unique_lock<std::mutex> lock(m_mutex);
     if (m_buffer.empty())
     {
-      if (iTimeoutMs == 0)
+      if (iTimeoutMs == 0 || m_aborted)
         return false;
 
       if (!m_condition.wait_for(lock, std::chrono::milliseconds(iTimeoutMs),
-                                [this] { return m_hasData == true; }))
+                                [this] { return m_hasData || m_aborted; }) ||
+          m_buffer.empty())
         return false;
     }
 
@@ -69,11 +70,28 @@ public:
     return true;
   }
 
+  /*!
+   * @brief Wake up waiting Pop() calls and do not wait in Pop() any longer.
+   */
+  void Abort()
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_aborted = true;
+    m_condition.notify_all();
+  }
+
+  bool IsAborted()
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_aborted;
+  }
+
 private:
   size_t m_maxSize = 100;
   std::queue<T> m_buffer;
   std::mutex m_mutex;
   bool m_hasData = false;
+  bool m_aborted = false;
   std::condition_variable m_condition;
 };
 

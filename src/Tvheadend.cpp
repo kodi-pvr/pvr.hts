@@ -74,6 +74,8 @@ void CTvheadend::Stop()
     dmx->Close();
 
   m_conn->Stop();
+  // Do not wait for Process() to time out waiting for messages
+  m_queue.Abort();
   StopThread();
 }
 
@@ -1966,8 +1968,8 @@ void CTvheadend::Process()
     HTSPMessage msg = {};
     bool bSuccess = m_queue.Pop(msg, 2000);
 
-    if (m_threadStop)
-      continue;
+    if (m_threadStop || m_queue.IsAborted())
+      break;
 
     // check for expired predictive tuning subscriptions and close those
     CloseExpiredSubscriptions();
