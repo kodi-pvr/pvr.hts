@@ -8,8 +8,10 @@
 #ifdef _MSC_VER
 #undef SLIST_ENTRY
 #include "Win32/include/sys/queue.h"
-#else
+#elif __has_include(<sys/queue.h>)
 #include <sys/queue.h>
+#else
+#include "Win32/include/sys/queue.h"
 #endif
 
 /*
