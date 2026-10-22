@@ -282,10 +282,8 @@ void HTSPConnection::SetState(PVR_CONNECTION_STATE state)
 
   if (prevState != newState)
   {
-    static std::string serverString;
-
     /* Notify connection state change (callback!) */
-    serverString = GetServerString();
+    const std::string serverString = GetServerString();
     m_connListener.ConnectionStateChange(serverString, newState, "");
   }
 }
@@ -681,8 +679,8 @@ fail:
  */
 void HTSPConnection::Process()
 {
-  static bool log = false;
-  static unsigned int retryAttempt = 0;
+  bool log = false;
+  unsigned int retryAttempt = 0;
 
   while (!ShouldStopProcessing())
   {
