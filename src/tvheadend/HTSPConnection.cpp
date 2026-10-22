@@ -110,6 +110,8 @@ HTSPConnection::~HTSPConnection()
   Stop();
   StopThread();
   delete m_regThread;
+  delete m_socket;
+  free(m_challenge);
 }
 
 void HTSPConnection::Start()
