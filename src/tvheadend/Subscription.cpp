@@ -12,6 +12,7 @@
 
 #include "kodi/General.h"
 
+#include <atomic>
 #include <cstring>
 
 using namespace tvheadend;
@@ -289,6 +290,6 @@ void Subscription::ShowStateNotification()
 
 uint32_t Subscription::GetNextId()
 {
-  static uint32_t id = 0;
+  static std::atomic<uint32_t> id{0};
   return ++id;
 }
