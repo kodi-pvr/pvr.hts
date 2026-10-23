@@ -53,6 +53,7 @@ public:
   void Disconnect();
 
   bool SendMessage0(const char* method, htsmsg_t* m);
+  bool SendAsync(std::unique_lock<std::recursive_mutex>& lock, const char* method, htsmsg_t* m);
   htsmsg_t* SendAndWait0(std::unique_lock<std::recursive_mutex>& lock,
                          const char* method,
                          htsmsg_t* m,
