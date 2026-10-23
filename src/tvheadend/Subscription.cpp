@@ -40,22 +40,10 @@ uint32_t Subscription::GetId() const
   return m_id;
 }
 
-void Subscription::SetId(uint32_t id)
-{
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  m_id = id;
-}
-
 uint32_t Subscription::GetChannelId() const
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
   return m_channelId;
-}
-
-void Subscription::SetChannelId(uint32_t id)
-{
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
-  m_channelId = id;
 }
 
 uint32_t Subscription::GetWeight() const
@@ -106,34 +94,64 @@ void Subscription::SetProfile(const std::string& profile)
   m_profile = profile;
 }
 
+void Subscription::SendRecordingSubscribe(std::unique_lock<std::recursive_mutex>& lock,
+                                          uint32_t dvrId)
+{
+  OpenSubscription(lock, 0, dvrId, SUBSCRIPTION_WEIGHT_NORMAL);
+}
+
 void Subscription::SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
                                  uint32_t channelId,
-                                 uint32_t weight,
-                                 bool restart)
+                                 uint32_t weight)
 {
-  /* We don't want to change anything when restarting a subscription */
-  if (!restart)
-  {
-    SetChannelId(channelId);
-    SetWeight(weight);
-    SetId(GetNextId());
-    SetSpeed(1000); //set back to normal
-  }
+  OpenSubscription(lock, channelId, std::nullopt, weight);
+}
 
+void Subscription::OpenSubscription(std::unique_lock<std::recursive_mutex>& lock,
+                                    uint32_t channelId,
+                                    std::optional<uint32_t> dvrId,
+                                    uint32_t weight)
+{
+  {
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
+    m_dvrId = dvrId;
+    m_channelId = channelId;
+    m_weight = weight;
+    m_id = GetNextId();
+    m_speed = 1000;
+  }
+  SendSubscribe0(lock, false);
+}
+
+void Subscription::Restart(std::unique_lock<std::recursive_mutex>& lock)
+{
+  SendSubscribe0(lock, true);
+}
+
+void Subscription::SendSubscribe0(std::unique_lock<std::recursive_mutex>& lock, bool restart)
+{
+  std::optional<uint32_t> dvrId;
+  {
+    std::lock_guard<std::recursive_mutex> guard(m_mutex);
+    dvrId = m_dvrId;
+  }
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
-  htsmsg_add_s32(m, "channelId", GetChannelId());
+  const uint32_t sourceId = dvrId.value_or(GetChannelId());
+  htsmsg_add_s32(m, dvrId ? "dvrId" : "channelId", sourceId);
   htsmsg_add_u32(m, "subscriptionId", GetId());
   htsmsg_add_u32(m, "weight", GetWeight());
-  htsmsg_add_u32(m, "timeshiftPeriod", static_cast<uint32_t>(~0));
+  if (!dvrId)
+    htsmsg_add_u32(m, "timeshiftPeriod", static_cast<uint32_t>(~0));
   htsmsg_add_u32(m, "normts", 1);
-  htsmsg_add_u32(m, "queueDepth", PACKET_QUEUE_DEPTH);
+  htsmsg_add_u32(m, "queueDepth", dvrId ? RECORDING_QUEUE_DEPTH : PACKET_QUEUE_DEPTH);
 
   /* Use the specified profile if it has been set */
   if (!GetProfile().empty())
     htsmsg_add_str(m, "profile", GetProfile().c_str());
 
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %d", GetChannelId());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribe to %s %u", dvrId ? "recording" : "channel",
+              sourceId);
 
   /* The receive thread can see START immediately after the subscribe reply. */
   SetState(SUBSCRIPTION_STARTING);
@@ -148,9 +166,13 @@ void Subscription::SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
     return;
   }
   htsmsg_destroy(m);
-  Logger::Log(LogLevel::LEVEL_DEBUG,
-              "demux successfully subscribed to channel id %d, subscription id %d", GetChannelId(),
-              GetId());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscribed to %s %u, subscription id %u",
+              dvrId ? "recording" : "channel", sourceId, GetId());
+}
+
+void Subscription::SetStopped()
+{
+  SetState(SUBSCRIPTION_STOPPED);
 }
 
 void Subscription::SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock)
@@ -158,10 +180,10 @@ void Subscription::SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock)
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", GetId());
-  Logger::Log(LogLevel::LEVEL_DEBUG, "demux unsubscribe from %d", GetChannelId());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux unsubscribe subscription %u", GetId());
 
   /* Mark subscription as inactive immediately in case this command fails */
-  SetState(SUBSCRIPTION_STOPPED);
+  SetStopped();
 
   /* Send and Wait */
   m = m_conn.SendAndWait(lock, "unsubscribe", m);
@@ -169,12 +191,22 @@ void Subscription::SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock)
     return;
 
   htsmsg_destroy(m);
-  Logger::Log(LogLevel::LEVEL_DEBUG,
-              "demux successfully unsubscribed from channel id %d, subscription id %d",
-              GetChannelId(), GetId());
+  Logger::Log(LogLevel::LEVEL_DEBUG, "demux successfully unsubscribed subscription %u", GetId());
 }
 
 bool Subscription::SendSeek(std::unique_lock<std::recursive_mutex>& lock, double time)
+{
+  return SendSeek0(lock, time, false);
+}
+
+bool Subscription::RestoreSeek(std::unique_lock<std::recursive_mutex>& lock, double time)
+{
+  return SendSeek0(lock, time, true);
+}
+
+bool Subscription::SendSeek0(std::unique_lock<std::recursive_mutex>& lock,
+                             double time,
+                             bool restart)
 {
   /* Build message */
   htsmsg_t* m = htsmsg_create_map();
@@ -184,7 +216,8 @@ bool Subscription::SendSeek(std::unique_lock<std::recursive_mutex>& lock, double
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send seek %.0f", time);
 
   /* Send and Wait */
-  m = m_conn.SendAndWait(lock, "subscriptionSeek", m);
+  m = restart ? m_conn.SendAndWait0(lock, "subscriptionSeek", m)
+              : m_conn.SendAndWait(lock, "subscriptionSeek", m);
   if (!m)
     return false;
 
@@ -192,28 +225,35 @@ bool Subscription::SendSeek(std::unique_lock<std::recursive_mutex>& lock, double
   return true;
 }
 
-void Subscription::SendSpeed(std::unique_lock<std::recursive_mutex>& lock,
-                             int32_t speed,
-                             bool restart)
+htsmsg_t* Subscription::SpeedMessage() const
 {
-  /* We don't want to change the speed when restarting a subscription */
-  if (!restart)
-    SetSpeed(speed);
-
-  /* Build message */
-  htsmsg_t* m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", GetId());
-  htsmsg_add_s32(m, "speed",
+  htsmsg_t* message = htsmsg_create_map();
+  htsmsg_add_u32(message, "subscriptionId", GetId());
+  htsmsg_add_s32(message, "speed",
                  GetSpeed() / 10); // Kodi uses values an order of magnitude larger than tvheadend
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux send speed %d", GetSpeed() / 10);
+  return message;
+}
 
-  if (restart)
-    m = m_conn.SendAndWait0(lock, "subscriptionSpeed", m);
-  else
-    m = m_conn.SendAndWait(lock, "subscriptionSpeed", m);
+void Subscription::SendSpeed(std::unique_lock<std::recursive_mutex>& lock, int32_t speed)
+{
+  SetSpeed(speed);
+  htsmsg_t* reply = m_conn.SendAndWait(lock, "subscriptionSpeed", SpeedMessage());
+  if (reply)
+    htsmsg_destroy(reply);
+}
 
-  if (m)
-    htsmsg_destroy(m);
+void Subscription::SendSpeedAsync(std::unique_lock<std::recursive_mutex>& lock, int32_t speed)
+{
+  SetSpeed(speed);
+  m_conn.SendAsync(lock, "subscriptionSpeed", SpeedMessage());
+}
+
+void Subscription::RestoreSpeed(std::unique_lock<std::recursive_mutex>& lock)
+{
+  htsmsg_t* reply = m_conn.SendAndWait0(lock, "subscriptionSpeed", SpeedMessage());
+  if (reply)
+    htsmsg_destroy(reply);
 }
 
 void Subscription::SendWeight(std::unique_lock<std::recursive_mutex>& lock, uint32_t weight)

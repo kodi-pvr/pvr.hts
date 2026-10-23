@@ -65,8 +65,8 @@ void HTSPDemuxer::RebuildState()
     std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
     m_subscription.SendUnsubscribe(lock);
-    m_subscription.SendSubscribe(lock, 0, 0, true);
-    m_subscription.SendSpeed(lock, 0, true);
+    m_subscription.Restart(lock);
+    m_subscription.RestoreSpeed(lock);
 
     ResetStatus(false);
   }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mutex>
+#include <optional>
 #include <string>
 
 extern "C"
@@ -50,6 +51,7 @@ enum eSubsriptionState
 };
 
 static const int PACKET_QUEUE_DEPTH = 10000000;
+static const int RECORDING_QUEUE_DEPTH = 500000;
 
 class Subscription
 {
@@ -68,17 +70,24 @@ public:
    * Subscribe to a channel on the backend
    * @param channelId the channel to subscribe to
    * @param weight the desired subscription weight
-   * @param restart restart the current subscription (i.e. after lost connection), other parameters will be ignored
    */
   void SendSubscribe(std::unique_lock<std::recursive_mutex>& lock,
                      uint32_t channelId,
-                     uint32_t weight,
-                     bool restart = false);
+                     uint32_t weight);
+
+  /** Subscribe to a recording using its DVR identifier. */
+  void SendRecordingSubscribe(std::unique_lock<std::recursive_mutex>& lock, uint32_t dvrId);
+
+  /** Restore the current source while registering a reconnected transport. */
+  void Restart(std::unique_lock<std::recursive_mutex>& lock);
 
   /**
-   * Unsubscribe from a channel on the backend
+   * Unsubscribe from a channel or recording on the backend
    */
   void SendUnsubscribe(std::unique_lock<std::recursive_mutex>& lock);
+
+  /** Mark inactive when the transport is unavailable, without sending. */
+  void SetStopped();
 
   /**
    * Send a seek to the backend
@@ -87,12 +96,20 @@ public:
    */
   bool SendSeek(std::unique_lock<std::recursive_mutex>& lock, double time);
 
+  /** Restore the seek position while registering a reconnected transport. */
+  bool RestoreSeek(std::unique_lock<std::recursive_mutex>& lock, double time);
+
   /**
    * Change the subscription speed on the backend
    * @param speed the desired speed of the subscription
-   * @param restart resent the current subscription speed (i.e. after lost connection), other parameters will be ignored
    */
-  void SendSpeed(std::unique_lock<std::recursive_mutex>& lock, int32_t speed, bool restart = false);
+  void SendSpeed(std::unique_lock<std::recursive_mutex>& lock, int32_t speed);
+
+  /** Send speed without awaiting a response from the media receiver. */
+  void SendSpeedAsync(std::unique_lock<std::recursive_mutex>& lock, int32_t speed);
+
+  /** Restore the stored speed while registering a reconnected transport. */
+  void RestoreSpeed(std::unique_lock<std::recursive_mutex>& lock);
 
   /**
    * Change the subscription weight on the backend
@@ -113,8 +130,13 @@ public:
   void SetProfile(const std::string& profile);
 
 private:
-  void SetId(uint32_t id);
-  void SetChannelId(uint32_t id);
+  void OpenSubscription(std::unique_lock<std::recursive_mutex>& lock,
+                        uint32_t channelId,
+                        std::optional<uint32_t> dvrId,
+                        uint32_t weight);
+  void SendSubscribe0(std::unique_lock<std::recursive_mutex>& lock, bool restart);
+  bool SendSeek0(std::unique_lock<std::recursive_mutex>& lock, double time, bool restart);
+  htsmsg_t* SpeedMessage() const;
   void SetWeight(uint32_t weight);
   void SetSpeed(int32_t speed);
   void SetState(eSubsriptionState state);
@@ -131,6 +153,7 @@ private:
 
   uint32_t m_id;
   uint32_t m_channelId;
+  std::optional<uint32_t> m_dvrId;
   uint32_t m_weight;
   int32_t m_speed;
   eSubsriptionState m_state;
