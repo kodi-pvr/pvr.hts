@@ -50,6 +50,7 @@ class HTSPConnection;
 class HTSPDemuxer;
 class HTSPVFS;
 class InstanceSettings;
+struct RecordingContext;
 } // namespace tvheadend
 
 /* Typedefs */
@@ -66,6 +67,11 @@ class ATTR_DLL_LOCAL CTvheadend : public kodi::addon::CInstancePVRClient,
 public:
   CTvheadend(const kodi::addon::IInstanceInfo& instance);
   ~CTvheadend() override;
+
+  std::shared_ptr<tvheadend::RecordingContext> GetRecordingContext() const
+  {
+    return m_recordingContext;
+  }
 
   void Start();
   void Stop();
@@ -277,6 +283,7 @@ public:
   std::shared_ptr<tvheadend::InstanceSettings> m_settings;
 
   tvheadend::HTSPConnection* m_conn;
+  std::shared_ptr<tvheadend::RecordingContext> m_recordingContext;
 
   const tvheadend::CustomTimerProperties m_customTimerProps;
 

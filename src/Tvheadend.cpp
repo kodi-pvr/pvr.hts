@@ -13,6 +13,7 @@
 #include "tvheadend/HTSPMessage.h"
 #include "tvheadend/HTSPVFS.h"
 #include "tvheadend/InstanceSettings.h"
+#include "tvheadend/RecordingContext.h"
 #include "tvheadend/utilities/LifetimeMapper.h"
 #include "tvheadend/utilities/Logger.h"
 #include "tvheadend/utilities/Utilities.h"
@@ -44,6 +45,12 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
     m_epgMaxDays(EpgMaxFutureDays()),
     m_playingLiveStream(false)
 {
+  m_recordingContext = std::make_shared<RecordingContext>();
+  m_recordingContext->codecLookup = [this](const std::string& name)
+  { return GetCodecByName(name); };
+  m_recordingContext->settings = m_settings;
+  m_recordingContext->id =
+      "recording-" + instance.GetID() + "-" + std::to_string(instance.GetNumber());
   m_dmx.reserve(m_settings->GetTotalTuners());
   for (int i = 0; i < 1 || i < m_settings->GetTotalTuners(); i++)
   {
@@ -54,6 +61,11 @@ CTvheadend::CTvheadend(const kodi::addon::IInstanceInfo& instance)
 
 CTvheadend::~CTvheadend()
 {
+  {
+    std::lock_guard<std::mutex> lock(m_recordingContext->mutex);
+    m_recordingContext->alive = false;
+    m_recordingContext->codecLookup = {};
+  }
   Stop();
 
   for (auto* dmx : m_dmx)
