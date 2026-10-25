@@ -520,6 +520,78 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(
  * Recordings
  * *************************************************************************/
 
+PVR_ERROR CTvheadend::GetRecordingPlaybackProfile(const kodi::addon::PVRRecording& recording,
+                                                  std::string& profile)
+{
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
+  if (!m_conn->HasCapability(RECORDING_STREAMING_CAPABILITY))
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
+  const std::string id = recording.GetRecordingId();
+  uint32_t number = 0;
+  if (!ParseRecordingId(id, number))
+    return PVR_ERROR_INVALID_PARAMETERS;
+  std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
+  htsmsg_t* request = htsmsg_create_map();
+  htsmsg_add_u32(request, "dvrId", number);
+  htsmsg_add_str(request, "profile", m_settings->GetStreamingProfile().c_str());
+  htsmsg_t* reply = m_conn->SendAndWait(lock, "getDvrPlaybackInfo", request);
+  if (!reply)
+    return PVR_ERROR_FAILED;
+  uint32_t enabled = 0;
+  if (htsmsg_get_u32(reply, "enabled", &enabled))
+  {
+    htsmsg_destroy(reply);
+    return PVR_ERROR_FAILED;
+  }
+  if (!enabled)
+  {
+    htsmsg_destroy(reply);
+    return PVR_ERROR_NOT_IMPLEMENTED;
+  }
+  if (!htsmsg_get_u32_or_default(reply, "supported", 0))
+  {
+    const char* status = htsmsg_get_str(reply, "status");
+    Logger::Log(LogLevel::LEVEL_INFO, "Using recording file: %s",
+                status ? status : "unsupported recording format");
+    htsmsg_destroy(reply);
+    return PVR_ERROR_NOT_IMPLEMENTED;
+  }
+  const char* selected = htsmsg_get_str(reply, "profile");
+  if (!selected || !*selected)
+  {
+    htsmsg_destroy(reply);
+    return PVR_ERROR_FAILED;
+  }
+  profile = selected;
+  htsmsg_destroy(reply);
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR CTvheadend::GetRecordingStreamProperties(
+    const kodi::addon::PVRRecording& recording,
+    std::vector<kodi::addon::PVRStreamProperty>& properties)
+{
+  std::string profile;
+  const auto result = GetRecordingPlaybackProfile(recording, profile);
+  if (result != PVR_ERROR_NO_ERROR)
+    return result;
+  const std::string id = recording.GetRecordingId();
+  properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM, "pvr.hts");
+  properties.emplace_back(PVR_STREAM_PROPERTY_INPUTSTREAM_INSTANCE_ID, m_recordingContext->id);
+  properties.emplace_back(
+      PVR_STREAM_PROPERTY_STREAMURL,
+      std::string("pvr://recordings/") +
+          (recording.GetChannelType() == PVR_RECORDING_CHANNEL_TYPE_RADIO ? "radio/" : "tv/") +
+          "pvr.hts/" + id + ".pvr");
+  properties.emplace_back(PVR_STREAM_PROPERTY_MIMETYPE, "application/octet-stream");
+  properties.emplace_back(PVR_STREAM_PROPERTY_ISREALTIMESTREAM, "false");
+  properties.emplace_back("pvr.hts.recording", id);
+  properties.emplace_back("pvr.hts.profile", profile);
+  return PVR_ERROR_NO_ERROR;
+}
+
 PVR_ERROR CTvheadend::SendDvrDelete(uint32_t id, const char* method)
 {
   std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
@@ -1746,6 +1818,10 @@ bool CTvheadend::OpenRecordedStream(const kodi::addon::PVRRecording& recording, 
   if (!m_asyncState.WaitForState(ASYNC_EPG))
     return false;
 
+  // Kodi also opens this path for thumbnail/stream-detail extraction.
+  std::string profile;
+  if (GetRecordingPlaybackProfile(recording, profile) != PVR_ERROR_NOT_IMPLEMENTED)
+    return false;
   const auto vfs{std::make_shared<HTSPVFS>(m_settings, *m_conn)};
   if (!vfs->Open(recording))
     return false;

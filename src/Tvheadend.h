@@ -113,6 +113,9 @@ public:
       PVR_SOURCE source,
       std::vector<kodi::addon::PVRStreamProperty>& properties) override;
 
+  PVR_ERROR GetRecordingStreamProperties(
+      const kodi::addon::PVRRecording& recording,
+      std::vector<kodi::addon::PVRStreamProperty>& properties) override;
   PVR_ERROR GetRecordingsAmount(bool deleted, int& amount) override;
   PVR_ERROR GetRecordings(bool deleted, kodi::addon::PVRRecordingsResultSet& results) override;
   PVR_ERROR GetRecordingEdl(const kodi::addon::PVRRecording& rec,
@@ -141,6 +144,8 @@ public:
   void GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const;
 
 private:
+  PVR_ERROR GetRecordingPlaybackProfile(const kodi::addon::PVRRecording& recording,
+                                        std::string& profile);
   bool CreateTimer(const tvheadend::entity::Recording& tvhTmr, kodi::addon::PVRTimer& tmr);
 
   uint32_t GetNextUnnumberedChannelNumber();
