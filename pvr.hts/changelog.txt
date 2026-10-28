@@ -1,3 +1,9 @@
+v22.9.6
+- Fix races in the HTSP connection and subscription handling during reconnects and seeks
+- Fix a memory leak when an add-on instance is stopped
+- Translations updates from Weblate
+	- it_it
+
 v22.9.5
 - Fix exiting Kodi taking up to two seconds longer per Tvheadend connection
 

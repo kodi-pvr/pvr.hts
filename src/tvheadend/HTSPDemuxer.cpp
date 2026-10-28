@@ -15,6 +15,7 @@
 
 #include "kodi/addon-instance/PVR.h"
 
+#include <algorithm>
 #include <chrono>
 #include <condition_variable>
 #include <cstring>
@@ -93,7 +94,7 @@ void HTSPDemuxer::Abort0()
   m_streamStat.clear();
   m_rdsIdx = 0;
   m_rdsExtractor.reset();
-  m_seektime = nullptr;
+  CancelSeek();
 }
 
 
@@ -226,11 +227,18 @@ private:
 
 } // namespace tvheadend
 
+void HTSPDemuxer::CancelSeek()
+{
+  auto* pending = m_seektime.exchange(nullptr);
+  if (pending)
+    pending->Set(INVALID_SEEKTIME);
+}
+
 bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 {
   std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
-  if (!m_subscription.IsActive())
+  if (!m_subscription.IsActive() || m_seektime != nullptr)
     return false;
 
   SubscriptionSeekTime seekTime;
@@ -243,8 +251,9 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
   }
 
   /* Wait for time */
-  int64_t seekedTo = (*m_seektime).Get(lock, m_settings->GetResponseTimeout());
-  m_seektime = nullptr;
+  int64_t seekedTo = seekTime.Get(lock, m_settings->GetResponseTimeout());
+  if (m_seektime == &seekTime)
+    m_seektime = nullptr;
 
   if (seekedTo == INVALID_SEEKTIME)
   {
@@ -904,19 +913,16 @@ void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
 void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
 {
   std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
-
-  if (m_seektime == nullptr)
+  auto* pending = m_seektime.exchange(nullptr);
+  if (!pending)
     return;
-
-  int64_t s64 = 0;
-  if (htsmsg_get_s64(m, "time", &s64))
-  {
-    (*m_seektime).Set(INVALID_SEEKTIME);
-  }
+  int64_t time = 0;
+  if (htsmsg_get_s64(m, "time", &time))
+    pending->Set(INVALID_SEEKTIME);
   else
   {
-    (*m_seektime).Set(s64 < 0 ? 0 : s64);
-    Flush(); /* flush old packets (with wrong pts) */
+    Flush(); /* Old packets must be gone before the waiting seek returns. */
+    pending->Set(std::max<int64_t>(time, 0));
   }
 }
 

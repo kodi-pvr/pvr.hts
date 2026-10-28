@@ -84,6 +84,7 @@ private:
   bool ShouldStopProcessing() const { return m_stopProcessing || m_threadStop; }
 
   void Register();
+  void AbortPendingRequests();
   bool ReadMessage();
   bool SendHello(std::unique_lock<std::recursive_mutex>& lock);
   bool SendAuth(std::unique_lock<std::recursive_mutex>& lock,
