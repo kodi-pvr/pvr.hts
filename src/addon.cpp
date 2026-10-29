@@ -9,6 +9,7 @@
 
 #include "Tvheadend.h"
 #include "tvheadend/AddonSettings.h"
+#include "tvheadend/RecordingInputStream.h"
 #include "tvheadend/utilities/Logger.h"
 #include "tvheadend/utilities/SettingsMigration.h"
 
@@ -71,6 +72,14 @@ ADDON_STATUS CHTSAddon::CreateInstance(const kodi::addon::IInstanceInfo& instanc
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+  for (auto entry = m_recordingContexts.begin(); entry != m_recordingContexts.end();)
+  {
+    if (entry->second.expired())
+      entry = m_recordingContexts.erase(entry);
+    else
+      ++entry;
+  }
+
   if (instance.IsType(ADDON_INSTANCE_PVR))
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "%s: Creating PVR-Client instance", __FUNCTION__);
@@ -86,12 +95,25 @@ ADDON_STATUS CHTSAddon::CreateInstance(const kodi::addon::IInstanceInfo& instanc
       client = new CTvheadend(instance);
     }
 
+    const auto context = client->GetRecordingContext();
+    m_recordingContexts[context->id] = context;
     client->Start();
     hdl = client;
 
     return ADDON_STATUS_OK;
   }
 
+  if (instance.IsType(ADDON_INSTANCE_INPUTSTREAM))
+  {
+    const auto entry = m_recordingContexts.find(instance.GetID());
+    if (entry == m_recordingContexts.end())
+      return ADDON_STATUS_PERMANENT_FAILURE;
+    auto context = entry->second.lock();
+    if (!context)
+      return ADDON_STATUS_PERMANENT_FAILURE;
+    hdl = new RecordingInputStream(instance, std::move(context));
+    return ADDON_STATUS_OK;
+  }
   return ADDON_STATUS_UNKNOWN;
 }
 

@@ -366,6 +366,11 @@ bool HTSPConnection::ReadMessage()
       it->second->Set(msg);
       return true;
     }
+    if (htsmsg_get_str(msg, "error") || htsmsg_get_u32_or_default(msg, "noaccess", 0))
+      Logger::Log(LogLevel::LEVEL_DEBUG, "unmatched HTSP response [%u] reports an error", seq);
+    // Asynchronous controls and timed-out requests have no waiting caller.
+    htsmsg_destroy(msg);
+    return true;
   }
 
   /* Get method */
@@ -390,6 +395,19 @@ bool HTSPConnection::ReadMessage()
 /*
  * Send message to server
  */
+bool HTSPConnection::SendAsync(std::unique_lock<std::recursive_mutex>& lock,
+                               const char* method,
+                               htsmsg_t* m)
+{
+  if (!WaitForConnection(lock))
+  {
+    htsmsg_destroy(m);
+    return false;
+  }
+  htsmsg_add_u32(m, "seq", 0);
+  return SendMessage0(method, m);
+}
+
 bool HTSPConnection::SendMessage0(const char* method, htsmsg_t* msg)
 {
   uint32_t seq = 0;

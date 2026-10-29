@@ -68,6 +68,9 @@ set(HTS_SOURCES_TVHEADEND
                 src/tvheadend/InstanceSettings.cpp
                 src/tvheadend/IHTSPConnectionListener.h
                 src/tvheadend/IHTSPDemuxPacketHandler.h
+                src/tvheadend/RecordingContext.h
+                src/tvheadend/RecordingInputStream.h
+                src/tvheadend/RecordingInputStream.cpp
                 src/tvheadend/Profile.h
                 src/tvheadend/Subscription.cpp
                 src/tvheadend/Subscription.h

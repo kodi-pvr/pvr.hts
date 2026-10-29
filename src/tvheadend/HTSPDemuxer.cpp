@@ -16,11 +16,13 @@
 #include "kodi/addon-instance/PVR.h"
 
 #include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <condition_variable>
 #include <cstring>
 #include <ctime>
 
+#define DVD_TIME_TO_TVH(x) (static_cast<int64_t>((x) * 1000000.0 / STREAM_TIME_BASE))
 #define TVH_TO_DVD_TIME(x) (static_cast<double>(x) * STREAM_TIME_BASE / 1000000.0f)
 
 #define INVALID_SEEKTIME (-1)
@@ -31,14 +33,18 @@
 // Easiest way is to add a fixed offset to all stream indexes delivered by tvh and to
 // use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
 static const int TVH_STREAM_INDEX_OFFSET = 1000;
+static constexpr int RECORDING_MIN_STALLED_THRESHOLD = 5;
+static constexpr size_t RECORDING_BUFFER_SIZE = 4 * 1024 * 1024;
 
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
 HTSPDemuxer::HTSPDemuxer(const std::shared_ptr<InstanceSettings>& settings,
                          IHTSPDemuxPacketHandler& demuxPktHdl,
-                         HTSPConnection& conn)
-  : m_settings(settings),
+                         HTSPConnection& conn,
+                         bool recording)
+  : m_recording(recording),
+    m_settings(settings),
     m_conn(conn),
     m_pktBuffer(static_cast<size_t>(-1)),
     m_seektime(nullptr),
@@ -65,8 +71,8 @@ void HTSPDemuxer::RebuildState()
     std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
 
     m_subscription.SendUnsubscribe(lock);
-    m_subscription.SendSubscribe(lock, 0, 0, true);
-    m_subscription.SendSpeed(lock, 0, true);
+    m_subscription.Restart(lock);
+    m_subscription.RestoreSpeed(lock);
 
     ResetStatus(false);
   }
@@ -80,7 +86,12 @@ void HTSPDemuxer::Close0(std::unique_lock<std::recursive_mutex>& lock)
 {
   /* Send unsubscribe */
   if (m_subscription.IsActive())
-    m_subscription.SendUnsubscribe(lock);
+  {
+    if (m_recording && m_reconnecting)
+      m_subscription.SetStopped();
+    else
+      m_subscription.SendUnsubscribe(lock);
+  }
 
   /* Clear */
   Flush();
@@ -92,6 +103,8 @@ void HTSPDemuxer::Abort0()
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
   m_streams.clear();
   m_streamStat.clear();
+  m_codecNames.clear();
+  m_codecData.clear();
   m_rdsIdx = 0;
   m_rdsExtractor.reset();
   CancelSeek();
@@ -100,6 +113,17 @@ void HTSPDemuxer::Abort0()
 
 bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
 {
+  return Open0(channelId, weight);
+}
+
+bool HTSPDemuxer::OpenRecording(uint32_t dvrId)
+{
+  return Open0(dvrId, SUBSCRIPTION_WEIGHT_NORMAL);
+}
+
+bool HTSPDemuxer::Open0(uint32_t sourceId, enum eSubscriptionWeight weight)
+{
+  InterruptRecording();
   std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux open");
 
@@ -111,10 +135,23 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
   time_t lastPkt = m_lastPkt.load();
   m_lastUse.store(std::time(nullptr));
   m_lastPkt = 0;
-  m_subscription.SendSubscribe(lock, channelId, weight);
-
-  /* Reset status */
-  ResetStatus();
+  if (m_recording)
+  {
+    m_closed = false;
+    m_eof = false;
+    m_failed = false;
+    m_reconnecting = false;
+    m_position = 0;
+    m_lastMessage = std::time(nullptr);
+    ResetStatus();
+    m_subscription.SendRecordingSubscribe(lock, sourceId);
+  }
+  else
+  {
+    m_subscription.SendSubscribe(lock, sourceId, weight);
+    /* Reset status */
+    ResetStatus();
+  }
 
   /* Send unsubscribe if subscribing failed */
   if (!m_subscription.IsActive())
@@ -128,8 +165,18 @@ bool HTSPDemuxer::Open(uint32_t channelId, enum eSubscriptionWeight weight)
   return true;
 }
 
+void HTSPDemuxer::InterruptRecording()
+{
+  if (m_recording)
+  {
+    m_closed = true;
+    WakeBuffer();
+  }
+}
+
 void HTSPDemuxer::Close()
 {
+  InterruptRecording();
   std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
   Close0(lock);
   ResetStatus();
@@ -140,23 +187,40 @@ DEMUX_PACKET* HTSPDemuxer::Read()
 {
   m_lastUse.store(std::time(nullptr));
 
+  if (m_recording && m_reconnecting)
+  {
+    std::unique_lock<std::mutex> lock(m_bufferMutex);
+    m_bufferCond.wait_for(lock, std::chrono::milliseconds(100),
+                          [this] { return !m_reconnecting || m_closed; });
+    if (m_reconnecting && !m_closed)
+      return m_demuxPktHdl.AllocateDemuxPacket(0);
+  }
   DEMUX_PACKET* pkt = nullptr;
   if (m_pktBuffer.Pop(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
                 pkt->pts, static_cast<long long>(pkt->iSize));
     m_lastPkt.store(m_lastUse.load());
+    ReleaseBufferSpace(pkt);
+    if (m_recording && pkt->iSize && pkt->pts != STREAM_NOPTS_VALUE)
+      m_position = DVD_TIME_TO_TVH(pkt->pts);
     return pkt;
   }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux read nothing");
+  if (HasEnded())
+    return nullptr;
 
-  if (m_lastPkt > 0 && m_lastUse - m_lastPkt > m_settings->GetStreamStalledThreshold() &&
-      !IsPaused())
+  const int threshold = m_recording ? std::max(m_settings->GetStreamStalledThreshold(),
+                                               RECORDING_MIN_STALLED_THRESHOLD)
+                                    : m_settings->GetStreamStalledThreshold();
+  const time_t last = m_recording ? m_lastMessage.load() : m_lastPkt.load();
+  if (last > 0 && m_lastUse - last > threshold && !IsPaused() &&
+      (!m_recording || (!m_reconnecting && m_seektime == nullptr && !m_closed)))
   {
     Logger::Log(LogLevel::LEVEL_WARNING,
-                "demux read no data for at least %d secs; restarting connection",
-                m_settings->GetStreamStalledThreshold());
+                "demux read no data for at least %d secs; restarting connection", threshold);
     m_lastPkt = 0;
+    m_lastMessage = 0;
     m_conn.Disconnect();
   }
   return m_demuxPktHdl.AllocateDemuxPacket(0);
@@ -166,9 +230,13 @@ void HTSPDemuxer::Flush()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
 
+  std::lock_guard<std::recursive_mutex> guard(m_mutex);
   DEMUX_PACKET* pkt = nullptr;
   while (m_pktBuffer.Pop(pkt))
+  {
+    ReleaseBufferSpace(pkt);
     m_demuxPktHdl.FreeDemuxPacket(pkt);
+  }
 }
 
 void HTSPDemuxer::Trim()
@@ -187,6 +255,8 @@ void HTSPDemuxer::Abort()
 {
   Logger::Log(LogLevel::LEVEL_TRACE, "demux abort");
 
+  if (m_recording)
+    EndRecording();
   std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
   Abort0();
   ResetStatus();
@@ -232,21 +302,39 @@ void HTSPDemuxer::CancelSeek()
   auto* pending = m_seektime.exchange(nullptr);
   if (pending)
     pending->Set(INVALID_SEEKTIME);
+  WakeBuffer();
 }
 
 bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 {
   std::unique_lock<std::recursive_mutex> lock(m_conn.Mutex());
+  /* Like Kodi's own demuxer: a seek before the start of a recording plays
+   * from the start, but reports a failure, so that a rewind ends there. */
+  if (m_recording && time < 0)
+  {
+    Seek0(lock, 0, startpts, false);
+    return false;
+  }
+  return Seek0(lock, time, startpts, false);
+}
 
-  if (!m_subscription.IsActive() || m_seektime != nullptr)
+bool HTSPDemuxer::Seek0(std::unique_lock<std::recursive_mutex>& lock,
+                        double time,
+                        double& startpts,
+                        bool restart)
+{
+  if (!m_subscription.IsActive() || m_seektime != nullptr ||
+      (m_recording && (m_closed || (!restart && m_reconnecting))))
     return false;
 
   SubscriptionSeekTime seekTime;
   m_seektime = &seekTime;
+  WakeBuffer();
 
-  if (!m_subscription.SendSeek(lock, time))
+  if (!(restart ? m_subscription.RestoreSeek(lock, time) : m_subscription.SendSeek(lock, time)))
   {
     m_seektime = nullptr;
+    WakeBuffer();
     return false;
   }
 
@@ -254,6 +342,7 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
   int64_t seekedTo = seekTime.Get(lock, m_settings->GetResponseTimeout());
   if (m_seektime == &seekTime)
     m_seektime = nullptr;
+  WakeBuffer();
 
   if (seekedTo == INVALID_SEEKTIME)
   {
@@ -264,9 +353,35 @@ bool HTSPDemuxer::Seek(double time, bool, double& startpts)
 
   /* Store */
   startpts = TVH_TO_DVD_TIME(seekedTo);
+  if (m_recording)
+  {
+    m_position = seekedTo;
+    m_lastMessage = std::time(nullptr);
+  }
   Logger::Log(LogLevel::LEVEL_TRACE, "demux seek startpts = %lf", startpts);
 
   return true;
+}
+
+void HTSPDemuxer::SuspendRecording()
+{
+  m_reconnecting = true;
+  CancelSeek();
+  WakeBuffer();
+}
+
+bool HTSPDemuxer::RestartRecording(std::unique_lock<std::recursive_mutex>& lock)
+{
+  if (m_closed || HasEnded())
+    return false;
+  const double time = std::max<int64_t>(m_position, 0) / 1000.0;
+  Flush();
+  m_subscription.Restart(lock);
+  if (!m_subscription.IsActive())
+    return false;
+  m_subscription.RestoreSpeed(lock);
+  double landed = 0;
+  return Seek0(lock, time, landed, true);
 }
 
 void HTSPDemuxer::Speed(int speed)
@@ -282,6 +397,13 @@ void HTSPDemuxer::Speed(int speed)
     m_lastPkt = 0;
   }
 
+  if (m_recording)
+  {
+    m_lastMessage = std::time(nullptr);
+    m_subscription.SendSpeedAsync(lock, speed);
+    m_requestedSpeed = speed;
+    return;
+  }
   if ((speed != m_requestedSpeed || speed == 0) && m_actualSpeed == m_subscription.GetSpeed())
   {
     m_subscription.SendSpeed(lock, speed);
@@ -392,6 +514,14 @@ PVR_ERROR HTSPDemuxer::GetStreamTimes(kodi::addon::PVRStreamTimes& times) const
 
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+  if (m_recording)
+  {
+    times.SetStartTime(0);
+    times.SetPTSStart(0);
+    times.SetPTSBegin(0);
+    times.SetPTSEnd(static_cast<int64_t>(TVH_TO_DVD_TIME(m_duration)));
+    return PVR_ERROR_NO_ERROR;
+  }
   times.SetStartTime(m_startTime);
   times.SetPTSStart(0);
   times.SetPTSBegin(static_cast<int64_t>(TVH_TO_DVD_TIME(m_timeshiftStatus.start)));
@@ -452,6 +582,7 @@ void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
   {
     m_sourceInfo.Clear(); // only send once with subscriptionStart response
     m_startTime = 0;
+    m_duration = 0;
   }
 }
 
@@ -461,6 +592,13 @@ void HTSPDemuxer::ResetStatus(bool resetSubscriptionData /* = true */)
 
 void HTSPDemuxer::ProcessSubscriptionStatus(htsmsg_t* m)
 {
+  if (m_recording)
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    if (!htsmsg_get_s64(m, "duration", &m_duration) && !htsmsg_get_str(m, "status") &&
+        !htsmsg_get_str(m, "subscriptionError"))
+      return;
+  }
   const eSubsriptionState prevState = m_subscription.GetState();
 
   m_subscription.ParseSubscriptionStatus(m);
@@ -473,12 +611,14 @@ void HTSPDemuxer::ProcessSubscriptionStatus(htsmsg_t* m)
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
     pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-    m_pktBuffer.Push(pkt);
+    QueuePacket(pkt);
   }
 }
 
 bool HTSPDemuxer::ProcessMessage(const std::string& method, htsmsg_t* m)
 {
+  if (m_recording)
+    m_lastMessage = std::time(nullptr);
   /* Subscription messages */
   if (method == "muxpkt")
     ParseMuxPacket(m);
@@ -534,7 +674,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
       DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
       pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-      m_pktBuffer.Push(pktSpecial);
+      QueuePacket(pktSpecial);
     }
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
@@ -548,13 +688,82 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
     pkt->iSize = rdslen;
     pkt->iStreamId = rdsIdx;
 
-    m_pktBuffer.Push(pkt);
+    QueuePacket(pkt);
   }
   m_rdsExtractor->Reset();
 }
 
+void HTSPDemuxer::WakeBuffer()
+{
+  std::lock_guard<std::mutex> lock(m_bufferMutex);
+  m_bufferCond.notify_all();
+}
+
+void HTSPDemuxer::QueuePacket(DEMUX_PACKET* packet)
+{
+  if (m_recording)
+  {
+    std::lock_guard<std::mutex> lock(m_bufferMutex);
+    if (m_closed || m_reconnecting)
+    {
+      m_demuxPktHdl.FreeDemuxPacket(packet);
+      return;
+    }
+    m_bufferBytes += std::max(packet->iSize, 0);
+  }
+  m_pktBuffer.Push(packet);
+}
+
+void HTSPDemuxer::ReleaseBufferSpace(const DEMUX_PACKET* packet)
+{
+  if (m_recording)
+  {
+    std::lock_guard<std::mutex> lock(m_bufferMutex);
+    const size_t size = std::max(packet->iSize, 0);
+    m_bufferBytes -= std::min(m_bufferBytes, size);
+    m_bufferCond.notify_all();
+  }
+}
+
+void HTSPDemuxer::EndRecording()
+{
+  m_closed = true;
+  m_eof = true;
+  m_reconnecting = false;
+  WakeBuffer();
+}
+
+bool HTSPDemuxer::GetCodecName(int streamId, std::string& name) const
+{
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  const auto it = m_codecNames.find(streamId);
+  if (it == m_codecNames.end())
+    return false;
+  name = it->second;
+  return true;
+}
+
+std::vector<uint8_t> HTSPDemuxer::GetCodecData(int streamId) const
+{
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  const auto it = m_codecData.find(streamId);
+  return it != m_codecData.end() ? it->second : std::vector<uint8_t>();
+}
+
 void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
 {
+  if (m_recording)
+  {
+    std::unique_lock<std::mutex> lock(m_bufferMutex);
+    m_bufferCond.wait(lock,
+                      [this]
+                      {
+                        return m_closed || m_reconnecting || m_seektime != nullptr ||
+                               m_bufferBytes < RECORDING_BUFFER_SIZE;
+                      });
+    if (m_closed || m_reconnecting)
+      return;
+  }
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
   /* Ignore packets while switching channels */
@@ -633,10 +842,11 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
       // first paket for this subscription
       m_startTime = std::time(nullptr);
     }
-    m_pktBuffer.Push(pkt);
+    QueuePacket(pkt);
 
     // Process RDS data, if present.
-    ProcessRDS(idx, bin, binlen);
+    if (!m_recording)
+      ProcessRDS(idx, bin, binlen);
   }
   else
     m_demuxPktHdl.FreeDemuxPacket(pkt);
@@ -789,6 +999,19 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
   {
     Logger::Log(LogLevel::LEVEL_DEBUG, "  id: %d, type %s, codec: %u", idx, type,
                 stream.GetCodecId());
+    if (m_recording)
+    {
+      std::transform(codecName.begin(), codecName.end(), codecName.begin(),
+                     [](unsigned char value) { return std::tolower(value); });
+      m_codecNames[idx] = codecName;
+      const void* data = nullptr;
+      size_t size = 0;
+      if (!htsmsg_get_bin(&f->hmf_msg, "meta", &data, &size))
+      {
+        const auto* bytes = static_cast<const uint8_t*>(data);
+        m_codecData[idx] = std::vector<uint8_t>(bytes, bytes + size);
+      }
+    }
     m_streams.emplace_back(std::move(stream));
     return true;
   }
@@ -815,8 +1038,15 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 
   m_streamStat.clear();
   m_streams.clear();
+  m_codecNames.clear();
+  m_codecData.clear();
   m_rdsIdx = 0;
   m_rdsExtractor.reset();
+  if (m_recording)
+  {
+    htsmsg_get_s64(m, "duration", &m_duration);
+    m_subscription.ParseSubscriptionStatus(m);
+  }
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
 
@@ -844,7 +1074,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 
   DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
   pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-  m_pktBuffer.Push(pkt);
+  QueuePacket(pkt);
 
   /* Source data */
   ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
@@ -906,8 +1136,23 @@ void HTSPDemuxer::ParseSourceInfo(htsmsg_t* m)
   }
 }
 
-void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t*)
+void HTSPDemuxer::ParseSubscriptionStop(htsmsg_t* message)
 {
+  if (m_recording)
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_conn.Mutex());
+    CancelSeek();
+    const char* error = htsmsg_get_str(message, "subscriptionError");
+    m_eof = !error && htsmsg_get_u32_or_default(message, "eof", 0);
+    m_failed = !m_eof;
+    if (m_failed)
+    {
+      Logger::Log(LogLevel::LEVEL_ERROR, "Recording playback failed: %s",
+                  error ? error : "missing EOF confirmation");
+      m_subscription.ParseSubscriptionStatus(message);
+    }
+    WakeBuffer();
+  }
 }
 
 void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
@@ -916,14 +1161,22 @@ void HTSPDemuxer::ParseSubscriptionSkip(htsmsg_t* m)
   auto* pending = m_seektime.exchange(nullptr);
   if (!pending)
     return;
+
   int64_t time = 0;
   if (htsmsg_get_s64(m, "time", &time))
     pending->Set(INVALID_SEEKTIME);
   else
   {
     Flush(); /* Old packets must be gone before the waiting seek returns. */
+    if (m_recording)
+    {
+      m_eof = false;
+      m_failed = false;
+      m_reconnecting = false;
+    }
     pending->Set(std::max<int64_t>(time, 0));
   }
+  WakeBuffer();
 }
 
 void HTSPDemuxer::ParseSubscriptionSpeed(htsmsg_t* m)
