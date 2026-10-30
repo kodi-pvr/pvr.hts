@@ -322,27 +322,43 @@ void HTSPConnection::Disconnect()
 bool HTSPConnection::ReadMessage()
 {
   /* Read 4 byte len */
-  uint8_t lb[4];
-  size_t len = static_cast<size_t>(m_socket->Read(&lb, sizeof(lb)));
-  if (len != sizeof(lb))
+  constexpr int64_t kHeaderSize = 4;
+  uint8_t lb[kHeaderSize];
+  const int64_t read = m_socket->Read(&lb, kHeaderSize);
+  if (read != kHeaderSize)
     return false;
 
-  len = (lb[0] << 24) + (lb[1] << 16) + (lb[2] << 8) + lb[3];
+  const size_t len = (static_cast<size_t>(lb[0]) << 24) + (static_cast<size_t>(lb[1]) << 16) +
+                     (static_cast<size_t>(lb[2]) << 8) + lb[3];
+
+  /* Real HTSP messages are far smaller (the biggest are fileRead replies, sized by
+     Kodi's read buffer). Anything above this means a desynced/corrupt stream. */
+  constexpr size_t kMaxPacketSize = 4 * 1024 * 1024;
+  if (len == 0 || len > kMaxPacketSize)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "invalid packet length %zu, dropping connection", len);
+    return false;
+  }
 
   /* Read rest of packet */
   uint8_t* buf = static_cast<uint8_t*>(malloc(len));
+  if (!buf)
+  {
+    Logger::Log(LogLevel::LEVEL_ERROR, "failed to allocate %zu bytes for packet", len);
+    return false;
+  }
   size_t cnt = 0;
   while (cnt < len)
   {
-    size_t r =
-        static_cast<size_t>(m_socket->Read(buf + cnt, len - cnt, m_settings->GetResponseTimeout()));
-    if (r < 0)
+    const int64_t r =
+        m_socket->Read(buf + cnt, static_cast<int64_t>(len - cnt), m_settings->GetResponseTimeout());
+    if (r <= 0)
     {
       Logger::Log(LogLevel::LEVEL_ERROR, "failed to read packet from socket");
       free(buf);
       return false;
     }
-    cnt += r;
+    cnt += static_cast<size_t>(r);
   }
 
   /* Deserialize */
