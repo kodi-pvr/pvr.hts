@@ -9,12 +9,14 @@
 
 #include "kodi/AddonBase.h"
 
+#include <map>
 #include <memory>
 #include <mutex>
 
 namespace tvheadend
 {
 class AddonSettings;
+struct RecordingContext;
 }
 
 class ATTR_DLL_LOCAL CHTSAddon : public kodi::addon::CAddonBase
@@ -31,4 +33,5 @@ public:
 private:
   std::recursive_mutex m_mutex;
   std::shared_ptr<tvheadend::AddonSettings> m_settings;
+  std::map<std::string, std::weak_ptr<tvheadend::RecordingContext>> m_recordingContexts;
 };

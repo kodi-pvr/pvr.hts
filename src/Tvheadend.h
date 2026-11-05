@@ -50,6 +50,7 @@ class HTSPConnection;
 class HTSPDemuxer;
 class HTSPVFS;
 class InstanceSettings;
+struct RecordingContext;
 } // namespace tvheadend
 
 /* Typedefs */
@@ -66,6 +67,11 @@ class ATTR_DLL_LOCAL CTvheadend : public kodi::addon::CInstancePVRClient,
 public:
   CTvheadend(const kodi::addon::IInstanceInfo& instance);
   ~CTvheadend() override;
+
+  std::shared_ptr<tvheadend::RecordingContext> GetRecordingContext() const
+  {
+    return m_recordingContext;
+  }
 
   void Start();
   void Stop();
@@ -107,6 +113,9 @@ public:
       PVR_SOURCE source,
       std::vector<kodi::addon::PVRStreamProperty>& properties) override;
 
+  PVR_ERROR GetRecordingStreamProperties(
+      const kodi::addon::PVRRecording& recording,
+      std::vector<kodi::addon::PVRStreamProperty>& properties) override;
   PVR_ERROR GetRecordingsAmount(bool deleted, int& amount) override;
   PVR_ERROR GetRecordings(bool deleted, kodi::addon::PVRRecordingsResultSet& results) override;
   PVR_ERROR GetRecordingEdl(const kodi::addon::PVRRecording& rec,
@@ -135,6 +144,8 @@ public:
   void GetLivetimeValues(std::vector<kodi::addon::PVRTypeIntValue>& lifetimeValues) const;
 
 private:
+  PVR_ERROR GetRecordingPlaybackProfile(const kodi::addon::PVRRecording& recording,
+                                        std::string& profile);
   bool CreateTimer(const tvheadend::entity::Recording& tvhTmr, kodi::addon::PVRTimer& tmr);
 
   uint32_t GetNextUnnumberedChannelNumber();
@@ -277,6 +288,7 @@ public:
   std::shared_ptr<tvheadend::InstanceSettings> m_settings;
 
   tvheadend::HTSPConnection* m_conn;
+  std::shared_ptr<tvheadend::RecordingContext> m_recordingContext;
 
   const tvheadend::CustomTimerProperties m_customTimerProps;
 

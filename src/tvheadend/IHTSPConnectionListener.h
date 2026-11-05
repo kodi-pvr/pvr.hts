@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include "kodi/addon-instance/pvr/General.h"
+
 #include <mutex>
+#include <string>
 
 extern "C"
 {

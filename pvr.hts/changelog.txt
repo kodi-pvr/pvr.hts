@@ -1,3 +1,6 @@
+v22.10.0
+- Add support for playing recordings through the backend streaming profile (HTSPv46+)
+
 v22.9.6
 - Fix races in the HTSP connection and subscription handling during reconnects and seeks
 - Fix a memory leak when an add-on instance is stopped
