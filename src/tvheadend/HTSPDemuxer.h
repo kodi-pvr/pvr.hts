@@ -99,6 +99,7 @@ private:
    * @param resetStartTime if true, all subscription-related data will be reset
    */
   void ResetStatus(bool resetSubscriptionData = true);
+  void RestartStallDetection();
 
   void ParseMuxPacket(htsmsg_t* m);
   void ParseSourceInfo(htsmsg_t* m);

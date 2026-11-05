@@ -279,7 +279,10 @@ void HTSPDemuxer::Speed(int speed)
   if (speed != 0)
   {
     speed = SPEED_NORMAL;
-    m_lastPkt = 0;
+
+    /* Fresh detection window only when resuming from pause */
+    if (m_subscription.GetSpeed() == 0)
+      RestartStallDetection();
   }
 
   if ((speed != m_requestedSpeed || speed == 0) && m_actualSpeed == m_subscription.GetSpeed())
@@ -432,7 +435,17 @@ bool HTSPDemuxer::IsPaused() const
 void HTSPDemuxer::Pause(bool paused)
 {
   if (!paused)
-    m_lastPkt = 0;
+    RestartStallDetection();
+}
+
+void HTSPDemuxer::RestartStallDetection()
+{
+  /* Re-arm instead of disarming (m_lastPkt = 0), otherwise a dead stream is never detected.
+   * 0 stays 0, CAS avoids re-arming after a concurrent stall was handled in Read(). */
+  time_t cur = m_lastPkt.load();
+  while (cur > 0 && !m_lastPkt.compare_exchange_weak(cur, std::time(nullptr)))
+  {
+  }
 }
 
 void HTSPDemuxer::SetStreamingProfile(const std::string& profile)
