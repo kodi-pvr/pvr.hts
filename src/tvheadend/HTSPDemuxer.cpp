@@ -32,6 +32,14 @@
 // use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
 static const int TVH_STREAM_INDEX_OFFSET = 1000;
 
+// Upper limit for the payload queued for Kodi. Kodi normally consumes packets as fast as they
+// arrive, so the queue stays small. But if Kodi stops reading while the subscription keeps
+// running (e.g. on Android when the display/HDMI sink goes away while live TV is playing), tvh
+// keeps sending and the queue would grow without bound until the OS kills Kodi (observed
+// ~30 MB/min growth for a DVB-T2 HD channel). Once the limit is exceeded, the stale backlog is
+// discarded and playback resumes from live.
+static const size_t MAX_PKT_BUFFER_BYTES = 128 * 1024 * 1024;
+
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -141,7 +149,7 @@ DEMUX_PACKET* HTSPDemuxer::Read()
   m_lastUse.store(std::time(nullptr));
 
   DEMUX_PACKET* pkt = nullptr;
-  if (m_pktBuffer.Pop(pkt, 100))
+  if (PopPacket(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
                 pkt->pts, static_cast<long long>(pkt->iSize));
@@ -167,7 +175,7 @@ void HTSPDemuxer::Flush()
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
 
   DEMUX_PACKET* pkt = nullptr;
-  while (m_pktBuffer.Pop(pkt))
+  while (PopPacket(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
 
@@ -179,8 +187,46 @@ void HTSPDemuxer::Trim()
    * playback without buffering. This depends on the bitrate, so we don't set
    * this too small. */
   DEMUX_PACKET* pkt = nullptr;
-  while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
+  while (m_pktBuffer.Size() > 512 && PopPacket(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
+}
+
+void HTSPDemuxer::PushPacket(DEMUX_PACKET* pkt)
+{
+  const size_t size = pkt->iSize > 0 ? static_cast<size_t>(pkt->iSize) : 0;
+  m_pktBuffer.Push(pkt);
+  const size_t buffered = (m_pktBufferBytes += size);
+
+  if (buffered <= MAX_PKT_BUFFER_BYTES)
+    return;
+
+  Logger::Log(LogLevel::LEVEL_WARNING,
+              "demux packet buffer exceeded %zu bytes (%zu packets queued), Kodi does not seem "
+              "to consume packets; discarding backlog",
+              MAX_PKT_BUFFER_BYTES, m_pktBuffer.Size());
+
+  Flush();
+
+  // Let Kodi re-read the stream properties before it continues with live packets.
+  DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
+  if (pktSpecial)
+  {
+    pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
+    m_pktBuffer.Push(pktSpecial);
+  }
+}
+
+bool HTSPDemuxer::PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs /* = 0 */)
+{
+  if (!m_pktBuffer.Pop(pkt, timeoutMs))
+    return false;
+
+  const size_t size = pkt->iSize > 0 ? static_cast<size_t>(pkt->iSize) : 0;
+  size_t buffered = m_pktBufferBytes.load();
+  while (!m_pktBufferBytes.compare_exchange_weak(buffered, buffered > size ? buffered - size : 0))
+  {
+  }
+  return true;
 }
 
 void HTSPDemuxer::Abort()
@@ -486,7 +532,7 @@ void HTSPDemuxer::ProcessSubscriptionStatus(htsmsg_t* m)
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
     pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
   }
 }
 
@@ -547,7 +593,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
       DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
       pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-      m_pktBuffer.Push(pktSpecial);
+      PushPacket(pktSpecial);
     }
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
@@ -561,7 +607,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
     pkt->iSize = rdslen;
     pkt->iStreamId = rdsIdx;
 
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
   }
   m_rdsExtractor->Reset();
 }
@@ -646,7 +692,7 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
       // first paket for this subscription
       m_startTime = std::time(nullptr);
     }
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
 
     // Process RDS data, if present.
     ProcessRDS(idx, bin, binlen);
@@ -857,7 +903,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 
   DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
   pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-  m_pktBuffer.Push(pkt);
+  PushPacket(pkt);
 
   /* Source data */
   ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
