@@ -99,6 +99,14 @@ private:
    * @param resetStartTime if true, all subscription-related data will be reset
    */
   void ResetStatus(bool resetSubscriptionData = true);
+
+  /**
+   * Queue a demux packet for Kodi. Keeps track of the buffered payload size and discards the
+   * backlog if Kodi stops consuming packets (see MAX_PKT_BUFFER_BYTES).
+   */
+  void PushPacket(DEMUX_PACKET* pkt);
+  bool PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs = 0);
+
   void RestartStallDetection();
 
   void ParseMuxPacket(htsmsg_t* m);
@@ -122,6 +130,7 @@ private:
   std::shared_ptr<InstanceSettings> m_settings;
   HTSPConnection& m_conn;
   tvheadend::utilities::SyncedBuffer<DEMUX_PACKET*> m_pktBuffer;
+  std::atomic<size_t> m_pktBufferBytes{0};
   std::vector<kodi::addon::PVRStreamProperties> m_streams;
   std::map<int, int> m_streamStat;
   std::atomic<SubscriptionSeekTime*> m_seektime;
