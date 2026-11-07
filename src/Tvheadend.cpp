@@ -3155,29 +3155,22 @@ void CTvheadend::ParseEventAddOrUpdate(htsmsg_t* msg, bool bAdd)
   /* create/update event */
   EventUids& events = sched.GetEvents();
 
-  bool bUpdated = false;
-  if (bAdd && m_asyncState.GetState() == ASYNC_DONE)
-  {
-    // After a reconnect, during processing of "enableAsyncMetadata" htsp
-    // method, tvheadend sends all events as "added". Check whether we
-    // announced the event already and in case send it as "updated" to Kodi.
-    auto it = events.find(evt.GetId());
-    if (it != events.end())
-    {
-      bUpdated = true;
+  // tvheadend announces all events again after a reconnect
+  const uint64_t hash = evt.GetHash();
+  const auto it = events.find(evt.GetId());
+  const bool bUpdated = (it != events.end());
 
-      Entity& ent = it->second;
-      ent.SetId(evt.GetId());
-      ent.SetDirty(false);
-    }
+  if (bUpdated && it->second.GetHash() == hash)
+  {
+    // Kodi has this event already; announcing it again only fills Kodi's EPG update queue
+    it->second.SetDirty(false);
+    return;
   }
 
-  if (!bUpdated)
-  {
-    Entity& ent = events[evt.GetId()];
-    ent.SetId(evt.GetId());
-    ent.SetDirty(false);
-  }
+  EventEntry& ent = events[evt.GetId()];
+  ent.SetId(evt.GetId());
+  ent.SetHash(hash);
+  ent.SetDirty(false);
 
   Logger::Log(LogLevel::LEVEL_TRACE, "event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
               evt.GetId(), evt.GetChannel(), static_cast<int>(evt.GetStart()),

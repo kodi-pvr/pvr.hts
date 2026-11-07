@@ -21,8 +21,21 @@ class Schedule;
 typedef std::pair<int, Schedule> ScheduleMapEntry;
 typedef std::map<int, Schedule> Schedules;
 
-typedef std::pair<uint32_t, Entity> EventUidsMapEntry;
-typedef std::map<uint32_t, Entity> EventUids;
+/**
+ * An event announced to Kodi: uid plus a hash of its content, to detect unchanged re-announcements.
+ */
+class EventEntry : public Entity
+{
+public:
+  uint64_t GetHash() const { return m_hash; }
+  void SetHash(uint64_t hash) { m_hash = hash; }
+
+private:
+  uint64_t m_hash{0};
+};
+
+typedef std::pair<uint32_t, EventEntry> EventUidsMapEntry;
+typedef std::map<uint32_t, EventEntry> EventUids;
 
 /**
  * Represents a schedule. A schedule has a channel and a bunch of events.

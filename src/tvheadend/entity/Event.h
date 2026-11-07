@@ -64,6 +64,9 @@ public:
 
   bool operator!=(const Event& other) const { return !(*this == other); }
 
+  /** @return 64 bit hash over the same properties as operator== */
+  uint64_t GetHash() const;
+
   uint32_t GetNext() const { return m_next; }
   void SetNext(uint32_t next) { m_next = next; }
 
