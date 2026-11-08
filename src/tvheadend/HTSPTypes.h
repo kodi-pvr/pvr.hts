@@ -137,7 +137,7 @@ struct SHTSPEvent
 
   bool operator==(const SHTSPEvent& right) const
   {
-    return m_type == right.m_type && m_epg == right.m_epg && m_state && right.m_state;
+    return m_type == right.m_type && m_epg == right.m_epg && m_state == right.m_state;
   }
 
   bool operator!=(const SHTSPEvent& right) const { return !(*this == right); }
