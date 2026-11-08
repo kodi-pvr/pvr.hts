@@ -3302,6 +3302,7 @@ bool CTvheadend::OpenLiveStream(const kodi::addon::PVRChannel& chn)
         m_streamchange = true;
       }
 
+      m_replayAIT = true;
       m_playingLiveStream = true;
       return true;
     }
@@ -3340,6 +3341,13 @@ DEMUX_PACKET* CTvheadend::DemuxRead()
     pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
     m_streamchange = false;
     return pkt;
+  }
+
+  if (m_replayAIT)
+  {
+    /* Kodi flushes the demuxer while opening, so the AIT copies go in afterwards. */
+    m_replayAIT = false;
+    m_dmx_active->ReplayAIT();
   }
 
   for (auto* dmx : m_dmx)
