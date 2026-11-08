@@ -1,3 +1,9 @@
+v22.9.7
+- Fix a possible crash when the connection to the Tvheadend server breaks
+- Fix stalled playback not being detected after pausing or seeking
+- Fix programmes removed on the server sometimes remaining in the TV guide
+- Fix HbbTV information missing when switching back to a recently watched channel
+
 v22.9.6
 - Fix races in the HTSP connection and subscription handling during reconnects and seeks
 - Fix a memory leak when an add-on instance is stopped
