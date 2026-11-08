@@ -63,6 +63,13 @@ public:
   DEMUX_PACKET* Read();
   void Trim();
   void Flush();
+
+  /**
+   * Queue the AIT sections received for this subscription again. Needed when a
+   * pre-tuned subscription becomes the active one: the sections are sent once
+   * per subscription and the buffered copy is trimmed away while pre-tuned.
+   */
+  void ReplayAIT();
   void Abort();
   bool Seek(double time, bool backwards, double& startpts);
   void Speed(int speed);
@@ -134,6 +141,8 @@ private:
   std::atomic<time_t> m_lastPkt;
   std::atomic<time_t> m_startTime;
   uint32_t m_rdsIdx;
+  uint32_t m_aitIdx = 0;
+  std::vector<std::vector<uint8_t>> m_aitPackets;
   std::unique_ptr<utilities::RDSExtractor> m_rdsExtractor;
   int32_t m_requestedSpeed = 1000;
   int32_t m_actualSpeed = 1000;

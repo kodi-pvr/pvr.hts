@@ -93,6 +93,8 @@ void HTSPDemuxer::Abort0()
   m_streams.clear();
   m_streamStat.clear();
   m_rdsIdx = 0;
+  m_aitIdx = 0;
+  m_aitPackets.clear();
   m_rdsExtractor.reset();
   CancelSeek();
 }
@@ -308,6 +310,25 @@ void HTSPDemuxer::FillBuffer(bool mode)
   }
 
   m_requestedSpeed = speed;
+}
+
+void HTSPDemuxer::ReplayAIT()
+{
+  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+  for (const auto& data : m_aitPackets)
+  {
+    DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(static_cast<int>(data.size()));
+    if (!pkt)
+      return;
+
+    std::memcpy(pkt->pData, data.data(), data.size());
+    pkt->iSize = static_cast<int>(data.size());
+    pkt->iStreamId = m_aitIdx;
+    pkt->dts = STREAM_NOPTS_VALUE;
+    pkt->pts = STREAM_NOPTS_VALUE;
+    m_pktBuffer.Push(pkt);
+  }
 }
 
 void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)
@@ -646,6 +667,13 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
       // first paket for this subscription
       m_startTime = std::time(nullptr);
     }
+
+    // AIT sections are sent once per subscription. Keep them to replay them when a
+    // pre-tuned subscription is switched to, after Trim() has dropped the buffered copy.
+    if (idx == m_aitIdx)
+      m_aitPackets.emplace_back(static_cast<const uint8_t*>(bin),
+                                static_cast<const uint8_t*>(bin) + binlen);
+
     m_pktBuffer.Push(pkt);
 
     // Process RDS data, if present.
@@ -734,6 +762,10 @@ bool HTSPDemuxer::AddTVHStream(uint32_t idx, const char* type, htsmsg_field_t* f
     if (language)
       stream.SetLanguage(language);
   }
+
+  /* AIT (HbbTV signalling) */
+  if (!std::strcmp("HBBTV", type))
+    m_aitIdx = idx;
 
   /* RDS */
   if (stream.GetCodecType() == PVR_CODEC_TYPE_RDS)
@@ -829,6 +861,8 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   m_streamStat.clear();
   m_streams.clear();
   m_rdsIdx = 0;
+  m_aitIdx = 0;
+  m_aitPackets.clear();
   m_rdsExtractor.reset();
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
