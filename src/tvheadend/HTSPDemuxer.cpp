@@ -312,23 +312,25 @@ void HTSPDemuxer::FillBuffer(bool mode)
   m_requestedSpeed = speed;
 }
 
-void HTSPDemuxer::ReplayAIT()
+std::vector<DEMUX_PACKET*> HTSPDemuxer::AITPackets()
 {
   std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
+  std::vector<DEMUX_PACKET*> packets;
   for (const auto& data : m_aitPackets)
   {
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(static_cast<int>(data.size()));
     if (!pkt)
-      return;
+      break;
 
     std::memcpy(pkt->pData, data.data(), data.size());
     pkt->iSize = static_cast<int>(data.size());
     pkt->iStreamId = m_aitIdx;
     pkt->dts = STREAM_NOPTS_VALUE;
     pkt->pts = STREAM_NOPTS_VALUE;
-    m_pktBuffer.Push(pkt);
+    packets.push_back(pkt);
   }
+  return packets;
 }
 
 void HTSPDemuxer::Weight(enum eSubscriptionWeight weight)

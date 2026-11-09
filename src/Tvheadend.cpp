@@ -3302,7 +3302,9 @@ bool CTvheadend::OpenLiveStream(const kodi::addon::PVRChannel& chn)
         m_streamchange = true;
       }
 
-      m_replayAIT = true;
+      DropAITReplay();
+      for (DEMUX_PACKET* pkt : dmx->AITPackets())
+        m_aitReplay.push_back(pkt);
       m_playingLiveStream = true;
       return true;
     }
@@ -3343,11 +3345,13 @@ DEMUX_PACKET* CTvheadend::DemuxRead()
     return pkt;
   }
 
-  if (m_replayAIT)
+  if (!m_aitReplay.empty())
   {
-    /* Kodi flushes the demuxer while opening, so the AIT copies go in afterwards. */
-    m_replayAIT = false;
-    m_dmx_active->ReplayAIT();
+    /* The lingering subscription has buffered up to a buffer full of packets, which
+     * Kodi drains at playback speed. The AIT must not wait behind them. */
+    pkt = m_aitReplay.front();
+    m_aitReplay.pop_front();
+    return pkt;
   }
 
   for (auto* dmx : m_dmx)
@@ -3362,6 +3366,8 @@ DEMUX_PACKET* CTvheadend::DemuxRead()
 
 void CTvheadend::CloseLiveStream()
 {
+  DropAITReplay();
+
   // If predictive tuning is active, demuxers will be closed automatically once they are expired.
   if (m_dmx.size() == 1)
     m_dmx_active->Close();
@@ -3371,14 +3377,23 @@ void CTvheadend::CloseLiveStream()
 
 void CTvheadend::DemuxFlush()
 {
+  DropAITReplay();
   m_dmx_active->Flush();
 }
 
 void CTvheadend::DemuxAbort()
 {
+  DropAITReplay();
   // If predictive tuning is active, demuxers will be closed/aborted automatically once they are expired.
   if (m_dmx.size() == 1)
     m_dmx_active->Abort();
+}
+
+void CTvheadend::DropAITReplay()
+{
+  for (DEMUX_PACKET* pkt : m_aitReplay)
+    kodi::addon::CInstancePVRClient::FreeDemuxPacket(pkt);
+  m_aitReplay.clear();
 }
 
 bool CTvheadend::SeekTime(double time, bool backward, double& startpts)
