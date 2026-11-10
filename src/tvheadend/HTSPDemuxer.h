@@ -65,11 +65,11 @@ public:
   void Flush();
 
   /**
-   * Queue the AIT sections received for this subscription again. Needed when a
-   * pre-tuned subscription becomes the active one: the sections are sent once
-   * per subscription and the buffered copy is trimmed away while pre-tuned.
+   * Copies of the AIT sections received for this subscription, as demux packets.
+   * Needed when a lingering subscription becomes the active one: the sections
+   * are sent once per subscription and the buffered copy may be trimmed away.
    */
-  void ReplayAIT();
+  std::vector<DEMUX_PACKET*> AITPackets();
   void Abort();
   bool Seek(double time, bool backwards, double& startpts);
   void Speed(int speed);

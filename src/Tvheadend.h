@@ -33,6 +33,7 @@ extern "C"
 #include "kodi/addon-instance/PVR.h"
 #include "kodi/tools/Thread.h"
 
+#include <deque>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -283,7 +284,8 @@ public:
   std::vector<tvheadend::HTSPDemuxer*> m_dmx;
   tvheadend::HTSPDemuxer* m_dmx_active;
   bool m_streamchange;
-  bool m_replayAIT = false;
+  std::deque<DEMUX_PACKET*> m_aitReplay; // delivered ahead of the buffered packets
+  void DropAITReplay();
   std::map<int64_t, std::shared_ptr<tvheadend::HTSPVFS>> m_vfs;
 
   HTSPMessageQueue m_queue;
