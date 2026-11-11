@@ -19,6 +19,7 @@
 
 #include "kodi/General.h"
 #include "kodi/Network.h"
+#include "kodi/tools/StringUtils.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -474,6 +475,30 @@ PVR_ERROR CTvheadend::GetChannels(bool radio, kodi::addon::PVRChannelsResultSet&
   return PVR_ERROR_NO_ERROR;
 }
 
+std::string CTvheadend::GetStreamTicket(uint32_t channelId)
+{
+  htsmsg_t* m = htsmsg_create_map();
+  htsmsg_add_u32(m, "channelId", channelId);
+
+  {
+    std::unique_lock<std::recursive_mutex> lock(m_conn->Mutex());
+    m = m_conn->SendAndWait(lock, "getTicket", m);
+  }
+
+  if (!m)
+    return {};
+
+  std::string ticket;
+  const char* str = htsmsg_get_str(m, "ticket");
+  if (str)
+    ticket = str;
+  else
+    Logger::Log(LogLevel::LEVEL_ERROR, "malformed getTicket response: 'ticket' missing");
+
+  htsmsg_destroy(m);
+  return ticket;
+}
+
 PVR_ERROR CTvheadend::GetChannelStreamProperties(
     const kodi::addon::PVRChannel& channel,
     PVR_SOURCE source,
@@ -485,16 +510,30 @@ PVR_ERROR CTvheadend::GetChannelStreamProperties(
   if (!m_asyncState.WaitForState(ASYNC_DVR))
     return PVR_ERROR_FAILED;
 
-  std::lock_guard<std::recursive_mutex> lock(m_mutex);
+  uint32_t channelId = 0;
+  {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-  auto it = m_channels.find(channel.GetUniqueId());
-  if (it == m_channels.end())
-    return PVR_ERROR_FAILED;
+    auto it = m_channels.find(channel.GetUniqueId());
+    if (it == m_channels.end())
+      return PVR_ERROR_FAILED;
 
-  std::string path = "/stream/channelid/" + std::to_string(it->first);
+    channelId = it->first;
+  }
+
+  std::vector<std::string> params;
+
+  const std::string ticket = GetStreamTicket(channelId);
+  if (!ticket.empty())
+    params.emplace_back("ticket=" + kodi::network::URLEncode(ticket));
+
   const std::string streamingProfile = m_settings->GetStreamingProfile();
   if (!streamingProfile.empty())
-    path += "?profile=" + kodi::network::URLEncode(streamingProfile);
+    params.emplace_back("profile=" + kodi::network::URLEncode(streamingProfile));
+
+  std::string path = "/stream/channelid/" + std::to_string(channelId);
+  if (!params.empty())
+    path += "?" + kodi::tools::StringUtils::Join(params, "&");
 
   const std::string url = m_conn->GetWebURL("%s", path.c_str());
 
