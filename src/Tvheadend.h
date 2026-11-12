@@ -140,6 +140,7 @@ private:
 
   uint32_t GetNextUnnumberedChannelNumber();
   std::string GetImageURL(const char* str);
+  std::string GetStreamTicket(uint32_t channelId);
 
   /**
    * Queries the server for available DVR configurations and populates m_dvrConfigs
