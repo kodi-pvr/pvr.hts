@@ -32,6 +32,8 @@
 // use numbers less than TVH_STREAM_INDEX_OFFSET for streams created by pvr.hts.
 static const int TVH_STREAM_INDEX_OFFSET = 1000;
 
+static const size_t MAX_PKT_BUFFER_BYTES = 64 * 1024 * 1024;
+
 using namespace tvheadend;
 using namespace tvheadend::utilities;
 
@@ -143,7 +145,7 @@ DEMUX_PACKET* HTSPDemuxer::Read()
   m_lastUse.store(std::time(nullptr));
 
   DEMUX_PACKET* pkt = nullptr;
-  if (m_pktBuffer.Pop(pkt, 100))
+  if (PopPacket(pkt, 100))
   {
     Logger::Log(LogLevel::LEVEL_TRACE, "demux read idx :%d pts %lf len %lld", pkt->iStreamId,
                 pkt->pts, static_cast<long long>(pkt->iSize));
@@ -169,7 +171,7 @@ void HTSPDemuxer::Flush()
   Logger::Log(LogLevel::LEVEL_TRACE, "demux flush");
 
   DEMUX_PACKET* pkt = nullptr;
-  while (m_pktBuffer.Pop(pkt))
+  while (PopPacket(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
 }
 
@@ -181,8 +183,50 @@ void HTSPDemuxer::Trim()
    * playback without buffering. This depends on the bitrate, so we don't set
    * this too small. */
   DEMUX_PACKET* pkt = nullptr;
-  while (m_pktBuffer.Size() > 512 && m_pktBuffer.Pop(pkt))
+  while (m_pktBuffer.Size() > 512 && PopPacket(pkt))
     m_demuxPktHdl.FreeDemuxPacket(pkt);
+}
+
+void HTSPDemuxer::PushPacket(DEMUX_PACKET* pkt)
+{
+  const size_t buffered = (m_pktBufferBytes += PacketBytes(pkt));
+  m_pktBuffer.Push(pkt);
+
+  if (buffered <= MAX_PKT_BUFFER_BYTES)
+    return;
+
+  Logger::Log(LogLevel::LEVEL_WARNING, "demux packet buffer full, discarding %zu packets",
+              m_pktBuffer.Size());
+
+  Flush();
+
+  DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
+  if (pktSpecial)
+  {
+    pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
+    m_pktBufferBytes += PacketBytes(pktSpecial);
+    m_pktBuffer.Push(pktSpecial);
+  }
+
+  for (DEMUX_PACKET* aitPkt : AITPackets())
+  {
+    m_pktBufferBytes += PacketBytes(aitPkt);
+    m_pktBuffer.Push(aitPkt);
+  }
+}
+
+bool HTSPDemuxer::PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs /* = 0 */)
+{
+  if (!m_pktBuffer.Pop(pkt, timeoutMs))
+    return false;
+
+  m_pktBufferBytes -= PacketBytes(pkt);
+  return true;
+}
+
+size_t HTSPDemuxer::PacketBytes(const DEMUX_PACKET* pkt)
+{
+  return pkt->iSize > 0 ? static_cast<size_t>(pkt->iSize) : 0;
 }
 
 void HTSPDemuxer::Abort()
@@ -509,7 +553,7 @@ void HTSPDemuxer::ProcessSubscriptionStatus(htsmsg_t* m)
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
     pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
   }
 }
 
@@ -570,7 +614,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
 
       DEMUX_PACKET* pktSpecial = m_demuxPktHdl.AllocateDemuxPacket(0);
       pktSpecial->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-      m_pktBuffer.Push(pktSpecial);
+      PushPacket(pktSpecial);
     }
 
     DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(rdslen);
@@ -584,7 +628,7 @@ void HTSPDemuxer::ProcessRDS(uint32_t idx, const void* bin, size_t binlen)
     pkt->iSize = rdslen;
     pkt->iStreamId = rdsIdx;
 
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
   }
   m_rdsExtractor->Reset();
 }
@@ -676,7 +720,7 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
       m_aitPackets.emplace_back(static_cast<const uint8_t*>(bin),
                                 static_cast<const uint8_t*>(bin) + binlen);
 
-    m_pktBuffer.Push(pkt);
+    PushPacket(pkt);
 
     // Process RDS data, if present.
     ProcessRDS(idx, bin, binlen);
@@ -893,7 +937,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
 
   DEMUX_PACKET* pkt = m_demuxPktHdl.AllocateDemuxPacket(0);
   pkt->iStreamId = DEMUX_SPECIALID_STREAMCHANGE;
-  m_pktBuffer.Push(pkt);
+  PushPacket(pkt);
 
   /* Source data */
   ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
