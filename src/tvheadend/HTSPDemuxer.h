@@ -110,6 +110,8 @@ private:
   void PushPacket(DEMUX_PACKET* pkt);
   bool PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs = 0);
   static size_t PacketBytes(const DEMUX_PACKET* pkt);
+  bool HasVideoStream() const;
+  bool IsVideoStream(uint32_t idx) const;
 
   void RestartStallDetection();
 
@@ -149,6 +151,7 @@ private:
   uint32_t m_rdsIdx;
   uint32_t m_aitIdx = 0;
   std::vector<std::vector<uint8_t>> m_aitPackets;
+  bool m_waitForVideoKeyframe = false;
   std::unique_ptr<utilities::RDSExtractor> m_rdsExtractor;
   int32_t m_requestedSpeed = 1000;
   int32_t m_actualSpeed = 1000;

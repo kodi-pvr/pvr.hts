@@ -97,6 +97,7 @@ void HTSPDemuxer::Abort0()
   m_rdsIdx = 0;
   m_aitIdx = 0;
   m_aitPackets.clear();
+  m_waitForVideoKeyframe = false;
   m_rdsExtractor.reset();
   CancelSeek();
 }
@@ -213,6 +214,8 @@ void HTSPDemuxer::PushPacket(DEMUX_PACKET* pkt)
     m_pktBufferBytes += PacketBytes(aitPkt);
     m_pktBuffer.Push(aitPkt);
   }
+
+  m_waitForVideoKeyframe = HasVideoStream();
 }
 
 bool HTSPDemuxer::PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs /* = 0 */)
@@ -227,6 +230,26 @@ bool HTSPDemuxer::PopPacket(DEMUX_PACKET*& pkt, int32_t timeoutMs /* = 0 */)
 size_t HTSPDemuxer::PacketBytes(const DEMUX_PACKET* pkt)
 {
   return pkt->iSize > 0 ? static_cast<size_t>(pkt->iSize) : 0;
+}
+
+bool HTSPDemuxer::HasVideoStream() const
+{
+  for (const auto& stream : m_streams)
+  {
+    if (stream.GetCodecType() == PVR_CODEC_TYPE_VIDEO)
+      return true;
+  }
+  return false;
+}
+
+bool HTSPDemuxer::IsVideoStream(uint32_t idx) const
+{
+  for (const auto& stream : m_streams)
+  {
+    if (stream.GetPID() == idx)
+      return stream.GetCodecType() == PVR_CODEC_TYPE_VIDEO;
+  }
+  return false;
 }
 
 void HTSPDemuxer::Abort()
@@ -701,6 +724,14 @@ void HTSPDemuxer::ParseMuxPacket(htsmsg_t* m)
 
   bool ignore = m_seektime != nullptr;
 
+  if (!ignore && m_waitForVideoKeyframe && IsVideoStream(idx))
+  {
+    if (type == 'I' || type == '_')
+      m_waitForVideoKeyframe = false;
+    else
+      ignore = true;
+  }
+
   Logger::Log(LogLevel::LEVEL_TRACE, "demux pkt idx %d:%d type %c pts %lf len %lld%s", idx,
               pkt->iStreamId, type, pkt->pts, static_cast<long long>(binlen),
               ignore ? " IGNORE" : "");
@@ -909,6 +940,7 @@ void HTSPDemuxer::ParseSubscriptionStart(htsmsg_t* m)
   m_rdsIdx = 0;
   m_aitIdx = 0;
   m_aitPackets.clear();
+  m_waitForVideoKeyframe = false;
   m_rdsExtractor.reset();
 
   Logger::Log(LogLevel::LEVEL_DEBUG, "demux subscription start");
