@@ -1,3 +1,8 @@
+v22.9.8
+- Fix memory use growing until Kodi is closed by the system while live TV is not being read, e.g. after switching off the TV
+- Fix the user's streaming profile being ignored for HTTP channel streams when the server allows anonymous streaming
+- Fix HbbTV applications starting several seconds late when switching back to a recently watched channel
+
 v22.9.7
 - Fix a possible crash when the connection to the Tvheadend server breaks
 - Fix stalled playback not being detected after pausing or seeking
